@@ -29,7 +29,7 @@ const StockFilterSearch = ({ onStockSelect }) => {
                    className="w-full bg-gray-700 text-white p-2 rounded" />
             {results.length > 0 && (
                 <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1">
-                    {results.map(r => <li key={r.symbol} onClick={() => handleSelect(r.symbol)}
+                    {results.map((r, index) => <li key={`${r.symbol}-${index}`} onClick={() => handleSelect(r.symbol)}
                                           className="px-4 py-2 hover:bg-green-500 cursor-pointer">{r.symbol}</li>)}
                 </ul>
             )}
