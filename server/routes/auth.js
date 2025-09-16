@@ -7,10 +7,19 @@ router.get('/google', passport.authenticate('google', {
 }));
 
 // Callback route for Google to redirect to
-router.get('/google/callback', passport.authenticate('google'), (req, res) => {
-    // Successful authentication, redirect to the home page.
-    res.redirect('http://localhost:3000/');
-});
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    const redirectURL =
+      process.env.NODE_ENV === 'production'
+        ? 'https://predictostock.vercel.app'
+        : 'http://localhost:3000';
+
+    res.redirect(redirectURL);
+  }
+);
+
 // Route to check current user
 router.get('/current_user', (req, res) => {
     res.send(req.user); // req.user is automatically added by Passport
