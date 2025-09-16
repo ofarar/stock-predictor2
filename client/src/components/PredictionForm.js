@@ -79,7 +79,7 @@ const PredictionForm = ({ selectedStock }) => {
             deadline: status.deadline,
             predictionType,
         };
-        axios.post('http://localhost:5001/api/predict', predictionData, { withCredentials: true })
+        axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
             .then(res => alert('Prediction submitted successfully!'))
             .catch(err => console.error("Prediction submission error:", err));
     };

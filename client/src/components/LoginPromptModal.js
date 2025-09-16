@@ -12,7 +12,7 @@ const LoginPromptModal = ({ isOpen, onClose }) => {
                 <h2 className="text-2xl font-bold text-white mb-4">Join the Competition!</h2>
                 <p className="text-gray-300 mb-6">Create an account to make predictions, follow top predictors, and climb the leaderboards.</p>
                 <a 
-                    href="http://localhost:5001/auth/google" 
+                    href={`${process.env.REACT_APP_API_URL}/auth/google`} 
                     className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center space-x-3 hover:bg-blue-700 transition"
                 >
                     <span>Sign Up with Google</span>

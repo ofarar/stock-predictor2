@@ -58,8 +58,8 @@ const ProfilePage = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const profileRes = await axios.get(`http://localhost:5001/api/profile/${userId}`);
-                const currentUserRes = await axios.get('http://localhost:5001/auth/current_user', { withCredentials: true });
+                const profileRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${userId}`);
+                const currentUserRes = await axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true });
                 setProfileData(profileRes.data);
                 setCurrentUser(currentUserRes.data);
             } catch (error) {

@@ -21,7 +21,7 @@ const StockSearch = ({ onStockSelect }) => {
 
         // Debounce mechanism: wait 500ms after user stops typing to make API call
         const delayDebounceFn = setTimeout(() => {
-            axios.get(`http://localhost:5001/api/search/${searchTerm}`)
+            axios.get(`${process.env.REACT_APP_API_URL}/api/search/${searchTerm}`)
                 .then(res => {
                     // The yahoo-finance2 library returns a 'quotes' array
                     if (res.data.quotes && res.data.quotes.length > 0) {

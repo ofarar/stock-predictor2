@@ -28,7 +28,7 @@ function App() {
 
   // Fetch the current user once when the app loads
   useEffect(() => {
-    axios.get('http://localhost:5001/auth/current_user', { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
         .then(res => setUser(res.data || null));
   }, []);
 

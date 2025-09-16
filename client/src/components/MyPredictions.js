@@ -6,7 +6,7 @@ const MyPredictions = () => {
     const [filter, setFilter] = useState('Active'); // 'Active' or 'Assessed'
 
     useEffect(() => {
-        axios.get('http://localhost:5001/api/my-predictions', { withCredentials: true })
+        axios.get(`${process.env.REACT_APP_API_URL}/api/my-predictions`, { withCredentials: true })
             .then(res => setPredictions(res.data))
             .catch(err => console.error("Could not fetch predictions", err));
     }, []);

@@ -16,7 +16,7 @@ const StockPage = ({ onPredictClick }) => {
                 setLoading(true);
                 setError('');
                 // This is the live API call to your backend
-                const response = await axios.get(`http://localhost:5001/api/stock/${ticker}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}`);
                 setStockData(response.data);
             } catch (err) {
                 console.error("Failed to fetch stock data", err);

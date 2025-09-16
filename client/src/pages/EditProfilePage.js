@@ -14,7 +14,7 @@ const EditProfilePage = () => {
 
     useEffect(() => {
         // Fetch current user data to pre-fill the form
-        axios.get('http://localhost:5001/auth/current_user', { withCredentials: true })
+        axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => {
                 if (res.data) {
                     setUser(res.data);
@@ -36,7 +36,7 @@ const EditProfilePage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put('http://localhost:5001/api/profile', formData, { withCredentials: true })
+        axios.put(`${process.env.REACT_APP_API_URL}/api/profile`, formData, { withCredentials: true })
             .then(res => {
                 alert('Profile updated successfully!');
                 // Redirect to the user's public profile page after saving

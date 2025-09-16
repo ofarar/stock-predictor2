@@ -43,7 +43,7 @@ const PredictionWidget = ({ onClose, initialStock }) => {
         }
         setIsLoading(true);
         const delayDebounceFn = setTimeout(() => {
-            axios.get(`http://localhost:5001/api/search/${searchTerm}`)
+            axios.get(`${process.env.REACT_APP_API_URL}/api/search/${searchTerm}`)
                 .then(res => setSearchResults(res.data.quotes || []))
                 .catch(() => setError('Search failed.'))
                 .finally(() => setIsLoading(false));
@@ -127,7 +127,7 @@ const PredictionWidget = ({ onClose, initialStock }) => {
         setError('');
         setSearchTerm('');
         setSearchResults([]);
-        axios.get(`http://localhost:5001/api/quote/${symbol}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${symbol}`)
             .then(res => {
                 setSelectedStock(res.data);
                 if (res.data.regularMarketPrice) {
@@ -149,7 +149,7 @@ const PredictionWidget = ({ onClose, initialStock }) => {
             predictionType,
         };
 
-        axios.post('http://localhost:5001/api/predict', predictionData, { withCredentials: true })
+        axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
             .then(res => {
                 alert(`Prediction for ${selectedStock.symbol} submitted successfully!`);
                 onClose();

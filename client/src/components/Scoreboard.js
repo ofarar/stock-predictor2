@@ -11,7 +11,7 @@ const ScoreboardPage = () => {
     useEffect(() => {
         // This API call would be updated to use the filters
         // e.g., /api/scoreboard?time=Daily&type=Hourly&stock=TSLA
-        axios.get('http://localhost:5001/api/scoreboard')
+        axios.get(`${process.env.REACT_APP_API_URL}/api/scoreboard`)
             .then(res => setUsers(res.data))
             .finally(() => setLoading(false));
     }, [timeFilter, predictionTypeFilter, stockFilter]);

@@ -4,7 +4,7 @@ import axios from 'axios';
 const AdminPanel = () => {
     const handleEvaluate = () => {
         if (window.confirm("Are you sure you want to manually evaluate all active predictions?")) {
-            axios.post('http://localhost:5001/api/admin/evaluate', {}, { withCredentials: true })
+            axios.post(`${process.env.REACT_APP_API_URL}/api/admin/evaluate`, {}, { withCredentials: true })
                 .then(res => alert("Success! Evaluation job started. Check server logs."))
                 .catch(err => alert("Error: You might not be an admin."));
         }

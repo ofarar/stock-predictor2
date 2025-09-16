@@ -21,14 +21,15 @@ const HomePage = () => {
             try {
                 // Use Promise.all to fetch all data in parallel for faster loading
                 const [hourlyRes, dailyRes, longTermRes, famousRes, communityRes] = await Promise.all([
-                    axios.get('http://localhost:5001/api/widgets/hourly-winners'),
-                    axios.get('http://localhost:5001/api/widgets/daily-leaders'),
-                    axios.get('http://localhost:5001/api/widgets/long-term-leaders'),
-                    axios.get('http://localhost:5001/api/widgets/famous-stocks'),
-                    axios.get('http://localhost:5001/api/widgets/community-feed')
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/community-feed`)
                 ]);
-                
-                setWidgetData({ 
+
+
+                setWidgetData({
                     hourlyWinners: hourlyRes.data,
                     dailyLeaders: dailyRes.data,
                     longTermLeaders: longTermRes.data,

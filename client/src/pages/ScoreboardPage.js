@@ -11,7 +11,7 @@ const ScoreboardPage = () => {
 
     useEffect(() => {
         // API call would be updated to use filters
-        axios.get('http://localhost:5001/api/scoreboard')
+        axios.get(`${process.env.REACT_APP_API_URL}/api/scoreboard`)
             .then(res => setUsers(res.data))
             .finally(() => setLoading(false));
     }, [predictionTypeFilter, stockFilter]);
