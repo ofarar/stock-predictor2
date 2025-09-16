@@ -111,8 +111,8 @@ const Header = ({ user, onMakePredictionClick }) => {
                         <div className="border-t border-gray-700 my-2"></div>
                         <div className="mt-2">
                             {user
-                                ? <a href="http://localhost:5001/auth/logout" className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">Logout</a>
-                                : <a href="http://localhost:5001/auth/google" className="block py-2 px-4 text-sm bg-blue-600 rounded">Log In</a>
+                                ? <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">Logout</a>
+                                : <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="block py-2 px-4 text-sm bg-blue-600 rounded">Log In</a>
                             }
                         </div>
                     </div>
