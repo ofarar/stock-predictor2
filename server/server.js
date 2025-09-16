@@ -22,6 +22,21 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.set('trust proxy', 1);
+
+app.use(
+    session({
+        secret: process.env.COOKIE_KEY,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+            secure: process.env.NODE_ENV === "production", // only send cookie over https
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        }
+    })
+);
+
 app.use(
     session({
         secret: process.env.COOKIE_KEY,
@@ -32,6 +47,15 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Log session info for debugging
+app.use((req, res, next) => {
+    console.log('Session ID:', req.sessionID);
+    console.log('Session object:', req.session);
+    console.log('Cookies:', req.cookies); // will show signed cookie if exists
+    next();
+});
+
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)

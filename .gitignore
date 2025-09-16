@@ -8,6 +8,8 @@
 # Environment variables
 .env
 /server/.env
+.env.local
+/client/.env.local
 
 # Logs
 npm-debug.log*

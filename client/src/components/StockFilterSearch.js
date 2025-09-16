@@ -11,7 +11,7 @@ const StockFilterSearch = ({ onStockSelect }) => {
             return;
         }
         const timer = setTimeout(() => {
-            axios.get(`http://localhost:5001/api/search/${searchTerm}`)
+            axios.get(`${process.env.REACT_APP_API_URL}/api/search/${searchTerm}`)
                 .then(res => setResults(res.data.quotes || []));
         }, 500);
         return () => clearTimeout(timer);

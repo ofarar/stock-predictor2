@@ -50,7 +50,7 @@ const StockSearch = ({ onStockSelect }) => {
         setSearchTerm(''); // Clear search term
         setSearchResults([]); // Hide dropdown
 
-        axios.get(`http://localhost:5001/api/quote/${symbol}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${symbol}`)
             .then(res => {
                 const quoteData = res.data;
                 if (quoteData && quoteData.regularMarketPrice) {
