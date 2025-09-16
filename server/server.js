@@ -14,7 +14,10 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow the client to access
+    origin: [
+        'http://localhost:3000',              // for local dev
+        'https://predictostock.vercel.app'    // for production frontend
+    ],
     credentials: true // Allow cookies to be sent
 }));
 app.use(express.json());
