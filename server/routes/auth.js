@@ -26,10 +26,19 @@ router.get('/current_user', (req, res) => {
 });
 
 router.get('/logout', (req, res, next) => {
-    req.logout(function(err) {
-        if (err) { return next(err); }
-        res.redirect('http://localhost:3000/');
-    });
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    const redirectURL =
+      process.env.NODE_ENV === 'production'
+        ? 'https://predictostock.vercel.app'
+        : 'http://localhost:3000';
+
+    res.redirect(redirectURL);
+  });
 });
+
 
 module.exports = router;
