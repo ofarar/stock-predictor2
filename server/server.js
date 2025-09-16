@@ -22,8 +22,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Heroku/Render use proxies. This is needed for session cookies in production.
 app.set('trust proxy', 1);
 
+// Use session middleware ONCE
 app.use(
     session({
         secret: process.env.COOKIE_KEY,
@@ -31,8 +33,8 @@ app.use(
         saveUninitialized: false,
         cookie: {
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-            secure: process.env.NODE_ENV === "production", // only send cookie over https
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+            secure: process.env.NODE_ENV === "production", // Cookie only works in HTTPS
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         }
     })
 );
