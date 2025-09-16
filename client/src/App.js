@@ -28,18 +28,22 @@ function App() {
   const [stockToPredict, setStockToPredict] = useState(null);
 
   // Fetch the current user once when the app loads
-  useEffect(() => {
+  const fetchUser = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
-        .then(res => setUser(res.data || null));
+      .then(res => setUser(res.data || null));
+  };
+
+  useEffect(() => {
+    fetchUser(); // Fetch user on initial load
   }, []);
 
   // This function is passed to components to open the prediction modal
   const handleOpenPredictionModal = (stock = null) => {
     if (user) { // If user is logged in, open the real prediction modal
-        setStockToPredict(stock);
-        setIsPredictionModalOpen(true);
+      setStockToPredict(stock);
+      setIsPredictionModalOpen(true);
     } else { // If user is a guest, open the login prompt modal
-        setIsLoginPromptOpen(true);
+      setIsLoginPromptOpen(true);
     }
   };
 
@@ -52,24 +56,24 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
         <Header user={user} onMakePredictionClick={handleOpenPredictionModal} />
-        
-        <PredictionModal 
-          isOpen={isPredictionModalOpen} 
+
+        <PredictionModal
+          isOpen={isPredictionModalOpen}
           onClose={handleCloseModal}
-          initialStock={stockToPredict} 
+          initialStock={stockToPredict}
         />
-        <LoginPromptModal 
-            isOpen={isLoginPromptOpen}
-            onClose={() => setIsLoginPromptOpen(false)}
+        <LoginPromptModal
+          isOpen={isLoginPromptOpen}
+          onClose={() => setIsLoginPromptOpen(false)}
         />
-        
+
         <main className="flex-grow container mx-auto px-4 sm:px-6 py-4">
           <Routes>
             <Route path="/" element={<HomePage user={user} />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage />} />
-            <Route path="/profile/edit" element={<EditProfilePage />} />
+            <Route path="/profile/edit" element={<EditProfilePage onProfileUpdate={fetchUser} />} />
             <Route path="/stock/:ticker" element={<StockPage onPredictClick={handleOpenPredictionModal} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -78,7 +82,7 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
-        
+
         <Footer />
       </div>
     </Router>

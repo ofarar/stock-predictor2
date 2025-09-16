@@ -1,46 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const EditProfilePage = () => {
-    const [formData, setFormData] = useState({ 
-        username: '', 
-        about: '', 
-        youtubeLink: '', 
-        xLink: '' 
+const EditProfilePage = ({ onProfileUpdate }) => {
+    const [formData, setFormData] = useState({
+        username: '',
+        about: '',
+        youtubeLink: '',
+        xLink: '',
+        avatar: '' // Add avatar to the form state
     });
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
+    const avatarStyles = ['adventurer', 'pixel-art', 'bottts', 'initials', 'fun-emoji', 'identicon'];
+
+    const getAvatarUrl = useCallback((style, name) => {
+        // Use the provided name for the seed, fallback to 'default'
+        return `https://api.dicebear.com/8.x/${style}/svg?seed=${name || 'default'}`;
+    }, []);
+
     useEffect(() => {
-        // Fetch current user data to pre-fill the form
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => {
                 if (res.data) {
+                    const initialUsername = res.data.username || 'User';
                     setUser(res.data);
                     setFormData({
-                        username: res.data.username || '',
+                        username: initialUsername,
                         about: res.data.about || '',
                         youtubeLink: res.data.youtubeLink || '',
-                        xLink: res.data.xLink || ''
+                        xLink: res.data.xLink || '',
+                        avatar: res.data.avatar || `https://api.dicebear.com/8.x/adventurer/svg?seed=${initialUsername}`
                     });
                 } else {
-                    navigate('/login'); // Redirect if not logged in
+                    navigate('/login');
                 }
             });
     }, [navigate]);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        // Create a new copy of the form data to update
+        const newFormData = { ...formData, [name]: value };
+
+        // If the username is being changed, update the avatar URL as well
+        if (name === 'username') {
+            // Extract the style from the current avatar URL
+            const currentStyle = formData.avatar.split('/')[4] || 'adventurer';
+            newFormData.avatar = getAvatarUrl(currentStyle, value);
+        }
+
+        setFormData(newFormData);
     };
 
+    const handleAvatarSelect = (style) => {
+        setFormData({ ...formData, avatar: getAvatarUrl(style, formData.username) });
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.put(`${process.env.REACT_APP_API_URL}/api/profile`, formData, { withCredentials: true })
             .then(res => {
                 alert('Profile updated successfully!');
-                // Redirect to the user's public profile page after saving
-                navigate(`/profile/${user._id}`); 
+                onProfileUpdate(); // <-- This tells App.js to refetch the user data
+                navigate(`/profile/${user._id}`);
             })
             .catch(err => {
                 console.error("Profile update error:", err);
@@ -49,32 +72,49 @@ const EditProfilePage = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg animate-fade-in">
+        <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg">
             <h1 className="text-3xl font-bold text-white mb-6">Edit Your Profile</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
+                    <label className="block text-sm font-medium text-gray-300">Select Avatar Style</label>
+                    <div className="mt-2 grid grid-cols-3 sm:grid-cols-6 gap-4">
+                        {avatarStyles.map(style => (
+                            <div key={style} onClick={() => handleAvatarSelect(style)}
+                                className={`p-2 rounded-full cursor-pointer transition-all duration-200 ${formData.avatar.includes(style) && formData.avatar.includes(formData.username) ? 'bg-green-500' : 'bg-gray-700'}`}>
+                                <img
+                                    src={getAvatarUrl(style)}
+                                    alt={`${style} avatar`}
+                                    className="w-16 h-16 rounded-full bg-white"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                {/* ------------------------------------ */}
+
+                <div>
                     <label htmlFor="username" className="block text-sm font-medium text-gray-300">Username</label>
                     <input type="text" name="username" id="username" value={formData.username} onChange={handleChange}
-                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                 </div>
                 <div>
                     <label htmlFor="about" className="block text-sm font-medium text-gray-300">About</label>
                     <textarea name="about" id="about" rows="4" value={formData.about} onChange={handleChange}
-                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"></textarea>
                 </div>
-                
+
                 <div>
                     <label htmlFor="xLink" className="block text-sm font-medium text-gray-300">X (Twitter) Link</label>
                     <input type="url" name="xLink" id="xLink" placeholder="https://x.com/yourprofile" value={formData.xLink} onChange={handleChange}
-                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                 </div>
                 <div>
                     <label htmlFor="youtubeLink" className="block text-sm font-medium text-gray-300">YouTube Link</label>
                     <input type="url" name="youtubeLink" id="youtubeLink" placeholder="https://youtube.com/yourchannel" value={formData.youtubeLink} onChange={handleChange}
-                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                 </div>
 
-                <button type="submit" className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600 transition duration-300">
+                <button type="submit" className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600">
                     Save Changes
                 </button>
             </form>

@@ -236,16 +236,19 @@ router.get('/profile/:userId', async (req, res) => {
 
 // In server/routes/api.js
 
+// In server/routes/api.js
+
 router.put('/profile', async (req, res) => {
     if (!req.user) {
         return res.status(401).send('You must be logged in.');
     }
     try {
-        const { username, about, youtubeLink, xLink } = req.body;
+        // Add 'avatar' to the list of fields to update
+        const { username, about, youtubeLink, xLink, avatar } = req.body;
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,
-            { username, about, youtubeLink, xLink },
-            { new: true, runValidators: true } // Return the updated document
+            { username, about, youtubeLink, xLink, avatar }, // Add avatar here
+            { new: true, runValidators: true }
         );
         res.json(updatedUser);
     } catch (err) {
