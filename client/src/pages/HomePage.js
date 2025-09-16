@@ -62,7 +62,13 @@ const HomePage = ({ user }) => {
                 <div className="lg:col-span-2 flex flex-col gap-8">
                     <HourlyWinnersFeed winners={widgetData.hourlyWinners} />
                     <DailyLeaderboard leaders={widgetData.dailyLeaders} />
+
+                    {/* Desktop CommunityFeed */}
+                    <div className="hidden lg:block mt-8">
+                        <CommunityFeed feedItems={widgetData.communityFeed} />
+                    </div>
                 </div>
+
 
                 {/* Sidebar Column */}
                 <div className="lg:col-span-1 flex flex-col gap-8">
@@ -71,20 +77,9 @@ const HomePage = ({ user }) => {
                 </div>
             </div>
 
-            {/* Community Feed for mobile only */}
+            {/* Mobile CommunityFeed */}
             <div className="lg:hidden">
                 <CommunityFeed feedItems={widgetData.communityFeed} />
-            </div>
-
-            {/* Community Feed for desktop only (inside main column if you want) */}
-            <div className="hidden lg:block lg:col-span-2 mt-8">
-                <CommunityFeed feedItems={widgetData.communityFeed} />
-            </div>
-
-            {/* Sidebar Column */}
-            <div className="lg:col-span-1 flex flex-col gap-8">
-                <FamousStocks stocks={widgetData.famousStocks} />
-                <LongTermLeaders leaders={widgetData.longTermLeaders} />
             </div>
         </div>
     );
