@@ -5,8 +5,38 @@ const axios = require('axios'); // <-- Added for making API calls
 const User = require('../models/User');
 const Prediction = require('../models/Prediction');
 const Notification = require('../models/Notification');
+const Setting = require('../models/Setting'); // Import the new model
 
 const searchCache = new Map();
+
+// --- SETTINGS ROUTES ---
+
+// GET: A public route to fetch current settings
+router.get('/settings', async (req, res) => {
+    try {
+        const settings = await Setting.findOne(); // Get the single settings document
+        res.json(settings);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching settings' });
+    }
+});
+
+// PUT: An admin-only route to update settings
+router.put('/settings/admin', async (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).send('Forbidden: Admins only.');
+    }
+    try {
+        const { isPromoBannerActive } = req.body;
+        const updatedSettings = await Setting.findOneAndUpdate({},
+            { isPromoBannerActive },
+            { new: true, upsert: true } // upsert: true creates the document if it doesn't exist
+        );
+        res.json(updatedSettings);
+    } catch (err) {
+        res.status(400).json({ message: 'Error updating settings' });
+    }
+});
 
 // ===================================
 // Original Prediction & User Routes

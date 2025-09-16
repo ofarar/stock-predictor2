@@ -18,17 +18,36 @@ passport.use(
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: process.env.GOOGLE_CALLBACK_URL
     }, async (accessToken, refreshToken, profile, done) => {
-        const existingUser = await User.findOne({ googleId: profile.id });
+        
+        // --- START DEBUGGING LOGS ---
+        console.log("--- Google Profile Data Received ---");
+        console.log("ID:", profile.id);
+        console.log("Display Name:", profile.displayName);
+        console.log("Email:", profile.emails[0].value);
+        console.log("------------------------------------");
+        // --- END DEBUGGING LOGS ---
 
-        if (existingUser) {
-            done(null, existingUser);
-        } else {
-            const newUser = await new User({
-                googleId: profile.id,
-                username: profile.displayName,
-            }).save();
+        try {
+            const userEmail = profile.emails[0].value;
+            const existingUser = await User.findOne({ googleId: profile.id });
 
-            done(null, newUser);
+            if (existingUser) {
+                console.log("User already exists:", existingUser);
+                done(null, existingUser);
+            } else {
+                console.log("User not found. Creating a new user...");
+                const newUser = await new User({
+                    googleId: profile.id,
+                    username: profile.displayName,
+                    email: userEmail
+                }).save();
+                
+                console.log("New user created successfully:", newUser);
+                done(null, newUser);
+            }
+        } catch (error) {
+            console.error("!!! Error saving user to database !!!", error);
+            done(error, null);
         }
     })
 );

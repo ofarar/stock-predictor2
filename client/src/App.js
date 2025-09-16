@@ -19,6 +19,7 @@ import FollowersPage from './pages/FollowersPage';
 import AboutPage from './pages/AboutPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -64,7 +65,7 @@ function App() {
         
         <main className="flex-grow container mx-auto px-4 sm:px-6 py-4">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage user={user} />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage />} />
@@ -74,6 +75,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
         
