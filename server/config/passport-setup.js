@@ -2,6 +2,9 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
 
+// 1. Import the function from your new service file
+const { sendWelcomeEmail } = require('../services/email');
+
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
@@ -18,7 +21,7 @@ passport.use(
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: process.env.GOOGLE_CALLBACK_URL
     }, async (accessToken, refreshToken, profile, done) => {
-        
+
         // --- START DEBUGGING LOGS ---
         console.log("--- Google Profile Data Received ---");
         console.log("ID:", profile.id);
@@ -41,7 +44,10 @@ passport.use(
                     username: profile.displayName,
                     email: userEmail
                 }).save();
-                
+
+                // 2. Call the imported function for the new user
+                sendWelcomeEmail(newUser.email, newUser.username);
+
                 console.log("New user created successfully:", newUser);
                 done(null, newUser);
             }
