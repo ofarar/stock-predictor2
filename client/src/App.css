@@ -1,0 +1,15 @@
+/* Import the three main Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You can add custom base styles or new components here if you want.
+  For example, let's apply a nice font and a smooth background color 
+  transition to the entire application.
+*/
+body {
+  font-family: 'Inter', sans-serif; /* A clean, modern sans-serif font */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease-in-out;
+}
