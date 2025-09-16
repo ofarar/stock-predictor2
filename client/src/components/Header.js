@@ -92,7 +92,7 @@ const Header = ({ user, onMakePredictionClick }) => {
                                     <UserMenu />
                                 </>
                             ) : (
-                                <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Log In</a>
+                                <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Log In</a>
                             )}
                         </div>
                         <div className="md:hidden">
