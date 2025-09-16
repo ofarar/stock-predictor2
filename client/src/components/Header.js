@@ -116,6 +116,10 @@ const Header = ({ user, onMakePredictionClick }) => {
                         <Link to="/scoreboard" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Scoreboard</Link>
                         {user && <Link to={`/profile/${user._id}`} className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">My Profile</Link>}
                         {user && <Link to="/profile/edit" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Edit Profile</Link>}
+                        {/* Admin Link for Mobile Menu */}
+                        {user && user.isAdmin && (
+                            <Link to="/admin" className="block py-2 px-4 text-sm text-yellow-400 hover:bg-gray-700 rounded">Admin Panel</Link>
+                        )}
                         <div className="border-t border-gray-700 my-2"></div>
                         <div className="mt-2">
                             {user
