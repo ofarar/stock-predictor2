@@ -1,7 +1,7 @@
 import React from 'react';
 
-const CommunityFeed = ({ feedItems = [] }) => (
-     <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+const CommunityFeed = ({ feedItems = [], className = '' }) => (
+     <div className={`bg-gray-800 p-6 rounded-lg shadow-lg ${className}`}>
         <h3 className="text-xl font-bold text-white mb-4">Community Feed</h3>
         <div className="space-y-4">
             {feedItems.length > 0 ? feedItems.map(item => (

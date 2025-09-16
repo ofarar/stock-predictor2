@@ -8,7 +8,7 @@ import CommunityFeed from '../components/CommunityFeed';
 import PromoBanner from '../components/PromoBanner'; // 1. Import the new component
 
 // 2. Accept the 'user' prop from App.js
-const HomePage = ({ user }) => { 
+const HomePage = ({ user }) => {
     const [widgetData, setWidgetData] = useState({
         dailyLeaders: [],
         famousStocks: [],
@@ -16,7 +16,7 @@ const HomePage = ({ user }) => {
         hourlyWinners: [],
         communityFeed: []
     });
-    const [settings, setSettings] = useState({ isPromoBannerActive: false });
+    const [settings] = useState({ isPromoBannerActive: false });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -54,20 +54,37 @@ const HomePage = ({ user }) => {
 
     return (
         <div className="space-y-8">
-            {/* 3. Conditionally render the banner if no user is logged in */}
-             {!user && settings.isPromoBannerActive && <PromoBanner />}
+            {!user && settings.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                <div className="lg:col-span-2 space-y-8">
+
+                {/* Main Column */}
+                <div className="lg:col-span-2 flex flex-col gap-8">
                     <HourlyWinnersFeed winners={widgetData.hourlyWinners} />
                     <DailyLeaderboard leaders={widgetData.dailyLeaders} />
-                    <CommunityFeed feedItems={widgetData.communityFeed} />
                 </div>
 
-                <div className="lg:col-span-1 space-y-8">
+                {/* Sidebar Column */}
+                <div className="lg:col-span-1 flex flex-col gap-8">
                     <FamousStocks stocks={widgetData.famousStocks} />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} />
                 </div>
+            </div>
+
+            {/* Community Feed for mobile only */}
+            <div className="lg:hidden">
+                <CommunityFeed feedItems={widgetData.communityFeed} />
+            </div>
+
+            {/* Community Feed for desktop only (inside main column if you want) */}
+            <div className="hidden lg:block lg:col-span-2 mt-8">
+                <CommunityFeed feedItems={widgetData.communityFeed} />
+            </div>
+
+            {/* Sidebar Column */}
+            <div className="lg:col-span-1 flex flex-col gap-8">
+                <FamousStocks stocks={widgetData.famousStocks} />
+                <LongTermLeaders leaders={widgetData.longTermLeaders} />
             </div>
         </div>
     );
