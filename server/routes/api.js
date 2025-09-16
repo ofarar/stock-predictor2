@@ -407,4 +407,23 @@ router.get('/widgets/community-feed', async (req, res) => {
     } catch (err) { res.status(500).json({ message: 'Error fetching community feed' }); }
 });
 
+router.get('/users/:userId/follow-data', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId)
+            .populate('followers', 'username avatar about') // Select fields to return for followers
+            .populate('following', 'username avatar about'); // Select fields for following
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json({
+            followers: user.followers,
+            following: user.following
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 module.exports = router;

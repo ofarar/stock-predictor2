@@ -80,8 +80,25 @@ const ProfilePage = () => {
     const isFollowing = currentUser?.following?.includes(user._id);
 
     const handleFollow = () => {
-        axios.post(`/api/users/${userId}/follow`, {}, { withCredentials: true })
-            .then(() => alert(`You are now following ${user.username}`));
+        axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow`, {}, { withCredentials: true })
+            .then(() => {
+                // --- Start: Update the local state immediately ---
+                // 1. Update the 'isFollowing' status for the button
+                setCurrentUser(prevUser => ({
+                    ...prevUser,
+                    following: [...prevUser.following, userId]
+                }));
+
+                // 2. Update the follower count on the page
+                setProfileData(prevData => ({
+                    ...prevData,
+                    followersCount: prevData.followersCount + 1
+                }));
+                // --- End: Update the local state ---
+            })
+            .catch(err => {
+                alert("Failed to follow user.");
+            });
     };
 
     return (
