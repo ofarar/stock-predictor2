@@ -16,7 +16,7 @@ const Header = ({ user, onMakePredictionClick }) => {
     useEffect(() => {
         if (user) {
             axios.get(`${process.env.REACT_APP_API_URL}/api/notifications`, { withCredentials: true })
-                 .then(notifRes => setNotifications(notifRes.data));
+                .then(notifRes => setNotifications(notifRes.data));
         }
     }, [user]);
 
@@ -42,7 +42,7 @@ const Header = ({ user, onMakePredictionClick }) => {
     const UserMenu = () => (
         <div className="relative" ref={userDropdownRef}>
             <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}>
-                <img src={user?.avatar || `https://avatar.iran.liara.run/public/boy?username=${user?._id}`} alt="Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600 hover:border-green-500"/>
+                <img src={user?.avatar || `https://avatar.iran.liara.run/public/boy?username=${user?._id}`} alt="Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600 hover:border-green-500" />
             </button>
             {isUserMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-20">
@@ -96,13 +96,27 @@ const Header = ({ user, onMakePredictionClick }) => {
                             )}
                         </div>
                         <div className="md:hidden">
-                             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                                 {isMobileMenuOpen ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>}
-                             </button>
+                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                                {isMobileMenuOpen ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>}
+                            </button>
                         </div>
                     </div>
                 </div>
-                 {isMobileMenuOpen && ( <div className="md:hidden mt-4"> {/* ... full mobile menu logic ... */} </div> )}
+                {isMobileMenuOpen && (
+                    <div className="md:hidden mt-4">
+                        {user && <button onClick={onMakePredictionClick} className="w-full mb-2 bg-green-500 text-white font-semibold px-4 py-2 rounded-md">Make a Prediction</button>}
+                        <Link to="/scoreboard" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Scoreboard</Link>
+                        {user && <Link to={`/profile/${user._id}`} className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">My Profile</Link>}
+                        {user && <Link to="/profile/edit" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Edit Profile</Link>}
+                        <div className="border-t border-gray-700 my-2"></div>
+                        <div className="mt-2">
+                            {user
+                                ? <a href="http://localhost:5001/auth/logout" className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">Logout</a>
+                                : <a href="http://localhost:5001/auth/google" className="block py-2 px-4 text-sm bg-blue-600 rounded">Log In</a>
+                            }
+                        </div>
+                    </div>
+                )}
             </div>
         </nav>
     );
