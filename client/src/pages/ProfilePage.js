@@ -107,6 +107,10 @@ const ProfilePage = () => {
                 <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className="w-24 h-24 rounded-full" />
                 <div className="flex-grow text-center sm:text-left">
                     <h1 className="text-4xl font-bold text-white">{user.username}</h1>
+                    {/* --- Member Since Date Added Here --- */}
+                    <p className="text-gray-500 text-sm mt-1">
+                        Member since {new Date(user.createdAt).toLocaleDateString()}
+                    </p>
                     <p className="text-gray-400 mt-2">{user.about || "No bio provided."}</p>
                     <div className="mt-4 flex items-center justify-center sm:justify-start space-x-4">
                         <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline">
