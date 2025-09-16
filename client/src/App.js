@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 
 // Import Components
+import ScrollToTop from './components/ScrollToTop';
 import Header from './components/Header';
 import PredictionModal from './components/PredictionModal';
 import LoginPromptModal from './components/LoginPromptModal';
@@ -54,6 +55,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
         <Header user={user} onMakePredictionClick={handleOpenPredictionModal} />
 
