@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Logo from './Logo';
+import GlobalSearch from './GlobalSearch'; 
 
 const Header = ({ user, onMakePredictionClick }) => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -86,6 +87,10 @@ const Header = ({ user, onMakePredictionClick }) => {
                     </div>
 
                     <div className="flex items-center space-x-4">
+                        {/* 2. Add the search bar to the desktop header */}
+                        <div className="hidden sm:block">
+                            <GlobalSearch />
+                        </div>
                         <div className="hidden md:flex items-center space-x-4">
                             <button onClick={() => onMakePredictionClick(null)} className="flex items-center gap-2 bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-600 transition">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -114,6 +119,9 @@ const Header = ({ user, onMakePredictionClick }) => {
 
                 {isMobileMenuOpen && (
                     <div className="md:hidden mt-4">
+                        <div className="mb-4">
+                            <GlobalSearch />
+                        </div>
                         <button onClick={() => onMakePredictionClick(null)} className="w-full mb-2 bg-green-500 text-white font-semibold px-4 py-3 rounded-md flex items-center justify-center gap-2">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             Make a Prediction
