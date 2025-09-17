@@ -5,9 +5,8 @@ import FamousStocks from '../components/FamousStocks';
 import LongTermLeaders from '../components/LongTermLeaders';
 import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import CommunityFeed from '../components/CommunityFeed';
-import PromoBanner from '../components/PromoBanner'; // 1. Import the new component
+import PromoBanner from '../components/PromoBanner';
 
-// 2. Accept the 'user' prop from App.js
 const HomePage = ({ user }) => {
     const [widgetData, setWidgetData] = useState({
         dailyLeaders: [],
@@ -16,14 +15,15 @@ const HomePage = ({ user }) => {
         hourlyWinners: [],
         communityFeed: []
     });
-    const [settings] = useState({ isPromoBannerActive: false });
+    const [settings, setSettings] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchWidgetData = async () => {
+        const fetchAllData = async () => {
             try {
-                // This fetches all widget data in parallel for faster loading
-                const [hourlyRes, dailyRes, longTermRes, famousRes, communityRes] = await Promise.all([
+                // Fetch all data in parallel for faster loading
+                const [settingsRes, hourlyRes, dailyRes, longTermRes, famousRes, communityRes] = await Promise.all([
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/settings`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
@@ -31,6 +31,7 @@ const HomePage = ({ user }) => {
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/community-feed`)
                 ]);
 
+                setSettings(settingsRes.data);
                 setWidgetData({
                     hourlyWinners: hourlyRes.data,
                     dailyLeaders: dailyRes.data,
@@ -45,41 +46,37 @@ const HomePage = ({ user }) => {
             }
         };
 
-        fetchWidgetData();
+        fetchAllData();
     }, []);
 
     if (loading) {
-        return <div className="text-center text-gray-400">Loading dashboard...</div>;
+        return <div className="text-center text-gray-400 py-10">Loading dashboard...</div>;
     }
 
     return (
         <div className="space-y-8">
-            {!user && settings.isPromoBannerActive && <PromoBanner />}
+            {!user && settings?.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-
+                
                 {/* Main Column */}
                 <div className="lg:col-span-2 flex flex-col gap-8">
+                    {/* These items will appear first on mobile */}
                     <HourlyWinnersFeed winners={widgetData.hourlyWinners} />
                     <DailyLeaderboard leaders={widgetData.dailyLeaders} />
 
-                    {/* Desktop CommunityFeed */}
-                    <div className="hidden lg:block mt-8">
-                        <CommunityFeed feedItems={widgetData.communityFeed} />
-                    </div>
+                    {/* This item will be moved to the end on mobile screens */}
+                    <CommunityFeed 
+                        feedItems={widgetData.communityFeed} 
+                        className="order-last lg:order-none" 
+                    />
                 </div>
-
 
                 {/* Sidebar Column */}
                 <div className="lg:col-span-1 flex flex-col gap-8">
                     <FamousStocks stocks={widgetData.famousStocks} />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} />
                 </div>
-            </div>
-
-            {/* Mobile CommunityFeed */}
-            <div className="lg:hidden">
-                <CommunityFeed feedItems={widgetData.communityFeed} />
             </div>
         </div>
     );

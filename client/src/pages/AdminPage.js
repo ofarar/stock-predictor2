@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import toast from 'react-hot-toast'; // 1. Import toast
 
 const AdminPage = () => {
-    const [settings, setSettings] = useState({ isPromoBannerActive: true });
+    const [settings, setSettings] = useState(null); // Initialize as null
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/settings`)
             .then(res => {
-                setSettings(res.data);
+                // If no settings exist in DB, start with a default object
+                setSettings(res.data || { isPromoBannerActive: true });
                 setLoading(false);
             });
     }, []);
@@ -20,11 +20,11 @@ const AdminPage = () => {
 
     const handleSave = () => {
         axios.put(`${process.env.REACT_APP_API_URL}/api/settings/admin`, settings, { withCredentials: true })
-            .then(() => toast.success('Settings saved!'))
-            .catch(() => toast.error('Error saving settings.'));
+            .then(() => alert('Settings saved!'))
+            .catch(() => alert('Error saving settings.'));
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div className="text-center text-white">Loading Settings...</div>;
 
     return (
         <div className="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg">
@@ -38,7 +38,8 @@ const AdminPage = () => {
                             type="checkbox"
                             id="isPromoBannerActive"
                             name="isPromoBannerActive"
-                            checked={settings.isPromoBannerActive}
+                            // Use optional chaining (?.) as a safety check
+                            checked={settings?.isPromoBannerActive || false}
                             onChange={handleCheckboxChange}
                             className="w-6 h-6 rounded"
                         />
