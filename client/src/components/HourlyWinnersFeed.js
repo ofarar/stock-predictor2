@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+// We'll use the same helper function to check market hours
+const isMarketOpen = () => {
+    const now = new Date();
+    const utcHour = now.getUTCHours();
+    const day = now.getUTCDay();
+    const isWeekday = day >= 1 && day <= 5;
+    const isMarketHours = utcHour > 13 || (utcHour === 13 && now.getUTCMinutes() >= 30);
+    const isBeforeClose = utcHour < 20;
+    return isWeekday && isMarketHours && isBeforeClose;
+};
+
 const HourlyWinnersFeed = ({ winners = [] }) => {
     const [timeLeft, setTimeLeft] = useState('');
+    const [marketIsOpen, setMarketIsOpen] = useState(isMarketOpen());
 
     useEffect(() => {
         const timer = setInterval(() => {
-            const minutes = 59 - new Date().getMinutes();
-            const seconds = 59 - new Date().getSeconds();
-            setTimeLeft(`${minutes}m ${seconds}s`);
+            const currentlyOpen = isMarketOpen();
+            setMarketIsOpen(currentlyOpen);
+
+            if (currentlyOpen) {
+                const minutes = 59 - new Date().getMinutes();
+                const seconds = 59 - new Date().getSeconds();
+                setTimeLeft(`${minutes}m ${seconds}s`);
+            }
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -21,7 +38,10 @@ const HourlyWinnersFeed = ({ winners = [] }) => {
                     <svg className="w-6 h-6 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <h3 className="text-xl font-bold text-white">Last Hour's Winners</h3>
                 </div>
-                <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-md">Next in: {timeLeft}</span>
+                {/* Conditionally display the timer or a "Market Closed" message */}
+                <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-md">
+                    {marketIsOpen ? `Next results in: ${timeLeft}` : 'Market Closed'}
+                </span>
             </div>
             <div className="space-y-3">
                 {winners.length > 0 ? winners.map(winner => (
