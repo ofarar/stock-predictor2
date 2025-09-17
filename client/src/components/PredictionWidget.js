@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast'; // 1. Import toast
 
 // Helper function to check market hours (approximates US market)
 // A robust implementation would use a library like 'market-hours' to handle holidays
@@ -151,11 +152,11 @@ const PredictionWidget = ({ onClose, initialStock }) => {
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
             .then(res => {
-                alert(`Prediction for ${selectedStock.symbol} submitted successfully!`);
+                toast.success(`Prediction for ${selectedStock.symbol} submitted successfully!`);
                 onClose();
             })
             .catch(err => {
-                alert('Failed to submit prediction. You may need to log in.');
+                toast.error('Failed to submit prediction. You may need to log in.');
                 onClose();
             });
     };

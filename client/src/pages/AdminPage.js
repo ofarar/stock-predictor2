@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast'; // 1. Import toast
 
 const AdminPage = () => {
     const [settings, setSettings] = useState({ isPromoBannerActive: true });
@@ -19,8 +20,8 @@ const AdminPage = () => {
 
     const handleSave = () => {
         axios.put(`${process.env.REACT_APP_API_URL}/api/settings/admin`, settings, { withCredentials: true })
-            .then(() => alert('Settings saved!'))
-            .catch(() => alert('Error saving settings.'));
+            .then(() => toast.success('Settings saved!'))
+            .catch(() => toast.error('Error saving settings.'));
     };
 
     if (loading) return <div>Loading...</div>;

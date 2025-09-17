@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
 
 // Import Components
 import ScrollToTop from './components/ScrollToTop';
@@ -55,6 +56,15 @@ function App() {
 
   return (
     <Router>
+      <Toaster // 2. Add the component here
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+        }}
+      />
       <ScrollToTop />
       <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
         <Header user={user} onMakePredictionClick={handleOpenPredictionModal} />

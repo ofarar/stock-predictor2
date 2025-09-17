@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast'; // 1. Import toast
 
 const PredictionForm = ({ selectedStock }) => {
     const [target, setTarget] = useState('');
@@ -80,7 +81,7 @@ const PredictionForm = ({ selectedStock }) => {
             predictionType,
         };
         axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
-            .then(res => alert('Prediction submitted successfully!'))
+            .then(res => toast.success('Prediction submitted successfully!'))
             .catch(err => console.error("Prediction submission error:", err));
     };
 

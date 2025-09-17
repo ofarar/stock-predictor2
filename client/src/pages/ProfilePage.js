@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import PerformanceChart from '../components/PerformanceChart';
+import toast from 'react-hot-toast'; // 1. Import toast
 
 // Helper component for the stat cards
 const StatCard = ({ label, value }) => (
@@ -97,7 +98,7 @@ const ProfilePage = () => {
                 // --- End: Update the local state ---
             })
             .catch(err => {
-                alert("Failed to follow user.");
+                toast.error("Failed to follow user.");
             });
     };
 
