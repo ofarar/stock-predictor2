@@ -21,8 +21,16 @@ const HomePage = ({ user }) => {
     useEffect(() => {
         const fetchAllData = async () => {
             try {
+                const settingsUrl = `${process.env.REACT_APP_API_URL}/api/settings`;
+                console.log("--- FRONTEND LOG: Fetching settings from URL: ---", settingsUrl); // Log A
+                const settingsRes = await axios.get(settingsUrl);
+
+                // Log the raw data we received
+                console.log("--- FRONTEND LOG: Received settings data: ---", settingsRes.data); // Log B
+
+                setSettings(settingsRes.data);
                 // Fetch all data in parallel for faster loading
-                const [settingsRes, hourlyRes, dailyRes, longTermRes, famousRes, communityRes] = await Promise.all([
+                const [hourlyRes, dailyRes, longTermRes, famousRes, communityRes] = await Promise.all([
                     axios.get(`${process.env.REACT_APP_API_URL}/api/settings`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),

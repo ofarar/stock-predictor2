@@ -13,10 +13,13 @@ const searchCache = new Map();
 
 // GET: A public route to fetch current settings
 router.get('/settings', async (req, res) => {
+    console.log("--- SERVER LOG: GET /api/settings route hit ---"); // Log 1
     try {
         const settings = await Setting.findOne(); // Get the single settings document
+        console.log("--- SERVER LOG: Found settings in DB: ---", settings); // Log 2
         res.json(settings);
     } catch (err) {
+        console.error("--- SERVER LOG: Error fetching settings: ---", err); // Log 3
         res.status(500).json({ message: 'Error fetching settings' });
     }
 });
