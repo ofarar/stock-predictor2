@@ -117,7 +117,7 @@ const ProfilePage = () => {
                         <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline">
                             <span className="font-bold text-white">{followersCount || 0}</span> Followers
                         </Link>
-                        <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline">
+                        <Link to={`/profile/${userId}/followers`}  state={{ activeTab: 'Following' }} className="text-sm text-gray-400 hover:underline">
                             <span className="font-bold text-white">{followingCount || 0}</span> Following
                         </Link>
                     </div>

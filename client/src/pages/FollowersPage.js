@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const FollowersPage = () => {
     const { userId } = useParams();
+    const location = useLocation();
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
-    const [activeTab, setActiveTab] = useState('Followers');
+    const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'Followers');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -36,22 +37,22 @@ const FollowersPage = () => {
     return (
         <div className="max-w-4xl mx-auto animate-fade-in">
             <h1 className="text-3xl font-bold text-white mb-6">Followers & Following</h1>
-            
+
             <div className="flex border-b border-gray-700 mb-6">
-                <button 
-                    onClick={() => setActiveTab('Followers')} 
+                <button
+                    onClick={() => setActiveTab('Followers')}
                     className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Followers' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}
                 >
                     Followers ({followers.length})
                 </button>
-                <button 
-                    onClick={() => setActiveTab('Following')} 
+                <button
+                    onClick={() => setActiveTab('Following')}
                     className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Following' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}
                 >
                     Following ({following.length})
                 </button>
             </div>
-            
+
             <div className="space-y-4">
                 {listToDisplay.length > 0 ? listToDisplay.map(user => (
                     <Link to={`/profile/${user._id}`} key={user._id} className="flex items-center bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-colors">
