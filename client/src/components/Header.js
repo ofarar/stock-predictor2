@@ -76,7 +76,7 @@ const Header = ({ user, onMakePredictionClick }) => {
     );
 
     return (
-        <nav className="bg-gray-900 text-white shadow-lg mb-8 sm:mb-12">
+        <nav className="bg-gray-900 text-white shadow-lg mb-2 sm:mb-6">
             <div className="container mx-auto px-4 sm:px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-8">

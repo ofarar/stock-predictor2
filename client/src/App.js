@@ -92,7 +92,7 @@ function App() {
           onClose={() => setIsLoginPromptOpen(false)}
         />
 
-        <main className="flex-grow container mx-auto px-4 sm:px-6 py-4">
+        <main className="flex-grow container mx-auto px-4 sm:px-6 pt-2 sm:pt-2 md:pt-0 pb-2 sm:pb-4">
            <PageSpecificContent />
           <Routes>
             <Route path="/" element={<HomePage user={user} />} />
