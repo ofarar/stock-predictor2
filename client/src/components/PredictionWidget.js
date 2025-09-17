@@ -138,11 +138,14 @@ const PredictionWidget = ({ onClose, initialStock }) => {
             .catch(err => setError('Could not fetch quote.'))
             .finally(() => setIsLoading(false));
     };
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!status.isOpen || !selectedStock) return;
-        
+        if (!status.isOpen || !selectedStock || !status.deadline) {
+            toast.error("Prediction window is closed or deadline is not set.");
+            return;
+        }
+
         const predictionData = {
             stockTicker: selectedStock.symbol,
             targetPrice: parseFloat(target),
@@ -152,11 +155,11 @@ const PredictionWidget = ({ onClose, initialStock }) => {
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
             .then(res => {
-                toast.success(`Prediction for ${selectedStock.symbol} submitted successfully!`);
+                toast.success(`Prediction for ${selectedStock.symbol} submitted!`);
                 onClose();
             })
             .catch(err => {
-                toast.error('Failed to submit prediction. You may need to log in.');
+                toast.error('Failed to submit prediction.');
                 onClose();
             });
     };
@@ -164,10 +167,10 @@ const PredictionWidget = ({ onClose, initialStock }) => {
     return (
         <div className="w-full">
             <h2 className="text-2xl font-bold text-white mb-4">Make a Prediction</h2>
-            
+
             {!initialStock && (
                 <div className="relative mb-4">
-                    <input 
+                    <input
                         type="text"
                         placeholder="Search for a stock (e.g., AAPL)"
                         value={searchTerm}
@@ -176,8 +179,8 @@ const PredictionWidget = ({ onClose, initialStock }) => {
                     />
                     {searchResults.length > 0 && (
                         <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
-                            {searchResults.map(result => (
-                                <li key={result.symbol} onClick={() => handleSelectStock(result.symbol)}
+                            {searchResults.map((result, index) => (
+                                <li key={`${result.symbol}-${index}`} onClick={() => handleSelectStock(result.symbol)}
                                     className="px-4 py-2 text-white hover:bg-green-500 cursor-pointer">
                                     {result.symbol} - {result.shortname}
                                 </li>
@@ -193,7 +196,7 @@ const PredictionWidget = ({ onClose, initialStock }) => {
             {selectedStock ? (
                 <div className="animate-fade-in">
                     <p className="text-center text-gray-400 mb-1">
-                        Predicting for <span className="font-bold text-white">{selectedStock.symbol}</span> | 
+                        Predicting for <span className="font-bold text-white">{selectedStock.symbol}</span> |
                         Current Price: <span className="font-semibold text-white ml-2">${currentPrice ? currentPrice.toFixed(2) : 'N/A'}</span>
                     </p>
                     <p className="text-center text-xs text-gray-500 mb-4">Data delayed up to 15 minutes</p>
@@ -213,17 +216,17 @@ const PredictionWidget = ({ onClose, initialStock }) => {
                     <form onSubmit={handleSubmit}>
                         <div>
                             <label className="block text-sm text-gray-300">Target Price for {selectedStock.symbol}</label>
-                            <input 
-                                type="number" 
-                                step="0.01" 
-                                value={target} 
+                            <input
+                                type="number"
+                                step="0.01"
+                                value={target}
                                 onChange={(e) => setTarget(e.target.value)}
                                 disabled={!status.isOpen}
-                                className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white disabled:opacity-50" 
+                                className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white disabled:opacity-50"
                             />
                         </div>
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             disabled={!status.isOpen}
                             className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed"
                         >

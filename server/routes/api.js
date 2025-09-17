@@ -66,32 +66,54 @@ router.get('/predictions/:ticker', async (req, res) => {
 });
 
 
-// In server/routes/api.js
-
-// In server/routes/api.js
-
 router.post('/predict', async (req, res) => {
-    // Check if a user is logged in from the session created by Passport.js
+    // Log the incoming data for debugging
+    console.log('Received prediction data:', req.body);
+
     if (!req.user) {
         return res.status(401).send('You must be logged in to make a prediction.');
     }
 
-    const { stockTicker, targetPrice, deadline, predictionType, rationale, confidence } = req.body;
+    const { stockTicker, targetPrice, deadline, predictionType } = req.body;
 
-    // Create the new prediction using the logged-in user's ID
+    // Server-side validation
+    if (!stockTicker || !targetPrice || !deadline || !predictionType) {
+        return res.status(400).json({ message: 'Missing required prediction fields.' });
+    }
+
+    // Create the new prediction document with all the data
     const prediction = new Prediction({
         userId: req.user._id,
         stockTicker,
         targetPrice,
         deadline,
-        predictionType,
-        rationale,
-        confidence
+        predictionType
     });
+    
     try {
         await prediction.save();
+
+        // --- Create Notifications for Followers ---
+        const user = await User.findById(req.user._id);
+        console.log(`User ${user.username} has ${user.followers.length} followers.`); 
+        const message = `${user.username} predicted ${stockTicker} will go to $${parseFloat(targetPrice).toFixed(2)}`;
+
+        const notifications = user.followers.map(followerId => ({
+            recipient: followerId,
+            sender: user._id,
+            type: 'NewPrediction',
+            message: message,
+            link: `/stock/${stockTicker}`
+        }));
+
+        if (notifications.length > 0) {
+            console.log(`Creating ${notifications.length} notifications...`);
+            await Notification.insertMany(notifications);
+        }
+
         res.status(201).json(prediction);
     } catch (err) {
+        console.error("Mongoose save error:", err.message);
         res.status(400).json({ message: err.message });
     }
 });
@@ -289,13 +311,39 @@ router.get('/stock/:ticker', async (req, res) => {
 });
 
 // Add this to api.js
+// In server/routes/api.js
+
 router.post('/users/:userId/follow', async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
-    // Add user to current user's following list
-    await User.findByIdAndUpdate(req.user._id, { $addToSet: { following: req.params.userId } });
-    // Add current user to the other user's followers list
-    await User.findByIdAndUpdate(req.params.userId, { $addToSet: { followers: req.user._id } });
-    res.status(200).send('Successfully followed user.');
+
+    const followedUserId = req.params.userId;
+    const currentUserId = req.user._id;
+
+    // Prevent users from following themselves
+    if (followedUserId === currentUserId.toString()) {
+        return res.status(400).send("You cannot follow yourself.");
+    }
+
+    try {
+        // Add user to current user's following list
+        await User.findByIdAndUpdate(currentUserId, { $addToSet: { following: followedUserId } });
+        // Add current user to the other user's followers list
+        await User.findByIdAndUpdate(followedUserId, { $addToSet: { followers: currentUserId } });
+
+        // --- Create a Notification for the user who was followed ---
+        await new Notification({
+            recipient: followedUserId,
+            sender: currentUserId,
+            type: 'NewFollower',
+            message: `${req.user.username} started following you.`,
+            link: `/profile/${currentUserId}`
+        }).save();
+        // ---------------------------------------------------------
+
+        res.status(200).send('Successfully followed user.');
+    } catch (error) {
+        res.status(500).json({ message: 'Error following user.' });
+    }
 });
 
 // Route to fetch notifications
