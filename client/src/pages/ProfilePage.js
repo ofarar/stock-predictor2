@@ -102,6 +102,22 @@ const ProfilePage = () => {
             });
     };
 
+    const handleUnfollow = () => {
+        axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/unfollow`, {}, { withCredentials: true })
+            .then(() => {
+                // Update the local state immediately for instant UI feedback
+                setCurrentUser(prevUser => ({
+                    ...prevUser,
+                    following: prevUser.following.filter(id => id !== userId)
+                }));
+                setProfileData(prevData => ({
+                    ...prevData,
+                    followersCount: prevData.followersCount - 1
+                }));
+            })
+            .catch(err => toast.error("Failed to unfollow user."));
+    };
+
     return (
         <div className="animate-fade-in max-w-6xl mx-auto">
             <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
@@ -117,7 +133,7 @@ const ProfilePage = () => {
                         <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline">
                             <span className="font-bold text-white">{followersCount || 0}</span> Followers
                         </Link>
-                        <Link to={`/profile/${userId}/followers`}  state={{ activeTab: 'Following' }} className="text-sm text-gray-400 hover:underline">
+                        <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Following' }} className="text-sm text-gray-400 hover:underline">
                             <span className="font-bold text-white">{followingCount || 0}</span> Following
                         </Link>
                     </div>
@@ -125,7 +141,12 @@ const ProfilePage = () => {
                 <div className="ml-auto mt-4 sm:mt-0">
                     {currentUser && !isOwnProfile && (
                         isFollowing ? (
-                            <button className="bg-gray-700 text-white font-bold py-2 px-4 rounded-md cursor-not-allowed">Following</button>
+                            <button
+                                onClick={handleUnfollow}
+                                className="bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-red-600 hover:border-red-500 border-2 border-gray-700 transition-colors"
+                            >
+                                Following
+                            </button>
                         ) : (
                             <button onClick={handleFollow} className="bg-blue-600 text-white font-bold py-2 px-4 rounded-md">Follow</button>
                         )
@@ -145,7 +166,7 @@ const ProfilePage = () => {
                 <div className="lg:col-span-2 space-y-8">
                     {/* Add the PerformanceChart component here */}
                     <PerformanceChart />
-                    
+
                     <PerformanceTabs performance={performance} />
                 </div>
                 <div className="lg:col-span-1">

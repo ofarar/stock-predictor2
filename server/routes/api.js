@@ -89,13 +89,13 @@ router.post('/predict', async (req, res) => {
         deadline,
         predictionType
     });
-    
+
     try {
         await prediction.save();
 
         // --- Create Notifications for Followers ---
         const user = await User.findById(req.user._id);
-        console.log(`User ${user.username} has ${user.followers.length} followers.`); 
+        console.log(`User ${user.username} has ${user.followers.length} followers.`);
         const message = `${user.username} predicted ${stockTicker} will go to $${parseFloat(targetPrice).toFixed(2)}`;
 
         const notifications = user.followers.map(followerId => ({
@@ -343,6 +343,25 @@ router.post('/users/:userId/follow', async (req, res) => {
         res.status(200).send('Successfully followed user.');
     } catch (error) {
         res.status(500).json({ message: 'Error following user.' });
+    }
+});
+
+router.post('/users/:userId/unfollow', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+
+    const unfollowedUserId = req.params.userId;
+    const currentUserId = req.user._id;
+
+    try {
+        // Use $pull to remove an item from an array in MongoDB
+        // Remove user from current user's "following" list
+        await User.findByIdAndUpdate(currentUserId, { $pull: { following: unfollowedUserId } });
+        // Remove current user from the other user's "followers" list
+        await User.findByIdAndUpdate(unfollowedUserId, { $pull: { followers: currentUserId } });
+
+        res.status(200).send('Successfully unfollowed user.');
+    } catch (error) {
+        res.status(500).json({ message: 'Error unfollowing user.' });
     }
 });
 
