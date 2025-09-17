@@ -11,4 +11,4 @@ const SettingSchema = new Schema({
     // isNewFeatureEnabled: { type: Boolean, default: false }
 });
 
-module.exports = mongoose.model('Setting', SettingSchema);
+module.exports = mongoose.model('Setting', SettingSchema, 'settings');
