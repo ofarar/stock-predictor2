@@ -58,18 +58,17 @@ const HomePage = ({ user }) => {
             {!user && settings?.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                
+
                 {/* Main Column */}
                 <div className="lg:col-span-2 flex flex-col gap-8">
                     {/* These items will appear first on mobile */}
                     <HourlyWinnersFeed winners={widgetData.hourlyWinners} />
                     <DailyLeaderboard leaders={widgetData.dailyLeaders} />
 
-                    {/* This item will be moved to the end on mobile screens */}
-                    <CommunityFeed 
-                        feedItems={widgetData.communityFeed} 
-                        className="order-last lg:order-none" 
-                    />
+                    {/* Desktop CommunityFeed */}
+                    <div className="hidden lg:block mt-8">
+                        <CommunityFeed feedItems={widgetData.communityFeed} />
+                    </div>
                 </div>
 
                 {/* Sidebar Column */}
@@ -77,6 +76,10 @@ const HomePage = ({ user }) => {
                     <FamousStocks stocks={widgetData.famousStocks} />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} />
                 </div>
+            </div>
+            {/* Mobile CommunityFeed */}
+            <div className="lg:hidden">
+                <CommunityFeed feedItems={widgetData.communityFeed} />
             </div>
         </div>
     );
