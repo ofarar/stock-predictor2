@@ -96,7 +96,7 @@ router.post('/predict', async (req, res) => {
         // --- Create Notifications for Followers ---
         const user = await User.findById(req.user._id);
         console.log(`User ${user.username} has ${user.followers.length} followers.`);
-        const message = `${user.username} predicted ${stockTicker} will go to $${parseFloat(targetPrice).toFixed(2)}`;
+        const message = `${user.username} made a new ${predictionType} prediction on ${stockTicker} to reach $${parseFloat(targetPrice).toFixed(2)}`;
 
         const notifications = user.followers.map(followerId => ({
             recipient: followerId,
