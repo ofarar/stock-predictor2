@@ -7,14 +7,15 @@ const PromoBanner = () => {
         return null;
     }
 
-    // Construct the full, dynamic URL for the login link
+    // This creates the dynamic URL
     const loginUrl = `${process.env.REACT_APP_API_URL}/auth/google`;
 
     return (
-        <div className="bg-green-800 bg-opacity-50 text-center p-3 rounded-lg mb-8 relative animate-fade-in">
+        <div className="bg-blue-800 bg-opacity-50 text-center p-3 rounded-lg mb-8 relative">
             <p className="text-white">
                 🎉 **Launch Offer:** Sign up now for free lifetime access. This offer is for a limited time! 
-                <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="font-bold underline hover:text-blue-300 ml-2">
+                {/* Use the loginUrl variable here */}
+                <a href={loginUrl} className="font-bold underline hover:text-blue-300 ml-2">
                     Join Now
                 </a>
             </p>

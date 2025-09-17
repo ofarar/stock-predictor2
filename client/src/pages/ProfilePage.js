@@ -142,7 +142,10 @@ const ProfilePage = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 space-y-8">
+                    {/* Add the PerformanceChart component here */}
+                    <PerformanceChart />
+                    
                     <PerformanceTabs performance={performance} />
                 </div>
                 <div className="lg:col-span-1">
