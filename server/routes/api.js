@@ -493,4 +493,24 @@ router.get('/users/:userId/follow-data', async (req, res) => {
     }
 });
 
+router.get('/stock/:ticker/historical', async (req, res) => {
+    const { ticker } = req.params;
+
+    try {
+        // Get the date from 90 days ago
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 90);
+
+        // Fetch historical data using the yahoo-finance2 library
+        const result = await yahooFinance.historical(ticker, {
+            period1: startDate,
+        });
+
+        res.json(result);
+    } catch (error) {
+        console.error(`Yahoo Finance historical error for ${ticker}:`, error.message);
+        res.status(500).json({ message: "Error fetching historical data" });
+    }
+});
+
 module.exports = router;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import StockChart from '../components/StockChart';
 
 const StockPage = ({ onPredictClick }) => {
     const { ticker } = useParams();
@@ -47,7 +48,7 @@ const StockPage = ({ onPredictClick }) => {
                         </p>
                     </div>
                 </div>
-                <button 
+                <button
                     onClick={() => onPredictClick(quote)}
                     className="bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition-transform hover:scale-105"
                 >
@@ -67,7 +68,7 @@ const StockPage = ({ onPredictClick }) => {
                     </div>
                     <div className="space-y-3">
                         {topPredictors && topPredictors.length > 0 ? topPredictors.map((user, index) => (
-                             <Link to={`/profile/${user._id}`} key={user._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                            <Link to={`/profile/${user._id}`} key={user._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
                                 <span className="font-bold w-8 text-gray-400">{index + 1}</span>
                                 <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className="w-8 h-8 rounded-full" />
                                 <span className="font-semibold text-white ml-3">{user.username}</span>
@@ -79,8 +80,9 @@ const StockPage = ({ onPredictClick }) => {
                     </div>
                 </div>
                 {/* Sidebar for Chart */}
-                <div className="lg:col-span-1 bg-gray-800 p-6 rounded-lg h-96 flex items-center justify-center">
-                    <p className="text-gray-500">Stock Chart Placeholder</p>
+                <div className="lg:col-span-1">
+                    {/* 2. Replace the placeholder with the real chart */}
+                    <StockChart ticker={ticker} />
                 </div>
             </div>
         </div>
