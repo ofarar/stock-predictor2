@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 
@@ -9,6 +9,7 @@ import Header from './components/Header';
 import PredictionModal from './components/PredictionModal';
 import LoginPromptModal from './components/LoginPromptModal';
 import Footer from './components/Footer';
+import Aim from './components/Aim';
 
 // Import Pages
 import HomePage from './pages/HomePage';
@@ -22,6 +23,18 @@ import AboutPage from './pages/AboutPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import AdminPage from './pages/AdminPage';
+
+// A small helper component to handle the conditional rendering
+const PageSpecificContent = () => {
+  const location = useLocation();
+  // We get the user prop if needed for other conditional components
+  // For now, just checking the path
+  return (
+    <>
+      {location.pathname === '/' && <Aim />}
+    </>
+  );
+};
 
 function App() {
   const [user, setUser] = useState(null);
@@ -80,6 +93,7 @@ function App() {
         />
 
         <main className="flex-grow container mx-auto px-4 sm:px-6 py-4">
+           <PageSpecificContent />
           <Routes>
             <Route path="/" element={<HomePage user={user} />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Logo from './Logo';
-import GlobalSearch from './GlobalSearch'; 
+import GlobalSearch from './GlobalSearch';
 
 const Header = ({ user, onMakePredictionClick }) => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -106,26 +106,43 @@ const Header = ({ user, onMakePredictionClick }) => {
                             )}
                         </div>
                         {/* --- Mobile Menu Buttons --- */}
-                        <div className="md:hidden flex items-center">
-                            {user && <NotificationBell />} {/* Add the bell for logged-in users */}
+                        <div className="md:hidden flex items-center gap-2">
+                            {/* The "Make a Prediction" button is now here for mobile */}
+                            {user && (
+                                <button onClick={() => onMakePredictionClick(null)} className="p-2">
+                                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                </button>
+                            )}
+                            {user && <NotificationBell />}
+                            {/* Hamburger / Close icon */}
                             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
-                                 {isMobileMenuOpen 
-                                    ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> 
-                                    : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>}
+                                {isMobileMenuOpen ? (
+                                    // Green cross when menu is open
+                                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                ) : (
+                                    // Hamburger when menu is closed
+                                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                )}
                             </button>
+
+
                         </div>
+                    </div>
+                </div>
+
+                {/* <---- PLACE MOBILE CENTERED SEARCH HERE ----> */}
+                <div className="md:hidden flex justify-center mt-2 w-full">
+                    <div className="w-full px-4 sm:px-6 max-w-md">
+                        <GlobalSearch />
                     </div>
                 </div>
 
                 {isMobileMenuOpen && (
                     <div className="md:hidden mt-4">
-                        <div className="mb-4">
-                            <GlobalSearch />
-                        </div>
-                        <button onClick={() => onMakePredictionClick(null)} className="w-full mb-2 bg-green-500 text-white font-semibold px-4 py-3 rounded-md flex items-center justify-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                            Make a Prediction
-                        </button>
                         <Link to="/scoreboard" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Scoreboard</Link>
                         {user && <Link to={`/profile/${user._id}`} className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">My Profile</Link>}
                         {user && user.isAdmin && <Link to="/admin" className="block py-2 px-4 text-sm text-yellow-400 hover:bg-gray-700 rounded">Admin Panel</Link>}
