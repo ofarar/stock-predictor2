@@ -42,12 +42,59 @@ router.put('/settings/admin', async (req, res) => {
 // Original Prediction & User Routes
 // ===================================
 
-// Get Scoreboard Data (Top Users)
+// GET: Scoreboard Data (Top Users) - Timeframe logic removed
 router.get('/scoreboard', async (req, res) => {
     try {
-        const topUsers = await User.find().sort({ score: -1 }).limit(20);
+        // 'timeframe' is no longer expected from req.query
+        const { predictionType = 'Overall', stock = '' } = req.query;
+
+        const predictionMatch = { status: 'Assessed' };
+
+        if (predictionType !== 'Overall') {
+            predictionMatch.predictionType = predictionType;
+        }
+        if (stock) {
+            predictionMatch.stockTicker = stock.toUpperCase();
+        }
+
+        // Timeframe filtering logic has been completely removed
+
+        // The aggregation pipeline remains the same
+        const topUsers = await Prediction.aggregate([
+            { $match: predictionMatch },
+            {
+                $group: {
+                    _id: '$userId',
+                    avgScore: { $avg: '$score' },
+                    predictionCount: { $sum: 1 }
+                }
+            },
+            { $sort: { avgScore: -1 } },
+            { $limit: 20 },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'userDetails'
+                }
+            },
+            { $unwind: '$userDetails' },
+            {
+                $project: {
+                    _id: '$userDetails._id',
+                    username: '$userDetails.username',
+                    avatar: '$userDetails.avatar',
+                    isGoldenMember: '$userDetails.isGoldenMember',
+                    avgScore: { $round: ['$avgScore', 1] },
+                    predictionCount: 1
+                }
+            }
+        ]);
+
         res.json(topUsers);
     } catch (err) {
+        console.error("Scoreboard error:", err);
         res.status(500).json({ message: err.message });
     }
 });
@@ -163,6 +210,7 @@ router.get('/my-predictions', async (req, res) => {
 });
 
 // GET a user's public profile data (UPDATED WITH NEW ACCURACY LOGIC)
+// GET a user's public profile data (UPDATED WITH 1-DIGIT FLOAT)
 router.get('/profile/:userId', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId).select('-googleId');
@@ -178,11 +226,13 @@ router.get('/profile/:userId', async (req, res) => {
         // 1. Real Overall Rank
         const overallRank = (await User.countDocuments({ score: { $gt: user.score } })) + 1;
 
-        // 2. NEW: Overall Accuracy is now Average Score
+        // 2. NEW: Overall Accuracy is now Average Score with one decimal
         const totalScore = assessedPredictions.reduce((sum, p) => sum + p.score, 0);
-        const overallAccuracy = assessedPredictions.length > 0
-            ? Math.round(totalScore / assessedPredictions.length)
-            : 0;
+        let overallAccuracy = 0;
+        if (assessedPredictions.length > 0) {
+            // Multiply by 10, round, then divide by 10 to keep one decimal place
+            overallAccuracy = Math.round((totalScore / assessedPredictions.length) * 10) / 10;
+        }
 
         // 3. Performance by Type (with personal ranking and avg score)
         const performanceByType = assessedPredictions.reduce((acc, p) => {
@@ -219,7 +269,7 @@ router.get('/profile/:userId', async (req, res) => {
         // 5. Final Performance Object
         const performance = {
             overallRank: `#${overallRank}`,
-            overallAccuracy: overallAccuracy, // This is now average score
+            overallAccuracy: overallAccuracy, // This will now be a float like 78.5
             byType: formattedPerfByType,
             byStock: formattedPerfByStock
         };
@@ -506,9 +556,9 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
                 { $match: { userId: { $in: userIds }, status: 'Assessed' } },
                 { $group: { _id: '$userId', avgScore: { $avg: '$score' } } }
             ]);
-            
+
             const scoresMap = new Map(results.map(r => [r._id.toString(), Math.round(r.avgScore)]));
-            
+
             return userList.map(u => ({
                 ...u.toObject(),
                 avgScore: scoresMap.get(u._id.toString()) || 0
