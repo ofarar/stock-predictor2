@@ -9,9 +9,15 @@ const CommunityFeed = ({ feedItems = [], className = '' }) => (
         </div>
         <div className="space-y-4">
             {feedItems.length > 0 ? feedItems.map(item => (
-                // Each item is now a clickable link to its detail page
-                <Link to={`/prediction/${item.id}`} key={item.id} className="block text-sm text-gray-300 border-l-2 border-green-500 pl-3 hover:bg-gray-700 rounded-r-md transition-colors">
-                    {item.text}
+                <Link to={`/prediction/${item.id}`} key={item.id} className="flex items-center p-2 hover:bg-gray-700 rounded-md transition-colors">
+                    <img 
+                        src={item.user.avatar || `https://avatar.iran.liara.run/public/boy?username=${item.user.id}`}
+                        alt="avatar"
+                        className={`w-8 h-8 rounded-full border-2 ${item.user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                    />
+                    <span className="text-sm text-gray-300 ml-3">
+                        {item.text}
+                    </span>
                 </Link>
             )) : <p className="text-gray-500 text-center py-4">No recent predictions.</p>}
         </div>

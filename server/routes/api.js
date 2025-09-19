@@ -436,7 +436,6 @@ router.get('/notifications', async (req, res) => {
     res.json(notifications);
 });
 
-// In server/routes/api.js
 
 router.get('/widgets/hourly-winners', async (req, res) => {
     try {
@@ -448,13 +447,15 @@ router.get('/widgets/hourly-winners', async (req, res) => {
         })
             .sort({ score: -1 })
             .limit(3)
-            .populate('userId', 'username');
+            // UPDATED: Populate more user fields
+            .populate('userId', 'username avatar isGoldenMember');
 
-        // Format the data for the frontend
         const formattedWinners = winners.map(p => ({
-            predictionId: p._id, // Add the unique prediction ID here
+            predictionId: p._id,
             userId: p.userId._id,
             username: p.userId.username,
+            avatar: p.userId.avatar, // Add avatar
+            isGoldenMember: p.userId.isGoldenMember, // Add golden status
             ticker: p.stockTicker,
             score: p.score
         }));
@@ -465,10 +466,8 @@ router.get('/widgets/hourly-winners', async (req, res) => {
     }
 });
 
-// GET Today's Top Performers
+// GET Today's Top Performers - UPDATED
 router.get('/widgets/daily-leaders', async (req, res) => {
-    // This is complex logic: it finds today's predictions, groups them by user,
-    // calculates the average score for each user, and returns the top 3.
     try {
         const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
@@ -480,15 +479,23 @@ router.get('/widgets/daily-leaders', async (req, res) => {
             { $limit: 3 },
             { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
             { $unwind: '$user' },
-            { $project: { userId: '$_id', username: '$user.username', avgScore: 1, _id: 0 } }
+            {
+                $project: {
+                    userId: '$_id',
+                    username: '$user.username',
+                    avgScore: 1,
+                    avatar: '$user.avatar',                 // Add avatar
+                    isGoldenMember: '$user.isGoldenMember', // Add golden status
+                    _id: 0
+                }
+            }
         ]);
         res.json(leaders);
     } catch (err) { res.status(500).json({ message: 'Error fetching daily leaders' }); }
 });
 
-// GET Long-Term Leaders
+// GET Long-Term Leaders - UPDATED
 router.get('/widgets/long-term-leaders', async (req, res) => {
-    // This logic finds the top 3 users with the highest average score on 'Yearly' predictions.
     try {
         const leaders = await Prediction.aggregate([
             { $match: { predictionType: 'Yearly', status: 'Assessed' } },
@@ -497,7 +504,16 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
             { $limit: 3 },
             { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
             { $unwind: '$user' },
-            { $project: { userId: '$_id', username: '$user.username', accuracy: { $round: ['$accuracy', 0] }, _id: 0 } }
+            {
+                $project: {
+                    userId: '$_id',
+                    username: '$user.username',
+                    accuracy: { $round: ['$accuracy', 0] },
+                    avatar: '$user.avatar',                 // Add avatar
+                    isGoldenMember: '$user.isGoldenMember', // Add golden status
+                    _id: 0
+                }
+            }
         ]);
         res.json(leaders);
     } catch (err) { res.status(500).json({ message: 'Error fetching long-term leaders' }); }
@@ -520,21 +536,29 @@ router.get('/widgets/famous-stocks', async (req, res) => {
     } catch (err) { res.status(500).json({ message: 'Error fetching famous stocks' }); }
 });
 
-// GET Community Feed (most recent predictions)
+// GET Community Feed (most recent predictions) - UPDATED
 router.get('/widgets/community-feed', async (req, res) => {
     try {
         const predictions = await Prediction.find({ status: 'Active' })
             .sort({ createdAt: -1 })
             .limit(5)
-            .populate('userId', 'username');
+            // Populate avatar and golden status
+            .populate('userId', 'username avatar isGoldenMember');
 
         const feed = predictions.map(p => ({
             id: p._id,
-            text: `${p.userId.username} made a new ${p.predictionType} prediction on ${p.stockTicker}`
+            // Update text to be more detailed and consistent with notifications
+            text: `${p.userId.username} predicted ${p.stockTicker} to reach $${p.targetPrice.toFixed(2)}`,
+            user: {
+                id: p.userId._id,
+                avatar: p.userId.avatar,
+                isGoldenMember: p.userId.isGoldenMember
+            }
         }));
         res.json(feed);
     } catch (err) { res.status(500).json({ message: 'Error fetching community feed' }); }
 });
+
 
 // NEW Extended Follow/Subscription Data Endpoint
 router.get('/users/:userId/follow-data-extended', async (req, res) => {
