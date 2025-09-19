@@ -1,24 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { format } from 'date-fns'; // 'subDays' and 'subMonths' removed
 
-const PerformanceChart = () => {
-    const [chartFilter, setChartFilter] = useState('Daily');
-    const types = ['Hourly', 'Daily', 'Weekly', 'Quarterly', 'Yearly'];
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+
+const PerformanceChart = ({ chartData = [] }) => {
+    const [filter, setFilter] = useState('Overall');
+    const navigate = useNavigate();
+    const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
+
+    const filteredAndFormattedData = useMemo(() => {
+        // 'now' variable removed from here
+        let dataPoints = chartData;
+
+        // Filter by prediction type if not 'Overall'
+        if (filter !== 'Overall') {
+            dataPoints = chartData.filter(p => p.predictionType === filter);
+        }
+
+        // Aggregate data by day for a cleaner chart
+        const dailyScores = dataPoints.reduce((acc, p) => {
+            const day = format(new Date(p.createdAt), 'yyyy-MM-dd');
+            if (!acc[day]) {
+                acc[day] = { totalScore: 0, count: 0, predictions: [] };
+            }
+            acc[day].totalScore += p.score;
+            acc[day].count++;
+            acc[day].predictions.push(p.id); // Store IDs for linking
+            return acc;
+        }, {});
+
+        const labels = Object.keys(dailyScores).sort();
+        const data = labels.map(label => dailyScores[label].totalScore / dailyScores[label].count);
+        const predictionIds = labels.map(label => dailyScores[label].predictions);
+
+        return { labels, datasets: [{ data, predictionIds }] };
+    }, [chartData, filter]);
+
+
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { ticks: { color: '#9ca3af', maxTicksLimit: 10 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, min: 0, max: 100 }
+        },
+        elements: {
+            line: {
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                fill: true,
+                tension: 0.3,
+            },
+            point: {
+                radius: 4,
+                hoverRadius: 6,
+                backgroundColor: '#22c55e',
+            }
+        },
+        onClick: (event, elements) => {
+            if (elements.length > 0) {
+                const elementIndex = elements[0].index;
+                const predictionId = filteredAndFormattedData.datasets[0].predictionIds[elementIndex][0];
+                if (predictionId) {
+                    navigate(`/prediction/${predictionId}`);
+                }
+            }
+        },
+        onHover: (event, chartElement) => {
+            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+        }
+    };
 
     return (
-        <div className="bg-gray-800 p-6 rounded-lg">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-white">Performance Chart</h3>
-                <div className="flex space-x-1 bg-gray-700 p-1 rounded-md">
+        <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                <h3 className="text-xl font-bold text-white mb-3 sm:mb-0">Performance Chart</h3>
+                <div className="flex flex-wrap gap-1 bg-gray-700 p-1 rounded-md">
                     {types.map(type => (
-                        <button key={type} onClick={() => setChartFilter(type)} 
-                            className={`px-2 py-1 text-xs rounded ${chartFilter === type ? 'bg-green-500' : ''}`}>
+                        <button key={type} onClick={() => setFilter(type)}
+                            className={`px-3 py-1 text-xs font-bold rounded transition-colors ${filter === type ? 'bg-green-500 text-white' : 'hover:bg-gray-600 text-gray-300'}`}>
                             {type}
                         </button>
                     ))}
                 </div>
             </div>
-            <div className="h-64 flex items-center justify-center text-gray-500">
-                Chart Placeholder
+            <div className="h-64">
+                {filteredAndFormattedData.labels.length > 0 ? (
+                    <Line options={options} data={filteredAndFormattedData} />
+                ) : (
+                    <div className="h-full flex items-center justify-center text-gray-500">No performance data for this filter.</div>
+                )}
             </div>
         </div>
     );

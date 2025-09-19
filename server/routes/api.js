@@ -162,9 +162,7 @@ router.get('/my-predictions', async (req, res) => {
     }
 });
 
-
-// Get a user's public profile data
-
+// GET a user's public profile data (UPDATED WITH NEW ACCURACY LOGIC)
 router.get('/profile/:userId', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId).select('-googleId');
@@ -172,73 +170,107 @@ router.get('/profile/:userId', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const predictions = await Prediction.find({ userId: req.params.userId });
+        const predictions = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
 
-        // --- Start Calculating Performance Stats ---
+        // --- Start Calculating REAL Performance Stats ---
 
-        // Overall Stats
-        const successfulPredictions = assessedPredictions.filter(p => p.score > 60).length;
-        const overallAccuracy = assessedPredictions.length > 0 ? (successfulPredictions / assessedPredictions.length) * 100 : 0;
+        // 1. Real Overall Rank
+        const overallRank = (await User.countDocuments({ score: { $gt: user.score } })) + 1;
 
-        // Performance by Type
+        // 2. NEW: Overall Accuracy is now Average Score
+        const totalScore = assessedPredictions.reduce((sum, p) => sum + p.score, 0);
+        const overallAccuracy = assessedPredictions.length > 0
+            ? Math.round(totalScore / assessedPredictions.length)
+            : 0;
+
+        // 3. Performance by Type (with personal ranking and avg score)
         const performanceByType = assessedPredictions.reduce((acc, p) => {
             if (!acc[p.predictionType]) {
-                acc[p.predictionType] = { total: 0, successful: 0 };
+                acc[p.predictionType] = { total: 0, totalScore: 0 };
             }
             acc[p.predictionType].total++;
-            if (p.score > 60) acc[p.predictionType].successful++;
+            acc[p.predictionType].totalScore += p.score;
             return acc;
         }, {});
 
-        // Performance by Stock
-        const performanceByStock = assessedPredictions.reduce((acc, p) => {
-            if (!acc[p.stockTicker]) {
-                acc[p.stockTicker] = { total: 0, successful: 0, totalPoints: 0 };
-            }
-            acc[p.stockTicker].total++;
-            acc[p.stockTicker].totalPoints += p.score;
-            if (p.score > 60) acc[p.stockTicker].successful++;
-            return acc;
-        }, {});
-
-        // --- Format Data for Frontend ---
         const formattedPerfByType = Object.entries(performanceByType).map(([type, data]) => ({
             type,
-            accuracy: `${Math.round((data.successful / data.total) * 100)}%`,
-            rank: `#${Math.floor(Math.random() * 20) + 1}` // Placeholder for rank
-        }));
+            accuracy: Math.round(data.totalScore / data.total), // This is now average score
+        })).sort((a, b) => b.accuracy - a.accuracy) // Sort by best average score
+            .map((item, index) => ({ ...item, rank: index + 1 })); // Assign rank
+
+        // 4. Performance by Stock (with personal ranking and avg score)
+        const performanceByStock = assessedPredictions.reduce((acc, p) => {
+            if (!acc[p.stockTicker]) {
+                acc[p.stockTicker] = { total: 0, totalScore: 0 };
+            }
+            acc[p.stockTicker].total++;
+            acc[p.stockTicker].totalScore += p.score;
+            return acc;
+        }, {});
 
         const formattedPerfByStock = Object.entries(performanceByStock).map(([ticker, data]) => ({
             ticker,
-            accuracy: `${Math.round((data.successful / data.total) * 100)}%`,
-            rank: `#${Math.floor(Math.random() * 10) + 1}`, // Placeholder for rank
-            totalPoints: data.totalPoints
-        }));
+            accuracy: Math.round(data.totalScore / data.total), // This is now average score
+        })).sort((a, b) => b.accuracy - a.accuracy) // Sort by best average score
+            .map((item, index) => ({ ...item, rank: index + 1 })); // Assign rank
 
+        // 5. Final Performance Object
         const performance = {
-            overallRank: `#${Math.floor(Math.random() * 50) + 1}`, // Placeholder for rank
-            overallAccuracy: Math.round(overallAccuracy),
+            overallRank: `#${overallRank}`,
+            overallAccuracy: overallAccuracy, // This is now average score
             byType: formattedPerfByType,
             byStock: formattedPerfByStock
         };
 
+        const chartData = assessedPredictions.map(p => ({
+            id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
+        }));
+
+        // NEW: Add golden member counts to the main payload
         res.json({
             user,
             predictions,
             performance,
+            chartData,
             followersCount: user.followers.length,
-            followingCount: user.following.length
+            followingCount: user.following.length,
+            goldenSubscribersCount: user.goldenSubscribers?.length || 0,
+            goldenSubscriptionsCount: user.goldenSubscriptions?.length || 0,
         });
 
     } catch (err) {
+        console.error("Error fetching profile:", err);
         res.status(500).json({ message: err.message });
     }
 });
 
-// In server/routes/api.js
 
-// In server/routes/api.js
+// --- NEW ROUTE for Golden Member Settings ---
+router.put('/profile/golden-member', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).send('You must be logged in.');
+    }
+
+    try {
+        const { isGoldenMember, price, description } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                isGoldenMember,
+                goldenMemberPrice: price,
+                goldenMemberDescription: description
+            },
+            { new: true, runValidators: true }
+        );
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
 
 router.put('/profile', async (req, res) => {
     if (!req.user) {
@@ -360,17 +392,17 @@ router.get('/widgets/hourly-winners', async (req, res) => {
     try {
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
-        // Find predictions assessed in the last hour, sort by score, take top 3
         const winners = await Prediction.find({
             status: 'Assessed',
-            updatedAt: { $gte: oneHourAgo } // Check when it was assessed
+            updatedAt: { $gte: oneHourAgo }
         })
             .sort({ score: -1 })
             .limit(3)
-            .populate('userId', 'username'); // Get user info
+            .populate('userId', 'username');
 
         // Format the data for the frontend
         const formattedWinners = winners.map(p => ({
+            predictionId: p._id, // Add the unique prediction ID here
             userId: p.userId._id,
             username: p.userId.username,
             ticker: p.stockTicker,
@@ -454,24 +486,49 @@ router.get('/widgets/community-feed', async (req, res) => {
     } catch (err) { res.status(500).json({ message: 'Error fetching community feed' }); }
 });
 
-router.get('/users/:userId/follow-data', async (req, res) => {
+// NEW Extended Follow/Subscription Data Endpoint
+router.get('/users/:userId/follow-data-extended', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId)
-            .populate('followers', 'username avatar about') // Select fields to return for followers
-            .populate('following', 'username avatar about'); // Select fields for following
+            .populate('followers', 'username avatar about isGoldenMember')
+            .populate('following', 'username avatar about isGoldenMember')
+            .populate('goldenSubscribers', 'username avatar about isGoldenMember')
+            .populate('goldenSubscriptions', 'username avatar about isGoldenMember');
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Helper to get average scores for a list of users
+        const getScoresForUsers = async (userList) => {
+            const userIds = userList.map(u => u._id);
+            const results = await Prediction.aggregate([
+                { $match: { userId: { $in: userIds }, status: 'Assessed' } },
+                { $group: { _id: '$userId', avgScore: { $avg: '$score' } } }
+            ]);
+            
+            const scoresMap = new Map(results.map(r => [r._id.toString(), Math.round(r.avgScore)]));
+            
+            return userList.map(u => ({
+                ...u.toObject(),
+                avgScore: scoresMap.get(u._id.toString()) || 0
+            }));
+        };
+
         res.json({
-            followers: user.followers,
-            following: user.following
+            profileUser: { username: user.username, isGoldenMember: user.isGoldenMember },
+            followers: await getScoresForUsers(user.followers),
+            following: await getScoresForUsers(user.following),
+            goldenSubscribers: await getScoresForUsers(user.goldenSubscribers),
+            goldenSubscriptions: await getScoresForUsers(user.goldenSubscriptions)
         });
     } catch (err) {
+        console.error("Error fetching extended follow data:", err);
         res.status(500).json({ message: "Server error" });
     }
 });
+
+
 
 router.get('/stock/:ticker/historical', async (req, res) => {
     const { ticker } = req.params;
@@ -523,6 +580,49 @@ router.post('/notifications/mark-read', async (req, res) => {
         res.status(500).json({ message: 'Error updating notifications' });
     }
 });
+
+// POST: Join a golden member's subscription
+router.post('/users/:userId/join-golden', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+
+    const goldenMemberId = req.params.userId;
+    const currentUserId = req.user._id;
+
+    if (goldenMemberId === currentUserId.toString()) {
+        return res.status(400).send("You cannot subscribe to yourself.");
+    }
+
+    try {
+        // Add current user to the golden member's subscriber list
+        await User.findByIdAndUpdate(goldenMemberId, { $addToSet: { goldenSubscribers: currentUserId } });
+        // Add golden member to the current user's subscription list
+        await User.findByIdAndUpdate(currentUserId, { $addToSet: { goldenSubscriptions: goldenMemberId } });
+
+        res.status(200).send('Successfully joined golden member subscription.');
+    } catch (error) {
+        res.status(500).json({ message: 'Error joining subscription.' });
+    }
+});
+
+// POST: Cancel a golden member's subscription
+router.post('/users/:userId/cancel-golden', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+
+    const goldenMemberId = req.params.userId;
+    const currentUserId = req.user._id;
+
+    try {
+        // Remove current user from the golden member's subscriber list
+        await User.findByIdAndUpdate(goldenMemberId, { $pull: { goldenSubscribers: currentUserId } });
+        // Remove golden member from the current user's subscription list
+        await User.findByIdAndUpdate(currentUserId, { $pull: { goldenSubscriptions: goldenMemberId } });
+
+        res.status(200).send('Successfully canceled subscription.');
+    } catch (error) {
+        res.status(500).json({ message: 'Error canceling subscription.' });
+    }
+});
+
 
 
 module.exports = router;

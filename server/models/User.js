@@ -13,6 +13,12 @@ const UserSchema = new Schema({
     score: { type: Number, default: 0, index: true },
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-}, { timestamps: true }); // Automatically adds createdAt and updatedAt
+    isGoldenMember: { type: Boolean, default: false },
+    goldenMemberPrice: { type: Number, default: 5 },
+    goldenMemberDescription: { type: String, maxLength: 300 },
+    // --- New Subscription Fields ---
+    goldenSubscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }], // People who joined me
+    goldenSubscriptions: [{ type: Schema.Types.ObjectId, ref: 'User' }] // Golden members I joined
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

@@ -82,6 +82,7 @@ const runAssessmentJob = async () => {
             // Update Prediction
             prediction.status = 'Assessed';
             prediction.score = score;
+            prediction.actualPrice = actualPrice; // <-- THE FIX: SAVE THE ACTUAL PRICE
             await prediction.save();
 
             // Update User's Total Score

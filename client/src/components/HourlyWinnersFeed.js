@@ -45,7 +45,8 @@ const HourlyWinnersFeed = ({ winners = [] }) => {
             </div>
             <div className="space-y-3">
                 {winners.length > 0 ? winners.map(winner => (
-                    <div key={winner.userId} className="flex justify-between items-center bg-gray-700 p-2 rounded-lg">
+                    // Use the unique predictionId for the key instead of userId
+                    <div key={winner.predictionId} className="flex justify-between items-center bg-gray-700 p-2 rounded-lg">
                         <Link to={`/profile/${winner.userId}`} className="font-semibold text-white hover:underline">{winner.username}</Link>
                         <Link to={`/stock/${winner.ticker}`} className="text-sm text-gray-400 hover:underline">{winner.ticker}</Link>
                         <span className="font-bold text-green-400">+{winner.score} pts</span>
