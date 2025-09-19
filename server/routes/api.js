@@ -65,9 +65,6 @@ router.get('/predictions/:ticker', async (req, res) => {
     }
 });
 
-
-const yahooFinance = require('yahoo-finance2').default; // Make sure this is imported
-
 router.post('/predict', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
