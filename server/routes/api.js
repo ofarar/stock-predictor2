@@ -112,6 +112,7 @@ router.get('/predictions/:ticker', async (req, res) => {
     }
 });
 
+// This route handles creating new predictions and sending notifications
 router.post('/predict', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
@@ -119,28 +120,40 @@ router.post('/predict', async (req, res) => {
     try {
         const quote = await yahooFinance.quote(stockTicker);
         const currentPrice = quote.regularMarketPrice;
-        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
 
-        const prediction = new Prediction({ /* ... prediction data ... */ });
+        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
+        const directionText = targetPrice >= currentPrice ? 'increase to' : 'decrease to';
+        const formattedPercentage = `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%`;
+
+        const prediction = new Prediction({
+            userId: req.user._id,
+            stockTicker,
+            targetPrice,
+            deadline,
+            predictionType,
+            status: 'Active'
+        });
         await prediction.save();
 
         const user = await User.findById(req.user._id);
 
-        // New, richer message
-        const message = `${user.username} made a ${predictionType} prediction on ${stockTicker} to reach $${targetPrice.toFixed(2)} (${percentageChange.toFixed(2)}%)`;
+        // UPDATED: The message is now split into two parts for styling
+        const mainMessage = `${user.username} predicted ${stockTicker} will ${directionText} $${targetPrice.toFixed(2)}`;
 
         const notifications = user.followers.map(followerId => ({
             recipient: followerId,
             sender: user._id,
             type: 'NewPrediction',
-            message: message,
-            link: `/prediction/${prediction._id}` // Link to prediction detail page
+            message: mainMessage, // The main text
+            metadata: { percentage: formattedPercentage }, // The part to be colored
+            link: `/prediction/${prediction._id}`
         }));
 
         if (notifications.length > 0) await Notification.insertMany(notifications);
 
         res.status(201).json(prediction);
     } catch (err) {
+        console.error("Prediction error:", err);
         res.status(400).json({ message: err.message });
     }
 });
@@ -542,21 +555,42 @@ router.get('/widgets/community-feed', async (req, res) => {
         const predictions = await Prediction.find({ status: 'Active' })
             .sort({ createdAt: -1 })
             .limit(5)
-            // Populate avatar and golden status
             .populate('userId', 'username avatar isGoldenMember');
 
-        const feed = predictions.map(p => ({
-            id: p._id,
-            // Update text to be more detailed and consistent with notifications
-            text: `${p.userId.username} predicted ${p.stockTicker} to reach $${p.targetPrice.toFixed(2)}`,
-            user: {
-                id: p.userId._id,
-                avatar: p.userId.avatar,
-                isGoldenMember: p.userId.isGoldenMember
+        // Fetch current prices for the tickers in the feed for comparison
+        const tickers = [...new Set(predictions.map(p => p.stockTicker))];
+        const quotes = await yahooFinance.quote(tickers);
+        const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
+
+        const feed = predictions.map(p => {
+            const currentPrice = priceMap.get(p.stockTicker) || 0;
+            const targetPrice = p.targetPrice;
+
+            // --- NEW: Calculate percentage change and determine direction ---
+            let percentageChange = 0;
+            if (currentPrice > 0) {
+                percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
             }
-        }));
+            const directionText = targetPrice >= currentPrice ? 'increase to' : 'decrease to';
+            const formattedPercentage = `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%`;
+
+            return {
+                id: p._id,
+                // UPDATED: New, richer text format for the community feed
+                text: `${p.userId.username} predicted ${p.stockTicker} will ${directionText} $${targetPrice.toFixed(2)}`,
+                percentage: formattedPercentage, // Send percentage separately for frontend coloring
+                user: {
+                    id: p.userId._id,
+                    avatar: p.userId.avatar,
+                    isGoldenMember: p.userId.isGoldenMember
+                }
+            };
+        });
         res.json(feed);
-    } catch (err) { res.status(500).json({ message: 'Error fetching community feed' }); }
+    } catch (err) {
+        console.error("Community feed error:", err);
+        res.status(500).json({ message: 'Error fetching community feed' });
+    }
 });
 
 

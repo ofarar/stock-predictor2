@@ -79,9 +79,19 @@ const Header = ({ user, onMakePredictionClick }) => {
             {isNotificationsOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-xl p-2 z-20">
                     <div className="p-2 font-bold text-white">Notifications</div>
-                    {notifications.length > 0 ? notifications.map(n => (
-                        <Link to={n.link} key={n._id} className="block p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">{n.message}</Link>
-                    )) : <p className="p-2 text-sm text-gray-500">No new notifications.</p>}
+                    <div className="max-h-96 overflow-y-auto">
+                        {notifications.length > 0 ? notifications.map(n => (
+                            <Link to={n.link} key={n._id} className="block p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                                {/* UPDATED: Logic to display main message and colored percentage */}
+                                <span>{n.message}</span>
+                                {n.metadata?.percentage && (
+                                    <span className={`ml-1 font-bold ${n.metadata.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                                        ({n.metadata.percentage})
+                                    </span>
+                                )}
+                            </Link>
+                        )) : <p className="p-2 text-sm text-gray-500">No new notifications.</p>}
+                    </div>
                 </div>
             )}
         </div>

@@ -8,6 +8,7 @@ const NotificationSchema = new Schema({
     message: { type: String, required: true },
     read: { type: Boolean, default: false },
     link: { type: String }, // e.g., /stock/TSLA
+    metadata: { type: Object }, // <-- ADD THIS FIELD for extra data
     createdAt: { type: Date, default: Date.now }
 });
 

@@ -15,9 +15,13 @@ const CommunityFeed = ({ feedItems = [], className = '' }) => (
                         alt="avatar"
                         className={`w-8 h-8 rounded-full border-2 ${item.user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                     />
-                    <span className="text-sm text-gray-300 ml-3">
-                        {item.text}
-                    </span>
+                    <div className="text-sm text-gray-300 ml-3">
+                        <span>{item.text}</span>
+                        {/* NEW: Display the percentage change with color */}
+                        <span className={`ml-2 font-bold ${item.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                            ({item.percentage})
+                        </span>
+                    </div>
                 </Link>
             )) : <p className="text-gray-500 text-center py-4">No recent predictions.</p>}
         </div>
