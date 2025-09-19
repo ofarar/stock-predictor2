@@ -1,6 +1,7 @@
 const Prediction = require('../models/Prediction');
 const User = require('../models/User');
 const PredictionLog = require('../models/PredictionLog');
+const Notification = require('../models/Notification');
 const yahooFinance = require('yahoo-finance2').default;
 
 /**
@@ -40,7 +41,7 @@ async function getActualStockPrice(ticker, deadline) {
             period2: new Date(deadline.getTime() + 24 * 60 * 60 * 1000), // A one-day range
         };
         const result = await yahooFinance.historical(ticker, queryOptions);
-        
+
         if (result && result.length > 0) {
             // Return the closing price for that day
             return result[0].close;
@@ -54,11 +55,11 @@ async function getActualStockPrice(ticker, deadline) {
 
 const runAssessmentJob = async () => {
     console.log('Starting assessment job...');
-    
+
     const predictionsToAssess = await Prediction.find({
         status: 'Active',
         deadline: { $lte: new Date() }
-    }).populate('userId', 'username'); // Populate user info
+    }).populate('userId', 'username');
 
     if (predictionsToAssess.length === 0) {
         console.log('No predictions to assess.');
@@ -69,7 +70,6 @@ const runAssessmentJob = async () => {
 
     for (const prediction of predictionsToAssess) {
         try {
-            // For hourly, we'd need a more granular price API. For now, we use daily close.
             const actualPrice = await getActualStockPrice(prediction.stockTicker, prediction.deadline);
 
             if (actualPrice === null) {
@@ -86,6 +86,16 @@ const runAssessmentJob = async () => {
 
             // Update User's Total Score
             await User.updateOne({ _id: prediction.userId._id }, { $inc: { score: score } });
+
+            // --- Create "Score Assessed" Notification ---
+            const message = `Your ${prediction.predictionType} prediction on ${prediction.stockTicker} scored ${score} points!`;
+            await new Notification({
+                recipient: prediction.userId._id,
+                type: 'NewPrediction', // You could add a new type like 'ScoreAssessed'
+                message: message,
+                link: `/prediction/${prediction._id}`
+            }).save();
+            // ------------------------------------------
 
             // Create a detailed log for your records
             await new PredictionLog({

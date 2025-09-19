@@ -14,7 +14,7 @@ const PerformanceChart = () => {
                 {/* This container will wrap its children on small screens */}
                 <div className="flex flex-wrap gap-1 bg-gray-700 p-1 rounded-md">
                     {types.map(type => (
-                        <button key={type} onClick={() => setChartFilter(type)} 
+                        <button key={type} onClick={() => setChartFilter(type)}
                             className={`px-2 py-1 text-xs rounded ${chartFilter === type ? 'bg-green-500' : 'hover:bg-gray-600'}`}>
                             {type}
                         </button>
@@ -53,7 +53,7 @@ const PerformanceTabs = ({ performance }) => {
             {activeTab === 'ByStock' && (
                 <div className="space-y-2">
                     {performance.byStock?.length > 0 ? performance.byStock.map(s => (
-                         <div key={s.ticker} className="flex flex-col sm:flex-row sm:justify-between text-sm p-2 bg-gray-700 rounded">
+                        <div key={s.ticker} className="flex flex-col sm:flex-row sm:justify-between text-sm p-2 bg-gray-700 rounded">
                             <span className="font-bold text-gray-300">{s.ticker}</span>
                             <div className="text-gray-400"><span className="font-semibold text-gray-300">{s.rank}</span> Rank | <span className="font-semibold text-gray-300">{s.accuracy}</span> Acc</div>
                         </div>
@@ -145,7 +145,7 @@ const ProfilePage = () => {
                     {isOwnProfile && <Link to="/profile/edit" className="bg-gray-700 px-4 py-2 rounded-md">Edit Profile</Link>}
                 </div>
             </div>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <StatCard label="Overall Rank" value={performance?.overallRank || 'N/A'} />
                 <StatCard label="Overall Accuracy" value={`${performance?.overallAccuracy || 0}%`} />
@@ -158,16 +158,21 @@ const ProfilePage = () => {
                     <PerformanceChart />
                     <PerformanceTabs performance={performance} />
                 </div>
+                {/* Sidebar for Active Predictions */}
                 <div className="lg:col-span-1">
                     <div className="bg-gray-800 p-6 rounded-lg">
                         <h3 className="text-xl font-bold text-white mb-4">Active Predictions</h3>
                         <div className="space-y-3">
-                             {activePredictions.length > 0 ? activePredictions.map(p => (
-                                <div key={p._id} className="flex justify-between items-center text-sm p-2 bg-gray-700 rounded">
-                                    <span className="font-bold text-white">{p.stockTicker}</span>
-                                    <span className="text-gray-400">{p.predictionType}</span>
-                                    <span className="text-gray-300">${p.targetPrice.toFixed(2)}</span>
-                                </div>
+                            {activePredictions.length > 0 ? activePredictions.map(p => (
+                                // --- This is the fix ---
+                                // Each prediction is now wrapped in a Link
+                                <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="font-bold text-white">{p.stockTicker}</span>
+                                        <span className="text-gray-400">{p.predictionType}</span>
+                                        <span className="text-gray-300">${p.targetPrice.toFixed(2)}</span>
+                                    </div>
+                                </Link>
                             )) : <p className="text-gray-500">No active predictions.</p>}
                         </div>
                     </div>

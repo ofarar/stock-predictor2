@@ -66,54 +66,37 @@ router.get('/predictions/:ticker', async (req, res) => {
 });
 
 
-router.post('/predict', async (req, res) => {
-    // Log the incoming data for debugging
-    console.log('Received prediction data:', req.body);
+const yahooFinance = require('yahoo-finance2').default; // Make sure this is imported
 
-    if (!req.user) {
-        return res.status(401).send('You must be logged in to make a prediction.');
-    }
+router.post('/predict', async (req, res) => {
+    if (!req.user) return res.status(401).send('You must be logged in.');
 
     const { stockTicker, targetPrice, deadline, predictionType } = req.body;
-
-    // Server-side validation
-    if (!stockTicker || !targetPrice || !deadline || !predictionType) {
-        return res.status(400).json({ message: 'Missing required prediction fields.' });
-    }
-
-    // Create the new prediction document with all the data
-    const prediction = new Prediction({
-        userId: req.user._id,
-        stockTicker,
-        targetPrice,
-        deadline,
-        predictionType
-    });
-
     try {
+        const quote = await yahooFinance.quote(stockTicker);
+        const currentPrice = quote.regularMarketPrice;
+        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
+
+        const prediction = new Prediction({ /* ... prediction data ... */ });
         await prediction.save();
 
-        // --- Create Notifications for Followers ---
         const user = await User.findById(req.user._id);
-        console.log(`User ${user.username} has ${user.followers.length} followers.`);
-        const message = `${user.username} made a new ${predictionType} prediction on ${stockTicker} to reach $${parseFloat(targetPrice).toFixed(2)}`;
+
+        // New, richer message
+        const message = `${user.username} made a ${predictionType} prediction on ${stockTicker} to reach $${targetPrice.toFixed(2)} (${percentageChange.toFixed(2)}%)`;
 
         const notifications = user.followers.map(followerId => ({
             recipient: followerId,
             sender: user._id,
             type: 'NewPrediction',
             message: message,
-            link: `/stock/${stockTicker}`
+            link: `/prediction/${prediction._id}` // Link to prediction detail page
         }));
 
-        if (notifications.length > 0) {
-            console.log(`Creating ${notifications.length} notifications...`);
-            await Notification.insertMany(notifications);
-        }
+        if (notifications.length > 0) await Notification.insertMany(notifications);
 
         res.status(201).json(prediction);
     } catch (err) {
-        console.error("Mongoose save error:", err.message);
         res.status(400).json({ message: err.message });
     }
 });
@@ -512,5 +495,37 @@ router.get('/stock/:ticker/historical', async (req, res) => {
         res.status(500).json({ message: "Error fetching historical data" });
     }
 });
+
+// In server/routes/api.js
+
+// GET: The details for a single prediction
+router.get('/prediction/:id', async (req, res) => {
+    try {
+        const prediction = await Prediction.findById(req.params.id)
+            .populate('userId', 'username avatar'); // Get the predictor's info
+
+        if (!prediction) {
+            return res.status(404).json({ message: "Prediction not found" });
+        }
+        res.json(prediction);
+    } catch (err) {
+        console.error("Error fetching prediction:", err);
+        res.status(500).json({ message: "Error fetching prediction details" });
+    }
+});
+
+router.post('/notifications/mark-read', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+    try {
+        await Notification.updateMany(
+            { recipient: req.user._id, read: false },
+            { $set: { read: true } }
+        );
+        res.status(200).send('Notifications marked as read.');
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating notifications' });
+    }
+});
+
 
 module.exports = router;

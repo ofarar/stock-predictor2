@@ -23,6 +23,7 @@ import AboutPage from './pages/AboutPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import AdminPage from './pages/AdminPage';
+import PredictionDetailPage from './pages/PredictionDetailPage';
 
 // A small helper component to handle the conditional rendering
 const PageSpecificContent = () => {
@@ -93,7 +94,7 @@ function App() {
         />
 
         <main className="flex-grow container mx-auto px-4 sm:px-6 pt-2 sm:pt-2 md:pt-0 pb-2 sm:pb-4">
-           <PageSpecificContent />
+          <PageSpecificContent />
           <Routes>
             <Route path="/" element={<HomePage user={user} />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
@@ -106,6 +107,7 @@ function App() {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/prediction/:predictionId" element={<PredictionDetailPage />} />
           </Routes>
         </main>
 
