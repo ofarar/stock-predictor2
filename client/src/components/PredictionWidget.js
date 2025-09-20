@@ -163,9 +163,18 @@ const PredictionWidget = ({ onClose, initialStock }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // --- THE FIX IS HERE ---
+        // 1. Add a check for the target price.
+        if (!target || parseFloat(target) <= 0) {
+            toast.error("Please enter a valid target price.");
+            return; // Stop the function
+        }
+
+        // 2. Add the missing 'return' to the existing validation.
         if (!formState.isOpen || !selectedStock) {
-            toast.error("Prediction window is closed for this type.");
-            return;
+            toast.error("Prediction window is closed or no stock is selected.");
+            return; // Stop the function
         };
 
         const predictionData = {

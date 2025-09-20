@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 
-// Register the necessary components for Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const StockChart = ({ ticker }) => {
@@ -12,21 +11,19 @@ const StockChart = ({ ticker }) => {
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}/historical`)
             .then(res => {
-                // The data from yahoo-finance2 is a direct array
                 const historicalData = res.data;
                 if (historicalData && historicalData.length > 0) {
                     setChartData({
-                        // Format the date for the labels
                         labels: historicalData.map(v => new Date(v.date).toLocaleDateString()),
                         datasets: [{
                             label: `${ticker} Price`,
-                            // Use the 'close' property for the price
                             data: historicalData.map(v => v.close),
                             borderColor: '#22c55e',
                             backgroundColor: 'rgba(34, 197, 94, 0.1)',
                             fill: true,
                             tension: 0.1,
-                            pointRadius: 0, // Hide the points on the line
+                            pointRadius: 0,
+                            pointHoverRadius: 5, // Show a point on hover/tap
                         }]
                     });
                 }
@@ -39,10 +36,16 @@ const StockChart = ({ ticker }) => {
         maintainAspectRatio: false,
         plugins: {
             legend: { display: false },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            },
         },
+        // ADDED: This makes the tooltips work better on mobile
+        events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
         scales: {
             x: {
-                ticks: { color: '#9ca3af', maxTicksLimit: 8 }, // Limit number of date labels
+                ticks: { color: '#9ca3af', maxTicksLimit: 8 },
                 grid: { color: 'rgba(255, 255, 255, 0.1)' }
             },
             y: {

@@ -369,19 +369,78 @@ router.post('/admin/evaluate', async (req, res) => {
     }
 });
 
-// In server/routes/api.js
+// GET: Data for a specific stock page - Made more resilient
 router.get('/stock/:ticker', async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
+    const { type: predictionTypeFilter = 'Overall' } = req.query;
+
     try {
-        // Fetch quote data, predictions for this stock, top predictors, etc.
-        const quote = await yahooFinance.quote(ticker);
-        const predictions = await Prediction.find({ stockTicker: ticker }).populate('userId', 'username score avatar');
+        // Use Promise.allSettled to prevent one failure from crashing the whole endpoint
+        const results = await Promise.allSettled([
+            yahooFinance.quote(ticker),
+            Prediction.find({ stockTicker: ticker, status: 'Active' })
+                .populate('userId', 'username avatar isGoldenMember')
+                .sort({ createdAt: -1 })
+        ]);
 
-        // Logic to find top predictors for this stock would go here
+        const quoteResult = results[0];
+        const activePredictionsResult = results[1];
 
-        res.json({ quote, predictions });
+        const quote = quoteResult.status === 'fulfilled' ? quoteResult.value : null;
+        const activePredictions = activePredictionsResult.status === 'fulfilled' ? activePredictionsResult.value : [];
+
+        if (!quote) {
+            return res.status(404).json({ message: `Could not load quote data for ${ticker}.` });
+        }
+
+        const predictionMatch = { status: 'Assessed', stockTicker: ticker };
+        if (predictionTypeFilter !== 'Overall') {
+            predictionMatch.predictionType = predictionTypeFilter;
+        }
+
+
+        // Use aggregation to find the top predictors for this specific stock
+        const topPredictors = await Prediction.aggregate([
+            { $match: predictionMatch },
+            { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
+            { $sort: { avgScore: -1 } },
+            { $limit: 10 },
+            { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'userDetails' } },
+            { $unwind: '$userDetails' },
+            {
+                $project: {
+                    _id: '$userDetails._id',
+                    username: '$userDetails.username',
+                    avatar: '$userDetails.avatar',
+                    isGoldenMember: '$userDetails.isGoldenMember',
+                    avgScore: { $round: ['$avgScore', 1] }
+                }
+            }
+        ]);
+
+        res.json({ quote, topPredictors, activePredictions });
+
     } catch (err) {
+        console.error(`Error fetching data for stock ${ticker}:`, err);
         res.status(500).json({ message: "Failed to fetch stock data" });
+    }
+});
+
+// GET: Historical data for the stock chart
+router.get('/stock/:ticker/historical', async (req, res) => {
+    const { ticker } = req.params;
+    try {
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 90); // Get data for the last 90 days
+
+        const result = await yahooFinance.historical(ticker, {
+            period1: startDate,
+        });
+
+        res.json(result);
+    } catch (error) {
+        console.error(`Yahoo Finance historical error for ${ticker}:`, error.message);
+        res.status(500).json({ message: "Error fetching historical data" });
     }
 });
 
@@ -638,23 +697,50 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
 
 
 
-router.get('/stock/:ticker/historical', async (req, res) => {
-    const { ticker } = req.params;
+// GET: Data for a specific stock page - FULLY OVERHAULED
+router.get('/stock/:ticker', async (req, res) => {
+    const ticker = req.params.ticker.toUpperCase();
+    const { type: predictionTypeFilter = 'Overall' } = req.query;
 
     try {
-        // Get the date from 90 days ago
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() - 90);
+        // Fetch quote data and active predictions in parallel
+        const [quote, activePredictions] = await Promise.all([
+            yahooFinance.quote(ticker),
+            Prediction.find({ stockTicker: ticker, status: 'Active' })
+                .populate('userId', 'username avatar isGoldenMember')
+                .sort({ createdAt: -1 })
+        ]);
 
-        // Fetch historical data using the yahoo-finance2 library
-        const result = await yahooFinance.historical(ticker, {
-            period1: startDate,
-        });
+        // Build the match criteria for the aggregation
+        const predictionMatch = { status: 'Assessed', stockTicker: ticker };
+        if (predictionTypeFilter !== 'Overall') {
+            predictionMatch.predictionType = predictionTypeFilter;
+        }
 
-        res.json(result);
-    } catch (error) {
-        console.error(`Yahoo Finance historical error for ${ticker}:`, error.message);
-        res.status(500).json({ message: "Error fetching historical data" });
+        // Use aggregation to find the top predictors for this specific stock
+        const topPredictors = await Prediction.aggregate([
+            { $match: predictionMatch },
+            { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
+            { $sort: { avgScore: -1 } },
+            { $limit: 10 },
+            { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'userDetails' } },
+            { $unwind: '$userDetails' },
+            {
+                $project: {
+                    _id: '$userDetails._id',
+                    username: '$userDetails.username',
+                    avatar: '$userDetails.avatar',
+                    isGoldenMember: '$userDetails.isGoldenMember',
+                    avgScore: { $round: ['$avgScore', 1] }
+                }
+            }
+        ]);
+
+        res.json({ quote, topPredictors, activePredictions });
+
+    } catch (err) {
+        console.error(`Error fetching data for stock ${ticker}:`, err);
+        res.status(500).json({ message: "Failed to fetch stock data" });
     }
 });
 
