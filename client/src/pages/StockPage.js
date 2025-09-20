@@ -69,7 +69,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                 </div>
                 <button
                     onClick={() => onPredictClick(quote)}
-                    className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
+                    className="text-2xl bg-green-500 text-white rounded-full w-[1.3em] h-[1.3em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
                     title="Make a Prediction"
                 >
                     <svg className="w-[0.7em] h-[0.7em]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
