@@ -23,6 +23,7 @@ const ProfilePage = () => {
     const [isGoldenModalOpen, setIsGoldenModalOpen] = useState(false);
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [visiblePredictions, setVisiblePredictions] = useState(5);
+    const [visibleActive, setVisibleActive] = useState(5); // New state for active predictions pagination
 
     // THE FIX IS HERE: The logic is simplified to remove the 'profileData' dependency.
     const fetchData = useCallback(async () => {
@@ -148,11 +149,12 @@ const ProfilePage = () => {
                         <PerformanceChart chartData={chartData} />
                     </div>
                     <div className="lg:col-span-1 space-y-8 self-start">
+                        {/* Active Predictions Section with Show More */}
                         <div className="bg-gray-800 p-6 rounded-lg">
                             <h3 className="text-xl font-bold text-white mb-4">Active Predictions</h3>
-                            <div className="space-y-3 max-h-96 overflow-y-auto">
-                                {activePredictions.length > 0 ? activePredictions.map(p => (
-                                    <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                            <div className="space-y-3">
+                                {activePredictions.length > 0 ? activePredictions.slice(0, visibleActive).map(p => (
+                                    <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600">
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="font-bold text-white">{p.stockTicker}</span>
                                             <span className="text-gray-400">{p.predictionType}</span>
@@ -161,7 +163,13 @@ const ProfilePage = () => {
                                     </Link>
                                 )) : <p className="text-gray-500 text-center py-4">No active predictions.</p>}
                             </div>
+                            {activePredictions.length > visibleActive && (
+                                <button onClick={() => setVisibleActive(prev => prev + 5)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">
+                                    Load More
+                                </button>
+                            )}
                         </div>
+
                         <div className="bg-gray-800 p-6 rounded-lg">
                             <h3 className="text-xl font-bold text-white mb-4">Prediction History</h3>
                             <div className="space-y-3">

@@ -1,17 +1,62 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const StatPill = ({ label, value, rank }) => (
-    <div className="flex-1 flex flex-col sm:flex-row justify-between items-baseline bg-gray-700 p-3 rounded-lg">
-        <div className="flex items-center gap-2">
-            <span className="font-bold text-white text-base">{label}</span>
+// A new, visually rich StatCard component
+const StatCard = ({ label, avgScore, rank, isStock }) => {
+    const circumference = 2 * Math.PI * 20; // Circle radius is 20
+    const offset = circumference - (avgScore / 100) * circumference;
+
+    return (
+        <div className="flex items-center bg-gray-700 p-4 rounded-lg transition-transform hover:scale-[1.02]">
+            {/* Circular Progress Bar */}
+            <div className="relative w-12 h-12 flex-shrink-0">
+                <svg className="w-full h-full" viewBox="0 0 44 44">
+                    <circle
+                        className="text-gray-600"
+                        strokeWidth="4"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="20"
+                        cx="22"
+                        cy="22"
+                    />
+                    <circle
+                        className="text-green-400"
+                        strokeWidth="4"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="20"
+                        cx="22"
+                        cy="22"
+                        transform="rotate(-90 22 22)"
+                    />
+                </svg>
+                <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">
+                    {avgScore.toFixed(1)}
+                </span>
+            </div>
+
+            {/* Label and Rank */}
+            <div className="ml-4 flex-grow">
+                {isStock ? (
+                    <Link to={`/stock/${label}`} className="font-bold text-white text-lg hover:underline">{label}</Link>
+                ) : (
+                    <p className="font-bold text-white text-lg">{label}</p>
+                )}
+                <p className="text-sm text-gray-400">Average Score</p>
+            </div>
+
+            {/* Rank Display */}
+            <div className="flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2">
+                <p className="text-xs text-blue-400 font-bold">RANK</p>
+                <p className="text-xl font-bold text-white">#{rank}</p>
+            </div>
         </div>
-        <div className="text-sm text-gray-400 mt-1 sm:mt-0">
-            {/* Updated Label: "Avg Score" */}
-            <span className="font-semibold text-green-400">{value}</span> Avg Score
-            <span className="ml-3 font-semibold text-blue-400">#{rank}</span> Rank
-        </div>
-    </div>
-);
+    );
+};
 
 
 const PerformanceTabs = ({ performance }) => {
@@ -26,17 +71,17 @@ const PerformanceTabs = ({ performance }) => {
                 <button onClick={() => setActiveTab('ByStock')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'ByStock' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>By Stock</button>
             </div>
             {activeTab === 'ByType' && (
-                <div className="space-y-3 animate-fade-in-fast">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                     {performance.byType?.length > 0 ? performance.byType.map(p => (
-                        <StatPill key={p.type} label={p.type} value={p.accuracy} rank={p.rank} />
-                    )) : <p className="text-gray-500 text-center py-4">No data available for prediction types.</p>}
+                        <StatCard key={p.type} label={p.type} avgScore={p.accuracy} rank={p.rank} />
+                    )) : <p className="md:col-span-2 text-gray-500 text-center py-4">No data available for prediction types.</p>}
                 </div>
             )}
             {activeTab === 'ByStock' && (
-                <div className="space-y-3 animate-fade-in-fast">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                     {performance.byStock?.length > 0 ? performance.byStock.map(s => (
-                        <StatPill key={s.ticker} label={s.ticker} value={s.accuracy} rank={s.rank} />
-                    )) : <p className="text-gray-500 text-center py-4">No data available for individual stocks.</p>}
+                        <StatCard key={s.ticker} label={s.ticker} avgScore={s.accuracy} rank={s.rank} isStock={true} />
+                    )) : <p className="md:col-span-2 text-gray-500 text-center py-4">No data available for individual stocks.</p>}
                 </div>
             )}
         </div>

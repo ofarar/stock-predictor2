@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { format } from 'date-fns'; // 'subDays' and 'subMonths' removed
@@ -8,7 +7,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const PerformanceChart = ({ chartData = [] }) => {
     const [filter, setFilter] = useState('Overall');
-    const navigate = useNavigate();
     const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
 
     const filteredAndFormattedData = useMemo(() => {
@@ -59,15 +57,6 @@ const PerformanceChart = ({ chartData = [] }) => {
                 radius: 4,
                 hoverRadius: 6,
                 backgroundColor: '#22c55e',
-            }
-        },
-        onClick: (event, elements) => {
-            if (elements.length > 0) {
-                const elementIndex = elements[0].index;
-                const predictionId = filteredAndFormattedData.datasets[0].predictionIds[elementIndex][0];
-                if (predictionId) {
-                    navigate(`/prediction/${predictionId}`);
-                }
             }
         },
         onHover: (event, chartElement) => {
