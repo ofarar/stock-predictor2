@@ -1,0 +1,76 @@
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+
+const StockFilterSearch = ({ onStockSelect }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [results, setResults] = useState([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const searchRef = useRef(null);
+
+    // Effect to fetch search results
+    useEffect(() => {
+        if (!searchTerm) {
+            setResults([]);
+            return;
+        }
+        const timer = setTimeout(() => {
+            axios.get(`${process.env.REACT_APP_API_URL}/api/search/${searchTerm}`)
+                .then(res => setResults(res.data.quotes || []));
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    // Effect to handle clicks outside the component
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleSelect = (symbol) => {
+        onStockSelect(symbol);
+        setSearchTerm(symbol);
+        setResults([]);
+        setIsDropdownOpen(false); // Explicitly close the dropdown
+    };
+    
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+        if (e.target.value === '') {
+            onStockSelect(''); // Clear the filter in the parent when input is cleared
+        }
+        setIsDropdownOpen(true); // Open dropdown when user types
+    }
+
+    return (
+        <div className="relative" ref={searchRef}>
+            <input 
+                type="text" 
+                placeholder="e.g., AAPL" 
+                value={searchTerm} 
+                onChange={handleInputChange}
+                onFocus={() => setIsDropdownOpen(true)} // Open on focus
+                className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {results.length > 0 && isDropdownOpen && (
+                <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto">
+                    {results.map((r, index) => (
+                        <li 
+                            key={`${r.symbol}-${index}`} 
+                            onClick={() => handleSelect(r.symbol)}
+                            className="px-4 py-2 hover:bg-green-500 cursor-pointer"
+                        >
+                            {r.symbol}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+};
+
+export default StockFilterSearch;
