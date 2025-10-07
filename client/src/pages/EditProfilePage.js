@@ -1,7 +1,9 @@
+// src/pages/EditProfilePage.js
+
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'; // 1. Import toast
+import toast from 'react-hot-toast';
 
 const EditProfilePage = ({ onProfileUpdate }) => {
     const [formData, setFormData] = useState({
@@ -9,15 +11,15 @@ const EditProfilePage = ({ onProfileUpdate }) => {
         about: '',
         youtubeLink: '',
         xLink: '',
-        avatar: '' // Add avatar to the form state
+        avatar: ''
     });
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+    const [isSaving, setIsSaving] = useState(false); // 1. Add saving state
 
     const avatarStyles = ['adventurer', 'pixel-art', 'bottts', 'initials', 'fun-emoji', 'identicon'];
 
     const getAvatarUrl = useCallback((style, name) => {
-        // Use the provided name for the seed, fallback to 'default'
         return `https://api.dicebear.com/8.x/${style}/svg?seed=${name || 'default'}`;
     }, []);
 
@@ -42,33 +44,33 @@ const EditProfilePage = ({ onProfileUpdate }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // Create a new copy of the form data to update
         const newFormData = { ...formData, [name]: value };
-
-        // If the username is being changed, update the avatar URL as well
         if (name === 'username') {
-            // Extract the style from the current avatar URL
             const currentStyle = formData.avatar.split('/')[4] || 'adventurer';
             newFormData.avatar = getAvatarUrl(currentStyle, value);
         }
-
         setFormData(newFormData);
     };
 
     const handleAvatarSelect = (style) => {
         setFormData({ ...formData, avatar: getAvatarUrl(style, formData.username) });
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        setIsSaving(true); // 2. Set saving to true on submit
         axios.put(`${process.env.REACT_APP_API_URL}/api/profile`, formData, { withCredentials: true })
             .then(res => {
                 toast.success('Profile updated successfully!');
-                onProfileUpdate(); // <-- This tells App.js to refetch the user data
+                onProfileUpdate();
                 navigate(`/profile/${user._id}`);
             })
             .catch(err => {
                 console.error("Profile update error:", err);
                 toast.error('Failed to update profile.');
+            })
+            .finally(() => {
+                setIsSaving(false); // 3. Set saving to false when API call finishes
             });
     };
 
@@ -76,6 +78,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
         <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg">
             <h1 className="text-3xl font-bold text-white mb-6">Edit Your Profile</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Avatar and other form fields remain the same... */}
                 <div>
                     <label className="block text-sm font-medium text-gray-300">Select Avatar Style</label>
                     <div className="mt-2 grid grid-cols-3 sm:grid-cols-6 gap-4">
@@ -91,7 +94,6 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                         ))}
                     </div>
                 </div>
-                {/* ------------------------------------ */}
 
                 <div>
                     <label htmlFor="username" className="block text-sm font-medium text-gray-300">Username</label>
@@ -114,9 +116,14 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                     <input type="url" name="youtubeLink" id="youtubeLink" placeholder="https://youtube.com/yourchannel" value={formData.youtubeLink} onChange={handleChange}
                         className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                 </div>
-
-                <button type="submit" className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600">
-                    Save Changes
+                
+                {/* 4. Update the button with disabled state and conditional text */}
+                <button 
+                    type="submit" 
+                    disabled={isSaving}
+                    className="w-full flex justify-center items-center bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600 disabled:bg-gray-500 disabled:cursor-not-allowed"
+                >
+                    {isSaving ? 'Saving...' : 'Save Changes'}
                 </button>
             </form>
         </div>
