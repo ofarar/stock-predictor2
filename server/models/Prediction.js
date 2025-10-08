@@ -10,7 +10,8 @@ const PredictionSchema = new Schema({
     status: { type: String, enum: ['Active', 'Assessed'], default: 'Active' },
     score: { type: Number, default: 0 },
     actualPrice: { type: Number },
-    priceAtCreation: { type: Number }
+    priceAtCreation: { type: Number },
+    description: { type: String, maxLength: 500 } 
 }, { timestamps: true });
 
 module.exports = mongoose.model('Prediction', PredictionSchema);

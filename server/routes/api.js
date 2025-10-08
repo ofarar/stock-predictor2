@@ -143,17 +143,16 @@ router.get('/predictions/:ticker', async (req, res) => {
 });
 
 // This route handles creating new predictions and sending notifications
+// server/routes/api.js
+
 router.post('/predict', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
-    const { stockTicker, targetPrice, deadline, predictionType } = req.body;
+    // FIX: Destructure the new 'description' field from the request body
+    const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
     try {
         const quote = await yahooFinance.quote(stockTicker);
         const currentPrice = quote.regularMarketPrice;
-
-        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
-        const directionText = targetPrice >= currentPrice ? 'increase to' : 'decrease to';
-        const formattedPercentage = `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%`;
 
         const prediction = new Prediction({
             userId: req.user._id,
@@ -162,21 +161,23 @@ router.post('/predict', async (req, res) => {
             deadline,
             predictionType,
             priceAtCreation: currentPrice,
+            description: description, // <-- FIX: Add the description to the new prediction
             status: 'Active'
         });
         await prediction.save();
 
         const user = await User.findById(req.user._id);
-
-        // UPDATED: The message is now split into two parts for styling
+        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
+        const directionText = targetPrice >= currentPrice ? 'increase to' : 'decrease to';
+        const formattedPercentage = `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%`;
         const mainMessage = `${user.username} predicted ${stockTicker} will ${directionText} $${targetPrice.toFixed(2)}`;
 
         const notifications = user.followers.map(followerId => ({
             recipient: followerId,
             sender: user._id,
             type: 'NewPrediction',
-            message: mainMessage, // The main text
-            metadata: { percentage: formattedPercentage }, // The part to be colored
+            message: mainMessage,
+            metadata: { percentage: formattedPercentage },
             link: `/prediction/${prediction._id}`
         }));
 
@@ -188,8 +189,6 @@ router.post('/predict', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
-
-
 // ===================================
 // New Real-Time Data Proxy Routes
 // ===================================
@@ -825,11 +824,11 @@ router.get('/explore/feed', async (req, res) => {
             // Aggregation pipeline for performance sorting
             predictions = await Prediction.aggregate([
                 { $match: matchQuery },
-                { $lookup: { from: 'users', localField: 'userId', foreignField: 'id', as: 'userDetails' } },
+                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
                 { $unwind: '$userDetails' },
                 { $sort: { 'userDetails.score': -1, createdAt: -1 } },
                 { $limit: 50 },
-                { $project: { _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1, actualPrice: 1, createdAt: 1, userId: '$userDetails' } }
+                { $project: { _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1, actualPrice: 1, createdAt: 1, description: 1, userId: '$userDetails' } }
             ]);
         } else {
             // Standard find for date-based sorting

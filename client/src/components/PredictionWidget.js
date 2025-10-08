@@ -38,9 +38,9 @@ const getPredictionDetails = (predictionType) => {
             marketCloseToday.setUTCHours(20, 0, 0, 0);
             const day = now.getUTCDay();
             const isAfterHours = now.getTime() > marketCloseToday.getTime();
-            if (day === 6) { deadline.setUTCDate(now.getUTCDate() + 2); } 
-            else if (day === 0) { deadline.setUTCDate(now.getUTCDate() + 1); } 
-            else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); } 
+            if (day === 6) { deadline.setUTCDate(now.getUTCDate() + 2); }
+            else if (day === 0) { deadline.setUTCDate(now.getUTCDate() + 1); }
+            else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); }
             else if (isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 1); }
             deadline.setUTCHours(20, 0, 0, 0);
             if (deadline.getUTCDate() !== now.getUTCDate() || deadline.getUTCMonth() !== now.getUTCMonth()) {
@@ -57,11 +57,35 @@ const getPredictionDetails = (predictionType) => {
             return { isOpen: true, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
         }
         case 'Weekly': {
-            const dayOfWeek = now.getUTCDay();
+            // START: New Rollover Logic
+            let deadline = new Date(now.getTime());
+            const dayOfWeek = now.getUTCDay(); // 0=Sun, 5=Fri
+            const hour = now.getUTCHours();
+
+            // Find this week's Friday
             const daysUntilFriday = dayOfWeek <= 5 ? 5 - dayOfWeek : 6;
             deadline.setUTCDate(now.getUTCDate() + daysUntilFriday);
-            const penalty = (dayOfWeek > 0 && dayOfWeek < 6) ? (dayOfWeek - 1) * 4 : 20;
-            maxScore = 100 - penalty; barWidth = 100 - ((dayOfWeek - 1) / 4 * 100);
+            deadline.setUTCHours(20, 0, 0, 0); // Friday 4 PM ET
+
+            // If it's past this week's deadline, set it for next Friday
+            if (now.getTime() > deadline.getTime()) {
+                deadline.setUTCDate(deadline.getUTCDate() + 7);
+            }
+            // END: New Rollover Logic
+
+            // The penalty is now based on how close we are to the calculated deadline
+            const startOfWeek = new Date(deadline.getTime());
+            startOfWeek.setUTCDate(startOfWeek.getUTCDate() - 4);
+            startOfWeek.setUTCHours(13, 30, 0, 0); // Monday 9:30 AM ET
+
+            const elapsedMillis = Math.max(0, now.getTime() - startOfWeek.getTime());
+            const totalMillis = deadline.getTime() - startOfWeek.getTime();
+            const percentElapsed = (elapsedMillis / totalMillis) * 100;
+
+            const penalty = Math.floor(percentElapsed / (100 / 20)); // Lose 20 points over the week
+            maxScore = 100 - penalty;
+            barWidth = 100 - percentElapsed;
+            message = `For ${deadline.toLocaleDateString()}`;
             break;
         }
         case 'Monthly': {
@@ -100,7 +124,7 @@ const getPredictionDetails = (predictionType) => {
     return { isOpen, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
 };
 
-const PredictionWidget = ({ onClose, initialStock, onInfoClick }) => {
+const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmation }) => {
     // ... all component logic remains the same
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -108,6 +132,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [target, setTarget] = useState('');
+    const [description, setDescription] = useState('');
     const [predictionType, setPredictionType] = useState('Weekly');
     const [formState, setFormState] = useState({
         isOpen: true, message: 'Max Score: 100', deadline: null, barWidth: '100%'
@@ -156,6 +181,25 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick }) => {
             .catch(err => setError('Could not fetch quote.'))
             .finally(() => setIsLoading(false));
     };
+    const executePrediction = () => {
+        const predictionData = {
+            stockTicker: selectedStock.symbol,
+            targetPrice: parseFloat(target),
+            deadline: formState.deadline,
+            predictionType,
+            description: description, // Pass the description
+        };
+
+        axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
+            .then(res => {
+                toast.success(`Prediction for ${selectedStock.symbol} submitted!`);
+                onClose();
+            })
+            .catch(err => {
+                toast.error('Failed to submit prediction.');
+                onClose();
+            });
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!target || parseFloat(target) <= 0) {
@@ -164,21 +208,18 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick }) => {
         if (!formState.isOpen || !selectedStock) {
             toast.error("Prediction window is closed or no stock is selected."); return;
         };
-        const predictionData = {
-            stockTicker: selectedStock.symbol,
-            targetPrice: parseFloat(target),
-            deadline: formState.deadline,
-            predictionType,
-        };
-        axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
-            .then(res => {
-                toast.success(`Prediction for ${selectedStock.symbol} submitted!`);
-                onClose();
-            })
-            .catch(err => {
-                toast.error('Failed to submit prediction. You may need to log in.');
-                onClose();
-            });
+        // START: Confirmation Logic
+        const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
+        const percentChange = Math.abs(((parseFloat(target) - currentPrice) / currentPrice) * 100);
+        const limit = thresholds[predictionType];
+
+        if (percentChange > limit) {
+            const message = `Your prediction of $${parseFloat(target).toFixed(2)} is a ${percentChange.toFixed(1)}% change, which is more than the typical ${limit}% range for this prediction type. Are you sure?`;
+            requestConfirmation(message, executePrediction); // Ask for confirmation
+        } else {
+            executePrediction(); // Submit directly if within limits
+        }
+        // END: Confirmation Logic
     };
 
     return (
@@ -218,6 +259,17 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick }) => {
                         <div>
                             <label className="block text-sm text-gray-300">Target Price for {selectedStock.symbol}</label>
                             <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!formState.isOpen} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white disabled:opacity-50" />
+                        </div>
+                        <div className="mt-4">
+                            <label className="block text-sm text-gray-300">Rationale (Optional)</label>
+                            <textarea
+                                placeholder="Why do you think the price will move?"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                maxLength={500}
+                                className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm"
+                                rows="2"
+                            />
                         </div>
                         <button type="submit" disabled={!formState.isOpen} className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
                             Place Prediction
