@@ -10,7 +10,6 @@ const PredictionCard = ({ prediction }) => {
 
     const isAssessed = prediction.status === 'Assessed';
     
-    // FIX: Calculate percentage change for ACTIVE predictions
     const percentChange = !isAssessed && prediction.currentPrice > 0
         ? ((prediction.targetPrice - prediction.currentPrice) / prediction.currentPrice) * 100
         : 0;
@@ -59,7 +58,6 @@ const PredictionCard = ({ prediction }) => {
                         <p className="text-gray-300">Predicts a price of</p>
                         <div className="flex justify-center items-baseline gap-2">
                             <p className="text-3xl font-bold text-green-400 my-2">${prediction.targetPrice.toFixed(2)}</p>
-                            {/* FIX: Display the percentage change */}
                             <p className={`text-lg font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                 ({percentChange >= 0 ? '+' : ''}{percentChange.toFixed(1)}%)
                             </p>
@@ -84,7 +82,6 @@ const PredictionCard = ({ prediction }) => {
     );
 };
 
-// The rest of the ExplorePage.js component remains the same
 const ExplorePage = () => {
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -95,7 +92,8 @@ const ExplorePage = () => {
         sortBy: 'date'
     });
 
-    const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
+    // FIX: Added 'Quarterly' to the array of filter options
+    const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     const fetchPredictions = useCallback(() => {
         setLoading(true);

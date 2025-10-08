@@ -1,9 +1,12 @@
+// src/components/InfoModal.js
+
 import React from 'react';
 
 const InfoModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
+        // FIX: Ensured the z-index is z-50, which is higher than the PredictionModal's z-40.
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
             <div className="relative bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg text-gray-300">
                 <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">

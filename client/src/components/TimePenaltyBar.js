@@ -1,10 +1,22 @@
+// src/components/TimePenaltyBar.js
+
 import React from 'react';
 
-const TimePenaltyBar = ({ message, barWidth }) => {
+const TimePenaltyBar = ({ message, barWidth, onInfoClick }) => {
     return (
         <div className="mb-4">
             <div className="flex justify-between items-center text-xs text-gray-400 mb-1">
-                <span>Time Bonus</span>
+                <div className="flex items-center gap-2">
+                    <span>Time Bonus</span>
+                    <button 
+                        type="button" 
+                        onClick={onInfoClick} 
+                        className="w-4 h-4 flex items-center justify-center bg-gray-600 text-gray-300 rounded-full text-xs font-bold hover:bg-gray-500"
+                        aria-label="Learn more about the Time Bonus"
+                    >
+                        ?
+                    </button>
+                </div>
                 <span className="font-bold text-white">{message}</span>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2.5">
