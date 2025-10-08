@@ -9,7 +9,8 @@ const PredictionSchema = new Schema({
     deadline: { type: Date, required: true },
     status: { type: String, enum: ['Active', 'Assessed'], default: 'Active' },
     score: { type: Number, default: 0 },
-    actualPrice: { type: Number } // <-- ADD THIS FIELD
+    actualPrice: { type: Number },
+    priceAtCreation: { type: Number }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Prediction', PredictionSchema);

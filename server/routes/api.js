@@ -161,6 +161,7 @@ router.post('/predict', async (req, res) => {
             targetPrice,
             deadline,
             predictionType,
+            priceAtCreation: currentPrice,
             status: 'Active'
         });
         await prediction.save();
@@ -724,7 +725,8 @@ router.get('/stock/:ticker', async (req, res) => {
 router.get('/prediction/:id', async (req, res) => {
     try {
         const prediction = await Prediction.findById(req.params.id)
-            .populate('userId', 'username avatar'); // Get the predictor's info
+            // FIX: Add 'isGoldenMember' to the fields being populated
+            .populate('userId', 'username avatar isGoldenMember');
 
         if (!prediction) {
             return res.status(404).json({ message: "Prediction not found" });
