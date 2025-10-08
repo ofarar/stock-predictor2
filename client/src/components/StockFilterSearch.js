@@ -1,13 +1,16 @@
+// src/components/StockFilterSearch.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-const StockFilterSearch = ({ onStockSelect }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+// FIX: Accept an initialValue prop
+const StockFilterSearch = ({ onStockSelect, initialValue = '' }) => {
+    // FIX: Use the initialValue to set the starting state
+    const [searchTerm, setSearchTerm] = useState(initialValue);
     const [results, setResults] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const searchRef = useRef(null);
 
-    // Effect to fetch search results
     useEffect(() => {
         if (!searchTerm) {
             setResults([]);
@@ -20,7 +23,6 @@ const StockFilterSearch = ({ onStockSelect }) => {
         return () => clearTimeout(timer);
     }, [searchTerm]);
 
-    // Effect to handle clicks outside the component
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -35,15 +37,15 @@ const StockFilterSearch = ({ onStockSelect }) => {
         onStockSelect(symbol);
         setSearchTerm(symbol);
         setResults([]);
-        setIsDropdownOpen(false); // Explicitly close the dropdown
+        setIsDropdownOpen(false);
     };
     
     const handleInputChange = (e) => {
-        setSearchTerm(e.target.value);
+        setSearchTerm(e.target.value.toUpperCase());
         if (e.target.value === '') {
-            onStockSelect(''); // Clear the filter in the parent when input is cleared
+            onStockSelect('');
         }
-        setIsDropdownOpen(true); // Open dropdown when user types
+        setIsDropdownOpen(true);
     }
 
     return (
@@ -53,7 +55,7 @@ const StockFilterSearch = ({ onStockSelect }) => {
                 placeholder="e.g., AAPL" 
                 value={searchTerm} 
                 onChange={handleInputChange}
-                onFocus={() => setIsDropdownOpen(true)} // Open on focus
+                onFocus={() => setIsDropdownOpen(true)}
                 className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             {results.length > 0 && isDropdownOpen && (

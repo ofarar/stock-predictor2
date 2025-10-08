@@ -2,16 +2,23 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+// FIX: Import Link and useSearchParams to read URL
+import { Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import StockFilterSearch from '../components/StockFilterSearch';
-import UserScoreSkeleton from '../components/UserScoreSkeleton'; // 1. Import the skeleton
+import UserScoreSkeleton from '../components/UserScoreSkeleton';
 
 const ScoreboardPage = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [predictionTypeFilter, setPredictionTypeFilter] = useState('Overall');
-    const [stockFilter, setStockFilter] = useState('');
+    
+    // FIX: Read initial filters from the URL
+    const [searchParams] = useSearchParams();
+    const initialStock = searchParams.get('stock') || '';
+    const initialType = searchParams.get('predictionType') || 'Overall';
+
+    const [predictionTypeFilter, setPredictionTypeFilter] = useState(initialType);
+    const [stockFilter, setStockFilter] = useState(initialStock);
 
     const predictionTypes = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
@@ -40,23 +47,23 @@ const ScoreboardPage = () => {
             <h1 className="text-3xl font-bold text-white mb-6 text-center">🏆 Leaderboards</h1>
             
             <div className="bg-gray-800 p-4 rounded-lg mb-8 space-y-4">
-                {/* Filter UI remains the same... */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-xs font-bold text-gray-400 mb-1">Prediction Type</label>
+                        {/* FIX: Set the value of the select to the state variable */}
                         <select value={predictionTypeFilter} onChange={e => setPredictionTypeFilter(e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                             {predictionTypes.map(type => <option key={type} value={type}>{type}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Stock</label>
-                        <StockFilterSearch onStockSelect={setStockFilter} />
+                        {/* FIX: Pass the initialStock to the search component */}
+                        <StockFilterSearch onStockSelect={setStockFilter} initialValue={stockFilter} />
                     </div>
                 </div>
             </div>
 
             {loading ? (
-                 // 2. Display a list of skeletons while loading
                  <div className="space-y-3">
                     {Array.from({ length: 5 }).map((_, index) => (
                         <UserScoreSkeleton key={index} />
@@ -83,7 +90,6 @@ const ScoreboardPage = () => {
                             </div>
                         </div>
                     )) : (
-                        // 3. Optional: Improve the empty state message
                         <div className="text-center text-gray-500 py-10">
                             <p className="text-lg font-semibold">No users found for these filters.</p>
                             <p>Try broadening your search criteria.</p>

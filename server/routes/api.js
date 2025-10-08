@@ -253,8 +253,6 @@ router.get('/my-predictions', async (req, res) => {
     }
 });
 
-// GET a user's public profile data (UPDATED WITH NEW ACCURACY LOGIC)
-// GET a user's public profile data (UPDATED WITH 1-DIGIT FLOAT)
 router.get('/profile/:userId', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId).select('-googleId');
@@ -265,69 +263,84 @@ router.get('/profile/:userId', async (req, res) => {
         const predictions = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
 
-        // --- Start Calculating REAL Performance Stats ---
-
-        // 1. Real Overall Rank
         const overallRank = (await User.countDocuments({ score: { $gt: user.score } })) + 1;
-
-        // 2. NEW: Overall Accuracy is now Average Score with one decimal
         const totalScore = assessedPredictions.reduce((sum, p) => sum + p.score, 0);
-        let overallAccuracy = 0;
-        if (assessedPredictions.length > 0) {
-            // Multiply by 10, round, then divide by 10 to keep one decimal place
-            overallAccuracy = Math.round((totalScore / assessedPredictions.length) * 10) / 10;
-        }
+        let overallAccuracy = assessedPredictions.length > 0 ? Math.round((totalScore / assessedPredictions.length) * 10) / 10 : 0;
 
-        // 3. Performance by Type (with personal ranking and avg score)
-        const performanceByType = assessedPredictions.reduce((acc, p) => {
-            if (!acc[p.predictionType]) {
-                acc[p.predictionType] = { total: 0, totalScore: 0 };
+        // --- Helper function to calculate global rank for a specific category ---
+        const getGlobalRank = async (field, value, userScore) => {
+            const matchStage = { status: 'Assessed' };
+            if (field && value) {
+                matchStage[field] = value;
             }
+
+            const rankData = await Prediction.aggregate([
+                { $match: matchStage },
+                { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
+                { $match: { avgScore: { $gt: userScore } } },
+                { $count: 'higherRankedUsers' }
+            ]);
+            return (rankData[0]?.higherRankedUsers || 0) + 1;
+        };
+
+        // --- Calculate personal stats first ---
+        const perfByType = assessedPredictions.reduce((acc, p) => {
+            if (!acc[p.predictionType]) acc[p.predictionType] = { total: 0, totalScore: 0 };
             acc[p.predictionType].total++;
             acc[p.predictionType].totalScore += p.score;
             return acc;
         }, {});
-
-        const formattedPerfByType = Object.entries(performanceByType).map(([type, data]) => ({
+        const formattedPerfByType = Object.entries(perfByType).map(([type, data]) => ({
             type,
-            accuracy: Math.round(data.totalScore / data.total), // This is now average score
-        })).sort((a, b) => b.accuracy - a.accuracy) // Sort by best average score
-            .map((item, index) => ({ ...item, rank: index + 1 })); // Assign rank
+            accuracy: data.totalScore / data.total, // Keep it as a float for accurate comparison
+            count: data.total
+        })).sort((a, b) => b.accuracy - a.accuracy);
 
-        // 4. Performance by Stock (with personal ranking and avg score)
-        const performanceByStock = assessedPredictions.reduce((acc, p) => {
-            if (!acc[p.stockTicker]) {
-                acc[p.stockTicker] = { total: 0, totalScore: 0 };
-            }
+        const perfByStock = assessedPredictions.reduce((acc, p) => {
+            if (!acc[p.stockTicker]) acc[p.stockTicker] = { total: 0, totalScore: 0 };
             acc[p.stockTicker].total++;
             acc[p.stockTicker].totalScore += p.score;
             return acc;
         }, {});
-
-        const formattedPerfByStock = Object.entries(performanceByStock).map(([ticker, data]) => ({
+        const formattedPerfByStock = Object.entries(perfByStock).map(([ticker, data]) => ({
             ticker,
-            accuracy: Math.round(data.totalScore / data.total), // This is now average score
-        })).sort((a, b) => b.accuracy - a.accuracy) // Sort by best average score
-            .map((item, index) => ({ ...item, rank: index + 1 })); // Assign rank
+            accuracy: data.totalScore / data.total,
+            count: data.total
+        })).sort((a, b) => b.accuracy - a.accuracy);
 
-        // 5. Final Performance Object
+        // --- Run all global rank calculations in parallel for speed ---
+        const rankPromisesByType = formattedPerfByType.map(p => getGlobalRank('predictionType', p.type, p.accuracy));
+        const rankPromisesByStock = formattedPerfByStock.map(s => getGlobalRank('stockTicker', s.ticker, s.accuracy));
+
+        const resolvedRanksByType = await Promise.all(rankPromisesByType);
+        const resolvedRanksByStock = await Promise.all(rankPromisesByStock);
+
+        // --- Combine personal stats with global ranks ---
+        const finalPerfByType = formattedPerfByType.map((p, index) => ({
+            ...p,
+            accuracy: Math.round(p.accuracy), // Now round the accuracy for display
+            rank: resolvedRanksByType[index]
+        }));
+
+        const finalPerfByStock = formattedPerfByStock.map((s, index) => ({
+            ...s,
+            accuracy: Math.round(s.accuracy),
+            rank: resolvedRanksByStock[index]
+        }));
+
         const performance = {
             overallRank: `#${overallRank}`,
-            overallAccuracy: overallAccuracy, // This will now be a float like 78.5
-            byType: formattedPerfByType,
-            byStock: formattedPerfByStock
+            overallAccuracy: overallAccuracy,
+            byType: finalPerfByType,
+            byStock: finalPerfByStock
         };
 
         const chartData = assessedPredictions.map(p => ({
             id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
         }));
 
-        // NEW: Add golden member counts to the main payload
         res.json({
-            user,
-            predictions,
-            performance,
-            chartData,
+            user, predictions, performance, chartData,
             followersCount: user.followers.length,
             followingCount: user.following.length,
             goldenSubscribersCount: user.goldenSubscribers?.length || 0,

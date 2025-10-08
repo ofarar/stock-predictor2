@@ -1,3 +1,5 @@
+// src/pages/ProfilePage.js
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -7,7 +9,31 @@ import PerformanceTabs from '../components/PerformanceTabs';
 import GoldenMemberModal from '../components/GoldenMemberModal';
 import JoinGoldenModal from '../components/JoinGoldenModal';
 
-// Helper component for the stat cards
+const MiniPredictionCard = ({ prediction }) => {
+    const isAssessed = prediction.status === 'Assessed';
+    return (
+        <Link to={`/prediction/${prediction._id}`} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+            <div className="flex justify-between items-center">
+                <div className="flex flex-col">
+                    <span className="font-bold text-white text-lg">{prediction.stockTicker}</span>
+                    <span className="text-xs text-gray-400">{prediction.predictionType}</span>
+                </div>
+                {isAssessed ? (
+                    <div className="text-right">
+                        <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score}</p>
+                        <p className="text-xs text-gray-500 -mt-1">Score</p>
+                    </div>
+                ) : (
+                    <div className="text-right">
+                         <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
+                         <p className="text-xs text-gray-500 -mt-1">Target</p>
+                    </div>
+                )}
+            </div>
+        </Link>
+    );
+};
+
 const StatCard = ({ label, value }) => (
     <div className="bg-gray-800 p-4 rounded-lg text-center">
         <p className="text-gray-400 text-sm font-medium">{label}</p>
@@ -22,12 +48,11 @@ const ProfilePage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isGoldenModalOpen, setIsGoldenModalOpen] = useState(false);
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
-    const [visiblePredictions, setVisiblePredictions] = useState(5);
-    const [visibleActive, setVisibleActive] = useState(5); // New state for active predictions pagination
+    const [visiblePredictions, setVisiblePredictions] = useState(6);
+    const [visibleActive, setVisibleActive] = useState(6);
 
-    // THE FIX IS HERE: The logic is simplified to remove the 'profileData' dependency.
     const fetchData = useCallback(async () => {
-        setLoading(true); // Always set loading before a fetch.
+        setLoading(true);
         try {
             const [profileRes, currentUserRes] = await Promise.all([
                 axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${userId}`),
@@ -41,11 +66,11 @@ const ProfilePage = () => {
         } finally {
             setLoading(false);
         }
-    }, [userId]); // Now, the only dependency is 'userId', which is correct.
+    }, [userId]);
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]); // This now correctly and safely depends on 'fetchData'.
+    }, [fetchData]);
 
     const handleFollow = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow`, {}, { withCredentials: true })
@@ -63,7 +88,6 @@ const ProfilePage = () => {
     const { user, predictions, performance, followersCount, followingCount, chartData } = profileData;
     const activePredictions = predictions.filter(p => p.status === 'Active');
     const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
-
     const isOwnProfile = currentUser?._id === user._id;
     const isFollowing = currentUser?.following?.includes(user._id);
     const isSubscribed = currentUser?.goldenSubscriptions?.includes(user._id);
@@ -71,18 +95,8 @@ const ProfilePage = () => {
 
     return (
         <>
-            <GoldenMemberModal
-                isOpen={isGoldenModalOpen}
-                onClose={() => setIsGoldenModalOpen(false)}
-                user={user}
-                onUpdate={fetchData}
-            />
-            <JoinGoldenModal
-                isOpen={isJoinModalOpen}
-                onClose={() => setIsJoinModalOpen(false)}
-                goldenMember={user}
-                onUpdate={fetchData}
-            />
+            <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData}/>
+            <JoinGoldenModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} goldenMember={user} onUpdate={fetchData}/>
 
             <div className="animate-fade-in max-w-6xl mx-auto">
                 <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
@@ -90,17 +104,29 @@ const ProfilePage = () => {
                     <div className="flex-grow text-center sm:text-left">
                         <h1 className="text-4xl font-bold text-white">{user.username}</h1>
                         <p className="text-gray-500 text-sm mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
-                        <p className="text-gray-400 mt-2">{user.about || "No bio provided."}</p>
+                        <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
+                            <p className="text-gray-400">{user.about || "No bio provided."}</p>
+                            {user.xLink && (
+                                <a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+                                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                                </a>
+                            )}
+                            {user.youtubeLink && (
+                                <a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+                                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z"/></svg>
+                                </a>
+                            )}
+                        </div>
                         <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2">
                             <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline"><span className="font-bold text-white">{followersCount}</span> Followers</Link>
                             <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Following' }} className="text-sm text-gray-400 hover:underline"><span className="font-bold text-white">{followingCount}</span> Following</Link>
                             {user.isGoldenMember && (
                                 <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscribers' }} className="text-sm text-yellow-400 hover:underline"><span className="font-bold text-white">{profileData.goldenSubscribersCount}</span> Subscribers</Link>
                             )}
-                            <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscriptions' }} className="text-sm text-yellow-400 hover:underline"><span className="font-bold text-white">{profileData.goldenSubscriptionsCount}</span> Subscriptions</Link>
                         </div>
                     </div>
-
+                    
+                    {/* FIX: Restored the missing buttons section */}
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
                         {currentUser && !isOwnProfile && (
                             <div className="flex gap-3">
@@ -135,10 +161,7 @@ const ProfilePage = () => {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <StatCard label="Overall Rank" value={performance.overallRank} />
-                    <StatCard
-                        label="Average Score"
-                        value={performance.overallAccuracy.toFixed(1)}
-                    />
+                    <StatCard label="Average Score" value={performance.overallAccuracy.toFixed(1)}/>
                     <StatCard label="Total Points" value={user.score} />
                     <StatCard label="Total Predictions" value={predictions.length} />
                 </div>
@@ -149,50 +172,27 @@ const ProfilePage = () => {
                         <PerformanceChart chartData={chartData} />
                     </div>
                     <div className="lg:col-span-1 space-y-8 self-start">
-                        {/* Active Predictions Section with Show More */}
                         <div className="bg-gray-800 p-6 rounded-lg">
                             <h3 className="text-xl font-bold text-white mb-4">Active Predictions</h3>
-                            <div className="space-y-3">
-                                {activePredictions.length > 0 ? activePredictions.slice(0, visibleActive).map(p => (
-                                    <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600">
-                                        <div className="flex justify-between items-center text-sm">
-                                            <span className="font-bold text-white">{p.stockTicker}</span>
-                                            <span className="text-gray-400">{p.predictionType}</span>
-                                            <span className="text-gray-300">${p.targetPrice.toFixed(2)}</span>
-                                        </div>
-                                    </Link>
-                                )) : <p className="text-gray-500 text-center py-4">No active predictions.</p>}
-                            </div>
+                            {activePredictions.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                                    {activePredictions.slice(0, visibleActive).map(p => <MiniPredictionCard key={p._id} prediction={p} />)}
+                                </div>
+                            ) : <p className="text-gray-500 text-center py-4">No active predictions.</p>}
                             {activePredictions.length > visibleActive && (
-                                <button onClick={() => setVisibleActive(prev => prev + 5)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">
-                                    Load More
-                                </button>
+                                <button onClick={() => setVisibleActive(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">Load More</button>
                             )}
                         </div>
 
                         <div className="bg-gray-800 p-6 rounded-lg">
                             <h3 className="text-xl font-bold text-white mb-4">Prediction History</h3>
-                            <div className="space-y-3">
-                                {assessedPredictions.length > 0 ? (
-                                    assessedPredictions.slice(0, visiblePredictions).map(p => (
-                                        <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="font-bold text-white">{p.stockTicker}</span>
-                                                <span className="text-gray-400">{p.predictionType}</span>
-                                                <span className={`font-bold ${p.score > 60 ? 'text-green-400' : 'text-red-400'}`}>
-                                                    {p.score} pts
-                                                </span>
-                                            </div>
-                                        </Link>
-                                    ))
-                                ) : (
-                                    <p className="text-gray-500 text-center py-4">No prediction history yet.</p>
-                                )}
-                            </div>
+                             {assessedPredictions.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                                    {assessedPredictions.slice(0, visiblePredictions).map(p => <MiniPredictionCard key={p._id} prediction={p} />)}
+                                </div>
+                            ) : <p className="text-gray-500 text-center py-4">No prediction history yet.</p>}
                             {assessedPredictions.length > visiblePredictions && (
-                                <button onClick={() => setVisiblePredictions(prev => prev + 5)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">
-                                    Load More
-                                </button>
+                                <button onClick={() => setVisiblePredictions(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">Load More</button>
                             )}
                         </div>
                     </div>

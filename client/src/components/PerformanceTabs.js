@@ -1,9 +1,11 @@
+// src/components/PerformanceTabs.js
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// A new, visually rich StatCard component
+// FIX: StatCard is now passed a 'rank' prop with the global rank
 const StatCard = ({ label, avgScore, rank, isStock }) => {
-    const circumference = 2 * Math.PI * 20; // Circle radius is 20
+    const circumference = 2 * Math.PI * 20;
     const offset = circumference - (avgScore / 100) * circumference;
 
     return (
@@ -11,35 +13,15 @@ const StatCard = ({ label, avgScore, rank, isStock }) => {
             {/* Circular Progress Bar */}
             <div className="relative w-12 h-12 flex-shrink-0">
                 <svg className="w-full h-full" viewBox="0 0 44 44">
-                    <circle
-                        className="text-gray-600"
-                        strokeWidth="4"
-                        stroke="currentColor"
-                        fill="transparent"
-                        r="20"
-                        cx="22"
-                        cy="22"
-                    />
-                    <circle
-                        className="text-green-400"
-                        strokeWidth="4"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={offset}
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        fill="transparent"
-                        r="20"
-                        cx="22"
-                        cy="22"
-                        transform="rotate(-90 22 22)"
-                    />
+                    <circle className="text-gray-600" strokeWidth="4" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22"/>
+                    <circle className="text-green-400" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22" transform="rotate(-90 22 22)"/>
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">
                     {avgScore.toFixed(1)}
                 </span>
             </div>
 
-            {/* Label and Rank */}
+            {/* Label */}
             <div className="ml-4 flex-grow">
                 {isStock ? (
                     <Link to={`/stock/${label}`} className="font-bold text-white text-lg hover:underline">{label}</Link>
@@ -50,7 +32,7 @@ const StatCard = ({ label, avgScore, rank, isStock }) => {
             </div>
 
             {/* Rank Display */}
-            <div className="flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2">
+            <div className="flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2 text-center w-20">
                 <p className="text-xs text-blue-400 font-bold">RANK</p>
                 <p className="text-xl font-bold text-white">#{rank}</p>
             </div>
