@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import DescriptionModal from '../components/DescriptionModal';
+import toast from 'react-hot-toast';
 
 const formatTimeLeft = (deadline) => {
     const total = Date.parse(deadline) - Date.parse(new Date());
@@ -29,23 +30,33 @@ const calculateLiveScore = (predictedPrice, actualPrice) => {
 const PredictionDetailPage = () => {
     const { predictionId } = useParams();
     const [prediction, setPrediction] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     const [currentQuote, setCurrentQuote] = useState(null);
     const [timeLeft, setTimeLeft] = useState('');
     const [loading, setLoading] = useState(true);
     const [isDescModalOpen, setIsDescModalOpen] = useState(false);
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/api/prediction/${predictionId}`)
-            .then(res => {
-                const pred = res.data;
-                setPrediction(pred);
-                if (pred.status === 'Active') {
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${pred.stockTicker}`)
-                         .then(quoteRes => setCurrentQuote(quoteRes.data));
-                }
-            })
-            .catch(err => console.error("Failed to fetch prediction details", err))
-            .finally(() => setLoading(false));
+        Promise.all([
+            axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }),
+            axios.get(`${process.env.REACT_APP_API_URL}/api/prediction/${predictionId}`)
+        ]).then(([userRes, predictionRes]) => {
+            setCurrentUser(userRes.data);
+            const pred = predictionRes.data;
+            setPrediction(pred);
+            if (pred.status === 'Active') {
+                return axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${pred.stockTicker}`);
+            }
+        }).then(quoteRes => {
+            if (quoteRes) {
+                setCurrentQuote(quoteRes.data);
+            }
+        }).catch(err => {
+            console.error("Failed to fetch page data", err);
+            toast.error("Could not load prediction details.");
+        }).finally(() => {
+            setLoading(false);
+        });
     }, [predictionId]);
 
     useEffect(() => {
@@ -56,6 +67,38 @@ const PredictionDetailPage = () => {
             return () => clearInterval(timer);
         }
     }, [prediction]);
+
+    const handleVote = (voteType) => {
+        if (!currentUser) return toast.error("Please log in to vote.");
+        if (!prediction || prediction.status !== 'Active') return;
+
+        const originalPrediction = { ...prediction };
+        const newPrediction = { ...prediction, likes: [...prediction.likes], dislikes: [...prediction.dislikes] };
+        const userId = currentUser._id;
+        const userLikesIndex = newPrediction.likes.indexOf(userId);
+        const userDislikesIndex = newPrediction.dislikes.indexOf(userId);
+
+        if (voteType === 'like') {
+            if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1);
+            else {
+                newPrediction.likes.push(userId);
+                if (userDislikesIndex !== -1) newPrediction.dislikes.splice(userDislikesIndex, 1);
+            }
+        } else {
+            if (userDislikesIndex !== -1) newPrediction.dislikes.splice(userDislikesIndex, 1);
+            else {
+                newPrediction.dislikes.push(userId);
+                if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1);
+            }
+        }
+        setPrediction(newPrediction);
+
+        axios.post(`${process.env.REACT_APP_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
+            .catch(() => {
+                toast.error("Vote failed.");
+                setPrediction(originalPrediction);
+            });
+    };
 
     if (loading) return <div className="text-center text-white">Loading Prediction...</div>;
     if (!prediction) return <div className="text-center text-white">Prediction not found.</div>;
@@ -68,6 +111,9 @@ const PredictionDetailPage = () => {
     const liveScoreColor = typeof liveScore === 'number' && liveScore > 60 ? 'text-green-400' : 'text-red-400';
     
     const formattedScore = typeof liveScore === 'number' ? liveScore.toFixed(1) : liveScore;
+    
+    const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
+    const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
 
     return (
         <>
@@ -84,7 +130,7 @@ const PredictionDetailPage = () => {
                                 <Link to={`/stock/${prediction.stockTicker}`} className="text-4xl font-bold text-white hover:underline">
                                     {prediction.stockTicker}
                                 </Link>
-                                {/* MOVED FROM HERE */}
+                                {/* FIX: The duplicate info icon has been removed from this header section */}
                             </div>
                             <p className="text-sm text-gray-400 mt-1">{prediction.predictionType} Prediction</p>
                         </div>
@@ -103,7 +149,6 @@ const PredictionDetailPage = () => {
                         <div className="bg-gray-700 p-4 rounded-lg">
                             <div className="flex items-center justify-center gap-2">
                                 <p className="text-sm text-gray-400">Predicted Price</p>
-                                {/* MOVED TO HERE */}
                                 {prediction.description && (
                                     <button onClick={() => setIsDescModalOpen(true)} className="text-gray-500 hover:text-white" title="View Rationale">
                                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
@@ -134,9 +179,24 @@ const PredictionDetailPage = () => {
                         </div>
                     )}
 
+                    <div className="mt-6 pt-6 border-t border-gray-700">
+                        <h3 className="text-center text-sm text-gray-400 font-bold mb-4">DO YOU AGREE WITH THIS PREDICTION?</h3>
+                        <div className="flex justify-center items-center gap-6 text-gray-400">
+                            <button onClick={() => handleVote('like')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userLike ? 'text-green-500' : 'hover:text-white'}`} disabled={!currentUser || isAssessed} title="Agree">
+                                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
+                                <span>{(prediction.likes || []).length}</span>
+                            </button>
+                            <button onClick={() => handleVote('dislike')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userDislike ? 'text-red-500' : 'hover:text-white'}`} disabled={!currentUser || isAssessed} title="Disagree">
+                                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.438 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.2-1.867a4 4 0 00.8-2.4z"></path></svg>
+                                <span>{(prediction.dislikes || []).length}</span>
+                            </button>
+                        </div>
+                        {isAssessed && <p className="text-center text-xs text-gray-500 mt-2">Voting is closed for assessed predictions.</p>}
+                    </div>
+
                     <div className="border-t border-gray-700 mt-6 pt-4 flex items-center">
                         <img 
-                            src={prediction.userId.avatar || `https-avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} 
+                            src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} 
                             alt="avatar" 
                             className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} 
                         />

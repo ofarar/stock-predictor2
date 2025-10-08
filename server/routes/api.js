@@ -11,6 +11,54 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+// POST: Like a prediction
+router.post('/predictions/:id/like', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+    try {
+        const prediction = await Prediction.findById(req.params.id);
+        if (!prediction) return res.status(404).send('Prediction not found.');
+
+        const userId = req.user._id.toString();
+        // Remove from dislikes if it's there
+        prediction.dislikes.pull(userId);
+
+        // Toggle the like
+        if (prediction.likes.includes(userId)) {
+            prediction.likes.pull(userId); // Unlike
+        } else {
+            prediction.likes.addToSet(userId); // Like
+        }
+        await prediction.save();
+        res.json(prediction);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// POST: Dislike a prediction
+router.post('/predictions/:id/dislike', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+    try {
+        const prediction = await Prediction.findById(req.params.id);
+        if (!prediction) return res.status(404).send('Prediction not found.');
+
+        const userId = req.user._id.toString();
+        // Remove from likes if it's there
+        prediction.likes.pull(userId);
+
+        // Toggle the dislike
+        if (prediction.dislikes.includes(userId)) {
+            prediction.dislikes.pull(userId); // Undislike
+        } else {
+            prediction.dislikes.addToSet(userId); // Dislike
+        }
+        await prediction.save();
+        res.json(prediction);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // ++ NEW ROUTE: Real-time Top Movers / Trending Stocks ++
 router.get('/market/top-movers', async (req, res) => {
     const cacheKey = 'top-movers';
@@ -819,38 +867,66 @@ router.get('/explore/feed', async (req, res) => {
         if (predictionType && predictionType !== 'All') matchQuery.predictionType = predictionType;
 
         let predictions;
+        const limit = 50;
 
-        if (sortBy === 'performance') {
-            // Aggregation pipeline for performance sorting
+        // The aggregation pipeline is now used for both 'performance' and 'votes'
+        if (sortBy === 'performance' || sortBy === 'votes') {
+            let sortStage = {};
+
+            if (sortBy === 'performance') {
+                sortStage = { 'userDetails.score': -1, createdAt: -1 };
+            } else { // sortBy === 'votes'
+                sortStage = { voteScore: -1, createdAt: -1 };
+            }
+
             predictions = await Prediction.aggregate([
                 { $match: matchQuery },
-                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
+                {
+                    $addFields: {
+                        voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] }
+                    }
+                },
+                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' }},
                 { $unwind: '$userDetails' },
-                { $sort: { 'userDetails.score': -1, createdAt: -1 } },
-                { $limit: 50 },
-                { $project: { _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1, actualPrice: 1, createdAt: 1, description: 1, userId: '$userDetails' } }
+                { $sort: sortStage },
+                { $limit: limit },
+                // FIX: This project stage is now complete and ensures all data is returned
+                {
+                    $project: {
+                        _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1,
+                        status: 1, score: 1, actualPrice: 1, createdAt: 1, description: 1,
+                        priceAtCreation: 1, likes: 1, dislikes: 1,
+                        userId: { // Manually reshape the userDetails to match the populate() structure
+                            _id: '$userDetails._id',
+                            username: '$userDetails.username',
+                            avatar: '$userDetails.avatar',
+                            isGoldenMember: '$userDetails.isGoldenMember',
+                            score: '$userDetails.score'
+                        }
+                    }
+                }
             ]);
+
         } else {
             // Standard find for date-based sorting
             predictions = await Prediction.find(matchQuery)
                 .sort({ createdAt: -1 })
-                .limit(50)
+                .limit(limit)
                 .populate('userId', 'username avatar isGoldenMember score')
-                .lean(); // Use .lean() for better performance and to allow modification
+                .lean();
         }
 
-        // ++ START: NEW LOGIC TO ADD CURRENT PRICE ++
+        // Add current price to active predictions
         if (status === 'Active' && predictions.length > 0) {
             const tickers = [...new Set(predictions.map(p => p.stockTicker))];
-            const quotes = await yahooFinance.quote(tickers);
-            const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
-
-            // Add the currentPrice to each prediction object
-            predictions.forEach(p => {
-                p.currentPrice = priceMap.get(p.stockTicker) || 0;
-            });
+            if (tickers.length > 0) {
+                const quotes = await yahooFinance.quote(tickers);
+                const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
+                predictions.forEach(p => {
+                    p.currentPrice = priceMap.get(p.stockTicker) || 0;
+                });
+            }
         }
-        // ++ END: NEW LOGIC ++
 
         res.json(predictions);
     } catch (err) {

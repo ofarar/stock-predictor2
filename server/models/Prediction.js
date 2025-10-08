@@ -11,7 +11,9 @@ const PredictionSchema = new Schema({
     score: { type: Number, default: 0 },
     actualPrice: { type: Number },
     priceAtCreation: { type: Number },
-    description: { type: String, maxLength: 500 } 
+    description: { type: String, maxLength: 500 },
+    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    dislikes: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Prediction', PredictionSchema);
