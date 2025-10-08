@@ -24,6 +24,8 @@ import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import AdminPage from './pages/AdminPage';
 import PredictionDetailPage from './pages/PredictionDetailPage';
+import ExplorePage from './pages/ExplorePage';
+
 
 // A small helper component to handle the conditional rendering
 const PageSpecificContent = () => {
@@ -97,6 +99,7 @@ function App() {
           <PageSpecificContent />
           <Routes>
             <Route path="/" element={<HomePage user={user} />} />
+            <Route path="/explore" element={<ExplorePage />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage />} />

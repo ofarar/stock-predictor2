@@ -104,6 +104,11 @@ const Header = ({ user, onMakePredictionClick }) => {
                     <div className="flex items-center space-x-8">
                         <Logo />
                         <div className="hidden md:flex items-center space-x-6">
+                            <Link to="/explore" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+                                {/* You can find a suitable icon for "Explore" */}
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                Explore
+                            </Link>
                             <Link to="/scoreboard" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6"></path></svg>Scoreboard</Link>
                         </div>
                     </div>
@@ -169,6 +174,7 @@ const Header = ({ user, onMakePredictionClick }) => {
 
                 {isMobileMenuOpen && (
                     <div className="md:hidden mt-4">
+                        <Link to="/explore" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Explore</Link>
                         <Link to="/scoreboard" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Scoreboard</Link>
                         {user && <Link to={`/profile/${user._id}`} className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">My Profile</Link>}
                         {user && user.isAdmin && <Link to="/admin" className="block py-2 px-4 text-sm text-yellow-400 hover:bg-gray-700 rounded">Admin Panel</Link>}

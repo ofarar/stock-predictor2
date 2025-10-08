@@ -8,6 +8,36 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 
 const searchCache = new Map();
+// A simple in-memory cache to avoid spamming the Yahoo Finance API
+const apiCache = new Map();
+
+// ++ NEW ROUTE: Real-time Top Movers / Trending Stocks ++
+router.get('/market/top-movers', async (req, res) => {
+    const cacheKey = 'top-movers';
+    if (apiCache.has(cacheKey) && (Date.now() - apiCache.get(cacheKey).timestamp < 15 * 60 * 1000)) {
+        return res.json(apiCache.get(cacheKey).data);
+    }
+
+    try {
+        const trending = await yahooFinance.trendingSymbols('US', { count: 6 });
+        const tickers = trending.quotes.map(q => q.symbol);
+        const quotes = await yahooFinance.quote(tickers);
+
+        const movers = quotes.map(q => ({
+            ticker: q.symbol,
+            price: q.regularMarketPrice?.toFixed(2) || 'N/A',
+            change: q.regularMarketChange?.toFixed(2) || 'N/A',
+            percentChange: q.regularMarketChangePercent?.toFixed(2) || 'N/A',
+            isUp: (q.regularMarketChange || 0) >= 0
+        }));
+
+        apiCache.set(cacheKey, { data: movers, timestamp: Date.now() });
+        res.json(movers);
+    } catch (err) {
+        console.error("Top movers fetch error:", err);
+        res.status(500).json({ message: "Failed to fetch market data." });
+    }
+});
 
 // --- SETTINGS ROUTES ---
 
@@ -510,11 +540,11 @@ router.get('/widgets/daily-leaders', async (req, res) => {
     } catch (err) { res.status(500).json({ message: 'Error fetching daily leaders' }); }
 });
 
-// GET Long-Term Leaders - UPDATED
+// ++ UPDATED WIDGET: Long-Term Leaders now includes Quarterly predictions ++
 router.get('/widgets/long-term-leaders', async (req, res) => {
     try {
         const leaders = await Prediction.aggregate([
-            { $match: { predictionType: 'Yearly', status: 'Assessed' } },
+            { $match: { predictionType: { $in: ['Yearly', 'Quarterly'] }, status: 'Assessed' } },
             { $group: { _id: '$userId', accuracy: { $avg: '$score' } } },
             { $sort: { accuracy: -1 } },
             { $limit: 3 },
@@ -525,8 +555,8 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
                     userId: '$_id',
                     username: '$user.username',
                     accuracy: { $round: ['$accuracy', 0] },
-                    avatar: '$user.avatar',                 // Add avatar
-                    isGoldenMember: '$user.isGoldenMember', // Add golden status
+                    avatar: '$user.avatar',
+                    isGoldenMember: '$user.isGoldenMember',
                     _id: 0
                 }
             }
@@ -761,6 +791,58 @@ router.post('/users/:userId/cancel-golden', async (req, res) => {
     }
 });
 
+// Find and update your /api/explore/feed route
+router.get('/explore/feed', async (req, res) => {
+    const { status = 'Active', stock, predictionType, sortBy = 'date' } = req.query;
 
+    if (!['Active', 'Assessed'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status filter' });
+    }
+
+    try {
+        const matchQuery = { status };
+        if (stock) matchQuery.stockTicker = stock.toUpperCase();
+        if (predictionType && predictionType !== 'All') matchQuery.predictionType = predictionType;
+
+        let predictions;
+
+        if (sortBy === 'performance') {
+            // Aggregation pipeline for performance sorting
+            predictions = await Prediction.aggregate([
+                { $match: matchQuery },
+                { $lookup: { from: 'users', localField: 'userId', foreignField: 'id', as: 'userDetails' } },
+                { $unwind: '$userDetails' },
+                { $sort: { 'userDetails.score': -1, createdAt: -1 } },
+                { $limit: 50 },
+                { $project: { _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1, actualPrice: 1, createdAt: 1, userId: '$userDetails' } }
+            ]);
+        } else {
+            // Standard find for date-based sorting
+            predictions = await Prediction.find(matchQuery)
+                .sort({ createdAt: -1 })
+                .limit(50)
+                .populate('userId', 'username avatar isGoldenMember score')
+                .lean(); // Use .lean() for better performance and to allow modification
+        }
+
+        // ++ START: NEW LOGIC TO ADD CURRENT PRICE ++
+        if (status === 'Active' && predictions.length > 0) {
+            const tickers = [...new Set(predictions.map(p => p.stockTicker))];
+            const quotes = await yahooFinance.quote(tickers);
+            const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
+
+            // Add the currentPrice to each prediction object
+            predictions.forEach(p => {
+                p.currentPrice = priceMap.get(p.stockTicker) || 0;
+            });
+        }
+        // ++ END: NEW LOGIC ++
+
+        res.json(predictions);
+    } catch (err) {
+        console.error(`Error fetching explore feed:`, err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 module.exports = router;
