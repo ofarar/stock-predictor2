@@ -24,6 +24,7 @@ const UserSchema = new Schema({
         max: 500  // ADD: Maximum price
     },
     goldenMemberDescription: { type: String, maxLength: 300 },
+    acceptingNewSubscribers: { type: Boolean, default: true },
 
     goldenSubscribers: [{
         user: { type: Schema.Types.ObjectId, ref: 'User' },

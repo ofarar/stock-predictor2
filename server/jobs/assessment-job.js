@@ -3,6 +3,7 @@ const User = require('../models/User');
 const PredictionLog = require('../models/PredictionLog');
 const Notification = require('../models/Notification');
 const yahooFinance = require('yahoo-finance2').default;
+const { awardBadges } = require('../services/badgeService'); // FIX: Import the awardBadges function
 
 /**
  * Calculates a score based on how close a prediction was to the actual price.
@@ -59,7 +60,7 @@ const runAssessmentJob = async () => {
     const predictionsToAssess = await Prediction.find({
         status: 'Active',
         deadline: { $lte: new Date() }
-    }).populate('userId', 'username');
+    }).populate('userId', 'username followers'); // Also populate followers for badge notifications
 
     if (predictionsToAssess.length === 0) {
         console.log('No predictions to assess.');
@@ -82,17 +83,24 @@ const runAssessmentJob = async () => {
             // Update Prediction
             prediction.status = 'Assessed';
             prediction.score = score;
-            prediction.actualPrice = actualPrice; // <-- THE FIX: SAVE THE ACTUAL PRICE
+            prediction.actualPrice = actualPrice;
             await prediction.save();
 
             // Update User's Total Score
-            await User.updateOne({ _id: prediction.userId._id }, { $inc: { score: score } });
+            const user = await User.findById(prediction.userId._id);
+            if (user) {
+                user.score += score;
+                await user.save();
+            } else {
+                console.warn(`Could not find user with ID ${prediction.userId._id} to update score.`);
+                continue; 
+            }
 
             // --- Create "Score Assessed" Notification ---
             const message = `Your ${prediction.predictionType} prediction on ${prediction.stockTicker} scored ${score} points!`;
             await new Notification({
                 recipient: prediction.userId._id,
-                type: 'NewPrediction', // You could add a new type like 'ScoreAssessed'
+                type: 'NewPrediction',
                 message: message,
                 link: `/prediction/${prediction._id}`
             }).save();
@@ -112,14 +120,9 @@ const runAssessmentJob = async () => {
 
             console.log(`Assessed prediction for ${prediction.stockTicker}. User ${prediction.userId.username} scored ${score} points.`);
 
-            // 2. After updating the user's score, check for new badges
-            const updatedUser = await User.findById(prediction.userId._id);
-            const userPredictions = await Prediction.find({ userId: updatedUser._id, status: 'Assessed' });
-            const totalScore = userPredictions.reduce((sum, p) => sum + p.score, 0);
-            const overallAccuracy = userPredictions.length > 0 ? totalScore / userPredictions.length : 0;
-
-            // Pass the user object and their latest stats to the badge service
-            await awardBadges(updatedUser, { overallAccuracy });
+            // FIX: This call will now work because awardBadges is imported.
+            // Pass the full user object, as the service calculates stats internally.
+            await awardBadges(user);
 
         } catch (error) {
             console.error(`Failed to assess prediction ${prediction._id}:`, error);

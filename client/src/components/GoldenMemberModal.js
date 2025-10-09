@@ -27,6 +27,11 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
             description: description,
             acceptingNewSubscribers: acceptingNew,
         };
+
+        // --- LOGGING ---
+        console.log("Frontend: Sending these settings to the server:", settings);
+        // ---------------
+
         axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
                 toast.success('Golden Member settings updated!');
@@ -39,13 +44,15 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
     };
     
     const handleDeactivate = () => {
-         // FIX: Ensure 'acceptingNewSubscribers' is included in the deactivation request.
          const settings = { 
             isGoldenMember: false, 
             price, 
             description, 
             acceptingNewSubscribers: acceptingNew 
          };
+         // --- LOGGING ---
+         console.log("Frontend: Sending DEACTIVATION settings:", settings);
+         // ---------------
          axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
                 toast.success('Golden Member status deactivated.');
@@ -62,17 +69,16 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
             <div className="relative bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg text-gray-300" onClick={e => e.stopPropagation()}>
                 <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
                 <h2 className="text-2xl font-bold text-white mb-4">Golden Member Settings</h2>
-                <p className="text-sm mb-6">Allow other users to subscribe to you for a monthly fee.</p>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label htmlFor="price" className="block text-sm font-medium text-gray-300">Monthly Subscription Price ($1 - $500)</label>
+                        <label htmlFor="price" className="block text-sm font-medium text-gray-300">Monthly Price ($1 - $500)</label>
                         <input type="number" name="price" id="price" min="1" max="500" step="1" value={price} onChange={e => setPrice(e.target.value)}
                             className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                     </div>
                     <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-300">Description (What subscribers get)</label>
+                        <label htmlFor="description" className="block text-sm font-medium text-gray-300">Description</label>
                         <textarea name="description" id="description" rows="3" value={description} onChange={e => setDescription(e.target.value)}
-                            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" placeholder="e.g., Access to my weekly stock analysis."></textarea>
+                            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"></textarea>
                     </div>
                     <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
                         <label htmlFor="acceptingNew" className="text-sm font-medium text-gray-300">Accepting New Subscribers</label>
@@ -82,13 +88,11 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                         </label>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <button type="submit" className="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-md hover:bg-yellow-400 transition-colors">
+                        <button type="submit" className="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-md hover:bg-yellow-400">
                             {user.isGoldenMember ? 'Update Settings' : 'Activate Golden Status'}
                         </button>
                         {user.isGoldenMember && (
-                             <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700 transition-colors">
-                                Deactivate
-                            </button>
+                             <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700">Deactivate</button>
                         )}
                     </div>
                 </form>

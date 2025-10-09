@@ -592,40 +592,34 @@ router.get('/profile/:userId', async (req, res) => {
 });
 
 
-// server/routes/api.js
-
-// Find and replace this entire route
 router.put('/profile/golden-member', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
     try {
-        console.log("--- Golden Member Update Initiated ---");
         const { isGoldenMember, price, description, acceptingNewSubscribers } = req.body;
-        console.log("Received settings:", { isGoldenMember, price, description, acceptingNewSubscribers });
+        const userToUpdate = await User.findById(req.user._id).populate('goldenSubscribers.user');
 
-        const currentUser = await User.findById(req.user._id).populate('goldenSubscribers.user');
-        
+        if (!userToUpdate) return res.status(404).json({ message: "User not found." });
+
         // --- Deactivation Logic ---
-        if (currentUser.isGoldenMember && isGoldenMember === false) {
-            console.log("Deactivation process started...");
-            const validSubscribers = currentUser.goldenSubscribers.filter(sub => sub.user);
+        if (userToUpdate.isGoldenMember && isGoldenMember === false) {
+            const validSubscribers = userToUpdate.goldenSubscribers.filter(sub => sub.user);
             const subscriberIds = validSubscribers.map(sub => sub.user._id);
 
             if (subscriberIds.length > 0) {
-                console.log(`Notifying ${subscriberIds.length} subscribers of cancellation.`);
-                const message = `${currentUser.username} is no longer a Golden Member. Your subscription has been cancelled.`;
-                const notifications = subscriberIds.map(id => ({ recipient: id, type: 'GoldenPost', message, link: `/profile/${currentUser._id}` }));
+                const message = `${userToUpdate.username} is no longer a Golden Member. Your subscription has been cancelled.`;
+                const notifications = subscriberIds.map(id => ({
+                    recipient: id, type: 'GoldenPost', message, link: `/profile/${userToUpdate._id}`
+                }));
                 await Notification.insertMany(notifications);
-
-                console.log("Removing user from subscribers' subscription lists.");
                 await User.updateMany(
                     { _id: { $in: subscriberIds } },
-                    { $pull: { goldenSubscriptions: { user: currentUser._id } } }
+                    { $pull: { goldenSubscriptions: { user: userToUpdate._id } } }
                 );
             }
         }
 
-        // FIX: Use findByIdAndUpdate for a more reliable atomic update.
+        // FIX: Use findByIdAndUpdate for a more robust and direct update.
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,
             {
@@ -635,17 +629,15 @@ router.put('/profile/golden-member', async (req, res) => {
                     goldenMemberDescription: description,
                     acceptingNewSubscribers,
                     // Conditionally clear the subscribers list only on deactivation
-                    goldenSubscribers: isGoldenMember === false ? [] : currentUser.goldenSubscribers
+                    goldenSubscribers: isGoldenMember === false ? [] : userToUpdate.goldenSubscribers
                 }
             },
-            { new: true, runValidators: true } // runValidators ensures price limits are checked
+            { new: true, runValidators: true } // runValidators ensures price limits are still checked
         );
 
-        console.log("--- User saved successfully! ---");
         res.json(updatedUser);
 
     } catch (err) {
-        console.error("!!! Golden Member Update FAILED !!!", err);
         if (err.name === 'ValidationError' && err.errors.goldenMemberPrice) {
             return res.status(400).json({ message: 'Price must be between $1 and $500.' });
         }
