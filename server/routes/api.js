@@ -7,10 +7,109 @@ const Prediction = require('../models/Prediction');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
+const Post = require('../models/Post');
 
 const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
+
+router.get('/golden-feed', async (req, res) => {
+    if (!req.user) return res.status(401).json([]);
+
+    try {
+        // Find the current user and their subscriptions
+        const currentUser = await User.findById(req.user._id);
+        const subscribedToIds = currentUser.goldenSubscriptions;
+
+        // Find all golden posts where the author is in the user's subscription list
+        const feedPosts = await Post.find({
+            userId: { $in: subscribedToIds },
+            isGoldenPost: true
+        })
+            .sort({ createdAt: -1 })
+            .limit(100)
+            .populate('userId', 'username avatar isGoldenMember'); // Populate author info
+
+        res.json(feedPosts);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching golden feed.' });
+    }
+});
+
+router.post('/posts/golden', async (req, res) => {
+    if (!req.user || !req.user.isGoldenMember) {
+        return res.status(403).json({ message: 'Only Golden Members can create posts.' });
+    }
+    try {
+        const { message, attachedPrediction } = req.body;
+        if (!message) return res.status(400).json({ message: 'Post message cannot be empty.' });
+
+        if (attachedPrediction && attachedPrediction.stockTicker) {
+            const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
+            attachedPrediction.priceAtCreation = quote.regularMarketPrice;
+        }
+
+        const newPost = new Post({ userId: req.user._id, message, attachedPrediction, isGoldenPost: true });
+        await newPost.save();
+
+        const goldenMember = await User.findById(req.user._id);
+        if (goldenMember.goldenSubscribers && goldenMember.goldenSubscribers.length > 0) {
+            const notificationMessage = `${goldenMember.username} has published a new Golden Post.`;
+
+            const notifications = goldenMember.goldenSubscribers.map(subscriberId => ({
+                recipient: subscriberId,
+                sender: goldenMember._id,
+                type: 'GoldenPost', // FIX: Use a unique type
+                message: notificationMessage,
+                link: `/profile/${goldenMember._id}?tab=GoldenFeed` // FIX: Add query parameter
+            }));
+
+            await Notification.insertMany(notifications);
+        }
+        res.status(201).json(newPost);
+    } catch (err) {
+        console.error("Error creating golden post:", err);
+        res.status(500).json({ message: 'Server error while creating post.' });
+    }
+});
+
+// GET: Fetch the golden feed for a specific user (with security)
+router.get('/posts/golden/:userId', async (req, res) => {
+    if (!req.user) {
+        // Not logged in, return empty array to show the paywall
+        return res.json([]);
+    }
+
+    try {
+        const profileUserId = req.params.userId;
+        const currentUserId = req.user._id.toString();
+
+        const profileUser = await User.findById(profileUserId);
+        if (!profileUser) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Check for authorization:
+        // 1. Is the current user the owner of the profile?
+        // 2. Is the current user in the profile owner's list of golden subscribers?
+        const isOwner = currentUserId === profileUserId;
+        const isSubscriber = profileUser.goldenSubscribers.map(id => id.toString()).includes(currentUserId);
+
+        if (isOwner || isSubscriber) {
+            // If authorized, fetch and return the posts
+            const posts = await Post.find({ userId: profileUserId, isGoldenPost: true })
+                .sort({ createdAt: -1 })
+                .limit(50);
+            return res.json(posts);
+        } else {
+            // If not authorized, return an empty array to indicate they don't have access
+            return res.json([]);
+        }
+    } catch (err) {
+        console.error("Error fetching golden feed:", err);
+        res.status(500).json({ message: 'Server error while fetching feed.' });
+    }
+});
 
 // POST: Like a prediction
 router.post('/predictions/:id/like', async (req, res) => {
@@ -92,16 +191,16 @@ router.get('/settings', async (req, res) => {
     try {
         // Define the default badge rules to be used if they don't exist
         const defaultBadgeSettings = {
-          "market_maven": {
-            "name": "Market Maven",
-            "description": "Awarded for achieving a high overall average score across all predictions.",
-            "tiers": { "Gold": { "score": 90 }, "Silver": { "score": 80 }, "Bronze": { "score": 70 } }
-          },
-          "daily_oracle": {
-            "name": "Daily Oracle",
-            "description": "Awarded for high accuracy specifically on Daily predictions.",
-            "tiers": { "Gold": { "score": 90 }, "Silver": { "score": 80 }, "Bronze": { "score": 70 } }
-          }
+            "market_maven": {
+                "name": "Market Maven",
+                "description": "Awarded for achieving a high overall average score across all predictions.",
+                "tiers": { "Gold": { "score": 90 }, "Silver": { "score": 80 }, "Bronze": { "score": 70 } }
+            },
+            "daily_oracle": {
+                "name": "Daily Oracle",
+                "description": "Awarded for high accuracy specifically on Daily predictions.",
+                "tiers": { "Gold": { "score": 90 }, "Silver": { "score": 80 }, "Bronze": { "score": 70 } }
+            }
         };
 
         let settings = await Setting.findOne();
@@ -110,7 +209,7 @@ router.get('/settings', async (req, res) => {
         if (!settings) {
             console.log("No settings document found. Creating one with default badge settings.");
             settings = await new Setting({ badgeSettings: defaultBadgeSettings }).save();
-        } 
+        }
         // If the document exists but is MISSING the badgeSettings, add them and save.
         else if (!settings.badgeSettings || Object.keys(settings.badgeSettings).length === 0) {
             console.log("Found settings document but it's missing badge rules. Applying defaults.");

@@ -15,6 +15,17 @@ const isMarketOpen = () => {
     return isWeekday && isAfterOpen && isBeforeClose;
 };
 
+// New helper function to check for the pre-market window
+const isPreMarketWindow = () => {
+    const now = new Date();
+    const utcHour = now.getUTCHours();
+    const day = now.getUTCDay();
+    const isWeekday = day >= 1 && day <= 5;
+    // Check if it's between 13:00 UTC (9:00 AM ET) and 13:30 UTC (9:30 AM ET)
+    const isInWindow = utcHour === 13 && now.getUTCMinutes() < 30;
+    return isWeekday && isInWindow;
+};
+
 const getPredictionDetails = (predictionType) => {
     const now = new Date();
     let deadline = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -25,14 +36,32 @@ const getPredictionDetails = (predictionType) => {
 
     switch (predictionType) {
         case 'Hourly': {
-            if (!isMarketOpen()) return { isOpen: false, message: 'Market is currently closed', barWidth: '0%' };
-            const elapsedMinutes = now.getMinutes();
-            const penalty = elapsedMinutes > 10 ? Math.floor(((elapsedMinutes - 10) / 50) * 20) : 0;
-            maxScore = 100 - penalty;
-            barWidth = 100 - (elapsedMinutes / 60 * 100);
-            deadline.setUTCHours(now.getUTCHours() + 1, 0, 0, 0);
+            // --- START: NEW PRE-MARKET LOGIC ---
+            if (isPreMarketWindow()) {
+                // Special window from 9:00 - 9:30 AM ET
+                deadline.setUTCHours(14, 0, 0, 0); // Deadline is 10:00 AM ET (14:00 UTC)
+                message = 'Opening Hour Prediction';
+                maxScore = 100;
+                barWidth = 100;
+                isOpen = true;
+            } else if (isMarketOpen()) {
+                // Normal logic for when the market is open
+                const elapsedMinutes = now.getMinutes();
+                const penalty = elapsedMinutes > 10 ? Math.floor(((elapsedMinutes - 10) / 50) * 20) : 0;
+                maxScore = 100 - penalty;
+                barWidth = 100 - (elapsedMinutes / 60 * 100);
+                deadline.setUTCHours(now.getUTCHours() + 1, 0, 0, 0);
+                isOpen = true;
+            } else {
+                // Market is closed
+                isOpen = false;
+                message = 'Market is currently closed';
+                barWidth = 0;
+            }
+            // --- END: NEW PRE-MARKET LOGIC ---
             break;
         }
+        // ... (Daily, Weekly, and other cases remain the same)
         case 'Daily': {
             const marketCloseToday = new Date(now.getTime());
             marketCloseToday.setUTCHours(20, 0, 0, 0);
@@ -57,32 +86,22 @@ const getPredictionDetails = (predictionType) => {
             return { isOpen: true, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
         }
         case 'Weekly': {
-            // START: New Rollover Logic
-            let deadline = new Date(now.getTime());
-            const dayOfWeek = now.getUTCDay(); // 0=Sun, 5=Fri
-            const hour = now.getUTCHours();
-
-            // Find this week's Friday
+            let weeklyDeadline = new Date(now.getTime());
+            const dayOfWeek = now.getUTCDay();
             const daysUntilFriday = dayOfWeek <= 5 ? 5 - dayOfWeek : 6;
-            deadline.setUTCDate(now.getUTCDate() + daysUntilFriday);
-            deadline.setUTCHours(20, 0, 0, 0); // Friday 4 PM ET
-
-            // If it's past this week's deadline, set it for next Friday
-            if (now.getTime() > deadline.getTime()) {
-                deadline.setUTCDate(deadline.getUTCDate() + 7);
+            weeklyDeadline.setUTCDate(now.getUTCDate() + daysUntilFriday);
+            weeklyDeadline.setUTCHours(20, 0, 0, 0);
+            if (now.getTime() > weeklyDeadline.getTime()) {
+                weeklyDeadline.setUTCDate(weeklyDeadline.getUTCDate() + 7);
             }
-            // END: New Rollover Logic
-
-            // The penalty is now based on how close we are to the calculated deadline
+            deadline = weeklyDeadline;
             const startOfWeek = new Date(deadline.getTime());
             startOfWeek.setUTCDate(startOfWeek.getUTCDate() - 4);
-            startOfWeek.setUTCHours(13, 30, 0, 0); // Monday 9:30 AM ET
-
+            startOfWeek.setUTCHours(13, 30, 0, 0);
             const elapsedMillis = Math.max(0, now.getTime() - startOfWeek.getTime());
             const totalMillis = deadline.getTime() - startOfWeek.getTime();
             const percentElapsed = (elapsedMillis / totalMillis) * 100;
-
-            const penalty = Math.floor(percentElapsed / (100 / 20)); // Lose 20 points over the week
+            const penalty = Math.floor(percentElapsed / (100 / 20));
             maxScore = 100 - penalty;
             barWidth = 100 - percentElapsed;
             message = `For ${deadline.toLocaleDateString()}`;
@@ -94,13 +113,12 @@ const getPredictionDetails = (predictionType) => {
             const totalDaysInMonth = deadline.getUTCDate();
             const elapsedDays = now.getUTCDate();
             const penalty = Math.floor((elapsedDays / totalDaysInMonth) * 25);
-            maxScore = 100 - penalty; barWidth = 100 - (elapsedDays / totalDaysInMonth * 100);
+            maxScore = 100 - penalty;
+            barWidth = 100 - (elapsedDays / totalDaysInMonth * 100);
             break;
         }
-        // ++ ADDED: Quarterly case ++
         case 'Quarterly': {
-            deadline.setUTCMonth(now.getUTCMonth() + 3); // Deadline is 3 months from now
-            // Simple penalty: 25 points lost over ~90 days
+            deadline.setUTCMonth(now.getUTCMonth() + 3);
             const startOfQuarter = new Date(Date.UTC(now.getUTCFullYear(), Math.floor(now.getUTCMonth() / 3) * 3, 1));
             const elapsedDays = (now - startOfQuarter) / (1000 * 60 * 60 * 24);
             const penalty = Math.floor((elapsedDays / 90) * 25);
@@ -113,13 +131,16 @@ const getPredictionDetails = (predictionType) => {
             const startOfYear = new Date(Date.UTC(now.getUTCFullYear(), 0, 1));
             const elapsedDays = (now - startOfYear) / (1000 * 60 * 60 * 24);
             const penalty = Math.floor((elapsedDays / 365) * 30);
-            maxScore = 100 - penalty; barWidth = 100 - (elapsedDays / 365 * 100);
+            maxScore = 100 - penalty;
+            barWidth = 100 - (elapsedDays / 365 * 100);
             break;
         }
         default:
-            isOpen = false; message = 'Select a valid prediction type.';
+            isOpen = false;
+            message = 'Select a valid prediction type.';
             break;
     }
+
     message = message || `Max Score: ${maxScore}`;
     return { isOpen, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
 };
@@ -239,6 +260,8 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
                     )}
                 </div>
             )}
+            {isLoading && <p className="text-center text-gray-400 py-2">Searching...</p>}
+            {error && <p className="text-center text-red-400 py-2">{error}</p>}
             {selectedStock ? (
                 <div className="animate-fade-in">
                     <p className="text-center text-gray-400 mb-1">
