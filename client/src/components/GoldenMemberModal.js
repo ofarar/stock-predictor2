@@ -1,3 +1,5 @@
+// src/components/GoldenMemberModal.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -11,7 +13,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
         if (user) {
             setPrice(user.goldenMemberPrice || 5);
             setDescription(user.goldenMemberDescription || 'Get exclusive insights and support my predictions!');
-            setAcceptingNew(user.acceptingNewSubscribers !== false); // Default to true
+            setAcceptingNew(user.acceptingNewSubscribers !== false);
         }
     }, [user]);
 
@@ -27,40 +29,44 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
         };
         axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
-                toast.success('Golden Member status activated!');
-                onUpdate(); // This will tell ProfilePage to refetch data
+                toast.success('Golden Member settings updated!');
+                onUpdate();
                 onClose();
             })
             .catch(err => {
-                toast.error('Failed to update settings.');
+                toast.error(err.response?.data?.message || 'Failed to update settings.');
             });
     };
-
+    
     const handleDeactivate = () => {
-        const settings = { isGoldenMember: false, price, description };
-        axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
+         // FIX: Ensure 'acceptingNewSubscribers' is included in the deactivation request.
+         const settings = { 
+            isGoldenMember: false, 
+            price, 
+            description, 
+            acceptingNewSubscribers: acceptingNew 
+         };
+         axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
                 toast.success('Golden Member status deactivated.');
                 onUpdate();
                 onClose();
             })
             .catch(err => {
-                toast.error('Failed to update settings.');
+                toast.error(err.response?.data?.message || 'Failed to update settings.');
             });
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 animate-fade-in-fast" onClick={onClose}>
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
             <div className="relative bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg text-gray-300" onClick={e => e.stopPropagation()}>
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
                 <h2 className="text-2xl font-bold text-white mb-4">Golden Member Settings</h2>
-                <p className="text-sm mb-6">Allow other users to subscribe to you for a monthly fee. This is a great way to share your insights and get rewarded for your accuracy.</p>
+                <p className="text-sm mb-6">Allow other users to subscribe to you for a monthly fee.</p>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label htmlFor="price" className="block text-sm font-medium text-gray-300">Monthly Subscription Price ($)</label>
-                        <input type="number" name="price" id="price" min="1" step="1" value={price} onChange={e => setPrice(e.target.value)}
+                        <label htmlFor="price" className="block text-sm font-medium text-gray-300">Monthly Subscription Price ($1 - $500)</label>
+                        <input type="number" name="price" id="price" min="1" max="500" step="1" value={price} onChange={e => setPrice(e.target.value)}
                             className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                     </div>
                     <div>
@@ -72,7 +78,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                         <label htmlFor="acceptingNew" className="text-sm font-medium text-gray-300">Accepting New Subscribers</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="acceptingNew" checked={acceptingNew} onChange={() => setAcceptingNew(!acceptingNew)} className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                            <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                         </label>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -80,7 +86,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                             {user.isGoldenMember ? 'Update Settings' : 'Activate Golden Status'}
                         </button>
                         {user.isGoldenMember && (
-                            <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700 transition-colors">
+                             <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700 transition-colors">
                                 Deactivate
                             </button>
                         )}

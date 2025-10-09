@@ -32,7 +32,7 @@ router.get('/golden-feed', async (req, res) => {
     try {
         const { authorId, stock, predictionType } = req.query;
         const currentUser = await User.findById(req.user._id);
-        
+
         // Base list of authors: the user themselves plus anyone they subscribe to
         let authorIds = [currentUser._id, ...currentUser.goldenSubscriptions.map(sub => sub.user)];
 
@@ -44,21 +44,21 @@ router.get('/golden-feed', async (req, res) => {
         } else {
             query.userId = { $in: authorIds };
         }
-        
+
         if (stock) {
             query['attachedPrediction.stockTicker'] = stock.toUpperCase();
         }
         if (predictionType && predictionType !== 'All') {
             query['attachedPrediction.predictionType'] = predictionType;
         }
-        
+
         const feedPosts = await Post.find(query)
             .sort({ createdAt: -1 })
             .limit(100)
             .populate('userId', 'username avatar isGoldenMember');
 
         res.json(feedPosts);
-    } catch(err) {
+    } catch (err) {
         console.error("Error fetching golden feed:", err);
         res.status(500).json({ message: 'Error fetching golden feed.' });
     }
@@ -482,12 +482,16 @@ router.get('/my-predictions', async (req, res) => {
     }
 });
 
+
 router.get('/profile/:userId', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId).select('-googleId');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
+        // Populate both to check for broken links
+        await user.populate(['goldenSubscriptions.user', 'goldenSubscribers.user']);
 
         const predictions = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
@@ -502,7 +506,6 @@ router.get('/profile/:userId', async (req, res) => {
             if (field && value) {
                 matchStage[field] = value;
             }
-
             const rankData = await Prediction.aggregate([
                 { $match: matchStage },
                 { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
@@ -512,7 +515,7 @@ router.get('/profile/:userId', async (req, res) => {
             return (rankData[0]?.higherRankedUsers || 0) + 1;
         };
 
-        // --- Calculate personal stats first ---
+        // --- Calculate personal stats ---
         const perfByType = assessedPredictions.reduce((acc, p) => {
             if (!acc[p.predictionType]) acc[p.predictionType] = { total: 0, totalScore: 0 };
             acc[p.predictionType].total++;
@@ -521,7 +524,7 @@ router.get('/profile/:userId', async (req, res) => {
         }, {});
         const formattedPerfByType = Object.entries(perfByType).map(([type, data]) => ({
             type,
-            accuracy: data.totalScore / data.total, // Keep it as a float for accurate comparison
+            accuracy: data.totalScore / data.total,
             count: data.total
         })).sort((a, b) => b.accuracy - a.accuracy);
 
@@ -537,20 +540,20 @@ router.get('/profile/:userId', async (req, res) => {
             count: data.total
         })).sort((a, b) => b.accuracy - a.accuracy);
 
-        // --- Run all global rank calculations in parallel for speed ---
+        // --- Run all global rank calculations in parallel ---
         const rankPromisesByType = formattedPerfByType.map(p => getGlobalRank('predictionType', p.type, p.accuracy));
         const rankPromisesByStock = formattedPerfByStock.map(s => getGlobalRank('stockTicker', s.ticker, s.accuracy));
-
-        const resolvedRanksByType = await Promise.all(rankPromisesByType);
-        const resolvedRanksByStock = await Promise.all(rankPromisesByStock);
+        const [resolvedRanksByType, resolvedRanksByStock] = await Promise.all([
+            Promise.all(rankPromisesByType),
+            Promise.all(rankPromisesByStock)
+        ]);
 
         // --- Combine personal stats with global ranks ---
         const finalPerfByType = formattedPerfByType.map((p, index) => ({
             ...p,
-            accuracy: Math.round(p.accuracy), // Now round the accuracy for display
+            accuracy: Math.round(p.accuracy),
             rank: resolvedRanksByType[index]
         }));
-
         const finalPerfByStock = formattedPerfByStock.map((s, index) => ({
             ...s,
             accuracy: Math.round(s.accuracy),
@@ -559,7 +562,7 @@ router.get('/profile/:userId', async (req, res) => {
 
         const performance = {
             overallRank: `#${overallRank}`,
-            overallAccuracy: overallAccuracy,
+            overallAccuracy,
             byType: finalPerfByType,
             byStock: finalPerfByStock
         };
@@ -568,14 +571,20 @@ router.get('/profile/:userId', async (req, res) => {
             id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
         }));
 
+        // FIX: Filter out invalid entries before counting for both lists
+        const validSubscriptions = user.goldenSubscriptions.filter(sub => sub.user);
+        const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
+
         res.json({
-            user, predictions, performance, chartData,
+            user,
+            predictions,
+            performance,
+            chartData,
             followersCount: user.followers.length,
             followingCount: user.following.length,
-            goldenSubscribersCount: user.goldenSubscribers?.length || 0,
-            goldenSubscriptionsCount: user.goldenSubscriptions?.length || 0,
+            goldenSubscribersCount: validSubscribers.length, // Use the filtered count
+            goldenSubscriptionsCount: validSubscriptions.length
         });
-
     } catch (err) {
         console.error("Error fetching profile:", err);
         res.status(500).json({ message: err.message });
@@ -583,52 +592,66 @@ router.get('/profile/:userId', async (req, res) => {
 });
 
 
+// server/routes/api.js
+
+// Find and replace this entire route
 router.put('/profile/golden-member', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
     try {
+        console.log("--- Golden Member Update Initiated ---");
         const { isGoldenMember, price, description, acceptingNewSubscribers } = req.body;
-        const user = await User.findById(req.user._id);
+        console.log("Received settings:", { isGoldenMember, price, description, acceptingNewSubscribers });
 
-        // --- DEACTIVATION LOGIC ---
-        if (user.isGoldenMember && isGoldenMember === false) {
-            const subscriberIds = user.goldenSubscribers.map(sub => sub.user);
+        const currentUser = await User.findById(req.user._id).populate('goldenSubscribers.user');
+        
+        // --- Deactivation Logic ---
+        if (currentUser.isGoldenMember && isGoldenMember === false) {
+            console.log("Deactivation process started...");
+            const validSubscribers = currentUser.goldenSubscribers.filter(sub => sub.user);
+            const subscriberIds = validSubscribers.map(sub => sub.user._id);
 
-            // Notify all subscribers
             if (subscriberIds.length > 0) {
-                const message = `${user.username} is no longer a Golden Member. Your subscription has been cancelled.`;
-                const notifications = subscriberIds.map(id => ({
-                    recipient: id,
-                    type: 'GoldenPost', // Or a new 'SubscriptionEnded' type
-                    message: message,
-                    link: `/profile/${user._id}`
-                }));
+                console.log(`Notifying ${subscriberIds.length} subscribers of cancellation.`);
+                const message = `${currentUser.username} is no longer a Golden Member. Your subscription has been cancelled.`;
+                const notifications = subscriberIds.map(id => ({ recipient: id, type: 'GoldenPost', message, link: `/profile/${currentUser._id}` }));
                 await Notification.insertMany(notifications);
 
-                // Remove this user from every subscriber's "subscriptions" list
+                console.log("Removing user from subscribers' subscription lists.");
                 await User.updateMany(
                     { _id: { $in: subscriberIds } },
-                    { $pull: { goldenSubscriptions: { user: user._id } } }
+                    { $pull: { goldenSubscriptions: { user: currentUser._id } } }
                 );
             }
-            // Clear the user's own subscriber list
-            user.goldenSubscribers = [];
         }
-        // --- END DEACTIVATION LOGIC ---
 
-        user.isGoldenMember = isGoldenMember;
-        user.goldenMemberPrice = price;
-        user.goldenMemberDescription = description;
-        user.acceptingNewSubscribers = acceptingNewSubscribers;
-        
-        await user.save();
-        res.json(user);
+        // FIX: Use findByIdAndUpdate for a more reliable atomic update.
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                $set: {
+                    isGoldenMember,
+                    goldenMemberPrice: price,
+                    goldenMemberDescription: description,
+                    acceptingNewSubscribers,
+                    // Conditionally clear the subscribers list only on deactivation
+                    goldenSubscribers: isGoldenMember === false ? [] : currentUser.goldenSubscribers
+                }
+            },
+            { new: true, runValidators: true } // runValidators ensures price limits are checked
+        );
+
+        console.log("--- User saved successfully! ---");
+        res.json(updatedUser);
 
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        console.error("!!! Golden Member Update FAILED !!!", err);
+        if (err.name === 'ValidationError' && err.errors.goldenMemberPrice) {
+            return res.status(400).json({ message: 'Price must be between $1 and $500.' });
+        }
+        res.status(400).json({ message: 'Failed to update settings.' });
     }
 });
-
 
 router.put('/profile', async (req, res) => {
     if (!req.user) {

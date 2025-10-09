@@ -30,8 +30,8 @@ const MiniPredictionCard = ({ prediction }) => {
                     </div>
                 ) : (
                     <div className="text-right">
-                         <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
-                         <p className="text-xs text-gray-500 -mt-1">Target</p>
+                        <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
+                        <p className="text-xs text-gray-500 -mt-1">Target</p>
                     </div>
                 )}
             </div>
@@ -122,13 +122,28 @@ const ProfilePage = () => {
                         <p className="text-gray-500 text-sm mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
                         <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
                             <p className="text-gray-400">{user.about || "No bio provided."}</p>
-                            {user.xLink && ( <a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>)}
-                            {user.youtubeLink && ( <a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z"/></svg></a>)}
+                            {user.xLink && (<a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>)}
+                            {user.youtubeLink && (<a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z" /></svg></a>)}
                         </div>
                         <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2">
-                            <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline"><span className="font-bold text-white">{followersCount}</span> Followers</Link>
-                            <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Following' }} className="text-sm text-gray-400 hover:underline"><span className="font-bold text-white">{followingCount}</span> Following</Link>
-                            {user.isGoldenMember && (<Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscribers' }} className="text-sm text-yellow-400 hover:underline"><span className="font-bold text-white">{profileData.goldenSubscribersCount}</span> Subscribers</Link>)}
+                            <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline">
+                                <span className="font-bold text-white">{followersCount}</span> Followers
+                            </Link>
+                            <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Following' }} className="text-sm text-gray-400 hover:underline">
+                                <span className="font-bold text-white">{followingCount}</span> Following
+                            </Link>
+
+                            {/* This "Subscribers" link will correctly only show for Golden Members */}
+                            {user.isGoldenMember && (
+                                <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscribers' }} className="text-sm text-yellow-400 hover:underline">
+                                    <span className="font-bold text-white">{profileData.goldenSubscribersCount}</span> Subscribers
+                                </Link>
+                            )}
+
+                            {/* FIX: The condition has been removed, so this "Subscriptions" link will always be visible */}
+                            <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscriptions' }} className="text-sm text-yellow-400 hover:underline">
+                                <span className="font-bold text-white">{profileData.goldenSubscriptionsCount}</span> Subscriptions
+                            </Link>
                         </div>
                     </div>
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
@@ -155,7 +170,7 @@ const ProfilePage = () => {
                     <StatCard label="Total Points" value={user.score} />
                     <StatCard label="Total Predictions" value={predictions.length} />
                 </div>
-                
+
                 <div className="flex border-b border-gray-700 mb-8">
                     <button onClick={() => setActiveTab('Profile')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Profile' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>Profile</button>
                     {user.isGoldenMember && (<button onClick={() => setActiveTab('GoldenFeed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'GoldenFeed' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-yellow-600 hover:text-yellow-400'}`}>Golden Feed</button>)}
@@ -174,7 +189,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 )}
-                
+
                 {activeTab === 'GoldenFeed' && (
                     <div>
                         {isOwnProfile && (
@@ -182,9 +197,9 @@ const ProfilePage = () => {
                                 <button onClick={() => setIsPostModalOpen(true)} className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-400">Create Golden Post</button>
                             </div>
                         )}
-                        <GoldenFeed 
-                            profileUser={user} 
-                            onJoinClick={() => setIsJoinModalOpen(true)} 
+                        <GoldenFeed
+                            profileUser={user}
+                            onJoinClick={() => setIsJoinModalOpen(true)}
                         />
                     </div>
                 )}
