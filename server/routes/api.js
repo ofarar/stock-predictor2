@@ -88,17 +88,43 @@ router.get('/market/top-movers', async (req, res) => {
     }
 });
 
-// --- SETTINGS ROUTES ---
-
-// GET: A public route to fetch current settings
 router.get('/settings', async (req, res) => {
     try {
-        const settings = await Setting.findOne(); // Get the single settings document
+        // Define the default badge rules to be used if they don't exist
+        const defaultBadgeSettings = {
+          "market_maven": {
+            "name": "Market Maven",
+            "description": "Awarded for achieving a high overall average score across all predictions.",
+            "tiers": { "Gold": { "score": 90 }, "Silver": { "score": 80 }, "Bronze": { "score": 70 } }
+          },
+          "daily_oracle": {
+            "name": "Daily Oracle",
+            "description": "Awarded for high accuracy specifically on Daily predictions.",
+            "tiers": { "Gold": { "score": 90 }, "Silver": { "score": 80 }, "Bronze": { "score": 70 } }
+          }
+        };
+
+        let settings = await Setting.findOne();
+
+        // If no settings document exists at all, create one with the defaults.
+        if (!settings) {
+            console.log("No settings document found. Creating one with default badge settings.");
+            settings = await new Setting({ badgeSettings: defaultBadgeSettings }).save();
+        } 
+        // If the document exists but is MISSING the badgeSettings, add them and save.
+        else if (!settings.badgeSettings || Object.keys(settings.badgeSettings).length === 0) {
+            console.log("Found settings document but it's missing badge rules. Applying defaults.");
+            settings.badgeSettings = defaultBadgeSettings;
+            settings = await settings.save();
+        }
+
         res.json(settings);
     } catch (err) {
+        console.error("Error in GET /settings:", err);
         res.status(500).json({ message: 'Error fetching settings' });
     }
 });
+
 
 // PUT: An admin-only route to update settings
 router.put('/settings/admin', async (req, res) => {

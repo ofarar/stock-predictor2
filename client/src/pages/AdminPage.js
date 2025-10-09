@@ -38,18 +38,13 @@ const AdminPage = () => {
             try {
                 settingsToSave = { badgeSettings: JSON.parse(badgeSettingsJson) };
             } catch (e) {
-                return toast.error("Invalid JSON format for badges. Please check syntax.");
+                return toast.error("Invalid JSON format. Please check syntax.");
             }
         } else {
             settingsToSave = { isPromoBannerActive: settings.isPromoBannerActive };
         }
-
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
-        toast.promise(promise, {
-            loading: 'Saving settings...',
-            success: 'Settings saved successfully!',
-            error: 'Error saving settings.'
-        });
+        toast.promise(promise, { loading: 'Saving...', success: 'Settings saved!', error: 'Error saving.' });
     };
 
     if (loading) return <div className="text-center text-white">Loading Admin Dashboard...</div>;
@@ -59,30 +54,27 @@ const AdminPage = () => {
             <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
             
             <div className="bg-gray-800 p-6 rounded-lg">
-                <h2 className="text-xl font-bold text-white mb-4">Site Settings</h2>
+                <h2 className="text-xl font-bold text-white mb-4">Current Badge Rules</h2>
                 <div className="space-y-4">
-                    <div className="flex items-center justify-between bg-gray-700 p-4 rounded-lg">
-                        <label htmlFor="isPromoBannerActive" className="text-gray-300">Show Promotional Banner for Guests</label>
-                        <input
-                            type="checkbox"
-                            id="isPromoBannerActive"
-                            name="isPromoBannerActive"
-                            checked={settings?.isPromoBannerActive || false}
-                            onChange={(e) => setSettings({ ...settings, isPromoBannerActive: e.target.checked })}
-                            className="w-6 h-6 rounded text-green-500 bg-gray-900 border-gray-600 focus:ring-green-600"
-                        />
-                    </div>
-                    <div className="flex justify-end">
-                        <button onClick={() => handleSaveSettings('promoBanner')} className="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600">
-                            Save Site Settings
-                        </button>
-                    </div>
+                    {settings?.badgeSettings && Object.entries(settings.badgeSettings).map(([id, badge]) => (
+                        <div key={id} className="bg-gray-700 p-4 rounded-lg">
+                            <h3 className="font-bold text-lg text-white">{badge.name}</h3>
+                            <p className="text-sm text-gray-400 italic mb-2">{badge.description}</p>
+                            <div className="flex gap-4">
+                                {badge.tiers && Object.entries(badge.tiers).map(([tier, criteria]) => (
+                                    <div key={tier} className="text-center text-xs">
+                                        <p className="font-bold">{tier}</p>
+                                        <p className="text-gray-300">Score > {criteria.score}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
             <div className="bg-gray-800 p-6 rounded-lg">
-                <h2 className="text-xl font-bold text-white mb-4">Badge Rules Editor</h2>
-                <p className="text-sm text-gray-400 mb-2">Edit badge rules in JSON format. Changes will apply the next time badges are calculated.</p>
+                <h2 className="text-xl font-bold text-white mb-4">Badge Rules JSON Editor</h2>
                 <textarea
                     value={badgeSettingsJson}
                     onChange={(e) => setBadgeSettingsJson(e.target.value)}

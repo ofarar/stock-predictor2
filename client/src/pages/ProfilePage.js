@@ -10,6 +10,7 @@ import GoldenMemberModal from '../components/GoldenMemberModal';
 import JoinGoldenModal from '../components/JoinGoldenModal';
 import BadgeShowcase from '../components/BadgeShowcase';
 import BadgeDetailModal from '../components/BadgeDetailModal';
+import BadgeInfoModal from '../components/BadgeInfoModal';
 
 const MiniPredictionCard = ({ prediction }) => {
     const isAssessed = prediction.status === 'Assessed';
@@ -27,8 +28,8 @@ const MiniPredictionCard = ({ prediction }) => {
                     </div>
                 ) : (
                     <div className="text-right">
-                         <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
-                         <p className="text-xs text-gray-500 -mt-1">Target</p>
+                        <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
+                        <p className="text-xs text-gray-500 -mt-1">Target</p>
                     </div>
                 )}
             </div>
@@ -52,9 +53,10 @@ const ProfilePage = () => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [visiblePredictions, setVisiblePredictions] = useState(6);
     const [visibleActive, setVisibleActive] = useState(6);
-    
+
     // FIX: This state variable was missing. It's needed to manage the badge detail modal.
     const [selectedBadge, setSelectedBadge] = useState(null);
+    const [isBadgeInfoOpen, setIsBadgeInfoOpen] = useState(false);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -101,8 +103,9 @@ const ProfilePage = () => {
     return (
         <>
             <BadgeDetailModal badge={selectedBadge} onClose={() => setSelectedBadge(null)} />
-            <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData}/>
-            <JoinGoldenModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} goldenMember={user} onUpdate={fetchData}/>
+            <BadgeInfoModal isOpen={isBadgeInfoOpen} onClose={() => setIsBadgeInfoOpen(false)} />
+            <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData} />
+            <JoinGoldenModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} goldenMember={user} onUpdate={fetchData} />
 
             <div className="animate-fade-in max-w-6xl mx-auto">
                 <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
@@ -119,7 +122,7 @@ const ProfilePage = () => {
                             )}
                             {user.youtubeLink && (
                                 <a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
-                                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z"/></svg>
+                                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z" /></svg>
                                 </a>
                             )}
                         </div>
@@ -131,7 +134,7 @@ const ProfilePage = () => {
                             )}
                         </div>
                     </div>
-                    
+
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
                         {currentUser && !isOwnProfile && (
                             <div className="flex gap-3">
@@ -166,14 +169,14 @@ const ProfilePage = () => {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <StatCard label="Overall Rank" value={performance.overallRank} />
-                    <StatCard label="Average Score" value={performance.overallAccuracy.toFixed(1)}/>
+                    <StatCard label="Average Score" value={performance.overallAccuracy.toFixed(1)} />
                     <StatCard label="Total Points" value={user.score} />
                     <StatCard label="Total Predictions" value={predictions.length} />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-8">
-                        <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} />
+                        <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} onInfoClick={() => setIsBadgeInfoOpen(true)} />
                         <PerformanceTabs performance={performance} />
                         <PerformanceChart chartData={chartData} />
                     </div>
@@ -192,7 +195,7 @@ const ProfilePage = () => {
 
                         <div className="bg-gray-800 p-6 rounded-lg">
                             <h3 className="text-xl font-bold text-white mb-4">Prediction History</h3>
-                             {assessedPredictions.length > 0 ? (
+                            {assessedPredictions.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                                     {assessedPredictions.slice(0, visiblePredictions).map(p => <MiniPredictionCard key={p._id} prediction={p} />)}
                                 </div>

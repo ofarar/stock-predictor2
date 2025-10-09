@@ -1,14 +1,34 @@
+// server/models/Setting.js
+
+// FIX: Changed from 'import mongoose from 'mongoose';'
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const defaultBadgeSettings = {
+  "market_maven": {
+    "name": "Market Maven",
+    "description": "Awarded for achieving a high overall average score across all predictions.",
+    "tiers": {
+      "Gold": { "score": 90 },
+      "Silver": { "score": 80 },
+      "Bronze": { "score": 70 }
+    }
+  },
+  "daily_oracle": {
+    "name": "Daily Oracle",
+    "description": "Awarded for high accuracy specifically on Daily predictions.",
+    "tiers": {
+      "Gold": { "score": 90 },
+      "Silver": { "score": 80 },
+      "Bronze": { "score": 70 }
+    }
+  }
+};
+
 const SettingSchema = new Schema({
-    // We will only have one document in this collection, used to control all settings
-    isPromoBannerActive: {
-        type: Boolean,
-        default: true
-    },
-    // You can add more settings here in the future
-    // isNewFeatureEnabled: { type: Boolean, default: false }
+    isPromoBannerActive: { type: Boolean, default: true },
+    badgeSettings: { type: Object, default: defaultBadgeSettings }
 });
 
+// FIX: Changed from 'export default mongoose.model(...);'
 module.exports = mongoose.model('Setting', SettingSchema);
