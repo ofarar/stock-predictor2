@@ -5,11 +5,13 @@ import toast from 'react-hot-toast';
 const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [price, setPrice] = useState(5);
     const [description, setDescription] = useState('');
+    const [acceptingNew, setAcceptingNew] = useState(true);
 
     useEffect(() => {
         if (user) {
             setPrice(user.goldenMemberPrice || 5);
             setDescription(user.goldenMemberDescription || 'Get exclusive insights and support my predictions!');
+            setAcceptingNew(user.acceptingNewSubscribers !== false); // Default to true
         }
     }, [user]);
 
@@ -21,6 +23,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
             isGoldenMember: true,
             price: parseFloat(price),
             description: description,
+            acceptingNewSubscribers: acceptingNew,
         };
         axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
@@ -32,10 +35,10 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                 toast.error('Failed to update settings.');
             });
     };
-    
+
     const handleDeactivate = () => {
-         const settings = { isGoldenMember: false, price, description };
-         axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
+        const settings = { isGoldenMember: false, price, description };
+        axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
                 toast.success('Golden Member status deactivated.');
                 onUpdate();
@@ -65,12 +68,19 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                         <textarea name="description" id="description" rows="3" value={description} onChange={e => setDescription(e.target.value)}
                             className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" placeholder="e.g., Access to my weekly stock analysis."></textarea>
                     </div>
+                    <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
+                        <label htmlFor="acceptingNew" className="text-sm font-medium text-gray-300">Accepting New Subscribers</label>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="acceptingNew" checked={acceptingNew} onChange={() => setAcceptingNew(!acceptingNew)} className="sr-only peer" />
+                            <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                        </label>
+                    </div>
                     <div className="flex flex-col sm:flex-row gap-4">
                         <button type="submit" className="w-full bg-yellow-500 text-black font-bold py-3 px-4 rounded-md hover:bg-yellow-400 transition-colors">
                             {user.isGoldenMember ? 'Update Settings' : 'Activate Golden Status'}
                         </button>
                         {user.isGoldenMember && (
-                             <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700 transition-colors">
+                            <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700 transition-colors">
                                 Deactivate
                             </button>
                         )}

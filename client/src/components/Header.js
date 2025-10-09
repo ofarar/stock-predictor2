@@ -15,7 +15,7 @@ const getNotificationIcon = (type) => {
             return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>;
         case 'GoldenPost':
             return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>;
-        default: // NewPrediction and others
+        default: // NewPrediction
             return <svg className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>;
     }
 }
@@ -31,6 +31,7 @@ const Header = ({ user, onMakePredictionClick }) => {
 
     const handleNotificationClick = () => {
         setIsNotificationsOpen(!isNotificationsOpen);
+        const unreadCount = notifications.filter(n => !n.read).length;
         if (!isNotificationsOpen && unreadCount > 0) {
             axios.post(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read`, {}, { withCredentials: true });
             const readNotifications = notifications.map(n => ({ ...n, read: true }));
@@ -74,12 +75,10 @@ const Header = ({ user, onMakePredictionClick }) => {
             {isUserMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-40">
                     <div className="px-4 py-2 text-sm text-green-400 border-b border-gray-700">{user.username}</div>
-                    <Link to={`/profile/${user._id}`} className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"><svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>My Profile</Link>
-                    {user.isAdmin && (
-                        <Link to="/admin" className="flex items-center px-4 py-2 text-sm text-yellow-400 hover:bg-gray-700"><svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.096 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Admin</Link>
-                    )}
+                    <Link to={`/profile/${user._id}`} className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">My Profile</Link>
+                    {user.isAdmin && ( <Link to="/admin" className="flex items-center px-4 py-2 text-sm text-yellow-400 hover:bg-gray-700">Admin</Link>)}
                     <div className="border-t border-gray-700 my-1"></div>
-                    <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"><svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>Logout</a>
+                    <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Logout</a>
                 </div>
             )}
         </div>
@@ -88,7 +87,7 @@ const Header = ({ user, onMakePredictionClick }) => {
     const NotificationBell = () => (
         <div className="relative" ref={notificationsDropdownRef}>
             <button onClick={handleNotificationClick} className="relative p-2">
-                <svg className="w-6 h-6 text-gray-300 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <svg className="w-6 h-6 text-gray-300 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                 {unreadCount > 0 && <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 border-2 border-gray-900"></span>}
             </button>
             {isNotificationsOpen && (
@@ -100,11 +99,7 @@ const Header = ({ user, onMakePredictionClick }) => {
                                 {getNotificationIcon(n.type)}
                                 <div>
                                     <span>{n.message}</span>
-                                    {n.metadata?.percentage && (
-                                        <span className={`ml-1 font-bold ${n.metadata.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                                            ({n.metadata.percentage})
-                                        </span>
-                                    )}
+                                    {n.metadata?.percentage && ( <span className={`ml-1 font-bold ${n.metadata.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>({n.metadata.percentage})</span>)}
                                 </div>
                             </Link>
                         )) : <p className="p-2 text-sm text-gray-500">No new notifications.</p>}
@@ -121,10 +116,13 @@ const Header = ({ user, onMakePredictionClick }) => {
                     <div className="flex items-center space-x-8">
                         <Logo />
                         <div className="hidden md:flex items-center space-x-6">
-                            <Link to="/golden-feed" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
-                                <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                                Golden Feed
-                            </Link>
+                            {/* FIX: Show Golden Feed link only if user is a GM or has subscriptions */}
+                            {user && (user.isGoldenMember || user.goldenSubscriptions?.length > 0) && (
+                                <Link to="/golden-feed" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+                                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                    Golden Feed
+                                </Link>
+                            )}
                             <Link to="/explore" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 Explore
@@ -134,66 +132,43 @@ const Header = ({ user, onMakePredictionClick }) => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        <div className="hidden sm:block">
-                            <GlobalSearch />
-                        </div>
+                        <div className="hidden sm:block"><GlobalSearch /></div>
                         <div className="hidden md:flex items-center space-x-4">
                             <button onClick={() => onMakePredictionClick(null)} className="flex items-center gap-2 bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-600 transition">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 Make a Prediction
                             </button>
-                            {user ? (
-                                <>
-                                    <NotificationBell />
-                                    <UserMenu />
-                                </>
-                            ) : (
-                                <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Log In</a>
-                            )}
+                            {user ? (<> <NotificationBell /> <UserMenu /> </>) : (<a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Log In</a>)}
                         </div>
                         <div className="md:hidden flex items-center gap-2">
-                            <button
-                                onClick={() => onMakePredictionClick(null)}
-                                className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
-                                title="Make a Prediction"
-                            >
+                            <button onClick={() => onMakePredictionClick(null)} className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600" title="Make a Prediction">
                                 <svg className="w-[0.7em] h-[0.7em]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             </button>
-
                             {user && <NotificationBell />}
                             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
-                                {isMobileMenuOpen ? (
-                                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                ) : (
-                                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                )}
+                                {isMobileMenuOpen ? (<svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>) : (<svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>)}
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <div className="md:hidden flex justify-center mt-2 w-full">
-                    <div className="w-full px-4 sm:px-6 max-w-md">
-                        <GlobalSearch />
-                    </div>
+                    <div className="w-full px-4 sm:px-6 max-w-md"><GlobalSearch /></div>
                 </div>
 
                 {isMobileMenuOpen && (
                     <div className="md:hidden mt-4">
+                        {/* FIX: Added conditional Golden Feed link to mobile menu */}
+                        {user && (user.isGoldenMember || user.goldenSubscriptions?.length > 0) && (
+                            <Link to="/golden-feed" className="block py-2 px-4 text-sm text-yellow-400 hover:bg-gray-700 rounded">Golden Feed</Link>
+                        )}
                         <Link to="/explore" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Explore</Link>
                         <Link to="/scoreboard" className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">Scoreboard</Link>
                         {user && <Link to={`/profile/${user._id}`} className="block py-2 px-4 text-sm hover:bg-gray-700 rounded">My Profile</Link>}
                         {user && user.isAdmin && <Link to="/admin" className="block py-2 px-4 text-sm text-yellow-400 hover:bg-gray-700 rounded">Admin Panel</Link>}
                         <div className="border-t border-gray-700 my-2"></div>
                         <div className="mt-2">
-                            {user
-                                ? <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">Logout</a>
-                                : <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="block w-full text-center py-2 px-4 text-sm bg-blue-600 rounded text-center">Log In</a>
-                            }
+                            {user ? <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">Logout</a> : <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="block w-full text-center py-2 px-4 text-sm bg-blue-600 rounded text-center">Log In</a>}
                         </div>
                     </div>
                 )}

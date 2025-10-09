@@ -11,8 +11,8 @@ import JoinGoldenModal from '../components/JoinGoldenModal';
 import BadgeShowcase from '../components/BadgeShowcase';
 import BadgeDetailModal from '../components/BadgeDetailModal';
 import BadgeInfoModal from '../components/BadgeInfoModal';
-import GoldenFeed from '../components/GoldenFeed'; // 1. Import the GoldenFeed component
-import GoldenPostForm from '../components/GoldenPostForm'; // Import the form for creating posts
+import GoldenFeed from '../components/GoldenFeed';
+import GoldenPostForm from '../components/GoldenPostForm';
 
 const MiniPredictionCard = ({ prediction }) => {
     const isAssessed = prediction.status === 'Assessed';
@@ -30,8 +30,8 @@ const MiniPredictionCard = ({ prediction }) => {
                     </div>
                 ) : (
                     <div className="text-right">
-                        <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
-                        <p className="text-xs text-gray-500 -mt-1">Target</p>
+                         <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
+                         <p className="text-xs text-gray-500 -mt-1">Target</p>
                     </div>
                 )}
             </div>
@@ -57,13 +57,10 @@ const ProfilePage = () => {
     const [visibleActive, setVisibleActive] = useState(6);
     const [selectedBadge, setSelectedBadge] = useState(null);
     const [isBadgeInfoOpen, setIsBadgeInfoOpen] = useState(false);
-
-    // 2. Add state for the new features
     const [activeTab, setActiveTab] = useState('Profile');
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-    const [searchParams] = useSearchParams(); // 2. Get URL search params
+    const [searchParams] = useSearchParams();
 
-    // 3. Add a useEffect to check for the 'tab' parameter on page load
     useEffect(() => {
         const tab = searchParams.get('tab');
         if (tab === 'GoldenFeed') {
@@ -81,7 +78,6 @@ const ProfilePage = () => {
             setProfileData(profileRes.data);
             setCurrentUser(currentUserRes.data);
         } catch (error) {
-            console.error("Failed to fetch profile data:", error);
             toast.error("Could not load profile.");
         } finally {
             setLoading(false);
@@ -93,13 +89,10 @@ const ProfilePage = () => {
     }, [fetchData]);
 
     const handleFollow = () => {
-        axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow`, {}, { withCredentials: true })
-            .then(() => fetchData());
+        axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow`, {}, { withCredentials: true }).then(() => fetchData());
     };
-
     const handleUnfollow = () => {
-        axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/unfollow`, {}, { withCredentials: true })
-            .then(() => fetchData());
+        axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/unfollow`, {}, { withCredentials: true }).then(() => fetchData());
     };
 
     if (loading) return <div className="text-center text-white mt-10">Loading profile...</div>;
@@ -110,7 +103,7 @@ const ProfilePage = () => {
     const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
     const isOwnProfile = currentUser?._id === user._id;
     const isFollowing = currentUser?.following?.includes(user._id);
-    const isSubscribed = currentUser?.goldenSubscriptions?.includes(user._id);
+    const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
 
     return (
@@ -123,15 +116,14 @@ const ProfilePage = () => {
 
             <div className="animate-fade-in max-w-6xl mx-auto">
                 <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
-                    {/* ... (This entire profile header section remains the same) ... */}
                     <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className={`w-24 h-24 rounded-full border-4 ${avatarBorder} transition-colors`} />
                     <div className="flex-grow text-center sm:text-left">
                         <h1 className="text-4xl font-bold text-white">{user.username}</h1>
                         <p className="text-gray-500 text-sm mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
                         <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
                             <p className="text-gray-400">{user.about || "No bio provided."}</p>
-                            {user.xLink && (<a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>)}
-                            {user.youtubeLink && (<a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z" /></svg></a>)}
+                            {user.xLink && ( <a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>)}
+                            {user.youtubeLink && ( <a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z"/></svg></a>)}
                         </div>
                         <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2">
                             <Link to={`/profile/${userId}/followers`} className="text-sm text-gray-400 hover:underline"><span className="font-bold text-white">{followersCount}</span> Followers</Link>
@@ -142,14 +134,15 @@ const ProfilePage = () => {
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
                         {currentUser && !isOwnProfile && (
                             <div className="flex gap-3">
-                                {user.isGoldenMember && !isSubscribed && (<button onClick={() => setIsJoinModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400 transition-transform hover:scale-105">Join (${user.goldenMemberPrice}/mo)</button>)}
+                                {user.isGoldenMember && !isSubscribed && user.acceptingNewSubscribers && (<button onClick={() => setIsJoinModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400">Join (${user.goldenMemberPrice}/mo)</button>)}
+                                {user.isGoldenMember && !user.acceptingNewSubscribers && (<div className="font-bold py-2 px-5 rounded-md bg-gray-700 text-gray-400">Not Accepting Subscribers</div>)}
                                 {isSubscribed && (<div className="font-bold py-2 px-5 rounded-md bg-gray-700 text-yellow-400 border border-yellow-500 flex items-center gap-2"><svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Subscribed</div>)}
                                 {isFollowing ? (<button onClick={handleUnfollow} className="bg-gray-700 text-white font-bold py-2 px-5 rounded-md hover:bg-red-600">Following</button>) : (<button onClick={handleFollow} className="bg-blue-600 text-white font-bold py-2 px-5 rounded-md hover:bg-blue-700">Follow</button>)}
                             </div>
                         )}
                         {isOwnProfile && (
                             <div className="flex gap-3">
-                                <button onClick={() => setIsGoldenModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400 transition-transform hover:scale-105">{user.isGoldenMember ? 'Manage Gold' : 'Become Golden'}</button>
+                                <button onClick={() => setIsGoldenModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400">{user.isGoldenMember ? 'Manage Gold' : 'Become Golden'}</button>
                                 <Link to="/profile/edit" className="bg-gray-700 text-white font-bold py-2 px-5 rounded-md hover:bg-gray-600">Edit Profile</Link>
                             </div>
                         )}
@@ -162,20 +155,12 @@ const ProfilePage = () => {
                     <StatCard label="Total Points" value={user.score} />
                     <StatCard label="Total Predictions" value={predictions.length} />
                 </div>
-
-                {/* 3. ADD TAB NAVIGATION */}
+                
                 <div className="flex border-b border-gray-700 mb-8">
-                    <button onClick={() => setActiveTab('Profile')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Profile' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
-                        Profile
-                    </button>
-                    {user.isGoldenMember && (
-                        <button onClick={() => setActiveTab('GoldenFeed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'GoldenFeed' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-yellow-600 hover:text-yellow-400'}`}>
-                            Golden Feed
-                        </button>
-                    )}
+                    <button onClick={() => setActiveTab('Profile')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Profile' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>Profile</button>
+                    {user.isGoldenMember && (<button onClick={() => setActiveTab('GoldenFeed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'GoldenFeed' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-yellow-600 hover:text-yellow-400'}`}>Golden Feed</button>)}
                 </div>
 
-                {/* 4. CONDITIONALLY RENDER CONTENT BASED ON ACTIVE TAB */}
                 {activeTab === 'Profile' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-8">
@@ -189,19 +174,17 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 )}
-
+                
                 {activeTab === 'GoldenFeed' && (
                     <div>
                         {isOwnProfile && (
                             <div className="flex justify-end mb-4">
-                                <button onClick={() => setIsPostModalOpen(true)} className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-400">
-                                    Create Golden Post
-                                </button>
+                                <button onClick={() => setIsPostModalOpen(true)} className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-400">Create Golden Post</button>
                             </div>
                         )}
-                        <GoldenFeed
-                            profileUser={user}
-                            onJoinClick={() => setIsJoinModalOpen(true)}
+                        <GoldenFeed 
+                            profileUser={user} 
+                            onJoinClick={() => setIsJoinModalOpen(true)} 
                         />
                     </div>
                 )}

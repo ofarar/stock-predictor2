@@ -32,7 +32,7 @@ const JoinGoldenModal = ({ isOpen, onClose, goldenMember, onUpdate }) => {
                     <p className="text-sm">{goldenMember.goldenMemberDescription || "No description provided."}</p>
                 </div>
                 <button onClick={handleJoin} className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600 transition-colors">
-                    Join Now (Free for testing)
+                    Join Now
                 </button>
             </div>
         </div>

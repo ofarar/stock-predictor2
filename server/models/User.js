@@ -17,9 +17,14 @@ const UserSchema = new Schema({
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     isGoldenMember: { type: Boolean, default: false },
-    goldenMemberPrice: { type: Number, default: 5 },
+    goldenMemberPrice: {
+        type: Number,
+        default: 5,
+        min: 1,   // ADD: Minimum price
+        max: 500  // ADD: Maximum price
+    },
     goldenMemberDescription: { type: String, maxLength: 300 },
-    
+
     goldenSubscribers: [{
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         subscribedAt: { type: Date, default: Date.now }

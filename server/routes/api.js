@@ -32,37 +32,33 @@ router.get('/golden-feed', async (req, res) => {
     try {
         const { authorId, stock, predictionType } = req.query;
         const currentUser = await User.findById(req.user._id);
-        let subscribedToIds = currentUser.goldenSubscriptions;
+        
+        // Base list of authors: the user themselves plus anyone they subscribe to
+        let authorIds = [currentUser._id, ...currentUser.goldenSubscriptions.map(sub => sub.user)];
 
-        // --- Build the database query based on filters ---
-        const query = {
-            isGoldenPost: true
-        };
+        const query = { isGoldenPost: true };
 
-        // If a specific author is selected, filter to just them (if user is subscribed)
+        // If filtering by a specific author, override the base list
         if (authorId && authorId !== 'All') {
-            if (subscribedToIds.map(id => id.toString()).includes(authorId)) {
-                query.userId = authorId;
-            }
+            query.userId = authorId;
         } else {
-            // Otherwise, get posts from all subscriptions
-            query.userId = { $in: subscribedToIds };
+            query.userId = { $in: authorIds };
         }
-
+        
         if (stock) {
             query['attachedPrediction.stockTicker'] = stock.toUpperCase();
         }
         if (predictionType && predictionType !== 'All') {
             query['attachedPrediction.predictionType'] = predictionType;
         }
-
+        
         const feedPosts = await Post.find(query)
             .sort({ createdAt: -1 })
             .limit(100)
             .populate('userId', 'username avatar isGoldenMember');
 
         res.json(feedPosts);
-    } catch (err) {
+    } catch(err) {
         console.error("Error fetching golden feed:", err);
         res.status(500).json({ message: 'Error fetching golden feed.' });
     }
@@ -587,25 +583,47 @@ router.get('/profile/:userId', async (req, res) => {
 });
 
 
-// --- NEW ROUTE for Golden Member Settings ---
 router.put('/profile/golden-member', async (req, res) => {
-    if (!req.user) {
-        return res.status(401).send('You must be logged in.');
-    }
+    if (!req.user) return res.status(401).send('You must be logged in.');
 
     try {
-        const { isGoldenMember, price, description } = req.body;
+        const { isGoldenMember, price, description, acceptingNewSubscribers } = req.body;
+        const user = await User.findById(req.user._id);
 
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user._id,
-            {
-                isGoldenMember,
-                goldenMemberPrice: price,
-                goldenMemberDescription: description
-            },
-            { new: true, runValidators: true }
-        );
-        res.json(updatedUser);
+        // --- DEACTIVATION LOGIC ---
+        if (user.isGoldenMember && isGoldenMember === false) {
+            const subscriberIds = user.goldenSubscribers.map(sub => sub.user);
+
+            // Notify all subscribers
+            if (subscriberIds.length > 0) {
+                const message = `${user.username} is no longer a Golden Member. Your subscription has been cancelled.`;
+                const notifications = subscriberIds.map(id => ({
+                    recipient: id,
+                    type: 'GoldenPost', // Or a new 'SubscriptionEnded' type
+                    message: message,
+                    link: `/profile/${user._id}`
+                }));
+                await Notification.insertMany(notifications);
+
+                // Remove this user from every subscriber's "subscriptions" list
+                await User.updateMany(
+                    { _id: { $in: subscriberIds } },
+                    { $pull: { goldenSubscriptions: { user: user._id } } }
+                );
+            }
+            // Clear the user's own subscriber list
+            user.goldenSubscribers = [];
+        }
+        // --- END DEACTIVATION LOGIC ---
+
+        user.isGoldenMember = isGoldenMember;
+        user.goldenMemberPrice = price;
+        user.goldenMemberDescription = description;
+        user.acceptingNewSubscribers = acceptingNewSubscribers;
+        
+        await user.save();
+        res.json(user);
+
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -1020,6 +1038,10 @@ router.post('/users/:userId/join-golden', async (req, res) => {
     const currentUserId = req.user._id;
 
     try {
+        const goldenMember = await User.findById(goldenMemberId);
+        if (!goldenMember.isGoldenMember || !goldenMember.acceptingNewSubscribers) {
+            return res.status(403).json({ message: 'This member is not accepting new subscribers.' });
+        }
         await User.findByIdAndUpdate(goldenMemberId, { $addToSet: { goldenSubscribers: { user: currentUserId } } });
         await User.findByIdAndUpdate(currentUserId, { $addToSet: { goldenSubscriptions: { user: goldenMemberId } } });
         res.status(200).send('Successfully joined subscription.');

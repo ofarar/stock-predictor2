@@ -3,12 +3,16 @@
 import React, { useState } from 'react';
 import PredictionWidget from './PredictionWidget';
 import InfoModal from './InfoModal';
-import ConfirmationModal from './ConfirmationModal'; // 1. Import ConfirmationModal
+import ConfirmationModal from './ConfirmationModal'; // Import the modal
 
 const PredictionModal = ({ isOpen, onClose, initialStock }) => {
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-    // 2. Add state for the new confirmation modal
-    const [confirmation, setConfirmation] = useState({ isOpen: false, message: '', onConfirm: null });
+    // 1. Add state to manage the confirmation modal
+    const [confirmation, setConfirmation] = useState({
+        isOpen: false,
+        message: '',
+        onConfirm: null
+    });
 
     if (!isOpen) return null;
 
@@ -19,12 +23,15 @@ const PredictionModal = ({ isOpen, onClose, initialStock }) => {
     return (
         <>
             <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
-            {/* 3. Render the ConfirmationModal */}
+            
+            {/* 2. Render the ConfirmationModal with its state and handlers */}
             <ConfirmationModal
                 isOpen={confirmation.isOpen}
                 onClose={handleCloseConfirmation}
                 onConfirm={() => {
-                    confirmation.onConfirm?.();
+                    if (confirmation.onConfirm) {
+                        confirmation.onConfirm();
+                    }
                     handleCloseConfirmation();
                 }}
                 title="Are you sure?"
@@ -43,11 +50,11 @@ const PredictionModal = ({ isOpen, onClose, initialStock }) => {
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                     
+                    {/* 3. Pass a function down to the widget to let it request a confirmation */}
                     <PredictionWidget 
                         onClose={onClose} 
                         initialStock={initialStock} 
                         onInfoClick={() => setIsInfoModalOpen(true)} 
-                        // 4. Pass the function to open the confirmation modal
                         requestConfirmation={(message, onConfirm) => setConfirmation({ isOpen: true, message, onConfirm })}
                     />
                 </div>
