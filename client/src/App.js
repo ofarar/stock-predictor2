@@ -25,6 +25,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import AdminPage from './pages/AdminPage';
 import PredictionDetailPage from './pages/PredictionDetailPage';
 import ExplorePage from './pages/ExplorePage';
+import GoldenFeedPage from './pages/GoldenFeedPage';
 
 
 // A small helper component to handle the conditional rendering
@@ -111,6 +112,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/prediction/:predictionId" element={<PredictionDetailPage />} />
+            <Route path="/golden-feed" element={<GoldenFeedPage />} />
           </Routes>
         </main>
 

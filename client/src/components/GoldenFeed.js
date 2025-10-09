@@ -3,9 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// A component to display a single post
 const PostCard = ({ post }) => {
-    // Check if the post is less than 24 hours old
     const isNew = (new Date() - new Date(post.createdAt)) < 24 * 60 * 60 * 1000;
 
     let percentChange = null;
@@ -51,13 +49,8 @@ const GoldenFeed = ({ profileUser, onJoinClick }) => {
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/posts/golden/${profileUser._id}`, { withCredentials: true })
             .then(res => {
-                setPosts(res.data);
-                // The API will return an empty array for non-subscribers, but a 200 status.
-                // A real error (e.g., 403) would be caught, so we need to infer access.
-                // A simple check is to see if we get posts, or if we are the owner.
-                // For a more robust check, the API could return a specific flag.
-                // For now, this logic will be refined when we check the current user.
-                setIsAllowed(true); // Temporarily assume allowed, the paywall logic will handle it if posts are empty.
+                setIsAllowed(res.data.isAllowed);
+                setPosts(res.data.posts);
             })
             .catch(() => {
                 setIsAllowed(false);
@@ -65,15 +58,11 @@ const GoldenFeed = ({ profileUser, onJoinClick }) => {
             .finally(() => setLoading(false));
     }, [profileUser._id]);
 
-    // This is a placeholder for checking if the current user is the profile owner or a subscriber.
-    // In the full ProfilePage, you'd pass this down as a prop.
-    const hasAccess = isAllowed; // In a real scenario, you'd compare currentUser with profileUser.
-
     if (loading) {
         return <p className="text-gray-500 text-center py-8">Loading Feed...</p>;
     }
 
-    if (!hasAccess) {
+    if (!isAllowed) {
         return (
             <div className="text-center bg-gray-800 p-8 rounded-lg">
                 <span className="text-5xl" role="img" aria-label="lock">🔒</span>

@@ -1,3 +1,6 @@
+// server/models/User.js
+
+// FIX: Changed from 'import' syntax
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -16,14 +19,22 @@ const UserSchema = new Schema({
     isGoldenMember: { type: Boolean, default: false },
     goldenMemberPrice: { type: Number, default: 5 },
     goldenMemberDescription: { type: String, maxLength: 300 },
-    // --- New Subscription Fields ---
-    goldenSubscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }], // People who joined me
-    goldenSubscriptions: [{ type: Schema.Types.ObjectId, ref: 'User' }], // Golden members I joined
+    
+    goldenSubscribers: [{
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        subscribedAt: { type: Date, default: Date.now }
+    }],
+    goldenSubscriptions: [{
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        subscribedAt: { type: Date, default: Date.now }
+    }],
+
     badges: [{
-        badgeId: { type: String, required: true }, // e.g., 'market_maven', 'tsla_specialist'
+        badgeId: { type: String, required: true },
         tier: { type: String, enum: ['Bronze', 'Silver', 'Gold'], required: true },
         achievedAt: { type: Date, default: Date.now }
     }]
 }, { timestamps: true });
 
+// FIX: Changed from 'export default' syntax
 module.exports = mongoose.model('User', UserSchema);

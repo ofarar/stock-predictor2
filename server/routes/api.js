@@ -13,6 +13,61 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+// GET: A list of the current user's subscriptions (for the filter dropdown)
+router.get('/my-subscriptions', async (req, res) => {
+    if (!req.user) return res.status(401).json([]);
+    try {
+        const currentUser = await User.findById(req.user._id)
+            .populate('goldenSubscriptions', 'username'); // Populate with id and username
+        res.json(currentUser.goldenSubscriptions);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching subscriptions.' });
+    }
+});
+
+// GET: The filterable, centralized Golden Feed
+router.get('/golden-feed', async (req, res) => {
+    if (!req.user) return res.status(401).json([]);
+
+    try {
+        const { authorId, stock, predictionType } = req.query;
+        const currentUser = await User.findById(req.user._id);
+        let subscribedToIds = currentUser.goldenSubscriptions;
+
+        // --- Build the database query based on filters ---
+        const query = {
+            isGoldenPost: true
+        };
+
+        // If a specific author is selected, filter to just them (if user is subscribed)
+        if (authorId && authorId !== 'All') {
+            if (subscribedToIds.map(id => id.toString()).includes(authorId)) {
+                query.userId = authorId;
+            }
+        } else {
+            // Otherwise, get posts from all subscriptions
+            query.userId = { $in: subscribedToIds };
+        }
+
+        if (stock) {
+            query['attachedPrediction.stockTicker'] = stock.toUpperCase();
+        }
+        if (predictionType && predictionType !== 'All') {
+            query['attachedPrediction.predictionType'] = predictionType;
+        }
+
+        const feedPosts = await Post.find(query)
+            .sort({ createdAt: -1 })
+            .limit(100)
+            .populate('userId', 'username avatar isGoldenMember');
+
+        res.json(feedPosts);
+    } catch (err) {
+        console.error("Error fetching golden feed:", err);
+        res.status(500).json({ message: 'Error fetching golden feed.' });
+    }
+});
+
 router.get('/golden-feed', async (req, res) => {
     if (!req.user) return res.status(401).json([]);
 
@@ -36,40 +91,35 @@ router.get('/golden-feed', async (req, res) => {
     }
 });
 
-router.post('/posts/golden', async (req, res) => {
-    if (!req.user || !req.user.isGoldenMember) {
-        return res.status(403).json({ message: 'Only Golden Members can create posts.' });
-    }
+router.get('/posts/golden/:userId', async (req, res) => {
     try {
-        const { message, attachedPrediction } = req.body;
-        if (!message) return res.status(400).json({ message: 'Post message cannot be empty.' });
+        const profileUserId = req.params.userId;
+        const profileUser = await User.findById(profileUserId);
+        if (!profileUser) return res.status(404).json({ message: 'User not found.' });
 
-        if (attachedPrediction && attachedPrediction.stockTicker) {
-            const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
-            attachedPrediction.priceAtCreation = quote.regularMarketPrice;
+        let isAllowed = false;
+        if (req.user) {
+            const currentUserId = req.user._id.toString();
+            const isOwner = currentUserId === profileUserId;
+            const isSubscriber = profileUser.goldenSubscribers.map(id => id.toString()).includes(currentUserId);
+            if (isOwner || isSubscriber) {
+                isAllowed = true;
+            }
         }
 
-        const newPost = new Post({ userId: req.user._id, message, attachedPrediction, isGoldenPost: true });
-        await newPost.save();
-
-        const goldenMember = await User.findById(req.user._id);
-        if (goldenMember.goldenSubscribers && goldenMember.goldenSubscribers.length > 0) {
-            const notificationMessage = `${goldenMember.username} has published a new Golden Post.`;
-
-            const notifications = goldenMember.goldenSubscribers.map(subscriberId => ({
-                recipient: subscriberId,
-                sender: goldenMember._id,
-                type: 'GoldenPost', // FIX: Use a unique type
-                message: notificationMessage,
-                link: `/profile/${goldenMember._id}?tab=GoldenFeed` // FIX: Add query parameter
-            }));
-
-            await Notification.insertMany(notifications);
+        if (isAllowed) {
+            const posts = await Post.find({ userId: profileUserId, isGoldenPost: true })
+                .sort({ createdAt: -1 })
+                .limit(50);
+            // Return an object with the access flag and the posts
+            return res.json({ isAllowed: true, posts: posts });
+        } else {
+            // If not allowed, still return the flag
+            return res.json({ isAllowed: false, posts: [] });
         }
-        res.status(201).json(newPost);
     } catch (err) {
-        console.error("Error creating golden post:", err);
-        res.status(500).json({ message: 'Server error while creating post.' });
+        console.error("Error fetching golden feed:", err);
+        res.status(500).json({ message: 'Server error while fetching feed.' });
     }
 });
 
@@ -828,45 +878,62 @@ router.get('/widgets/community-feed', async (req, res) => {
 router.get('/users/:userId/follow-data-extended', async (req, res) => {
     try {
         const user = await User.findById(req.params.userId)
-            .populate('followers', 'username avatar about isGoldenMember')
-            .populate('following', 'username avatar about isGoldenMember')
-            .populate('goldenSubscribers', 'username avatar about isGoldenMember')
-            .populate('goldenSubscriptions', 'username avatar about isGoldenMember');
+            .populate('followers', 'username avatar isGoldenMember')
+            .populate('following', 'username avatar isGoldenMember')
+            .populate('goldenSubscribers.user', 'username avatar isGoldenMember')
+            .populate('goldenSubscriptions.user', 'username avatar isGoldenMember');
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Helper to get average scores for a list of users
-        const getScoresForUsers = async (userList) => {
-            const userIds = userList.map(u => u._id);
+        const getScoresForUserIds = async (userIds) => {
+            if (userIds.length === 0) return new Map();
             const results = await Prediction.aggregate([
                 { $match: { userId: { $in: userIds }, status: 'Assessed' } },
                 { $group: { _id: '$userId', avgScore: { $avg: '$score' } } }
             ]);
-
-            const scoresMap = new Map(results.map(r => [r._id.toString(), Math.round(r.avgScore)]));
-
-            return userList.map(u => ({
-                ...u.toObject(),
-                avgScore: scoresMap.get(u._id.toString()) || 0
-            }));
+            return new Map(results.map(r => [r._id.toString(), Math.round(r.avgScore)]));
         };
+
+        const allUserIds = [
+            ...user.followers.map(u => u._id),
+            ...user.following.map(u => u._id),
+            // FIX: Add a .filter(sub => sub.user) to safely ignore deleted or invalid user references
+            ...user.goldenSubscribers.filter(sub => sub.user).map(sub => sub.user._id),
+            ...user.goldenSubscriptions.filter(sub => sub.user).map(sub => sub.user._id)
+        ];
+        const uniqueUserIds = [...new Set(allUserIds)];
+        const scoresMap = await getScoresForUserIds(uniqueUserIds);
+
+        const combineUserDataWithScore = (userData) => ({
+            ...userData.toObject(),
+            avgScore: scoresMap.get(userData._id.toString()) || 0
+        });
 
         res.json({
             profileUser: { username: user.username, isGoldenMember: user.isGoldenMember },
-            followers: await getScoresForUsers(user.followers),
-            following: await getScoresForUsers(user.following),
-            goldenSubscribers: await getScoresForUsers(user.goldenSubscribers),
-            goldenSubscriptions: await getScoresForUsers(user.goldenSubscriptions)
+            followers: user.followers.map(combineUserDataWithScore),
+            following: user.following.map(combineUserDataWithScore),
+            // FIX: Add a .filter() here as well to ensure the final list is clean
+            goldenSubscribers: user.goldenSubscribers
+                .filter(sub => sub.user)
+                .map(sub => ({
+                    ...combineUserDataWithScore(sub.user),
+                    subscribedAt: sub.subscribedAt
+                })),
+            goldenSubscriptions: user.goldenSubscriptions
+                .filter(sub => sub.user)
+                .map(sub => ({
+                    ...combineUserDataWithScore(sub.user),
+                    subscribedAt: sub.subscribedAt
+                }))
         });
     } catch (err) {
         console.error("Error fetching extended follow data:", err);
         res.status(500).json({ message: "Server error" });
     }
 });
-
-
 
 // GET: Data for a specific stock page - FULLY OVERHAULED
 router.get('/stock/:ticker', async (req, res) => {
@@ -947,26 +1014,32 @@ router.post('/notifications/mark-read', async (req, res) => {
     }
 });
 
-// POST: Join a golden member's subscription
 router.post('/users/:userId/join-golden', async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
-
     const goldenMemberId = req.params.userId;
     const currentUserId = req.user._id;
 
-    if (goldenMemberId === currentUserId.toString()) {
-        return res.status(400).send("You cannot subscribe to yourself.");
-    }
-
     try {
-        // Add current user to the golden member's subscriber list
-        await User.findByIdAndUpdate(goldenMemberId, { $addToSet: { goldenSubscribers: currentUserId } });
-        // Add golden member to the current user's subscription list
-        await User.findByIdAndUpdate(currentUserId, { $addToSet: { goldenSubscriptions: goldenMemberId } });
-
-        res.status(200).send('Successfully joined golden member subscription.');
+        await User.findByIdAndUpdate(goldenMemberId, { $addToSet: { goldenSubscribers: { user: currentUserId } } });
+        await User.findByIdAndUpdate(currentUserId, { $addToSet: { goldenSubscriptions: { user: goldenMemberId } } });
+        res.status(200).send('Successfully joined subscription.');
     } catch (error) {
         res.status(500).json({ message: 'Error joining subscription.' });
+    }
+});
+
+// Replace 'POST /users/:userId/cancel-golden'
+router.post('/users/:userId/cancel-golden', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+    const goldenMemberId = req.params.userId;
+    const currentUserId = req.user._id;
+
+    try {
+        await User.findByIdAndUpdate(goldenMemberId, { $pull: { goldenSubscribers: { user: currentUserId } } });
+        await User.findByIdAndUpdate(currentUserId, { $pull: { goldenSubscriptions: { user: goldenMemberId } } });
+        res.status(200).send('Successfully canceled subscription.');
+    } catch (error) {
+        res.status(500).json({ message: 'Error canceling subscription.' });
     }
 });
 
