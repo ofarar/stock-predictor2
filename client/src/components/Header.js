@@ -1,8 +1,22 @@
+// src/components/Header.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Logo from './Logo';
 import GlobalSearch from './GlobalSearch';
+
+// A helper function to get an icon based on notification type
+const getNotificationIcon = (type) => {
+    switch (type) {
+        case 'NewFollower':
+            return <svg className="w-5 h-5 mr-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>;
+        case 'BadgeEarned':
+            return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>;
+        default: // NewPrediction and others
+            return <svg className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>;
+    }
+}
 
 const Header = ({ user, onMakePredictionClick }) => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -13,15 +27,10 @@ const Header = ({ user, onMakePredictionClick }) => {
     const userDropdownRef = useRef(null);
     const notificationsDropdownRef = useRef(null);
 
-    // This function is now called when the bell icon is clicked
     const handleNotificationClick = () => {
         setIsNotificationsOpen(!isNotificationsOpen);
-        // If opening the menu and there are unread notifications
         if (!isNotificationsOpen && unreadCount > 0) {
-            // Tell the backend to mark them as read
             axios.post(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read`, {}, { withCredentials: true });
-
-            // Instantly update the UI to remove the red dot
             const readNotifications = notifications.map(n => ({ ...n, read: true }));
             setNotifications(readNotifications);
         }
@@ -57,7 +66,7 @@ const Header = ({ user, onMakePredictionClick }) => {
                 <img src={user?.avatar || `https://avatar.iran.liara.run/public/boy?username=${user?._id}`} alt="Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600 hover:border-green-500" />
             </button>
             {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-20">
+                <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-40">
                     <div className="px-4 py-2 text-sm text-green-400 border-b border-gray-700">{user.username}</div>
                     <Link to={`/profile/${user._id}`} className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"><svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>My Profile</Link>
                     {user.isAdmin && (
@@ -77,18 +86,20 @@ const Header = ({ user, onMakePredictionClick }) => {
                 {unreadCount > 0 && <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 border-2 border-gray-900"></span>}
             </button>
             {isNotificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-xl p-2 z-20">
+                <div className="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-xl p-2 z-40">
                     <div className="p-2 font-bold text-white">Notifications</div>
                     <div className="max-h-96 overflow-y-auto">
                         {notifications.length > 0 ? notifications.map(n => (
-                            <Link to={n.link} key={n._id} className="block p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
-                                {/* UPDATED: Logic to display main message and colored percentage */}
-                                <span>{n.message}</span>
-                                {n.metadata?.percentage && (
-                                    <span className={`ml-1 font-bold ${n.metadata.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                                        ({n.metadata.percentage})
-                                    </span>
-                                )}
+                            <Link to={n.link} key={n._id} className="flex items-start p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                                {getNotificationIcon(n.type)}
+                                <div>
+                                    <span>{n.message}</span>
+                                    {n.metadata?.percentage && (
+                                        <span className={`ml-1 font-bold ${n.metadata.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                                            ({n.metadata.percentage})
+                                        </span>
+                                    )}
+                                </div>
                             </Link>
                         )) : <p className="p-2 text-sm text-gray-500">No new notifications.</p>}
                     </div>
@@ -105,7 +116,6 @@ const Header = ({ user, onMakePredictionClick }) => {
                         <Logo />
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/explore" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
-                                {/* You can find a suitable icon for "Explore" */}
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 Explore
                             </Link>
@@ -114,7 +124,6 @@ const Header = ({ user, onMakePredictionClick }) => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {/* 2. Add the search bar to the desktop header */}
                         <div className="hidden sm:block">
                             <GlobalSearch />
                         </div>
@@ -132,10 +141,7 @@ const Header = ({ user, onMakePredictionClick }) => {
                                 <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Log In</a>
                             )}
                         </div>
-                        {/* --- Mobile Menu Buttons --- */}
                         <div className="md:hidden flex items-center gap-2">
-                            {/* The "Make a Prediction" button is now here for mobile */}
-
                             <button
                                 onClick={() => onMakePredictionClick(null)}
                                 className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
@@ -145,27 +151,21 @@ const Header = ({ user, onMakePredictionClick }) => {
                             </button>
 
                             {user && <NotificationBell />}
-                            {/* Hamburger / Close icon */}
                             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
                                 {isMobileMenuOpen ? (
-                                    // Green cross when menu is open
                                     <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 ) : (
-                                    // Hamburger when menu is closed
                                     <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                                     </svg>
                                 )}
                             </button>
-
-
                         </div>
                     </div>
                 </div>
 
-                {/* <---- PLACE MOBILE CENTERED SEARCH HERE ----> */}
                 <div className="md:hidden flex justify-center mt-2 w-full">
                     <div className="w-full px-4 sm:px-6 max-w-md">
                         <GlobalSearch />

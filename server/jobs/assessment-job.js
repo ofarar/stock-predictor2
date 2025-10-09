@@ -112,6 +112,15 @@ const runAssessmentJob = async () => {
 
             console.log(`Assessed prediction for ${prediction.stockTicker}. User ${prediction.userId.username} scored ${score} points.`);
 
+            // 2. After updating the user's score, check for new badges
+            const updatedUser = await User.findById(prediction.userId._id);
+            const userPredictions = await Prediction.find({ userId: updatedUser._id, status: 'Assessed' });
+            const totalScore = userPredictions.reduce((sum, p) => sum + p.score, 0);
+            const overallAccuracy = userPredictions.length > 0 ? totalScore / userPredictions.length : 0;
+
+            // Pass the user object and their latest stats to the badge service
+            await awardBadges(updatedUser, { overallAccuracy });
+
         } catch (error) {
             console.error(`Failed to assess prediction ${prediction._id}:`, error);
         }

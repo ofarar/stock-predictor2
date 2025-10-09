@@ -8,6 +8,8 @@ import PerformanceChart from '../components/PerformanceChart';
 import PerformanceTabs from '../components/PerformanceTabs';
 import GoldenMemberModal from '../components/GoldenMemberModal';
 import JoinGoldenModal from '../components/JoinGoldenModal';
+import BadgeShowcase from '../components/BadgeShowcase';
+import BadgeDetailModal from '../components/BadgeDetailModal';
 
 const MiniPredictionCard = ({ prediction }) => {
     const isAssessed = prediction.status === 'Assessed';
@@ -50,6 +52,9 @@ const ProfilePage = () => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [visiblePredictions, setVisiblePredictions] = useState(6);
     const [visibleActive, setVisibleActive] = useState(6);
+    
+    // FIX: This state variable was missing. It's needed to manage the badge detail modal.
+    const [selectedBadge, setSelectedBadge] = useState(null);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -95,6 +100,7 @@ const ProfilePage = () => {
 
     return (
         <>
+            <BadgeDetailModal badge={selectedBadge} onClose={() => setSelectedBadge(null)} />
             <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData}/>
             <JoinGoldenModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} goldenMember={user} onUpdate={fetchData}/>
 
@@ -126,7 +132,6 @@ const ProfilePage = () => {
                         </div>
                     </div>
                     
-                    {/* FIX: Restored the missing buttons section */}
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
                         {currentUser && !isOwnProfile && (
                             <div className="flex gap-3">
@@ -168,6 +173,7 @@ const ProfilePage = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-8">
+                        <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} />
                         <PerformanceTabs performance={performance} />
                         <PerformanceChart chartData={chartData} />
                     </div>

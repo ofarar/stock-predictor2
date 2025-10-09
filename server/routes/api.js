@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Prediction = require('../models/Prediction');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
+const { awardBadges } = require('../services/badgeService');
 
 const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
@@ -105,13 +106,23 @@ router.put('/settings/admin', async (req, res) => {
         return res.status(403).send('Forbidden: Admins only.');
     }
     try {
-        const { isPromoBannerActive } = req.body;
+        // FIX: This logic now dynamically builds the update object,
+        // so it can save either the banner setting, the badge settings, or both.
+        const updateData = {};
+        if (req.body.isPromoBannerActive !== undefined) {
+            updateData.isPromoBannerActive = req.body.isPromoBannerActive;
+        }
+        if (req.body.badgeSettings) {
+            updateData.badgeSettings = req.body.badgeSettings;
+        }
+
         const updatedSettings = await Setting.findOneAndUpdate({},
-            { isPromoBannerActive },
-            { new: true, upsert: true } // upsert: true creates the document if it doesn't exist
+            { $set: updateData },
+            { new: true, upsert: true }
         );
         res.json(updatedSettings);
     } catch (err) {
+        console.error("Error updating settings:", err);
         res.status(400).json({ message: 'Error updating settings' });
     }
 });
@@ -886,7 +897,7 @@ router.get('/explore/feed', async (req, res) => {
                         voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] }
                     }
                 },
-                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' }},
+                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
                 { $unwind: '$userDetails' },
                 { $sort: sortStage },
                 { $limit: limit },
@@ -932,6 +943,45 @@ router.get('/explore/feed', async (req, res) => {
     } catch (err) {
         console.error(`Error fetching explore feed:`, err);
         res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// --- ADD THIS NEW ADMIN ROUTE ---
+router.post('/admin/recalculate-badges', async (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).send('Forbidden: Admins only.');
+    }
+
+    try {
+        console.log('--- Admin triggered badge recalculation for all users ---');
+
+        const allUsers = await User.find({}).populate('followers');
+
+        for (const user of allUsers) {
+            // FIX: Add a check to skip users that are missing an email.
+            if (!user.email) {
+                console.warn(`Skipping user with ID ${user._id} because they are missing an email.`);
+                continue; // This jumps to the next user in the loop.
+            }
+
+            user.badges = []; // Clear existing badges for a fresh calculation
+
+            const userPredictions = await Prediction.find({ userId: user._id, status: 'Assessed' });
+
+            if (userPredictions.length > 0) {
+                const totalScore = userPredictions.reduce((sum, p) => sum + p.score, 0);
+                const overallAccuracy = totalScore / userPredictions.length;
+
+                await awardBadges(user, { overallAccuracy });
+            }
+        }
+
+        console.log(`--- Badge recalculation completed for ${allUsers.length} users. ---`);
+        res.status(200).send('Successfully recalculated badges for all users.');
+
+    } catch (error) {
+        console.error("Error during badge recalculation:", error);
+        res.status(500).send('An error occurred during recalculation.');
     }
 });
 

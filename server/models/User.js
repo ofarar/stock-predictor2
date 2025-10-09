@@ -18,7 +18,12 @@ const UserSchema = new Schema({
     goldenMemberDescription: { type: String, maxLength: 300 },
     // --- New Subscription Fields ---
     goldenSubscribers: [{ type: Schema.Types.ObjectId, ref: 'User' }], // People who joined me
-    goldenSubscriptions: [{ type: Schema.Types.ObjectId, ref: 'User' }] // Golden members I joined
+    goldenSubscriptions: [{ type: Schema.Types.ObjectId, ref: 'User' }], // Golden members I joined
+    badges: [{
+        badgeId: { type: String, required: true }, // e.g., 'market_maven', 'tsla_specialist'
+        tier: { type: String, enum: ['Bronze', 'Silver', 'Gold'], required: true },
+        achievedAt: { type: Date, default: Date.now }
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
