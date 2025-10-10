@@ -252,12 +252,18 @@ router.put('/notification-settings', async (req, res) => {
     }
 });
 
-// GET: A list of the current user's subscriptions (for the filter dropdown)
 router.get('/my-subscriptions', async (req, res) => {
     if (!req.user) return res.status(401).json([]);
     try {
         const currentUser = await User.findById(req.user._id)
-            .populate('goldenSubscriptions', 'username'); // Populate with id and username
+            // FIX: Correctly populate the nested 'user' field within the 'goldenSubscriptions' array
+            .populate({
+                path: 'goldenSubscriptions',
+                populate: {
+                    path: 'user',
+                    select: 'username' // We only need the username and id
+                }
+            });
         res.json(currentUser.goldenSubscriptions);
     } catch (err) {
         res.status(500).json({ message: 'Error fetching subscriptions.' });

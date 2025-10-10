@@ -1,11 +1,8 @@
-// src/pages/GoldenFeedPage.js
-
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
 
-// This is a new, more detailed Post Card for the central feed
 const CentralPostCard = ({ post }) => {
     let percentChange = null;
     if (post.attachedPrediction?.priceAtCreation > 0) {
@@ -13,15 +10,13 @@ const CentralPostCard = ({ post }) => {
         const target = post.attachedPrediction.targetPrice;
         percentChange = ((target - initial) / initial) * 100;
     }
-
+    
     return (
         <div className="bg-gray-800 p-4 rounded-lg">
-            {/* Author Info */}
             <div className="flex items-center mb-3">
                 <img src={post.userId.avatar} alt="author avatar" className={`w-8 h-8 rounded-full border-2 ${post.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                 <span className="ml-3 font-semibold text-white">{post.userId.username}</span>
             </div>
-            {/* Post Content */}
             <p className="text-gray-300 whitespace-pre-wrap">{post.message}</p>
             {post.attachedPrediction?.stockTicker && (
                 <div className="border-t border-gray-700 mt-4 pt-3">
@@ -49,34 +44,21 @@ const GoldenFeedPage = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [subscriptions, setSubscriptions] = useState([]);
-    const [filters, setFilters] = useState({
-        authorId: 'All',
-        stock: '',
-        predictionType: 'All'
-    });
-
-    // --- START: NEW STATE ---
+    const [filters, setFilters] = useState({ authorId: 'All', stock: '', predictionType: 'All' });
     const [currentUser, setCurrentUser] = useState(null);
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-    // --- END: NEW STATE ---
-
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    // --- START: NEW EFFECT ---
-    // Fetch current user to check if they are a Golden Member
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => setCurrentUser(res.data));
     }, []);
-    // --- END: NEW EFFECT ---
 
-    // Fetch the list of subscriptions for the filter dropdown
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/my-subscriptions`, { withCredentials: true })
             .then(res => setSubscriptions(res.data));
     }, []);
 
-    // Fetch the feed posts whenever filters change
     const fetchPosts = useCallback(() => {
         setLoading(true);
         axios.get(`${process.env.REACT_APP_API_URL}/api/golden-feed`, { params: filters, withCredentials: true })
@@ -93,16 +75,15 @@ const GoldenFeedPage = () => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };
 
-        return (
+    return (
         <>
             <GoldenPostForm
                 isOpen={isPostModalOpen}
                 onClose={() => setIsPostModalOpen(false)}
-                onPostCreated={fetchPosts} // This will refresh the feed after you post
+                onPostCreated={fetchPosts}
             />
 
             <div className="max-w-4xl mx-auto animate-fade-in">
-                {/* --- START: UPDATED HEADER --- */}
                 <div className="flex flex-wrap gap-4 justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold text-white">Your Golden Feed</h1>
                     {currentUser?.isGoldenMember && (
@@ -115,7 +96,6 @@ const GoldenFeedPage = () => {
                         </button>
                     )}
                 </div>
-                {/* --- END: UPDATED HEADER --- */}
                 
                 <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -123,7 +103,10 @@ const GoldenFeedPage = () => {
                             <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Member</label>
                             <select onChange={(e) => handleFilterChange('authorId', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
                                 <option value="All">All Subscriptions</option>
-                                {subscriptions.map(sub => <option key={sub._id} value={sub._id}>{sub.username}</option>)}
+                                {/* --- FIX: Access the nested user object for key, value, and name --- */}
+                                {subscriptions.map(sub => (
+                                    sub.user && <option key={sub.user._id} value={sub.user._id}>{sub.user.username}</option>
+                                ))}
                             </select>
                         </div>
                         <div>
