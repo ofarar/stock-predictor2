@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     youtubeLink: { type: String },
     xLink: { type: String },
     isAdmin: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
     score: { type: Number, default: 0, index: true },
 
     // --- START: NEW FIELDS ---

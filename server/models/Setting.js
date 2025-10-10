@@ -27,7 +27,9 @@ const defaultBadgeSettings = {
 
 const SettingSchema = new Schema({
     isPromoBannerActive: { type: Boolean, default: true },
-    badgeSettings: { type: Object, default: defaultBadgeSettings }
+    badgeSettings: { type: Object, default: defaultBadgeSettings },
+    isVerificationEnabled: { type: Boolean, default: false },
+    verificationPrice: { type: Number, default: 4.99 },
 });
 
 // FIX: Changed from 'export default mongoose.model(...);'

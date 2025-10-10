@@ -48,6 +48,7 @@ function App() {
   const [isPredictionModalOpen, setIsPredictionModalOpen] = useState(false);
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
   const [stockToPredict, setStockToPredict] = useState(null);
+  const [settings, setSettings] = useState(null);
 
   // Fetch the current user once when the app loads
   const fetchUser = () => {
@@ -57,6 +58,8 @@ function App() {
 
   useEffect(() => {
     fetchUser(); // Fetch user on initial load
+    axios.get(`${process.env.REACT_APP_API_URL}/api/settings`, { withCredentials: true })
+      .then(res => setSettings(res.data));
   }, []);
 
   // This function is now passed to more components
@@ -77,39 +80,23 @@ function App() {
     setStockToPredict(null);
   };
 
-  return (
+return (
     <Router>
-      <Toaster // 2. Add the component here
-        position="top-center"
-        toastOptions={{
-          style: {
-            background: '#333',
-            color: '#fff',
-          },
-        }}
-      />
+      <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
       <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
         <Header user={user} onMakePredictionClick={handleOpenPredictionModal} />
-
-        <PredictionModal
-          isOpen={isPredictionModalOpen}
-          onClose={handleCloseModal}
-          initialStock={stockToPredict}
-        />
-        <LoginPromptModal
-          isOpen={isLoginPromptOpen}
-          onClose={() => setIsLoginPromptOpen(false)}
-        />
-
+        <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
+        <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
         <main className="flex-grow container mx-auto px-4 sm:px-6 pt-2 sm:pt-2 md:pt-0 pb-2 sm:pb-4">
           <PageSpecificContent />
           <Routes>
+            {/* --- Pass 'settings' prop down to all relevant pages --- */}
             <Route path="/" element={<HomePage user={user} />} />
-            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} />} />
-            <Route path="/scoreboard" element={<ScoreboardPage />} />
-            <Route path="/profile/:userId" element={<ProfilePage />} />
-            <Route path="/profile/:userId/followers" element={<FollowersPage />} />
+            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
+            <Route path="/scoreboard" element={<ScoreboardPage settings={settings} />} />
+            <Route path="/profile/:userId" element={<ProfilePage settings={settings} />} />
+            <Route path="/profile/:userId/followers" element={<FollowersPage settings={settings} />} />
             <Route path="/profile/edit" element={<EditProfilePage onProfileUpdate={fetchUser} />} />
             <Route path="/stock/:ticker" element={<StockPage onPredictClick={handleOpenPredictionModal} />} />
             <Route path="/login" element={<LoginPage />} />
@@ -118,13 +105,12 @@ function App() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/prediction/:predictionId" element={<PredictionDetailPage requestLogin={requestLogin} />} />
-            <Route path="/golden-feed" element={<GoldenFeedPage />} />
-            <Route path="/watchlist" element={<WatchlistPage />} />
-            <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+            <Route path="/golden-feed" element={<GoldenFeedPage settings={settings} />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/watchlist" element={<WatchlistPage settings={settings} />} />
+            <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
           </Routes>
         </main>
-
         <Footer />
       </div>
     </Router>

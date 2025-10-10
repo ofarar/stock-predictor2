@@ -13,7 +13,11 @@ import BadgeDetailModal from '../components/BadgeDetailModal';
 import BadgeInfoModal from '../components/BadgeInfoModal';
 import GoldenFeed from '../components/GoldenFeed';
 import GoldenPostForm from '../components/GoldenPostForm';
-import WatchlistShowcase from '../components/WatchlistShowcase'; // <-- 1. Import the new component
+import WatchlistShowcase from '../components/WatchlistShowcase';
+import VerificationModal from '../components/VerificationModal';
+import VerifiedTick from '../components/VerifiedTick';
+import VerifiedStatusModal from '../components/VerifiedStatusModal';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const MiniPredictionCard = ({ prediction, currentPrice }) => {
     const isAssessed = prediction.status === 'Assessed';
@@ -66,7 +70,7 @@ const StatCard = ({ label, value, isRank = false }) => {
 };
 // --- END: UPDATED StatCard COMPONENT ---
 
-const ProfilePage = () => {
+const ProfilePage = ({ settings }) => {
     const { userId } = useParams();
     const [profileData, setProfileData] = useState(null);
     const [activePredictionQuotes, setActivePredictionQuotes] = useState({});
@@ -81,6 +85,9 @@ const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState('Profile');
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
     const [searchParams] = useSearchParams();
+    const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+    const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+    const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -133,6 +140,23 @@ const ProfilePage = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/unfollow`, {}, { withCredentials: true }).then(() => fetchData());
     };
 
+    // --- START: UPDATED VERIFICATION HANDLER ---
+    const handleGetVerified = () => {
+        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/profile/verify`, {}, { withCredentials: true })
+            .then(() => {
+                fetchData(); // Refetch all profile data to update the UI
+            });
+
+        toast.promise(promise, {
+            loading: 'Processing verification...',
+            success: 'Verification successful!',
+            error: 'Verification failed.',
+        });
+
+        setIsVerificationModalOpen(false);
+    };
+    // --- END: UPDATED VERIFICATION HANDLER ---
+
     if (loading) return <div className="text-center text-white mt-10">Loading profile...</div>;
     if (!profileData) return <div className="text-center text-white mt-10">User not found.</div>;
 
@@ -147,8 +171,28 @@ const ProfilePage = () => {
     // --- END: FIX ----
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
 
+    const handleCancelVerification = () => {
+        setIsStatusModalOpen(false); // Close the status modal first
+        setIsCancelConfirmOpen(true); // Open the confirmation modal
+    };
+
+    const confirmCancelVerification = () => {
+        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/profile/cancel-verification`, {}, { withCredentials: true })
+            .then(() => fetchData());
+        toast.promise(promise, { /* ... */ });
+        setIsCancelConfirmOpen(false);
+    };
+
     return (
         <>
+            <VerifiedStatusModal isOpen={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} onCancel={handleCancelVerification} />
+            <ConfirmationModal isOpen={isCancelConfirmOpen} onClose={() => setIsCancelConfirmOpen(false)} onConfirm={confirmCancelVerification} title="Cancel Verification" message="Are you sure? You will lose your verified status and benefits." />
+            <VerificationModal
+                isOpen={isVerificationModalOpen}
+                onClose={() => setIsVerificationModalOpen(false)}
+                onConfirm={handleGetVerified}
+                price={settings?.verificationPrice.toFixed(2) || '4.99'}
+            />
             <BadgeDetailModal badge={selectedBadge} onClose={() => setSelectedBadge(null)} />
             <BadgeInfoModal isOpen={isBadgeInfoOpen} onClose={() => setIsBadgeInfoOpen(false)} />
             <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData} />
@@ -159,7 +203,16 @@ const ProfilePage = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
                     <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className={`w-24 h-24 rounded-full border-4 ${avatarBorder} transition-colors`} />
                     <div className="flex-grow text-center sm:text-left">
-                        <h1 className="text-4xl font-bold text-white">{user.username}</h1>
+                        <div className="flex items-center justify-center sm:justify-start gap-2">
+                            <h1 className="text-4xl font-bold text-white">{user.username}</h1>
+                            {user.isVerified && (
+                                isOwnProfile ? (
+                                    <button onClick={() => setIsStatusModalOpen(true)}><VerifiedTick /></button>
+                                ) : (
+                                    <VerifiedTick />
+                                )
+                            )}
+                        </div>
                         <p className="text-gray-500 text-sm mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
                         <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
                             <p className="text-gray-400">{user.about || "No bio provided."}</p>
@@ -215,7 +268,11 @@ const ProfilePage = () => {
                             </div>
                         )}
                         {isOwnProfile && (
-                            <div className="flex gap-3">
+                            <div className="flex flex-wrap justify-center gap-3">
+                                {/* --- FIX: Conditionally render the button based on settings --- */}
+                                {settings?.isVerificationEnabled && !user.isVerified && (
+                                    <button onClick={() => setIsVerificationModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-green-600 text-white hover:bg-green-700">Get Verified</button>
+                                )}
                                 <button onClick={() => setIsGoldenModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400">{user.isGoldenMember ? 'Manage Gold' : 'Become Golden'}</button>
                                 <Link to="/profile/edit" className="bg-gray-700 text-white font-bold py-2 px-5 rounded-md hover:bg-gray-600">Edit Profile</Link>
                             </div>

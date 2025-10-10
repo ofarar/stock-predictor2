@@ -4,30 +4,35 @@ import { Link, useNavigate } from 'react-router-dom';
 import StockFilterSearch from '../components/StockFilterSearch';
 import DescriptionModal from '../components/DescriptionModal';
 import toast from 'react-hot-toast';
+import VerifiedTick from '../components/VerifiedTick';
 
-const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate }) => {
+const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
     if (!prediction.userId) return null;
 
     const isAssessed = prediction.status === 'Assessed';
     const percentChange = !isAssessed && prediction.currentPrice > 0 ? ((prediction.targetPrice - prediction.currentPrice) / prediction.currentPrice) * 100 : 0;
-    
+
     const likes = prediction.likes || [];
     const dislikes = prediction.dislikes || [];
 
     const userLike = currentUser && likes.includes(currentUser._id);
     const userDislike = currentUser && dislikes.includes(currentUser._id);
 
-     return (
+    return (
         // --- FIX: Wrapper is now a div with an onClick handler ---
-        <div 
-            onClick={() => navigate(`/prediction/${prediction._id}`)} 
+        <div
+            onClick={() => navigate(`/prediction/${prediction._id}`)}
             className="block bg-gray-800 rounded-lg overflow-hidden transition-all hover:shadow-lg hover:shadow-green-500/10 flex flex-col cursor-pointer"
         >
             <div className="p-4 flex-grow">
                 <div className="flex items-center mb-4">
-                    <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
+                    <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                     <div className="ml-3 flex-grow">
-                        <Link to={`/profile/${prediction.userId._id}`} onClick={(e) => e.stopPropagation()} className="font-bold text-white hover:underline">{prediction.userId.username}</Link>
+                        {/* --- NEW: TICK ADDED HERE --- */}
+                        <div className="flex items-center gap-2">
+                            <Link to={`/profile/${prediction.userId._id}`} /* ... */>{prediction.userId.username}</Link>
+                            {settings?.isVerificationEnabled && prediction.userId.isVerified && <VerifiedTick />}
+                        </div>
                         <p className="text-xs text-gray-400">@{prediction.userId.username}</p>
                     </div>
                     <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ml-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>
@@ -66,12 +71,12 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
     );
 };
 
-const ExplorePage = ({ requestLogin }) => {
+const ExplorePage = ({ requestLogin, settings }) => {
     const navigate = useNavigate();
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Active');
-    const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date' });
+    const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date', verifiedOnly: false });
     const [descModal, setDescModal] = useState({ isOpen: false, description: '' });
     const [currentUser, setCurrentUser] = useState(null);
 
@@ -86,19 +91,19 @@ const ExplorePage = ({ requestLogin }) => {
         setLoading(true);
         const apiSortBy = filters.sortBy === 'potential' ? 'date' : filters.sortBy;
         axios.get(`${process.env.REACT_APP_API_URL}/api/explore/feed`, { params: { status: activeTab, ...filters, sortBy: apiSortBy } })
-        .then(res => {
-            let data = res.data;
-            if (filters.sortBy === 'potential' && activeTab === 'Active') {
-                data.sort((a, b) => {
-                    const changeA = a.currentPrice > 0 ? Math.abs((a.targetPrice - a.currentPrice) / a.currentPrice) : 0;
-                    const changeB = b.currentPrice > 0 ? Math.abs((b.targetPrice - b.currentPrice) / b.currentPrice) : 0;
-                    return changeB - changeA;
-                });
-            }
-            setPredictions(data);
-        })
-        .catch(err => console.error("Failed to fetch predictions feed", err))
-        .finally(() => setLoading(false));
+            .then(res => {
+                let data = res.data;
+                if (filters.sortBy === 'potential' && activeTab === 'Active') {
+                    data.sort((a, b) => {
+                        const changeA = a.currentPrice > 0 ? Math.abs((a.targetPrice - a.currentPrice) / a.currentPrice) : 0;
+                        const changeB = b.currentPrice > 0 ? Math.abs((b.targetPrice - b.currentPrice) / b.currentPrice) : 0;
+                        return changeB - changeA;
+                    });
+                }
+                setPredictions(data);
+            })
+            .catch(err => console.error("Failed to fetch predictions feed", err))
+            .finally(() => setLoading(false));
     }, [activeTab, filters]);
 
     useEffect(() => { fetchPredictions(); }, [fetchPredictions]);
@@ -109,7 +114,7 @@ const ExplorePage = ({ requestLogin }) => {
 
     const handleVote = (predictionId, voteType) => {
         if (!currentUser) return requestLogin();
-        
+
         const originalPredictions = [...predictions];
         const updatedPredictions = predictions.map(p => {
             if (p._id === predictionId) {
@@ -161,6 +166,16 @@ const ExplorePage = ({ requestLogin }) => {
                             </select>
                         </div>
                     </div>
+                    <div className="flex items-center justify-center pt-2">
+                        <input
+                            type="checkbox"
+                            id="verifiedOnly"
+                            checked={filters.verifiedOnly}
+                            onChange={(e) => handleFilterChange('verifiedOnly', e.target.checked)}
+                            className="h-4 w-4 rounded bg-gray-700 text-green-500"
+                        />
+                        <label htmlFor="verifiedOnly" className="ml-2 text-sm font-medium text-gray-300">Show Verified Predictors Only</label>
+                    </div>
                 </div>
                 <div className="flex border-b border-gray-700 mb-6">
                     <button onClick={() => setActiveTab('Active')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Active' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>Active</button>
@@ -170,14 +185,15 @@ const ExplorePage = ({ requestLogin }) => {
                     <>
                         {predictions.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                                {predictions.map(p =>  <PredictionCard 
-                                        key={p._id} 
-                                        prediction={p} 
-                                        onInfoClick={(desc) => setDescModal({ isOpen: true, description: desc })} 
-                                        onVote={handleVote} 
-                                        currentUser={currentUser}
-                                        navigate={navigate} // <-- Pass navigate to the card
-                                    />)}
+                                {predictions.map(p => <PredictionCard
+                                    key={p._id}
+                                    prediction={p}
+                                    onInfoClick={(desc) => setDescModal({ isOpen: true, description: desc })}
+                                    onVote={handleVote}
+                                    currentUser={currentUser}
+                                    navigate={navigate} // <-- Pass navigate to the card
+                                    settings={settings}
+                                />)}
                             </div>
                         ) : (<div className="text-center bg-gray-800 rounded-lg py-20"><p className="text-lg font-semibold text-gray-400">No predictions found for these filters.</p></div>)}
                     </>

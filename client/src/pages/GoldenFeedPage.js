@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
+import VerifiedTick from '../components/VerifiedTick';
 
-const CentralPostCard = ({ post }) => {
+const CentralPostCard = ({ post, settings }) => {
     let percentChange = null;
     if (post.attachedPrediction?.priceAtCreation > 0) {
         const initial = post.attachedPrediction.priceAtCreation;
@@ -20,6 +21,7 @@ const CentralPostCard = ({ post }) => {
             <div className="flex items-center mb-3">
                 <img src={post.userId.avatar} alt="author avatar" className={`w-8 h-8 rounded-full border-2 ${post.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                 <span className="ml-3 font-semibold text-white">{post.userId.username}</span>
+                {settings?.isVerificationEnabled && post.userId.isVerified && <VerifiedTick />}
             </div>
             <p className="text-gray-300 whitespace-pre-wrap">{post.message}</p>
             {post.attachedPrediction?.stockTicker && (
@@ -44,7 +46,7 @@ const CentralPostCard = ({ post }) => {
 };
 
 
-const GoldenFeedPage = () => {
+const GoldenFeedPage = ({ settings }) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [subscriptions, setSubscriptions] = useState([]);
@@ -140,7 +142,7 @@ const GoldenFeedPage = () => {
                 ) : (
                     <div className="space-y-4">
                         {posts.length > 0 ? (
-                            posts.map(post => <CentralPostCard key={post._id} post={post} />)
+                            posts.map(post => <CentralPostCard key={post._id} post={post} settings={settings} />)
                         ) : (
                             <div className="text-center bg-gray-800 rounded-lg py-20">
                                 <p className="text-lg font-semibold text-gray-400">No posts found for these filters.</p>

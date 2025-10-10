@@ -14,7 +14,35 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
-// In server/routes/api.js, replace your existing POST '/posts/golden' route with this one.
+router.post('/profile/verify', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+    try {
+        // --- NEW: Check if the feature is enabled by an admin ---
+        const settings = await Setting.findOne();
+        if (!settings || !settings.isVerificationEnabled) {
+            return res.status(403).json({ message: 'This feature is currently disabled.' });
+        }
+
+        await User.findByIdAndUpdate(req.user.id, { isVerified: true });
+        res.status(200).json({ message: 'User verified successfully.' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating verification status.' });
+    }
+});
+
+router.post('/profile/cancel-verification', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+    try {
+        await User.findByIdAndUpdate(req.user.id, { isVerified: false });
+        res.status(200).json({ message: 'User verification has been removed.' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error removing verification status.' });
+    }
+});
 
 router.post('/posts/golden', async (req, res) => {
     // 1. Security check (unchanged)
@@ -91,7 +119,7 @@ router.get('/admin/all-users', async (req, res) => {
     }
 
     try {
-        const { sortBy = 'username', order = 'asc', isGoldenMember } = req.query;
+        const { sortBy = 'username', order = 'asc', isGoldenMember, isVerified } = req.query;
 
         // Whitelist valid sort fields to prevent injection
         const validSortKeys = [
@@ -109,6 +137,7 @@ router.get('/admin/all-users', async (req, res) => {
         if (isGoldenMember === 'true') {
             matchQuery.isGoldenMember = true;
         }
+        if (isVerified === 'true') { matchQuery.isVerified = true; }
 
         const usersWithStats = await User.aggregate([
             { $match: matchQuery },
@@ -137,7 +166,7 @@ router.get('/admin/all-users', async (req, res) => {
             },
             {
                 $project: {
-                    username: 1, avatar: 1, isGoldenMember: 1,
+                    username: 1, avatar: 1, isGoldenMember: 1, isVerified: 1,
                     followersCount: 1, followingCount: 1,
                     goldenSubscribersCount: 1, goldenSubscriptionsCount: 1,
                     predictionCount: 1,
@@ -172,7 +201,6 @@ router.post('/contact', async (req, res) => {
     }
 });
 
-// GET: Data for the user's multi-stock watchlist page
 router.get('/watchlist', async (req, res) => {
     if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
 
@@ -187,12 +215,14 @@ router.get('/watchlist', async (req, res) => {
         const quotes = await yahooFinance.quote(tickers);
 
         // Fetch predictions and recommended users for all watched stocks in parallel
-        const dataPromises = tickers.map(ticker => (
-            Promise.all([
+        const dataPromises = tickers.map(async (ticker) => {
+            const [predictions, topPredictors, topVerified] = await Promise.all([
+                // 1. Get active predictions for this ticker
                 Prediction.find({ stockTicker: ticker, status: 'Active' })
                     .sort({ createdAt: -1 })
                     .limit(10)
-                    .populate('userId', 'username avatar isGoldenMember score'),
+                    .populate('userId', 'username avatar isGoldenMember score isVerified'),
+                // 2. Get top 3 predictors overall for this ticker
                 Prediction.aggregate([
                     { $match: { status: 'Assessed', stockTicker: ticker } },
                     { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
@@ -200,21 +230,44 @@ router.get('/watchlist', async (req, res) => {
                     { $limit: 3 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', avgScore: { $round: ['$avgScore', 1] } } }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] } } }
+                ]),
+                // 3. Get the single top verified predictor for this ticker
+                Prediction.aggregate([
+                    { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } },
+                    { $unwind: '$user' },
+                    { $match: { status: 'Assessed', stockTicker: ticker, 'user.isVerified': true } },
+                    { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
+                    { $sort: { avgScore: -1 } },
+                    { $limit: 1 },
+                    { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
+                    { $unwind: '$user' },
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] } } }
                 ])
-            ])
-        ));
+            ]);
+
+            // 4. Combine top predictors and the top verified user, removing duplicates
+            let recommended = [...topPredictors];
+            if (topVerified.length > 0) {
+                const topVerifiedId = topVerified[0]._id.toString();
+                if (!recommended.some(u => u._id.toString() === topVerifiedId)) {
+                    recommended.push(topVerified[0]);
+                }
+            }
+
+            return { ticker, predictions, recommendedUsers: recommended };
+        });
 
         const results = await Promise.all(dataPromises);
 
-        const predictions = {};
-        const recommendedUsers = {};
-        tickers.forEach((ticker, index) => {
-            predictions[ticker] = results[index][0];
-            recommendedUsers[ticker] = results[index][1];
+        const predictionsByTicker = {};
+        const recommendedUsersByTicker = {};
+        results.forEach(result => {
+            predictionsByTicker[result.ticker] = result.predictions;
+            recommendedUsersByTicker[result.ticker] = result.recommendedUsers;
         });
 
-        res.json({ quotes, predictions, recommendedUsers });
+        res.json({ quotes, predictions: predictionsByTicker, recommendedUsers: recommendedUsersByTicker });
 
     } catch (err) {
         console.error("Watchlist fetch error:", err);
@@ -496,21 +549,32 @@ router.get('/settings', async (req, res) => {
 });
 
 
-// PUT: An admin-only route to update settings
+// In server/routes/api.js, replace your existing PUT '/settings/admin' route with this one.
+
 router.put('/settings/admin', async (req, res) => {
     if (!req.user || !req.user.isAdmin) {
         return res.status(403).send('Forbidden: Admins only.');
     }
     try {
-        // FIX: This logic now dynamically builds the update object,
-        // so it can save either the banner setting, the badge settings, or both.
         const updateData = {};
+
+        // This logic dynamically builds the update object from whatever is sent.
         if (req.body.isPromoBannerActive !== undefined) {
             updateData.isPromoBannerActive = req.body.isPromoBannerActive;
         }
         if (req.body.badgeSettings) {
             updateData.badgeSettings = req.body.badgeSettings;
         }
+
+        // --- START: ADDED FIX ---
+        // These checks were missing. They will now save the verification settings.
+        if (req.body.isVerificationEnabled !== undefined) {
+            updateData.isVerificationEnabled = req.body.isVerificationEnabled;
+        }
+        if (req.body.verificationPrice !== undefined) {
+            updateData.verificationPrice = req.body.verificationPrice;
+        }
+        // --- END: ADDED FIX ---
 
         const updatedSettings = await Setting.findOneAndUpdate({},
             { $set: updateData },
@@ -569,6 +633,7 @@ router.get('/scoreboard', async (req, res) => {
                     username: '$userDetails.username',
                     avatar: '$userDetails.avatar',
                     isGoldenMember: '$userDetails.isGoldenMember',
+                    isVerified: '$userDetails.isVerified',
                     avgScore: { $round: ['$avgScore', 1] },
                     predictionCount: 1
                 }
@@ -740,18 +805,9 @@ router.get('/my-predictions', async (req, res) => {
 
 router.get('/profile/:userId', async (req, res) => {
     try {
-        // --- START: NEW DEBUGGING & FIX ---
-        console.log('--- Profile Page Access Check V2 ---');
-        console.log('Full req.user object:', JSON.stringify(req.user, null, 2));
-
         // This is the potential fix. We now compare the '.id' property (string)
         // instead of the '_id' property (ObjectId).
         const isOwnProfile = req.user ? req.user.id === req.params.userId : false;
-
-        console.log('Logged-in User ID from req.user.id:', req.user?.id);
-        console.log('Profile ID from URL:', req.params.userId);
-        console.log('Are they the same? (isOwnProfile):', isOwnProfile);
-        console.log('--- End of Check V2 ---');
         // --- END ---
         const user = await User.findById(req.params.userId).select('-googleId');
         if (!user) {
@@ -1194,22 +1250,30 @@ router.get('/widgets/community-feed', async (req, res) => {
 // NEW Extended Follow/Subscription Data Endpoint
 router.get('/users/:userId/follow-data-extended', async (req, res) => {
     try {
-        const isOwnProfile = req.user ? req.user._id.equals(req.params.userId) : false;
-        // --- END: DEBUGGING LOGS ---
-        const user = await User.findById(req.params.userId)
-            .populate('followers', 'username avatar isGoldenMember')
-            .populate('following', 'username avatar isGoldenMember');
+        const isOwnProfile = req.user ? req.user.id === req.params.userId : false;
 
-        // --- FIX: Conditionally populate private data ---
-        if (isOwnProfile) {
-            await user.populate('goldenSubscribers.user', 'username avatar isGoldenMember');
-            await user.populate('goldenSubscriptions.user', 'username avatar isGoldenMember');
-        }
+        // 1. Fetch user and populate public lists that everyone can see
+        const user = await User.findById(req.params.userId)
+            .populate('followers', 'username avatar isGoldenMember isVerified')
+            .populate('following', 'username avatar isGoldenMember isVerified');
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // 2. Conditionally populate private lists only for the owner
+        if (isOwnProfile) {
+            await user.populate({
+                path: 'goldenSubscribers.user',
+                select: 'username avatar isGoldenMember isVerified'
+            });
+            await user.populate({
+                path: 'goldenSubscriptions.user',
+                select: 'username avatar isGoldenMember isVerified'
+            });
+        }
+
+        // 3. Helper function to efficiently get average scores for all involved users
         const getScoresForUserIds = async (userIds) => {
             if (userIds.length === 0) return new Map();
             const results = await Prediction.aggregate([
@@ -1219,26 +1283,27 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
             return new Map(results.map(r => [r._id.toString(), Math.round(r.avgScore)]));
         };
 
+        // 4. Gather all unique IDs from the lists
         const allUserIds = [
             ...user.followers.map(u => u._id),
             ...user.following.map(u => u._id),
-            // FIX: Add a .filter(sub => sub.user) to safely ignore deleted or invalid user references
-            ...user.goldenSubscribers.filter(sub => sub.user).map(sub => sub.user._id),
-            ...user.goldenSubscriptions.filter(sub => sub.user).map(sub => sub.user._id)
+            ...(isOwnProfile ? user.goldenSubscribers.filter(sub => sub.user).map(sub => sub.user._id) : []),
+            ...(isOwnProfile ? user.goldenSubscriptions.filter(sub => sub.user).map(sub => sub.user._id) : [])
         ];
         const uniqueUserIds = [...new Set(allUserIds)];
         const scoresMap = await getScoresForUserIds(uniqueUserIds);
 
+        // 5. Helper function to combine user data with their calculated score
         const combineUserDataWithScore = (userData) => ({
             ...userData.toObject(),
             avgScore: scoresMap.get(userData._id.toString()) || 0
         });
 
+        // 6. Build and send the final response
         res.json({
             profileUser: { username: user.username, isGoldenMember: user.isGoldenMember },
             followers: user.followers.map(combineUserDataWithScore),
             following: user.following.map(combineUserDataWithScore),
-            // FIX: Add a .filter() here as well to ensure the final list is clean
             goldenSubscribers: isOwnProfile ? user.goldenSubscribers
                 .filter(sub => sub.user)
                 .map(sub => ({
@@ -1250,7 +1315,7 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
                 .map(sub => ({
                     ...combineUserDataWithScore(sub.user),
                     subscribedAt: sub.subscribedAt
-                })) : [],
+                })) : []
         });
     } catch (err) {
         console.error("Error fetching extended follow data:", err);
@@ -1389,11 +1454,9 @@ router.post('/users/:userId/cancel-golden', async (req, res) => {
     }
 });
 
-// Find and update your /api/explore/feed route
-// In server/routes/api.js, replace your existing GET '/explore/feed' route with this one.
 
 router.get('/explore/feed', async (req, res) => {
-    const { status = 'Active', stock, predictionType, sortBy = 'date' } = req.query;
+    const { status = 'Active', stock, predictionType, sortBy = 'date', verifiedOnly } = req.query;
 
     if (!['Active', 'Assessed'].includes(status)) {
         return res.status(400).json({ message: 'Invalid status filter' });
@@ -1407,6 +1470,18 @@ router.get('/explore/feed', async (req, res) => {
         let predictions;
         const limit = 50;
 
+        let pipeline = [];
+        // If filtering by verified, we need to join with users first
+        if (verifiedOnly === 'true') {
+            pipeline.push(
+                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
+                { $unwind: '$userDetails' },
+                { $match: { 'userDetails.isVerified': true } }
+            );
+        }
+
+        pipeline.push({ $match: matchQuery });
+
         if (sortBy === 'performance' || sortBy === 'votes') {
             let sortStage = {};
             if (sortBy === 'performance') {
@@ -1414,33 +1489,39 @@ router.get('/explore/feed', async (req, res) => {
             } else { // sortBy === 'votes'
                 sortStage = { voteScore: -1, createdAt: -1 };
             }
-
-            predictions = await Prediction.aggregate([
-                { $match: matchQuery },
+            // If we didn't already do a lookup for the verified filter, do it now
+            if (verifiedOnly !== 'true') {
+                pipeline.push(
+                    { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
+                    { $unwind: '$userDetails' }
+                );
+            }
+            pipeline.push(
                 { $addFields: { voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] } } },
-                { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
-                { $unwind: '$userDetails' },
                 { $sort: sortStage },
                 { $limit: limit },
                 {
                     $project: {
-                        _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1,
-                        status: 1, score: 1, actualPrice: 1, createdAt: 1, description: 1,
-                        priceAtCreation: 1, likes: 1, dislikes: 1,
+                        _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1,
+                        actualPrice: 1, createdAt: 1, description: 1, priceAtCreation: 1, likes: 1, dislikes: 1,
                         userId: {
                             _id: '$userDetails._id', username: '$userDetails.username', avatar: '$userDetails.avatar',
-                            isGoldenMember: '$userDetails.isGoldenMember', score: '$userDetails.score'
+                            isGoldenMember: '$userDetails.isGoldenMember', score: '$userDetails.score', isVerified: '$userDetails.isVerified'
                         }
                     }
                 }
-            ]);
-
+            );
+            predictions = await Prediction.aggregate(pipeline);
         } else {
-            predictions = await Prediction.find(matchQuery)
+            // Standard find for date-based sorting
+            const initialPredictions = await Prediction.aggregate(pipeline);
+            const initialPredictionIds = initialPredictions.map(p => p._id);
+
+            predictions = await Prediction.find({ _id: { $in: initialPredictionIds } })
                 .sort({ createdAt: -1 })
                 .limit(limit)
-                .populate('userId', 'username avatar isGoldenMember score')
-                .lean(); // Use .lean() for better performance as we will modify the objects
+                .populate('userId', 'username avatar isGoldenMember score isVerified')
+                .lean();
         }
 
         // --- START: MODIFIED RESILIENT BLOCK ---

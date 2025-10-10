@@ -4,11 +4,12 @@ import { Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import StockFilterSearch from '../components/StockFilterSearch';
 import UserScoreSkeleton from '../components/UserScoreSkeleton';
+import VerifiedTick from '../components/VerifiedTick';
 
-const ScoreboardPage = () => {
+const ScoreboardPage = ({ settings }) => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const [searchParams] = useSearchParams();
     const initialStock = searchParams.get('stock') || '';
     const initialType = searchParams.get('predictionType') || 'Overall';
@@ -26,9 +27,9 @@ const ScoreboardPage = () => {
                 stock: stockFilter
             }
         })
-        .then(res => setUsers(res.data))
-        .catch(() => toast.error("Could not load scoreboard data."))
-        .finally(() => setLoading(false));
+            .then(res => setUsers(res.data))
+            .catch(() => toast.error("Could not load scoreboard data."))
+            .finally(() => setLoading(false));
     }, [predictionTypeFilter, stockFilter]);
 
     useEffect(() => {
@@ -38,7 +39,7 @@ const ScoreboardPage = () => {
     return (
         <div className="w-full max-w-4xl mx-auto animate-fade-in px-4">
             <h1 className="text-3xl font-bold text-white mb-6 text-center">🏆 Top Performers</h1>
-            
+
             <div className="bg-gray-800 p-4 rounded-lg mb-8 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -55,22 +56,25 @@ const ScoreboardPage = () => {
             </div>
 
             {loading ? (
-                 <div className="space-y-3">
+                <div className="space-y-3">
                     {Array.from({ length: 10 }).map((_, index) => <UserScoreSkeleton key={index} />)}
-                 </div>
+                </div>
             ) : (
                 <div className="space-y-3">
                     {users.length > 0 ? users.map((user) => (
                         <div key={user._id} className="bg-gray-800 rounded-lg p-3 sm:p-4 flex items-center justify-between transition-colors hover:bg-gray-700">
                             <div className="flex items-center">
-                                <img 
-                                    src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} 
-                                    alt="avatar" 
-                                    className={`w-12 h-12 rounded-full border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} 
+                                <img
+                                    src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
+                                    alt="avatar"
+                                    className={`w-12 h-12 rounded-full border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                 />
-                                <Link to={`/profile/${user._id}`} className="font-semibold text-white text-lg ml-4 hover:underline">
-                                    {user.username}
-                                </Link>
+                                <div className="flex items-center gap-2 ml-4">
+                                    <Link to={`/profile/${user._id}`} className="font-semibold text-white text-lg hover:underline">
+                                        {user.username}
+                                    </Link>
+                                    {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                                </div>
                             </div>
                             <div className="text-right">
                                 <span className="font-bold text-green-400 text-xl">{user.avgScore}</span>

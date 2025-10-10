@@ -1,5 +1,3 @@
-// src/pages/AdminPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +6,11 @@ import AdminPanel from '../components/AdminPanel';
 import AdminUserList from '../components/AdminUserList';
 
 const AdminPage = () => {
-    const [settings, setSettings] = useState(null);
+    const [settings, setSettings] = useState({
+        isVerificationEnabled: false,
+        verificationPrice: 0,
+        badgeSettings: {}
+    });
     const [loading, setLoading] = useState(true);
     const [badgeSettingsJson, setBadgeSettingsJson] = useState('');
     const navigate = useNavigate();
@@ -21,7 +23,7 @@ const AdminPage = () => {
                     navigate('/');
                     return;
                 }
-                return axios.get(`${process.env.REACT_APP_API_URL}/api/settings`);
+                return axios.get(`${process.env.REACT_APP_API_URL}/api/settings`, { withCredentials: true });
             })
             .then(settingsRes => {
                 if (settingsRes) {
@@ -33,48 +35,60 @@ const AdminPage = () => {
             .finally(() => setLoading(false));
     }, [navigate]);
 
-    const handleSaveSettings = (settingsKey) => {
-        let settingsToSave = {};
-        if (settingsKey === 'badgeSettings') {
-            try {
-                settingsToSave = { badgeSettings: JSON.parse(badgeSettingsJson) };
-            } catch (e) {
-                return toast.error("Invalid JSON format. Please check syntax.");
-            }
-        } else {
-            settingsToSave = { isPromoBannerActive: settings.isPromoBannerActive };
+    const handleSettingsChange = (key, value) => {
+        setSettings(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleSaveAllSettings = () => {
+        let badgeSettings;
+        try {
+            badgeSettings = JSON.parse(badgeSettingsJson);
+        } catch (e) {
+            return toast.error("Invalid JSON format in Badge Rules. Please check syntax.");
         }
+
+        const settingsToSave = { 
+            isVerificationEnabled: settings.isVerificationEnabled,
+            verificationPrice: parseFloat(settings.verificationPrice) || 0,
+            badgeSettings: badgeSettings
+        };
+        
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
-        toast.promise(promise, { loading: 'Saving...', success: 'Settings saved!', error: 'Error saving.' });
+        toast.promise(promise, { loading: 'Saving all settings...', success: 'Settings saved!', error: 'Error saving.' });
     };
 
     if (loading) return <div className="text-center text-white">Loading Admin Dashboard...</div>;
 
     return (
         <div className="max-w-4xl mx-auto space-y-8">
-            <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-
-            <AdminUserList />
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+                <button onClick={handleSaveAllSettings} className="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600">
+                    Save All Settings
+                </button>
+            </div>
 
             <div className="bg-gray-800 p-6 rounded-lg">
-                <h2 className="text-xl font-bold text-white mb-4">Current Badge Rules</h2>
+                <h2 className="text-xl font-bold text-white mb-4">Verification Feature</h2>
                 <div className="space-y-4">
-                    {settings?.badgeSettings && Object.entries(settings.badgeSettings).map(([id, badge]) => (
-                        <div key={id} className="bg-gray-700 p-4 rounded-lg">
-                            <h3 className="font-bold text-lg text-white">{badge.name}</h3>
-                            <p className="text-sm text-gray-400 italic mb-2">{badge.description}</p>
-                            <div className="flex gap-4">
-                                {badge.tiers && Object.entries(badge.tiers).map(([tier, criteria]) => (
-                                    <div key={tier} className="text-center text-xs">
-                                        <p className="font-bold">{tier}</p>
-                                        <p className="text-gray-300">Score > {criteria.score}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                    <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
+                        <label htmlFor="isVerificationEnabled" className="font-medium text-gray-300">Enable "Get Verified" Feature</label>
+                        <input type="checkbox" id="isVerificationEnabled" checked={settings.isVerificationEnabled} onChange={(e) => handleSettingsChange('isVerificationEnabled', e.target.checked)} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300">Verification Price ($)</label>
+                        <input 
+                            type="number" 
+                            step="0.01" 
+                            value={settings.verificationPrice} 
+                            onChange={(e) => handleSettingsChange('verificationPrice', e.target.value)}
+                            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"
+                        />
+                    </div>
                 </div>
             </div>
+
+            <AdminUserList />
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">Badge Rules JSON Editor</h2>
@@ -83,13 +97,8 @@ const AdminPage = () => {
                     onChange={(e) => setBadgeSettingsJson(e.target.value)}
                     className="w-full h-96 bg-gray-900 text-green-400 font-mono p-4 rounded-md border border-gray-700"
                 />
-                <div className="flex justify-end mt-4">
-                    <button onClick={() => handleSaveSettings('badgeSettings')} className="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600">
-                        Save Badge Rules
-                    </button>
-                </div>
             </div>
-
+            
             <AdminPanel />
         </div>
     );

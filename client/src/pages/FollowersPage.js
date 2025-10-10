@@ -5,8 +5,9 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import ConfirmationModal from '../components/ConfirmationModal';
+import VerifiedTick from '../components/VerifiedTick';
 
-const UserCard = ({ user, onCancel, isSubscription, showDate }) => (
+const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => (
     <div className="bg-gray-800 p-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:bg-gray-700 flex flex-col items-center text-center">
         <Link to={`/profile/${user._id}`}>
             <img
@@ -16,6 +17,7 @@ const UserCard = ({ user, onCancel, isSubscription, showDate }) => (
             />
         </Link>
         <Link to={`/profile/${user._id}`} className="font-bold text-white text-lg hover:underline mt-3">{user.username}</Link>
+        {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
         <div className="text-sm text-gray-400 mt-1">
             Avg Score: <span className="font-bold text-green-400">{user.avgScore || 0}</span>
         </div>
@@ -38,7 +40,7 @@ const UserCard = ({ user, onCancel, isSubscription, showDate }) => (
 );
 
 
-const FollowersPage = () => {
+const FollowersPage = ({ settings }) => {
     const { userId } = useParams();
     const location = useLocation();
     const [userData, setUserData] = useState({
@@ -149,6 +151,7 @@ const FollowersPage = () => {
                         <UserCard
                             key={item._id}
                             user={item}
+                            settings={settings}
                             isSubscription={activeTab === 'Subscriptions'}
                             showDate={activeTab === 'Subscriptions' || activeTab === 'Subscribers'}
                             onCancel={handleCancelClick}

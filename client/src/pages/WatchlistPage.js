@@ -3,12 +3,13 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import StockFilterSearch from '../components/StockFilterSearch';
+import VerifiedTick from '../components/VerifiedTick';
 
 const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
     const priceChange = quote?.regularMarketChangePercent || 0;
     return (
         <div className="relative flex-shrink-0 w-56">
-             <button onClick={onClick} className={`w-full p-4 rounded-lg text-left transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
+            <button onClick={onClick} className={`w-full p-4 rounded-lg text-left transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                 <div className="flex justify-between items-baseline">
                     <p className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-white'}`}>{quote.symbol}</p>
                     <p className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-white'}`}>{quote.regularMarketPrice?.toFixed(2)}</p>
@@ -21,8 +22,8 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
                 </div>
             </button>
             {isSelected && (
-                <button 
-                    onClick={onRemove} 
+                <button
+                    onClick={onRemove}
                     className="absolute top-1 right-1 p-1 bg-black bg-opacity-20 rounded-full text-white hover:bg-red-500/50"
                     title={`Remove ${quote.symbol} from watchlist`}
                 >
@@ -33,7 +34,7 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
     );
 };
 
-const WatchlistPage = () => {
+const WatchlistPage = ({ settings }) => {
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
     const [selectedTicker, setSelectedTicker] = useState(null);
@@ -41,10 +42,10 @@ const WatchlistPage = () => {
     const [predictionTypeFilter, setPredictionTypeFilter] = useState('All');
     const [sortBy, setSortBy] = useState('date');
     const [visibleCount, setVisibleCount] = useState(6);
-    
+
     const scrollContainerRef = useRef(null);
     const stockCardRefs = useRef({});
-    
+
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     const fetchData = useCallback(() => {
@@ -82,7 +83,7 @@ const WatchlistPage = () => {
         if (!ticker) return;
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(() => {
-                if(action === 'add') {
+                if (action === 'add') {
                     setSelectedTicker(ticker);
                 }
                 fetchData();
@@ -93,7 +94,7 @@ const WatchlistPage = () => {
             error: 'Failed to update.',
         });
     };
-    
+
     const handleFollow = (userIdToFollow) => {
         const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToFollow}/follow`, {}, { withCredentials: true })
             .then(() => {
@@ -112,7 +113,7 @@ const WatchlistPage = () => {
 
     const selectedPredictions = data.predictions[selectedTicker] || [];
     const currentPrice = data.quotes.find(q => q.symbol === selectedTicker)?.regularMarketPrice || 0;
-    
+
     const filteredAndSortedPredictions = useMemo(() => {
         let processedPredictions = [...selectedPredictions];
 
@@ -135,7 +136,7 @@ const WatchlistPage = () => {
         } else {
             processedPredictions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
-        
+
         return processedPredictions;
     }, [selectedPredictions, predictionTypeFilter, sortBy, currentPrice]);
 
@@ -160,11 +161,11 @@ const WatchlistPage = () => {
                     <div ref={scrollContainerRef} className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                         {data.quotes.map(q => (
                             <div key={q.symbol} ref={el => stockCardRefs.current[q.symbol] = el}>
-                                <WatchlistStockCard 
-                                    quote={q} 
-                                    isSelected={selectedTicker === q.symbol} 
-                                    onClick={() => setSelectedTicker(q.symbol)} 
-                                    onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')} 
+                                <WatchlistStockCard
+                                    quote={q}
+                                    isSelected={selectedTicker === q.symbol}
+                                    onClick={() => setSelectedTicker(q.symbol)}
+                                    onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')}
                                 />
                             </div>
                         ))}
@@ -173,7 +174,7 @@ const WatchlistPage = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                         <div className="lg:col-span-2 space-y-6">
                             <h2 className="text-2xl font-bold text-white">Active Predictions for {selectedTicker}</h2>
-                            
+
                             <div className="flex flex-col sm:flex-row gap-4 bg-gray-800 p-3 rounded-lg">
                                 <div className="flex-1">
                                     <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Type</label>
@@ -201,8 +202,9 @@ const WatchlistPage = () => {
                                         return (
                                             <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-800 p-4 rounded-lg hover:bg-gray-700">
                                                 <div className="flex items-center gap-3 mb-3">
-                                                    <img src={p.userId.avatar} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
+                                                    <img src={p.userId.avatar} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                                                     <p className="font-semibold text-white text-sm">{p.userId.username}</p>
+                                                    {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
                                                 </div>
                                                 <div className="text-center">
                                                     <p className="text-xl font-bold text-white">${p.targetPrice.toFixed(2)}</p>
@@ -215,12 +217,12 @@ const WatchlistPage = () => {
                                         );
                                     })}
                                 </div>
-                            ) : ( <p className="text-gray-500 text-center py-8">No active predictions match your filters.</p> )}
+                            ) : (<p className="text-gray-500 text-center py-8">No active predictions match your filters.</p>)}
 
                             {visibleCount < filteredAndSortedPredictions.length && (
                                 <div className="relative text-center">
                                     <hr className="absolute top-1/2 w-full border-t border-gray-700" />
-                                    <button 
+                                    <button
                                         onClick={() => setVisibleCount(prev => prev + 6)}
                                         className="relative bg-gray-800 px-4 py-2 text-sm font-bold text-gray-300 rounded-full border border-gray-700 hover:bg-gray-700 hover:text-white"
                                     >
@@ -238,13 +240,20 @@ const WatchlistPage = () => {
                                         const isFollowing = currentUser?.following.includes(user._id);
                                         return (
                                             <div key={user._id} className="flex items-center bg-gray-700 p-3 rounded-lg">
-                                                <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-full"/>
+                                                <img
+                                                    src={user.avatar}
+                                                    alt="avatar"
+                                                    className={`w-10 h-10 rounded-full border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} // Golden border fix
+                                                />
                                                 <div className="ml-3 flex-grow">
-                                                    <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline">{user.username}</Link>
+                                                    <div className="flex items-center gap-2">
+                                                        <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline">{user.username}</Link>
+                                                        {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                                                    </div>
                                                     <p className="text-xs text-gray-400">Avg Score: <span className="font-bold text-green-400">{user.avgScore}</span></p>
                                                 </div>
                                                 {!isFollowing && currentUser && currentUser._id !== user._id && (
-                                                    <button 
+                                                    <button
                                                         onClick={() => handleFollow(user._id)}
                                                         className="bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-blue-700 ml-2"
                                                     >
@@ -255,7 +264,7 @@ const WatchlistPage = () => {
                                         );
                                     })}
                                 </div>
-                            ) : ( <p className="text-gray-500 text-center py-8">No top predictors for this stock yet.</p> )}
+                            ) : (<p className="text-gray-500 text-center py-8">No top predictors for this stock yet.</p>)}
                         </div>
                     </div>
                 </>
