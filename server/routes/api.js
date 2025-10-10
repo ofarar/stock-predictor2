@@ -14,6 +14,79 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+// In server/routes/api.js, replace the existing GET '/api/admin/all-users' route with this one.
+
+// In server/routes/api.js, replace the existing GET '/api/admin/all-users' route with this one.
+
+router.get('/admin/all-users', async (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    try {
+        const { sortBy = 'username', order = 'asc', isGoldenMember } = req.query;
+
+        // Whitelist valid sort fields to prevent injection
+        const validSortKeys = [
+            'username', 'followersCount', 'predictionCount',
+            'avgScore', 'goldenSubscribersCount', 'followingCount',
+            'goldenSubscriptionsCount'
+        ];
+
+        const sortKey = validSortKeys.includes(sortBy) ? sortBy : 'username';
+        const sortOrder = order === 'asc' ? 1 : -1;
+        const sortQuery = { [sortKey]: sortOrder, username: 1 }; // Add username as a secondary sort
+
+        // Build the initial match query (for categorical filters like 'isGoldenMember')
+        const matchQuery = {};
+        if (isGoldenMember === 'true') {
+            matchQuery.isGoldenMember = true;
+        }
+
+        const usersWithStats = await User.aggregate([
+            { $match: matchQuery },
+            {
+                $addFields: {
+                    followersCount: { $size: { $ifNull: ["$followers", []] } },
+                    followingCount: { $size: { $ifNull: ["$following", []] } },
+                    goldenSubscribersCount: { $size: { $ifNull: ["$goldenSubscribers", []] } },
+                    goldenSubscriptionsCount: { $size: { $ifNull: ["$goldenSubscriptions", []] } },
+                }
+            },
+            {
+                $lookup: { from: 'predictions', localField: '_id', foreignField: 'userId', as: 'predictions' }
+            },
+            {
+                $addFields: {
+                    predictionCount: { $size: "$predictions" },
+                    avgScore: {
+                        $cond: {
+                            if: { $gt: [{ $size: "$predictions" }, 0] },
+                            then: { $avg: "$predictions.score" },
+                            else: 0
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    username: 1, avatar: 1, isGoldenMember: 1,
+                    followersCount: 1, followingCount: 1,
+                    goldenSubscribersCount: 1, goldenSubscriptionsCount: 1,
+                    predictionCount: 1,
+                    avgScore: { $round: ["$avgScore", 1] }
+                }
+            },
+            { $sort: sortQuery }
+        ]);
+
+        res.json(usersWithStats);
+    } catch (err) {
+        console.error("Error fetching all users for admin:", err);
+        res.status(500).json({ message: 'Error fetching user data.' });
+    }
+});
+
 // Add this route anywhere in the file
 router.post('/contact', async (req, res) => {
     const { name, email, message } = req.body;

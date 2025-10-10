@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import AdminPanel from '../components/AdminPanel';
+import AdminUserList from '../components/AdminUserList';
 
 const AdminPage = () => {
     const [settings, setSettings] = useState(null);
@@ -52,7 +53,9 @@ const AdminPage = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-            
+
+            <AdminUserList />
+
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">Current Badge Rules</h2>
                 <div className="space-y-4">
