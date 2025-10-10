@@ -841,7 +841,7 @@ router.get('/profile/:userId', async (req, res) => {
         }));
 
         const performance = {
-            overallRank: `#${overallRank}`,
+            overallRank: overallRank,
             overallAccuracy,
             byType: finalPerfByType,
             byStock: finalPerfByStock

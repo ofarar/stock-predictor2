@@ -49,12 +49,22 @@ const MiniPredictionCard = ({ prediction, currentPrice }) => {
     );
 };
 
-const StatCard = ({ label, value }) => (
-    <div className="bg-gray-800 p-4 rounded-lg text-center">
-        <p className="text-gray-400 text-sm font-medium">{label}</p>
-        <p className="text-2xl font-bold text-white">{value}</p>
-    </div>
-);
+// --- START: UPDATED StatCard COMPONENT ---
+const StatCard = ({ label, value, isRank = false }) => {
+    const isTopRank = isRank && value <= 3;
+    const displayValue = isRank ? `#${value}` : value;
+
+    return (
+        <div className="bg-gray-800 p-4 rounded-lg text-center relative">
+            {isTopRank && (
+                <span className="absolute top-2 right-2 text-2xl" title={`Top ${value} Rank`}>⭐</span>
+            )}
+            <p className="text-gray-400 text-sm font-medium">{label}</p>
+            <p className="text-2xl font-bold text-white">{displayValue}</p>
+        </div>
+    );
+};
+// --- END: UPDATED StatCard COMPONENT ---
 
 const ProfilePage = () => {
     const { userId } = useParams();
@@ -214,7 +224,7 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <StatCard label="Overall Rank" value={performance.overallRank} />
+                    <StatCard label="Overall Rank" value={performance.overallRank} isRank={true} />
                     <StatCard label="Average Score" value={performance.overallAccuracy.toFixed(1)} />
                     <StatCard label="Total Points" value={user.score} />
                     <StatCard label="Total Predictions" value={predictions.length} />
