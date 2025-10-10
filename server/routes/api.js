@@ -485,8 +485,6 @@ router.put('/settings/admin', async (req, res) => {
 // Original Prediction & User Routes
 // ===================================
 
-// In server/routes/api.js, replace the GET '/scoreboard' route with this updated version.
-
 router.get('/scoreboard', async (req, res) => {
     try {
         const { predictionType = 'Overall', stock = '' } = req.query;
@@ -509,7 +507,8 @@ router.get('/scoreboard', async (req, res) => {
                     predictionCount: { $sum: 1 }
                 }
             },
-            // --- NEW: Explicitly ensure only users with predictions are included ---
+            // --- THIS IS THE KEY LINE ---
+            // It ensures only users with predictions for the filter are included.
             { $match: { predictionCount: { $gt: 0 } } },
             { $sort: { avgScore: -1 } },
             { $limit: 20 },

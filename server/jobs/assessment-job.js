@@ -25,7 +25,10 @@ function calculateProximityScore(predictedPrice, actualPrice) {
     }
 
     const score = MAX_SCORE * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
-    return Math.round(score);
+    
+    // --- THIS IS THE CORRECT LINE ---
+    // It ensures the score is saved with one decimal place (e.g., 91.8)
+    return parseFloat(score.toFixed(1)); 
 }
 
 /**
