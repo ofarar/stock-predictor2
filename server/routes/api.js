@@ -8,12 +8,29 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
+const { sendContactFormEmail } = require('../services/email');
 
 const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
-// In server/routes/api.js, replace the GET '/watchlist' and PUT '/watchlist' routes
+// Add this route anywhere in the file
+router.post('/contact', async (req, res) => {
+    const { name, email, message } = req.body;
+
+    // Basic validation
+    if (!name || !email || !message) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try {
+        await sendContactFormEmail(name, email, message);
+        res.status(200).json({ message: 'Message sent successfully!' });
+    } catch (error) {
+        console.error("Contact form submission error:", error);
+        res.status(500).json({ message: 'Failed to send message. Please try again later.' });
+    }
+});
 
 // GET: Data for the user's multi-stock watchlist page
 router.get('/watchlist', async (req, res) => {

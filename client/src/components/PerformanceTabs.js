@@ -1,9 +1,6 @@
-// src/components/PerformanceTabs.js
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// FIX: StatCard is now passed a 'rank' prop with the global rank
 const StatCard = ({ label, avgScore, rank, isStock }) => {
     const circumference = 2 * Math.PI * 20;
     const offset = circumference - (avgScore / 100) * circumference;
@@ -32,7 +29,12 @@ const StatCard = ({ label, avgScore, rank, isStock }) => {
             </div>
 
             {/* Rank Display */}
-            <div className="flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2 text-center w-20">
+            <div className="relative flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2 text-center w-20">
+                {/* --- START: NEW STAR ICON --- */}
+                {rank <= 3 && (
+                    <span className="absolute -top-2 -right-2 text-2xl" title={`Top ${rank} Rank`}>⭐</span>
+                )}
+                {/* --- END: NEW STAR ICON --- */}
                 <p className="text-xs text-blue-400 font-bold">RANK</p>
                 <p className="text-xl font-bold text-white">#{rank}</p>
             </div>

@@ -28,6 +28,7 @@ import ExplorePage from './pages/ExplorePage';
 import GoldenFeedPage from './pages/GoldenFeedPage';
 import WatchlistPage from './pages/WatchlistPage';
 import NotificationSettingsPage from './pages/NotificationSettingsPage';
+import ContactPage from './pages/ContactPage';
 
 
 // A small helper component to handle the conditional rendering
@@ -58,13 +59,16 @@ function App() {
     fetchUser(); // Fetch user on initial load
   }, []);
 
+  // This function is now passed to more components
+  const requestLogin = () => setIsLoginPromptOpen(true);
+
   // This function is passed to components to open the prediction modal
   const handleOpenPredictionModal = (stock = null) => {
     if (user) { // If user is logged in, open the real prediction modal
       setStockToPredict(stock);
       setIsPredictionModalOpen(true);
     } else { // If user is a guest, open the login prompt modal
-      setIsLoginPromptOpen(true);
+      requestLogin();
     }
   };
 
@@ -102,7 +106,7 @@ function App() {
           <PageSpecificContent />
           <Routes>
             <Route path="/" element={<HomePage user={user} />} />
-            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage />} />
@@ -113,10 +117,11 @@ function App() {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/prediction/:predictionId" element={<PredictionDetailPage />} />
+            <Route path="/prediction/:predictionId" element={<PredictionDetailPage requestLogin={requestLogin} />} />
             <Route path="/golden-feed" element={<GoldenFeedPage />} />
             <Route path="/watchlist" element={<WatchlistPage />} />
             <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </main>
 

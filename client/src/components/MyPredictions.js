@@ -8,7 +8,6 @@ const MyPredictions = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch real prediction data from your backend
         axios.get(`${process.env.REACT_APP_API_URL}/api/my-predictions`, { withCredentials: true })
             .then(res => {
                 setPredictions(res.data);
@@ -41,7 +40,6 @@ const MyPredictions = () => {
             
             <div className="space-y-3">
                 {filteredPredictions.length > 0 ? filteredPredictions.map(p => (
-                    // This link now uses the real p._id from the database
                     <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
                         <div className="flex justify-between items-center text-sm">
                             <span className="font-bold text-white">{p.stockTicker}</span>
@@ -49,7 +47,8 @@ const MyPredictions = () => {
                             <span className="text-gray-300">Target: ${p.targetPrice.toFixed(2)}</span>
                             {p.status === 'Assessed' && (
                                <span className={`font-bold ${p.score > 60 ? 'text-green-400' : 'text-red-400'}`}>
-                                   Score: {p.score}
+                                   {/* FIX: Use .toFixed(1) to display one decimal place */}
+                                   Score: {p.score.toFixed(1)}
                                </span>
                             )}
                         </div>

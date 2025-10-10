@@ -9,7 +9,8 @@ const LoginPromptModal = ({ isOpen, onClose }) => {
                 <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-                <h2 className="text-2xl font-bold text-white mb-4">Join the Competition!</h2>
+                {/* FIX: Updated Title */}
+                <h2 className="text-2xl font-bold text-white mb-4">Join the Community</h2>
                 <p className="text-gray-300 mb-6">Create an account to make predictions, follow top predictors, and climb the leaderboards.</p>
                 <a 
                     href={`${process.env.REACT_APP_API_URL}/auth/google`} 

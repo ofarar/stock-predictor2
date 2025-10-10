@@ -26,7 +26,8 @@ const MiniPredictionCard = ({ prediction }) => {
                 </div>
                 {isAssessed ? (
                     <div className="text-right">
-                        <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score}</p>
+                        {/* FIX: Use .toFixed(1) to display one decimal place */}
+                        <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score.toFixed(1)}</p>
                         <p className="text-xs text-gray-500 -mt-1">Score</p>
                     </div>
                 ) : (

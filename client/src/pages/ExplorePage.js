@@ -12,7 +12,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser }) => {
 
     const isAssessed = prediction.status === 'Assessed';
     const percentChange = !isAssessed && prediction.currentPrice > 0 ? ((prediction.targetPrice - prediction.currentPrice) / prediction.currentPrice) * 100 : 0;
-    
+
     const likes = prediction.likes || [];
     const dislikes = prediction.dislikes || [];
 
@@ -23,7 +23,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser }) => {
         <div className="bg-gray-800 rounded-lg overflow-hidden transition-all hover:shadow-lg hover:shadow-green-500/10 flex flex-col">
             <div className="p-4 flex-grow">
                 <div className="flex items-center mb-4">
-                    <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
+                    <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                     <div className="ml-3 flex-grow">
                         <div className="flex items-center gap-2">
                             <Link to={`/profile/${prediction.userId._id}`} className="font-bold text-white hover:underline">{prediction.userId.username}</Link>
@@ -53,11 +53,11 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser }) => {
             <div className={`flex justify-between items-center text-xs px-4 py-2 ${isAssessed ? 'bg-gray-700' : 'bg-gray-900'}`}>
                 <span className="font-semibold text-gray-300">{prediction.predictionType}</span>
                 <div className="flex items-center gap-3 text-gray-400">
-                    <button onClick={(e) => { e.preventDefault(); onVote(prediction._id, 'like'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userLike ? 'text-green-500' : ''}`} disabled={!currentUser || isAssessed} title="Agree">
+                    <button onClick={(e) => { e.preventDefault(); onVote(prediction._id, 'like'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userLike ? 'text-green-500' : ''}`} disabled={isAssessed} title="Agree">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
                         <span>{likes.length}</span>
                     </button>
-                    <button onClick={(e) => { e.preventDefault(); onVote(prediction._id, 'dislike'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userDislike ? 'text-red-500' : ''}`} disabled={!currentUser || isAssessed} title="Disagree">
+                    <button onClick={(e) => { e.preventDefault(); onVote(prediction._id, 'dislike'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userDislike ? 'text-red-500' : ''}`} disabled={isAssessed} title="Disagree">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.438 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.2-1.867a4 4 0 00.8-2.4z"></path></svg>
                         <span>{dislikes.length}</span>
                     </button>
@@ -67,7 +67,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser }) => {
     );
 };
 
-const ExplorePage = () => {
+const ExplorePage = ({ requestLogin }) => {
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Active');
@@ -86,19 +86,19 @@ const ExplorePage = () => {
         setLoading(true);
         const apiSortBy = filters.sortBy === 'potential' ? 'date' : filters.sortBy;
         axios.get(`${process.env.REACT_APP_API_URL}/api/explore/feed`, { params: { status: activeTab, ...filters, sortBy: apiSortBy } })
-        .then(res => {
-            let data = res.data;
-            if (filters.sortBy === 'potential' && activeTab === 'Active') {
-                data.sort((a, b) => {
-                    const changeA = a.currentPrice > 0 ? Math.abs((a.targetPrice - a.currentPrice) / a.currentPrice) : 0;
-                    const changeB = b.currentPrice > 0 ? Math.abs((b.targetPrice - b.currentPrice) / b.currentPrice) : 0;
-                    return changeB - changeA;
-                });
-            }
-            setPredictions(data);
-        })
-        .catch(err => console.error("Failed to fetch predictions feed", err))
-        .finally(() => setLoading(false));
+            .then(res => {
+                let data = res.data;
+                if (filters.sortBy === 'potential' && activeTab === 'Active') {
+                    data.sort((a, b) => {
+                        const changeA = a.currentPrice > 0 ? Math.abs((a.targetPrice - a.currentPrice) / a.currentPrice) : 0;
+                        const changeB = b.currentPrice > 0 ? Math.abs((b.targetPrice - b.currentPrice) / b.currentPrice) : 0;
+                        return changeB - changeA;
+                    });
+                }
+                setPredictions(data);
+            })
+            .catch(err => console.error("Failed to fetch predictions feed", err))
+            .finally(() => setLoading(false));
     }, [activeTab, filters]);
 
     useEffect(() => { fetchPredictions(); }, [fetchPredictions]);
@@ -108,7 +108,8 @@ const ExplorePage = () => {
     };
 
     const handleVote = (predictionId, voteType) => {
-        if (!currentUser) return toast.error("Please log in to vote.");
+        if (!currentUser) return requestLogin();
+
         const originalPredictions = [...predictions];
         const updatedPredictions = predictions.map(p => {
             if (p._id === predictionId) {

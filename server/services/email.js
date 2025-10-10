@@ -5,6 +5,8 @@ const transporter = nodemailer.createTransport(sgTransport({
     auth: { api_key: process.env.SENDGRID_API_KEY }
 }));
 
+const ADMIN_EMAIL = 'predictostock@gmail.com';
+
 exports.sendWelcomeEmail = (email, username) => {
     const emailBody = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
@@ -29,4 +31,25 @@ exports.sendWelcomeEmail = (email, username) => {
         subject: 'Welcome to StockPredictor! Your Journey Begins.',
         html: emailBody
     }).catch(err => console.error("Email sending error:", err));
+};
+
+// --- START: NEW FUNCTION ---
+exports.sendContactFormEmail = (name, senderEmail, message) => {
+    const emailBody = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2 style="color: #4CAF50;">New Message from StockPredictor Contact Form</h2>
+            <p><strong>From:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${senderEmail}</p>
+            <hr/>
+            <p><strong>Message:</strong></p>
+            <p style="background-color: #f4f4f4; border-left: 4px solid #ccc; padding: 10px;">${message.replace(/\n/g, '<br>')}</p>
+        </div>
+    `;
+
+    return transporter.sendMail({
+        to: ADMIN_EMAIL,
+        from: ADMIN_EMAIL, // Must be a verified sender in SendGrid
+        subject: `[StockPredictor] New Message from ${name}`,
+        html: emailBody
+    });
 };

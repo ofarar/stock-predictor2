@@ -1,3 +1,5 @@
+// src/components/Footer.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
@@ -9,8 +11,9 @@ const Footer = () => {
             <div className="container mx-auto py-8 px-6">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     <div className="mb-4 md:mb-0"><Logo /></div>
-                    <div className="flex space-x-6 text-gray-400">
+                    <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-gray-400">
                         <Link to="/about" className="hover:text-white">About</Link>
+                        <Link to="/contact" className="hover:text-white">Contact</Link> {/* <-- Add this link */}
                         <Link to="/terms" className="hover:text-white">Terms of Service</Link>
                         <Link to="/privacy" className="hover:text-white">Privacy Policy</Link>
                     </div>
