@@ -14,10 +14,10 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
-// Add this entire route anywhere inside your server/routes/api.js file.
+// In server/routes/api.js, replace your existing POST '/posts/golden' route with this one.
 
 router.post('/posts/golden', async (req, res) => {
-    // 1. Security check
+    // 1. Security check (unchanged)
     if (!req.user || !req.user.isGoldenMember) {
         return res.status(403).json({ message: 'Only Golden Members can create posts.' });
     }
@@ -34,7 +34,7 @@ router.post('/posts/golden', async (req, res) => {
             isGoldenPost: true,
         };
 
-        // 2. If a prediction is attached, get the current price and save it with the post
+        // 2. Prediction attachment logic (unchanged)
         if (attachedPrediction && attachedPrediction.stockTicker) {
             const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
             newPostData.attachedPrediction = {
@@ -45,7 +45,7 @@ router.post('/posts/golden', async (req, res) => {
 
         const post = await new Post(newPostData).save();
 
-        // 3. Send notifications to all golden subscribers
+        // 3. Send notifications to SUBSCRIBERS ONLY (this logic is correct)
         const user = await User.findById(req.user._id).populate('goldenSubscribers.user');
         const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
         
@@ -56,7 +56,8 @@ router.post('/posts/golden', async (req, res) => {
                 sender: user._id,
                 type: 'GoldenPost',
                 message: notificationMessage,
-                link: `/profile/${user._id}?tab=GoldenFeed`
+                // --- FIX: Updated link to point to the main Golden Feed page ---
+                link: '/golden-feed'
             }));
             await Notification.insertMany(notifications);
         }
