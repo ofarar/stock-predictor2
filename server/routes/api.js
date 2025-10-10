@@ -48,7 +48,7 @@ router.post('/posts/golden', async (req, res) => {
         // 3. Send notifications to SUBSCRIBERS ONLY (this logic is correct)
         const user = await User.findById(req.user._id).populate('goldenSubscribers.user');
         const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
-        
+
         if (validSubscribers.length > 0) {
             const notificationMessage = `${user.username} has published a new Golden Post.`;
             const notifications = validSubscribers.map(sub => ({
@@ -273,17 +273,14 @@ router.get('/my-subscriptions', async (req, res) => {
 // GET: The filterable, centralized Golden Feed
 router.get('/golden-feed', async (req, res) => {
     if (!req.user) return res.status(401).json([]);
-
     try {
         const { authorId, stock, predictionType } = req.query;
         const currentUser = await User.findById(req.user._id);
+        const lastCheck = currentUser.lastCheckedGoldenFeed;
 
-        // Base list of authors: the user themselves plus anyone they subscribe to
         let authorIds = [currentUser._id, ...currentUser.goldenSubscriptions.map(sub => sub.user)];
-
         const query = { isGoldenPost: true };
 
-        // If filtering by a specific author, override the base list
         if (authorId && authorId !== 'All') {
             query.userId = authorId;
         } else {
@@ -300,12 +297,28 @@ router.get('/golden-feed', async (req, res) => {
         const feedPosts = await Post.find(query)
             .sort({ createdAt: -1 })
             .limit(100)
-            .populate('userId', 'username avatar isGoldenMember');
+            .populate('userId', 'username avatar isGoldenMember')
+            .lean(); // Use .lean() to make the objects mutable
+
+        // Add the 'isNew' flag to each post
+        feedPosts.forEach(post => {
+            post.isNew = new Date(post.createdAt) > new Date(lastCheck);
+        });
 
         res.json(feedPosts);
     } catch (err) {
-        console.error("Error fetching golden feed:", err);
         res.status(500).json({ message: 'Error fetching golden feed.' });
+    }
+});
+
+// POST: Mark the golden feed as "read" by updating the user's timestamp
+router.post('/golden-feed/mark-as-read', async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+    try {
+        await User.findByIdAndUpdate(req.user._id, { lastCheckedGoldenFeed: new Date() });
+        res.status(200).send('Timestamp updated.');
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating timestamp.' });
     }
 });
 
@@ -364,40 +377,38 @@ router.get('/posts/golden/:userId', async (req, res) => {
     }
 });
 
-// GET: Fetch the golden feed for a specific user (with security)
 router.get('/posts/golden/:userId', async (req, res) => {
-    if (!req.user) {
-        // Not logged in, return empty array to show the paywall
-        return res.json([]);
-    }
-
     try {
         const profileUserId = req.params.userId;
-        const currentUserId = req.user._id.toString();
+        let isAllowed = false;
+        let posts = [];
 
-        const profileUser = await User.findById(profileUserId);
-        if (!profileUser) {
-            return res.status(404).json({ message: 'User not found.' });
+        if (req.user) {
+            const currentUser = await User.findById(req.user._id);
+            const profileUser = await User.findById(profileUserId);
+            if (!profileUser) return res.status(404).json({ message: 'User not found.' });
+
+            const currentUserId = req.user._id.toString();
+            const isOwner = currentUserId === profileUserId;
+            const isSubscriber = profileUser.goldenSubscribers.some(sub => sub.user.toString() === currentUserId);
+
+            if (isOwner || isSubscriber) {
+                isAllowed = true;
+                const lastCheck = currentUser.lastCheckedGoldenFeed;
+                const rawPosts = await Post.find({ userId: profileUserId, isGoldenPost: true })
+                    .sort({ createdAt: -1 })
+                    .limit(50)
+                    .lean();
+
+                rawPosts.forEach(post => {
+                    post.isNew = new Date(post.createdAt) > new Date(lastCheck);
+                });
+                posts = rawPosts;
+            }
         }
 
-        // Check for authorization:
-        // 1. Is the current user the owner of the profile?
-        // 2. Is the current user in the profile owner's list of golden subscribers?
-        const isOwner = currentUserId === profileUserId;
-        const isSubscriber = profileUser.goldenSubscribers.map(id => id.toString()).includes(currentUserId);
-
-        if (isOwner || isSubscriber) {
-            // If authorized, fetch and return the posts
-            const posts = await Post.find({ userId: profileUserId, isGoldenPost: true })
-                .sort({ createdAt: -1 })
-                .limit(50);
-            return res.json(posts);
-        } else {
-            // If not authorized, return an empty array to indicate they don't have access
-            return res.json([]);
-        }
+        res.json({ isAllowed, posts });
     } catch (err) {
-        console.error("Error fetching golden feed:", err);
         res.status(500).json({ message: 'Server error while fetching feed.' });
     }
 });
@@ -731,7 +742,7 @@ router.get('/quote/:symbol', async (req, res) => {
         // Create a new 'displayPrice' field by checking multiple price fields in order of preference.
         // This ensures we almost always have a price to show on the frontend.
         const displayPrice = quote.regularMarketPrice || quote.marketPrice || quote.regularMarketPreviousClose || null;
-        
+
         // Return the original quote object with our new reliable price field added to it.
         res.json({ ...quote, displayPrice });
         // --- END: NEW LOGIC ---
@@ -1445,7 +1456,7 @@ router.get('/explore/feed', async (req, res) => {
         // Add current price to active predictions if possible, but don't fail if the API times out.
         if (status === 'Active' && predictions.length > 0) {
             const tickers = [...new Set(predictions.map(p => p.stockTicker))];
-            
+
             try {
                 if (tickers.length > 0) {
                     const quotes = await yahooFinance.quote(tickers);

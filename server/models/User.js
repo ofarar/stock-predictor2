@@ -47,7 +47,8 @@ const UserSchema = new Schema({
         badgeId: { type: String, required: true },
         tier: { type: String, enum: ['Bronze', 'Silver', 'Gold'], required: true },
         achievedAt: { type: Date, default: Date.now }
-    }]
+    }],
+    lastCheckedGoldenFeed: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

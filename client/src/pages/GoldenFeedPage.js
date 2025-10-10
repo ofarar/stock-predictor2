@@ -10,9 +10,13 @@ const CentralPostCard = ({ post }) => {
         const target = post.attachedPrediction.targetPrice;
         percentChange = ((target - initial) / initial) * 100;
     }
-    
+
     return (
-        <div className="bg-gray-800 p-4 rounded-lg">
+        <div className="bg-gray-800 p-4 rounded-lg relative">
+            {/* --- NEW: Conditional "NEW" Label --- */}
+            {post.isNew && (
+                <span className="absolute top-3 right-3 text-xs bg-green-500 text-white font-bold px-2 py-1 rounded-full animate-pulse">NEW</span>
+            )}
             <div className="flex items-center mb-3">
                 <img src={post.userId.avatar} alt="author avatar" className={`w-8 h-8 rounded-full border-2 ${post.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                 <span className="ml-3 font-semibold text-white">{post.userId.username}</span>
@@ -49,6 +53,12 @@ const GoldenFeedPage = () => {
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
+    const markFeedAsRead = () => {
+        // This function will be called once when the component loads
+        axios.post(`${process.env.REACT_APP_API_URL}/api/golden-feed/mark-as-read`, {}, { withCredentials: true })
+            .catch(err => console.error("Failed to mark feed as read.", err));
+    };
+
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => setCurrentUser(res.data));
@@ -69,7 +79,10 @@ const GoldenFeedPage = () => {
 
     useEffect(() => {
         fetchPosts();
-    }, [fetchPosts]);
+        // --- NEW: Mark feed as read when posts are fetched ---
+        const timer = setTimeout(markFeedAsRead, 2000); // Delay to ensure user sees the "new" labels first
+        return () => clearTimeout(timer);
+    }, [fetchPosts])
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
@@ -87,7 +100,7 @@ const GoldenFeedPage = () => {
                 <div className="flex flex-wrap gap-4 justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold text-white">Your Golden Feed</h1>
                     {currentUser?.isGoldenMember && (
-                        <button 
+                        <button
                             onClick={() => setIsPostModalOpen(true)}
                             className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-400 flex items-center gap-2"
                         >
@@ -96,7 +109,7 @@ const GoldenFeedPage = () => {
                         </button>
                     )}
                 </div>
-                
+
                 <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         <div>

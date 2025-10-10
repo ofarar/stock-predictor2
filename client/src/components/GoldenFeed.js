@@ -15,8 +15,8 @@ const PostCard = ({ post }) => {
 
     return (
         <div className="bg-gray-700 p-4 rounded-lg relative">
-            {isNew && (
-                <span className="absolute top-2 right-2 text-xs bg-green-500 text-white font-bold px-2 py-1 rounded-full">NEW</span>
+            {post.isNew && (
+                <span className="absolute top-2 right-2 text-xs bg-green-500 text-white font-bold px-2 py-1 rounded-full animate-pulse">NEW</span>
             )}
             <p className="text-gray-300 whitespace-pre-wrap">{post.message}</p>
             {post.attachedPrediction?.stockTicker && (
@@ -51,6 +51,13 @@ const GoldenFeed = ({ profileUser, onJoinClick }) => {
             .then(res => {
                 setIsAllowed(res.data.isAllowed);
                 setPosts(res.data.posts);
+                // --- NEW: Mark feed as read if the user is allowed to see it ---
+                if (res.data.isAllowed) {
+                    setTimeout(() => {
+                        axios.post(`${process.env.REACT_APP_API_URL}/api/golden-feed/mark-as-read`, {}, { withCredentials: true })
+                            .catch(err => console.error("Failed to mark feed as read.", err));
+                    }, 2000);
+                }
             })
             .catch(() => {
                 setIsAllowed(false);
@@ -70,8 +77,8 @@ const GoldenFeed = ({ profileUser, onJoinClick }) => {
                 <p className="text-gray-400 mt-2">
                     Join {profileUser.username}'s subscribers to view their private feed, including detailed prediction rationales and market analysis.
                 </p>
-                <button 
-                    onClick={onJoinClick} 
+                <button
+                    onClick={onJoinClick}
                     className="mt-6 font-bold py-3 px-6 rounded-md bg-yellow-500 text-black hover:bg-yellow-400 transition-transform hover:scale-105"
                 >
                     Join for ${profileUser.goldenMemberPrice}/mo
