@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import DescriptionModal from '../components/DescriptionModal';
+import PredictionJourney from '../components/PredictionJourney';
 
 const formatTimeLeft = (deadline) => {
     const total = Date.parse(deadline) - Date.parse(new Date());
@@ -33,68 +34,12 @@ const calculateLiveScore = (predictedPrice, actualPrice) => {
 const isMarketOpen = () => {
     const now = new Date();
     const utcHour = now.getUTCHours();
-    const day = now.getUTCDay(); 
+    const day = now.getUTCDay();
     const isWeekday = day >= 1 && day <= 5;
     const isAfterOpen = utcHour > 13 || (utcHour === 13 && now.getUTCMinutes() >= 30);
     const isBeforeClose = utcHour < 20;
     return isWeekday && isAfterOpen && isBeforeClose;
 };
-
-
-const PredictionJourney = ({ initial, target, current, priceLabel }) => {
-    if (typeof initial !== 'number' || typeof target !== 'number') {
-        return null;
-    }
-
-    const min = Math.min(initial, target);
-    const max = Math.max(initial, target);
-    const range = max - min;
-    const isUpward = target > initial;
-
-    let currentPosition = 0;
-    if (range > 0 && typeof current === 'number') {
-        const clampedCurrent = Math.max(min, Math.min(current, max));
-        currentPosition = ((clampedCurrent - min) / range) * 100;
-    }
-
-    let tooltipClasses = 'absolute bottom-full mb-2 left-1/2 -translate-x-1/2';
-    if (currentPosition < 15) {
-        tooltipClasses = 'absolute bottom-full mb-2 left-0';
-    } else if (currentPosition > 85) {
-        tooltipClasses = 'absolute bottom-full mb-2 right-0';
-    }
-
-    return (
-        <div className="my-8">
-            <div className="relative h-2 bg-gray-700 rounded-full">
-                {typeof current === 'number' && (
-                    <div 
-                        className="absolute top-1/2 -translate-y-1/2" 
-                        style={{ left: `${isUpward ? currentPosition : 100 - currentPosition}%`, transform: 'translateX(-50%)' }}
-                    >
-                        <div className="relative">
-                            <span className={`${tooltipClasses} whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded`}>
-                                ${current.toFixed(2)} {priceLabel}
-                            </span>
-                            <div className="w-4 h-4 rounded-full bg-white ring-4 ring-gray-800"></div>
-                        </div>
-                    </div>
-                )}
-            </div>
-            <div className="flex justify-between mt-3 text-sm">
-                <div className={`text-center ${isUpward ? 'text-gray-400' : 'text-red-400 font-bold'}`}>
-                    <p>Initial</p>
-                    <p>${initial.toFixed(2)}</p>
-                </div>
-                <div className={`text-center ${isUpward ? 'text-green-400 font-bold' : 'text-gray-400'}`}>
-                    <p>Predicted</p>
-                    <p>${target.toFixed(2)}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
 
 const PredictionDetailPage = ({ requestLogin }) => {
     const { predictionId } = useParams();
@@ -121,7 +66,7 @@ const PredictionDetailPage = ({ requestLogin }) => {
                 setCurrentQuote(quoteRes.data);
             }
         }).catch(() => toast.error("Could not load prediction details."))
-          .finally(() => setLoading(false));
+            .finally(() => setLoading(false));
     }, [predictionId]);
 
     useEffect(() => {
@@ -155,7 +100,7 @@ const PredictionDetailPage = ({ requestLogin }) => {
     if (!prediction) return <div className="text-center text-white">Prediction not found.</div>;
 
     const isAssessed = prediction.status === 'Assessed';
-    
+
     const marketIsOpenNow = isMarketOpen();
     const currentPrice = isAssessed
         ? prediction.actualPrice
@@ -163,21 +108,25 @@ const PredictionDetailPage = ({ requestLogin }) => {
 
     const scoreLabel = marketIsOpenNow ? 'Live Score' : 'Score at Close';
     const priceLabel = marketIsOpenNow ? 'Current' : 'Closing Price';
-    
-    let score = isAssessed 
-        ? prediction.score 
+
+    let score = isAssessed
+        ? prediction.score
         : calculateLiveScore(prediction.targetPrice, currentPrice);
 
     const formattedScore = typeof score === 'number' ? score.toFixed(1) : score;
     const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
     const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
-    
+
     const hasInitialPrice = typeof prediction.priceAtCreation === 'number';
-    const percentChange = hasInitialPrice ? ((prediction.targetPrice - prediction.priceAtCreation) / prediction.priceAtCreation) * 100 : null;
+    // --- FIX: Percentage calculation is now based on CURRENT price ---
+    let percentFromCurrent = null;
+    if (typeof currentPrice === 'number' && currentPrice > 0) {
+        percentFromCurrent = ((prediction.targetPrice - currentPrice) / currentPrice) * 100;
+    }
 
     return (
         <>
-            <DescriptionModal 
+            <DescriptionModal
                 isOpen={isDescModalOpen}
                 onClose={() => setIsDescModalOpen(false)}
                 description={prediction.description}
@@ -196,9 +145,9 @@ const PredictionDetailPage = ({ requestLogin }) => {
                     </div>
 
                     {hasInitialPrice ? (
-                        <PredictionJourney 
-                            initial={prediction.priceAtCreation} 
-                            target={prediction.targetPrice} 
+                        <PredictionJourney
+                            initial={prediction.priceAtCreation}
+                            target={prediction.targetPrice}
                             current={currentPrice}
                             priceLabel={priceLabel}
                         />
@@ -209,11 +158,16 @@ const PredictionDetailPage = ({ requestLogin }) => {
                     )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-                        <div className="bg-gray-700 p-4 rounded-lg">
-                            <p className="text-sm text-gray-400">Target {percentChange !== null ? `(${percentChange >= 0 ? '+' : ''}${percentChange.toFixed(1)}%)` : ''}</p>
-                            <p className={`text-3xl font-bold ${percentChange === null ? 'text-white' : (percentChange >= 0 ? 'text-green-400' : 'text-red-400')}`}>${prediction.targetPrice.toFixed(2)}</p>
+                        <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
+                            <p className="text-sm text-gray-400">Target Price</p>
+                            <p className="text-3xl font-bold text-white">${prediction.targetPrice.toFixed(2)}</p>
+                            {percentFromCurrent !== null && (
+                                <p className={`text-sm font-bold ${percentFromCurrent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                    {percentFromCurrent >= 0 ? '+' : ''}{percentFromCurrent.toFixed(1)}%
+                                </p>
+                            )}
                         </div>
-                         <div className="bg-gray-700 p-4 rounded-lg">
+                        <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
                             <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
                                 {isAssessed ? 'Final Score' : scoreLabel}
                                 {prediction.description && (
@@ -225,13 +179,13 @@ const PredictionDetailPage = ({ requestLogin }) => {
                             <p className={`text-3xl font-bold ${typeof score === 'number' && score > 60 ? 'text-green-400' : 'text-red-400'}`}>{formattedScore}</p>
                         </div>
                     </div>
-                     {!isAssessed && (
+                    {!isAssessed && (
                         <div className="mt-4 text-center bg-gray-700 p-2 rounded-lg">
                             <p className="text-sm text-gray-400">Time Remaining</p>
                             <p className="font-mono text-white">{timeLeft}</p>
                         </div>
                     )}
-                    
+
                     <div className="mt-6 pt-6 border-t border-gray-700">
                         <h3 className="text-center text-sm text-gray-400 font-bold mb-4">DO YOU AGREE?</h3>
                         <div className="flex justify-center items-center gap-6 text-gray-400">
