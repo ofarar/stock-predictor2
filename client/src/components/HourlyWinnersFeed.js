@@ -41,20 +41,14 @@ const HourlyWinnersFeed = ({ winners = [] }) => {
                 </span>
             </div>
             <div className="space-y-3">
-                {winners.length > 0 ? winners.map((winner, index) => (
-                    <div key={winner.predictionId} className="flex items-center bg-gray-700 p-2 rounded-lg">
-                        {/* 1. Rank Number Added */}
-                        <span className="font-bold w-8 text-center text-gray-400">{index + 1}</span>
-                        
-                        {/* 2. Small Avatar Added */}
+                {winners.length > 0 ? winners.map((winner) => (
+                    <div key={winner.predictionId} className="flex items-center bg-gray-700 p-3 rounded-lg">
                         <img 
                             src={winner.avatar || `https://avatar.iran.liara.run/public/boy?username=${winner.userId}`} 
                             alt="avatar" 
-                            // 3. Golden Border for Golden Members
-                            className={`w-8 h-8 rounded-full ml-2 border-2 ${winner.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                            className={`w-10 h-10 rounded-full border-2 ${winner.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                         />
-                        
-                        <Link to={`/profile/${winner.userId}`} className="font-semibold text-white hover:underline ml-3 flex-grow">{winner.username}</Link>
+                        <Link to={`/profile/${winner.userId}`} className="font-semibold text-white hover:underline ml-4 flex-grow">{winner.username}</Link>
                         <Link to={`/stock/${winner.ticker}`} className="text-sm text-gray-400 hover:underline mx-4">{winner.ticker}</Link>
                         <span className="font-bold text-green-400">+{winner.score} pts</span>
                     </div>

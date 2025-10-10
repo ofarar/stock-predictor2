@@ -9,15 +9,14 @@ const DailyLeaderboard = ({ leaders = [] }) => (
         </div>
         <p className="text-sm text-gray-400 mb-4">(Based on today's hourly predictions)</p>
         <div className="space-y-3">
-            {leaders.length > 0 ? leaders.map((leader, index) => (
-                <div key={leader.userId} className="flex items-center bg-gray-700 p-2 rounded-lg">
-                    <span className="font-bold w-8 text-center text-gray-400">{index + 1}</span>
+            {leaders.length > 0 ? leaders.map((leader) => (
+                <div key={leader.userId} className="flex items-center bg-gray-700 p-3 rounded-lg">
                     <img 
                         src={leader.avatar || `https://avatar.iran.liara.run/public/boy?username=${leader.userId}`}
                         alt="avatar"
-                        className={`w-8 h-8 rounded-full ml-2 border-2 ${leader.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                        className={`w-10 h-10 rounded-full border-2 ${leader.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                     />
-                    <Link to={`/profile/${leader.userId}`} className="font-semibold text-white hover:underline ml-3 flex-grow">{leader.username}</Link>
+                    <Link to={`/profile/${leader.userId}`} className="font-semibold text-white hover:underline ml-4 flex-grow">{leader.username}</Link>
                     <span className="ml-auto font-bold text-green-400">{leader.avgScore.toFixed(1)} avg</span>
                 </div>
             )) : <p className="text-gray-500 text-center py-4">No data yet today.</p>}
