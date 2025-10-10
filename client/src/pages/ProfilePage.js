@@ -130,7 +130,10 @@ const ProfilePage = () => {
     const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
     const isOwnProfile = currentUser?._id === user._id;
     const isFollowing = currentUser?.following?.includes(user._id);
+    // --- START: FIX FOR SUBSCRIPTION CHECK ---
+    // This now correctly checks if the subscription ID (sub.user) exists in your list.
     const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);
+    // --- END: FIX ----
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
 
     return (

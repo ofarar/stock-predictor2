@@ -348,67 +348,36 @@ router.get('/golden-feed', async (req, res) => {
 router.get('/posts/golden/:userId', async (req, res) => {
     try {
         const profileUserId = req.params.userId;
-        const profileUser = await User.findById(profileUserId);
-        if (!profileUser) return res.status(404).json({ message: 'User not found.' });
-
-        let isAllowed = false;
-        if (req.user) {
-            const currentUserId = req.user._id.toString();
-            const isOwner = currentUserId === profileUserId;
-            const isSubscriber = profileUser.goldenSubscribers.map(id => id.toString()).includes(currentUserId);
-            if (isOwner || isSubscriber) {
-                isAllowed = true;
-            }
-        }
-
-        if (isAllowed) {
-            const posts = await Post.find({ userId: profileUserId, isGoldenPost: true })
-                .sort({ createdAt: -1 })
-                .limit(50);
-            // Return an object with the access flag and the posts
-            return res.json({ isAllowed: true, posts: posts });
-        } else {
-            // If not allowed, still return the flag
-            return res.json({ isAllowed: false, posts: [] });
-        }
-    } catch (err) {
-        console.error("Error fetching golden feed:", err);
-        res.status(500).json({ message: 'Server error while fetching feed.' });
-    }
-});
-
-router.get('/posts/golden/:userId', async (req, res) => {
-    try {
-        const profileUserId = req.params.userId;
         let isAllowed = false;
         let posts = [];
 
         if (req.user) {
-            const currentUser = await User.findById(req.user._id);
+            const currentUserId = req.user._id.toString();
             const profileUser = await User.findById(profileUserId);
             if (!profileUser) return res.status(404).json({ message: 'User not found.' });
 
-            const currentUserId = req.user._id.toString();
             const isOwner = currentUserId === profileUserId;
-            const isSubscriber = profileUser.goldenSubscribers.some(sub => sub.user.toString() === currentUserId);
+
+            // --- START: FIX ---
+            // Added checks for 'sub' and 'sub.user' to prevent crashes on malformed data.
+            const isSubscriber = profileUser.goldenSubscribers.some(
+                sub => sub && sub.user && sub.user.toString() === currentUserId
+            );
+            // --- END: FIX ---
 
             if (isOwner || isSubscriber) {
                 isAllowed = true;
+                const currentUser = await User.findById(req.user._id);
                 const lastCheck = currentUser.lastCheckedGoldenFeed;
-                const rawPosts = await Post.find({ userId: profileUserId, isGoldenPost: true })
-                    .sort({ createdAt: -1 })
-                    .limit(50)
-                    .lean();
-
-                rawPosts.forEach(post => {
-                    post.isNew = new Date(post.createdAt) > new Date(lastCheck);
-                });
+                const rawPosts = await Post.find({ userId: profileUserId, isGoldenPost: true }).sort({ createdAt: -1 }).limit(50).lean();
+                rawPosts.forEach(post => { post.isNew = new Date(post.createdAt) > new Date(lastCheck); });
                 posts = rawPosts;
             }
         }
 
         res.json({ isAllowed, posts });
     } catch (err) {
+        console.error("Error fetching profile golden feed:", err);
         res.status(500).json({ message: 'Server error while fetching feed.' });
     }
 });

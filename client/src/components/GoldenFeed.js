@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const PostCard = ({ post }) => {
-    const isNew = (new Date() - new Date(post.createdAt)) < 24 * 60 * 60 * 1000;
-
     let percentChange = null;
     if (post.attachedPrediction?.priceAtCreation > 0) {
         const initial = post.attachedPrediction.priceAtCreation;
