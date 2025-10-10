@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
     const priceChange = quote?.regularMarketChangePercent || 0;
     return (
         <div className="relative flex-shrink-0 w-56">
-            <button onClick={onClick} className={`w-full p-4 rounded-lg text-left transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
+             <button onClick={onClick} className={`w-full p-4 rounded-lg text-left transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
                 <div className="flex justify-between items-baseline">
                     <p className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-white'}`}>{quote.symbol}</p>
                     <p className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-white'}`}>{quote.regularMarketPrice?.toFixed(2)}</p>
@@ -21,8 +21,8 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
                 </div>
             </button>
             {isSelected && (
-                <button
-                    onClick={onRemove}
+                <button 
+                    onClick={onRemove} 
                     className="absolute top-1 right-1 p-1 bg-black bg-opacity-20 rounded-full text-white hover:bg-red-500/50"
                     title={`Remove ${quote.symbol} from watchlist`}
                 >
@@ -41,7 +41,10 @@ const WatchlistPage = () => {
     const [predictionTypeFilter, setPredictionTypeFilter] = useState('All');
     const [sortBy, setSortBy] = useState('date');
     const [visibleCount, setVisibleCount] = useState(6);
-
+    
+    const scrollContainerRef = useRef(null);
+    const stockCardRefs = useRef({});
+    
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     const fetchData = useCallback(() => {
@@ -65,11 +68,23 @@ const WatchlistPage = () => {
         fetchData();
     }, [fetchData]);
 
+    useEffect(() => {
+        if (selectedTicker && stockCardRefs.current[selectedTicker]) {
+            stockCardRefs.current[selectedTicker].scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }, [selectedTicker]);
+
     const handleWatchlistUpdate = (ticker, action) => {
         if (!ticker) return;
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(() => {
-                if (action === 'add') setSelectedTicker(ticker);
+                if(action === 'add') {
+                    setSelectedTicker(ticker);
+                }
                 fetchData();
             });
         toast.promise(promise, {
@@ -78,7 +93,7 @@ const WatchlistPage = () => {
             error: 'Failed to update.',
         });
     };
-
+    
     const handleFollow = (userIdToFollow) => {
         const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToFollow}/follow`, {}, { withCredentials: true })
             .then(() => {
@@ -96,9 +111,8 @@ const WatchlistPage = () => {
     };
 
     const selectedPredictions = data.predictions[selectedTicker] || [];
-    const selectedQuote = data.quotes.find(q => q.symbol === selectedTicker);
-    const currentPrice = selectedQuote?.regularMarketPrice || 0;
-
+    const currentPrice = data.quotes.find(q => q.symbol === selectedTicker)?.regularMarketPrice || 0;
+    
     const filteredAndSortedPredictions = useMemo(() => {
         let processedPredictions = [...selectedPredictions];
 
@@ -106,7 +120,6 @@ const WatchlistPage = () => {
             processedPredictions = processedPredictions.filter(p => p.predictionType === predictionTypeFilter);
         }
 
-        // --- START: UPDATED SORT LOGIC ---
         if (sortBy === 'potential') {
             processedPredictions.sort((a, b) => {
                 const changeA = currentPrice > 0 ? Math.abs((a.targetPrice - currentPrice) / currentPrice) : 0;
@@ -122,7 +135,7 @@ const WatchlistPage = () => {
         } else {
             processedPredictions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
-
+        
         return processedPredictions;
     }, [selectedPredictions, predictionTypeFilter, sortBy, currentPrice]);
 
@@ -144,8 +157,17 @@ const WatchlistPage = () => {
                 </div>
             ) : (
                 <>
-                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-                        {data.quotes.map(q => <WatchlistStockCard key={q.symbol} quote={q} isSelected={selectedTicker === q.symbol} onClick={() => setSelectedTicker(q.symbol)} onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')} /> )}
+                    <div ref={scrollContainerRef} className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                        {data.quotes.map(q => (
+                            <div key={q.symbol} ref={el => stockCardRefs.current[q.symbol] = el}>
+                                <WatchlistStockCard 
+                                    quote={q} 
+                                    isSelected={selectedTicker === q.symbol} 
+                                    onClick={() => setSelectedTicker(q.symbol)} 
+                                    onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')} 
+                                />
+                            </div>
+                        ))}
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -164,9 +186,7 @@ const WatchlistPage = () => {
                                     <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
                                         <option value="date">Most Recent</option>
                                         <option value="votes">Most Voted</option>
-                                        {/* --- START: NEW SORT OPTION --- */}
                                         <option value="potential">Highest Potential</option>
-                                        {/* --- END: NEW SORT OPTION --- */}
                                     </select>
                                 </div>
                             </div>
@@ -174,12 +194,10 @@ const WatchlistPage = () => {
                             {filteredAndSortedPredictions.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {filteredAndSortedPredictions.slice(0, visibleCount).map(p => {
-                                        // --- START: NEW PERCENTAGE CALCULATION ---
                                         let percentageChange = 0;
                                         if (currentPrice > 0) {
                                             percentageChange = ((p.targetPrice - currentPrice) / currentPrice) * 100;
                                         }
-                                        // --- END: NEW PERCENTAGE CALCULATION ---
                                         return (
                                             <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-800 p-4 rounded-lg hover:bg-gray-700">
                                                 <div className="flex items-center gap-3 mb-3">
@@ -187,12 +205,10 @@ const WatchlistPage = () => {
                                                     <p className="font-semibold text-white text-sm">{p.userId.username}</p>
                                                 </div>
                                                 <div className="text-center">
-                                                    {/* --- START: UPDATED DISPLAY --- */}
                                                     <p className="text-xl font-bold text-white">${p.targetPrice.toFixed(2)}</p>
                                                     <p className={`text-sm font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                         ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
                                                     </p>
-                                                    {/* --- END: UPDATED DISPLAY --- */}
                                                 </div>
                                                 <p className="text-center text-xs text-gray-400 mt-2">{p.predictionType} by {new Date(p.deadline).toLocaleDateString()}</p>
                                             </Link>
@@ -204,7 +220,7 @@ const WatchlistPage = () => {
                             {visibleCount < filteredAndSortedPredictions.length && (
                                 <div className="relative text-center">
                                     <hr className="absolute top-1/2 w-full border-t border-gray-700" />
-                                    <button
+                                    <button 
                                         onClick={() => setVisibleCount(prev => prev + 6)}
                                         className="relative bg-gray-800 px-4 py-2 text-sm font-bold text-gray-300 rounded-full border border-gray-700 hover:bg-gray-700 hover:text-white"
                                     >
@@ -222,13 +238,13 @@ const WatchlistPage = () => {
                                         const isFollowing = currentUser?.following.includes(user._id);
                                         return (
                                             <div key={user._id} className="flex items-center bg-gray-700 p-3 rounded-lg">
-                                                <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-full" />
+                                                <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-full"/>
                                                 <div className="ml-3 flex-grow">
                                                     <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline">{user.username}</Link>
                                                     <p className="text-xs text-gray-400">Avg Score: <span className="font-bold text-green-400">{user.avgScore}</span></p>
                                                 </div>
                                                 {!isFollowing && currentUser && currentUser._id !== user._id && (
-                                                    <button
+                                                    <button 
                                                         onClick={() => handleFollow(user._id)}
                                                         className="bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-blue-700 ml-2"
                                                     >
@@ -239,7 +255,7 @@ const WatchlistPage = () => {
                                         );
                                     })}
                                 </div>
-                            ) : (<p className="text-gray-500 text-center py-8">No top predictors for this stock yet.</p>)}
+                            ) : ( <p className="text-gray-500 text-center py-8">No top predictors for this stock yet.</p> )}
                         </div>
                     </div>
                 </>
