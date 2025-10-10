@@ -740,6 +740,19 @@ router.get('/my-predictions', async (req, res) => {
 
 router.get('/profile/:userId', async (req, res) => {
     try {
+        // --- START: NEW DEBUGGING & FIX ---
+        console.log('--- Profile Page Access Check V2 ---');
+        console.log('Full req.user object:', JSON.stringify(req.user, null, 2));
+
+        // This is the potential fix. We now compare the '.id' property (string)
+        // instead of the '_id' property (ObjectId).
+        const isOwnProfile = req.user ? req.user.id === req.params.userId : false;
+
+        console.log('Logged-in User ID from req.user.id:', req.user?.id);
+        console.log('Profile ID from URL:', req.params.userId);
+        console.log('Are they the same? (isOwnProfile):', isOwnProfile);
+        console.log('--- End of Check V2 ---');
+        // --- END ---
         const user = await User.findById(req.params.userId).select('-googleId');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -838,11 +851,7 @@ router.get('/profile/:userId', async (req, res) => {
             id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
         }));
 
-        // FIX: Filter out invalid entries before counting for both lists
-        const validSubscriptions = user.goldenSubscriptions.filter(sub => sub.user);
-        const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
-
-        res.json({
+        const jsonResponse = {
             user,
             watchlistQuotes,
             predictions,
@@ -850,9 +859,16 @@ router.get('/profile/:userId', async (req, res) => {
             chartData,
             followersCount: user.followers.length,
             followingCount: user.following.length,
-            goldenSubscribersCount: validSubscribers.length, // Use the filtered count
-            goldenSubscriptionsCount: validSubscriptions.length
-        });
+        };
+        // --- FIX: Conditionally add subscriber/subscription counts only for the owner ---
+        if (isOwnProfile) {
+            const validSubscriptions = user.goldenSubscriptions.filter(sub => sub.user);
+            const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
+            jsonResponse.goldenSubscribersCount = validSubscribers.length;
+            jsonResponse.goldenSubscriptionsCount = validSubscriptions.length;
+        }
+
+        res.json(jsonResponse);
     } catch (err) {
         console.error("Error fetching profile:", err);
         res.status(500).json({ message: err.message });
@@ -1178,11 +1194,17 @@ router.get('/widgets/community-feed', async (req, res) => {
 // NEW Extended Follow/Subscription Data Endpoint
 router.get('/users/:userId/follow-data-extended', async (req, res) => {
     try {
+        const isOwnProfile = req.user ? req.user._id.equals(req.params.userId) : false;
+        // --- END: DEBUGGING LOGS ---
         const user = await User.findById(req.params.userId)
             .populate('followers', 'username avatar isGoldenMember')
-            .populate('following', 'username avatar isGoldenMember')
-            .populate('goldenSubscribers.user', 'username avatar isGoldenMember')
-            .populate('goldenSubscriptions.user', 'username avatar isGoldenMember');
+            .populate('following', 'username avatar isGoldenMember');
+
+        // --- FIX: Conditionally populate private data ---
+        if (isOwnProfile) {
+            await user.populate('goldenSubscribers.user', 'username avatar isGoldenMember');
+            await user.populate('goldenSubscriptions.user', 'username avatar isGoldenMember');
+        }
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -1217,18 +1239,18 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
             followers: user.followers.map(combineUserDataWithScore),
             following: user.following.map(combineUserDataWithScore),
             // FIX: Add a .filter() here as well to ensure the final list is clean
-            goldenSubscribers: user.goldenSubscribers
+            goldenSubscribers: isOwnProfile ? user.goldenSubscribers
                 .filter(sub => sub.user)
                 .map(sub => ({
                     ...combineUserDataWithScore(sub.user),
                     subscribedAt: sub.subscribedAt
-                })),
-            goldenSubscriptions: user.goldenSubscriptions
+                })) : [],
+            goldenSubscriptions: isOwnProfile ? user.goldenSubscriptions
                 .filter(sub => sub.user)
                 .map(sub => ({
                     ...combineUserDataWithScore(sub.user),
                     subscribedAt: sub.subscribedAt
-                }))
+                })) : [],
         });
     } catch (err) {
         console.error("Error fetching extended follow data:", err);

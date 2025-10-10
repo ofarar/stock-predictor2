@@ -83,7 +83,8 @@ const ProfilePage = () => {
         setLoading(true);
         try {
             const [profileRes, currentUserRes] = await Promise.all([
-                axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${userId}`),
+                // --- FIX: Added { withCredentials: true } to this request ---
+                axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${userId}`, { withCredentials: true }),
                 axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             ]);
 
@@ -95,7 +96,7 @@ const ProfilePage = () => {
             const activePredictions = profile.predictions.filter(p => p.status === 'Active');
             if (activePredictions.length > 0) {
                 const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
-                const quotesRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/quotes`, { tickers });
+                const quotesRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/quotes`, { tickers }, { withCredentials: true });
                 const quotesMap = quotesRes.data.reduce((acc, quote) => {
                     acc[quote.symbol] = quote.regularMarketPrice;
                     return acc;
@@ -125,7 +126,7 @@ const ProfilePage = () => {
     if (loading) return <div className="text-center text-white mt-10">Loading profile...</div>;
     if (!profileData) return <div className="text-center text-white mt-10">User not found.</div>;
 
-    const { user, predictions, performance, followersCount, followingCount, chartData, watchlistQuotes } = profileData;
+    const { user, predictions, performance, followersCount, followingCount, chartData, watchlistQuotes, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const activePredictions = predictions.filter(p => p.status === 'Active');
     const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
     const isOwnProfile = currentUser?._id === user._id;
@@ -163,17 +164,17 @@ const ProfilePage = () => {
                                 <span className="font-bold text-white">{followingCount}</span> Following
                             </Link>
 
-                            {/* This "Subscribers" link will correctly only show for Golden Members */}
-                            {user.isGoldenMember && (
+                            {/* --- FIX: Links are now conditional based on isOwnProfile --- */}
+                            {isOwnProfile && user.isGoldenMember && (
                                 <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscribers' }} className="text-sm text-yellow-400 hover:underline">
-                                    <span className="font-bold text-white">{profileData.goldenSubscribersCount}</span> Subscribers
+                                    <span className="font-bold text-white">{goldenSubscribersCount}</span> Subscribers
                                 </Link>
                             )}
-
-                            {/* FIX: The condition has been removed, so this "Subscriptions" link will always be visible */}
-                            <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscriptions' }} className="text-sm text-yellow-400 hover:underline">
-                                <span className="font-bold text-white">{profileData.goldenSubscriptionsCount}</span> Subscriptions
-                            </Link>
+                            {isOwnProfile && (
+                                <Link to={`/profile/${userId}/followers`} state={{ activeTab: 'Subscriptions' }} className="text-sm text-yellow-400 hover:underline">
+                                    <span className="font-bold text-white">{goldenSubscriptionsCount}</span> Subscriptions
+                                </Link>
+                            )}
                         </div>
                     </div>
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">

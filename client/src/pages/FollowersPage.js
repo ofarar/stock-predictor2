@@ -9,17 +9,17 @@ import ConfirmationModal from '../components/ConfirmationModal';
 const UserCard = ({ user, onCancel, isSubscription, showDate }) => (
     <div className="bg-gray-800 p-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:bg-gray-700 flex flex-col items-center text-center">
         <Link to={`/profile/${user._id}`}>
-            <img 
-                src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} 
-                alt="avatar" 
-                className={`w-20 h-20 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} 
+            <img
+                src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
+                alt="avatar"
+                className={`w-20 h-20 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
             />
         </Link>
         <Link to={`/profile/${user._id}`} className="font-bold text-white text-lg hover:underline mt-3">{user.username}</Link>
         <div className="text-sm text-gray-400 mt-1">
             Avg Score: <span className="font-bold text-green-400">{user.avgScore || 0}</span>
         </div>
-        
+
         {showDate && user.subscribedAt && (
             <div className="text-xs text-gray-500 mt-2">
                 Subscribed on {new Date(user.subscribedAt).toLocaleDateString()}
@@ -27,7 +27,7 @@ const UserCard = ({ user, onCancel, isSubscription, showDate }) => (
         )}
 
         {isSubscription && (
-            <button 
+            <button
                 onClick={() => onCancel(user)}
                 className="w-full mt-auto pt-3 text-red-500 text-xs font-bold hover:underline"
             >
@@ -41,23 +41,24 @@ const UserCard = ({ user, onCancel, isSubscription, showDate }) => (
 const FollowersPage = () => {
     const { userId } = useParams();
     const location = useLocation();
-    const [userData, setUserData] = useState({ 
-        followers: [], 
-        following: [], 
-        goldenSubscribers: [], 
-        goldenSubscriptions: [] 
+    const [userData, setUserData] = useState({
+        followers: [],
+        following: [],
+        goldenSubscribers: [],
+        goldenSubscriptions: []
     });
     const [profileUser, setProfileUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'Followers');
     const [loading, setLoading] = useState(true);
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userToUnsubscribe, setUserToUnsubscribe] = useState(null);
 
     const fetchFollowData = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow-data-extended`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow-data-extended`, { withCredentials: true });
             setUserData(response.data);
             setProfileUser(response.data.profileUser);
         } catch (err) {
@@ -68,6 +69,9 @@ const FollowersPage = () => {
     }, [userId]);
 
     useEffect(() => {
+        // --- FIX: Fetch current user to determine if we're viewing our own profile ---
+        axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
+            .then(res => setCurrentUser(res.data));
         fetchFollowData();
     }, [fetchFollowData]);
 
@@ -91,11 +95,14 @@ const FollowersPage = () => {
             });
     };
 
+    const isOwnProfile = currentUser?._id === userId;
+
     const tabs = [
         { name: 'Followers', count: userData.followers.length, data: userData.followers },
         { name: 'Following', count: userData.following.length, data: userData.following },
-        ...(profileUser?.isGoldenMember ? [{ name: 'Subscribers', count: userData.goldenSubscribers.length, data: userData.goldenSubscribers, isGolden: true }] : []),
-        { name: 'Subscriptions', count: userData.goldenSubscriptions.length, data: userData.goldenSubscriptions, isGolden: true },
+        // --- FIX: Conditionally add private tabs only if it's the user's own profile ---
+        ...(isOwnProfile && profileUser?.isGoldenMember ? [{ name: 'Subscribers', count: userData.goldenSubscribers.length, data: userData.goldenSubscribers, isGolden: true }] : []),
+        ...(isOwnProfile ? [{ name: 'Subscriptions', count: userData.goldenSubscriptions.length, data: userData.goldenSubscriptions, isGolden: true }] : []),
     ];
 
     const currentTabData = tabs.find(tab => tab.name === activeTab)?.data || [];
@@ -126,8 +133,8 @@ const FollowersPage = () => {
                         }
 
                         return (
-                            <button 
-                                key={tab.name} 
+                            <button
+                                key={tab.name}
                                 onClick={() => setActiveTab(tab.name)}
                                 className={`px-4 py-2 font-bold transition-colors border-b-2 ${isActive ? activeClasses : `${inactiveClasses} border-transparent`}`}
                             >
