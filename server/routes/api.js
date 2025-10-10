@@ -485,10 +485,10 @@ router.put('/settings/admin', async (req, res) => {
 // Original Prediction & User Routes
 // ===================================
 
-// GET: Scoreboard Data (Top Users) - Timeframe logic removed
+// In server/routes/api.js, replace the GET '/scoreboard' route with this updated version.
+
 router.get('/scoreboard', async (req, res) => {
     try {
-        // 'timeframe' is no longer expected from req.query
         const { predictionType = 'Overall', stock = '' } = req.query;
 
         const predictionMatch = { status: 'Assessed' };
@@ -500,9 +500,6 @@ router.get('/scoreboard', async (req, res) => {
             predictionMatch.stockTicker = stock.toUpperCase();
         }
 
-        // Timeframe filtering logic has been completely removed
-
-        // The aggregation pipeline remains the same
         const topUsers = await Prediction.aggregate([
             { $match: predictionMatch },
             {
@@ -512,6 +509,8 @@ router.get('/scoreboard', async (req, res) => {
                     predictionCount: { $sum: 1 }
                 }
             },
+            // --- NEW: Explicitly ensure only users with predictions are included ---
+            { $match: { predictionCount: { $gt: 0 } } },
             { $sort: { avgScore: -1 } },
             { $limit: 20 },
             {
