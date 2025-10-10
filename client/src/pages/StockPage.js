@@ -1,5 +1,3 @@
-// src/pages/StockPage.js
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -16,7 +14,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [filter, setFilter] = useState('Overall');
-    const [currentUser, setCurrentUser] = useState(null); // State for current user
+    const [currentUser, setCurrentUser] = useState(null);
 
     const predictionTypes = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
@@ -40,10 +38,9 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
         if (setPageDataRefresher) {
             setPageDataRefresher(() => fetchStockData);
         }
-        // Also fetch current user to check their watchlist
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => setCurrentUser(res.data));
-
+            
         return () => {
             if (setPageDataRefresher) {
                 setPageDataRefresher(null);
@@ -59,7 +56,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
             .then(res => {
                 setCurrentUser(prev => ({ ...prev, watchlist: res.data.watchlist }));
             });
-
+        
         toast.promise(promise, {
             loading: 'Updating watchlist...',
             success: isWatching ? `Removed ${ticker} from watchlist.` : `Added ${ticker} to watchlist.`,
@@ -72,14 +69,13 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
     if (!stockData.quote) return null;
 
     const { quote, topPredictors, activePredictions } = stockData;
-    const currentPrice = quote.regularMarketPrice || 0;
     const priceChange = quote.regularMarketChange || 0;
     const percentChange = quote.regularMarketChangePercent || 0;
     const isWatching = currentUser?.watchlist?.includes(ticker);
+    const currentPrice = quote.regularMarketPrice || 0;
 
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
-            {/* Stock Header */}
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <h1 className="text-3xl md:text-4xl font-bold text-white">{quote.longName || ticker} ({quote.symbol})</h1>
@@ -91,18 +87,20 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
+                    {/* --- START: UPDATED HEART ICON BUTTON --- */}
                     <button
                         onClick={handleWatchlistToggle}
-                        className={`font-bold py-2 px-4 rounded-md flex items-center gap-2 transition-colors ${isWatching ? 'bg-gray-700 text-green-400' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                        className={`p-2 rounded-full transition-colors disabled:opacity-50 ${isWatching ? 'bg-red-500/10 text-red-500' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}
                         title={isWatching ? 'Remove from Watchlist' : 'Add to Watchlist'}
                         disabled={!currentUser}
                     >
-                        {isWatching
-                            ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path></svg>
-                            : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        {isWatching 
+                            ? <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path></svg>
+                            : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                         }
-                        <span>{isWatching ? 'Watching' : 'Watch'}</span>
                     </button>
+                    {/* --- END: UPDATED HEART ICON BUTTON --- */}
+
                     <button
                         onClick={() => onPredictClick(quote)}
                         className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
@@ -157,22 +155,19 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                     <h3 className="text-xl font-bold text-white mb-4">Active Predictions on {ticker}</h3>
                     <div className="space-y-3">
                         {activePredictions && activePredictions.length > 0 ? activePredictions.map(p => {
-                            // --- START: NEW CALCULATION ---
                             let percentageChange = 0;
                             if (currentPrice > 0) {
                                 percentageChange = ((p.targetPrice - currentPrice) / currentPrice) * 100;
                             }
-                            // --- END: NEW CALCULATION ---
                             return (
                                 <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
-                                    <img src={p.userId.avatar} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
+                                    <img src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
                                     <div className="ml-3 flex-grow">
                                         <p className="text-sm font-semibold text-white">{p.userId.username}</p>
                                         <p className="text-xs text-gray-400">{p.predictionType} Prediction</p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-sm font-bold text-white">Target: ${p.targetPrice.toFixed(2)}</p>
-                                        {/* --- NEW: DISPLAY PERCENTAGE --- */}
                                         <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                             ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
                                         </p>
