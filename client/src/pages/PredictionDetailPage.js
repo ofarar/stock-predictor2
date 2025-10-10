@@ -159,7 +159,16 @@ const PredictionDetailPage = ({ requestLogin }) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                         <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
-                            <p className="text-sm text-gray-400">Target Price</p>
+                            {/* --- START: INFO ICON MOVED HERE --- */}
+                            <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
+                                Target Price
+                                {prediction.description && (
+                                    <button onClick={() => setIsDescModalOpen(true)} className="text-gray-500 hover:text-white" title="View Rationale">
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                )}
+                            </p>
+                            {/* --- END: INFO ICON MOVED HERE --- */}
                             <p className="text-3xl font-bold text-white">${prediction.targetPrice.toFixed(2)}</p>
                             {percentFromCurrent !== null && (
                                 <p className={`text-sm font-bold ${percentFromCurrent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -170,11 +179,6 @@ const PredictionDetailPage = ({ requestLogin }) => {
                         <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
                             <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
                                 {isAssessed ? 'Final Score' : scoreLabel}
-                                {prediction.description && (
-                                    <button onClick={() => setIsDescModalOpen(true)} className="text-gray-500 hover:text-white" title="View Rationale">
-                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
-                                    </button>
-                                )}
                             </p>
                             <p className={`text-3xl font-bold ${typeof score === 'number' && score > 60 ? 'text-green-400' : 'text-red-400'}`}>{formattedScore}</p>
                         </div>
