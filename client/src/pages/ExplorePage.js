@@ -170,7 +170,14 @@ const ExplorePage = ({ requestLogin }) => {
                     <>
                         {predictions.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                                {predictions.map(p => <PredictionCard key={p._id} prediction={p} onInfoClick={(desc) => setDescModal({ isOpen: true, description: desc })} onVote={handleVote} currentUser={currentUser} />)}
+                                {predictions.map(p =>  <PredictionCard 
+                                        key={p._id} 
+                                        prediction={p} 
+                                        onInfoClick={(desc) => setDescModal({ isOpen: true, description: desc })} 
+                                        onVote={handleVote} 
+                                        currentUser={currentUser}
+                                        navigate={navigate} // <-- Pass navigate to the card
+                                    />)}
                             </div>
                         ) : (<div className="text-center bg-gray-800 rounded-lg py-20"><p className="text-lg font-semibold text-gray-400">No predictions found for these filters.</p></div>)}
                     </>
