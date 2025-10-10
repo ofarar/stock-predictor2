@@ -350,7 +350,7 @@ router.get('/golden-feed', async (req, res) => {
         const feedPosts = await Post.find(query)
             .sort({ createdAt: -1 })
             .limit(100)
-            .populate('userId', 'username avatar isGoldenMember')
+            .populate('userId', 'username avatar isGoldenMember isVerified')
             .lean(); // Use .lean() to make the objects mutable
 
         // Add the 'isNew' flag to each post

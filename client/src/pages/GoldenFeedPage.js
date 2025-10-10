@@ -20,7 +20,8 @@ const CentralPostCard = ({ post, settings }) => {
             )}
             <div className="flex items-center mb-3">
                 <img src={post.userId.avatar} alt="author avatar" className={`w-8 h-8 rounded-full border-2 ${post.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
-                <span className="ml-3 font-semibold text-white">{post.userId.username}</span>
+                {/* --- FIX: Added 'mr-2' for spacing --- */}
+                <span className="ml-3 mr-2 font-semibold text-white">{post.userId.username}</span>
                 {settings?.isVerificationEnabled && post.userId.isVerified && <VerifiedTick />}
             </div>
             <p className="text-gray-300 whitespace-pre-wrap">{post.message}</p>
