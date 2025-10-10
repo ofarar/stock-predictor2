@@ -14,9 +14,20 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
-// In server/routes/api.js, replace the existing GET '/api/admin/all-users' route with this one.
+router.post('/quotes', async (req, res) => {
+    const { tickers } = req.body;
+    if (!tickers || !Array.isArray(tickers) || tickers.length === 0) {
+        return res.status(400).json({ message: 'An array of tickers is required.' });
+    }
 
-// In server/routes/api.js, replace the existing GET '/api/admin/all-users' route with this one.
+    try {
+        const quotes = await yahooFinance.quote(tickers);
+        res.json(quotes);
+    } catch (error) {
+        console.error("Yahoo Finance multi-quote error:", error);
+        res.status(500).json({ message: 'Error fetching stock quotes.' });
+    }
+});
 
 router.get('/admin/all-users', async (req, res) => {
     if (!req.user || !req.user.isAdmin) {

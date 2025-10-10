@@ -15,8 +15,13 @@ import GoldenFeed from '../components/GoldenFeed';
 import GoldenPostForm from '../components/GoldenPostForm';
 import WatchlistShowcase from '../components/WatchlistShowcase'; // <-- 1. Import the new component
 
-const MiniPredictionCard = ({ prediction }) => {
+const MiniPredictionCard = ({ prediction, currentPrice }) => {
     const isAssessed = prediction.status === 'Assessed';
+    // Calculate live percentage change for active predictions
+    let percentageChange = null;
+    if (!isAssessed && currentPrice > 0) {
+        percentageChange = ((prediction.targetPrice - currentPrice) / currentPrice) * 100;
+    }
     return (
         <Link to={`/prediction/${prediction._id}`} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
             <div className="flex justify-between items-center">
@@ -26,14 +31,17 @@ const MiniPredictionCard = ({ prediction }) => {
                 </div>
                 {isAssessed ? (
                     <div className="text-right">
-                        {/* FIX: Use .toFixed(1) to display one decimal place */}
                         <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score.toFixed(1)}</p>
                         <p className="text-xs text-gray-500 -mt-1">Score</p>
                     </div>
                 ) : (
                     <div className="text-right">
                         <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
-                        <p className="text-xs text-gray-500 -mt-1">Target</p>
+                        {percentageChange !== null && (
+                            <p className={`text-sm font-bold -mt-1 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                {percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%
+                            </p>
+                        )}
                     </div>
                 )}
             </div>
@@ -51,6 +59,7 @@ const StatCard = ({ label, value }) => (
 const ProfilePage = () => {
     const { userId } = useParams();
     const [profileData, setProfileData] = useState(null);
+    const [activePredictionQuotes, setActivePredictionQuotes] = useState({});
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
     const [isGoldenModalOpen, setIsGoldenModalOpen] = useState(false);
@@ -77,8 +86,24 @@ const ProfilePage = () => {
                 axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${userId}`),
                 axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             ]);
-            setProfileData(profileRes.data);
+
+            const profile = profileRes.data;
+            setProfileData(profile);
             setCurrentUser(currentUserRes.data);
+
+            // --- START: NEW LOGIC TO FETCH QUOTES ---
+            const activePredictions = profile.predictions.filter(p => p.status === 'Active');
+            if (activePredictions.length > 0) {
+                const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
+                const quotesRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/quotes`, { tickers });
+                const quotesMap = quotesRes.data.reduce((acc, quote) => {
+                    acc[quote.symbol] = quote.regularMarketPrice;
+                    return acc;
+                }, {});
+                setActivePredictionQuotes(quotesMap);
+            }
+            // --- END: NEW LOGIC ---
+
         } catch (error) {
             toast.error("Could not load profile.");
         } finally {
@@ -205,7 +230,7 @@ const ProfilePage = () => {
                             <PerformanceChart chartData={chartData} />
                         </div>
                         <div className="lg:col-span-1 space-y-8 self-start">
-                            <div className="bg-gray-800 p-6 rounded-lg"><h3 className="text-xl font-bold text-white mb-4">Active Predictions</h3>{activePredictions.length > 0 ? (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">{activePredictions.slice(0, visibleActive).map(p => <MiniPredictionCard key={p._id} prediction={p} />)}</div>) : <p className="text-gray-500 text-center py-4">No active predictions.</p>}{activePredictions.length > visibleActive && (<button onClick={() => setVisibleActive(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">Load More</button>)}</div>
+                            <div className="bg-gray-800 p-6 rounded-lg"><h3 className="text-xl font-bold text-white mb-4">Active Predictions</h3>{activePredictions.length > 0 ? (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">{activePredictions.slice(0, visibleActive).map(p => <MiniPredictionCard key={p._id} prediction={p} currentPrice={activePredictionQuotes[p.stockTicker]} />)}</div>) : <p className="text-gray-500 text-center py-4">No active predictions.</p>}{activePredictions.length > visibleActive && (<button onClick={() => setVisibleActive(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">Load More</button>)}</div>
                             <div className="bg-gray-800 p-6 rounded-lg"><h3 className="text-xl font-bold text-white mb-4">Prediction History</h3>{assessedPredictions.length > 0 ? (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">{assessedPredictions.slice(0, visiblePredictions).map(p => <MiniPredictionCard key={p._id} prediction={p} />)}</div>) : <p className="text-gray-500 text-center py-4">No prediction history yet.</p>}{assessedPredictions.length > visiblePredictions && (<button onClick={() => setVisiblePredictions(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">Load More</button>)}</div>
                         </div>
                     </div>

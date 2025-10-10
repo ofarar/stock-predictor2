@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 import StockFilterSearch from '../components/StockFilterSearch';
 
 const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
-    const priceChange = quote?.regularMarketChange || 0;
-    const percentChange = quote?.regularMarketChangePercent || 0;
+    const priceChange = quote?.regularMarketChangePercent || 0;
     return (
         <div className="relative flex-shrink-0 w-64">
              <button onClick={onClick} className={`w-full p-4 rounded-lg text-left transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'}`}>
@@ -17,11 +16,10 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
                 <div className="flex justify-between items-baseline mt-1">
                     <p className="text-xs w-2/3 truncate">{quote.longName}</p>
                     <p className={`text-xs font-bold ${isSelected ? 'text-white' : (priceChange >= 0 ? 'text-green-400' : 'text-red-400')}`}>
-                        {priceChange >= 0 ? '+' : ''}{percentChange?.toFixed(2)}%
+                        {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2)}%
                     </p>
                 </div>
             </button>
-            {/* New Remove Button - Appears only when selected */}
             {isSelected && (
                 <button 
                     onClick={onRemove} 
@@ -46,9 +44,8 @@ const WatchlistPage = () => {
             .then(res => {
                 setData(res.data);
                 if (res.data.quotes.length > 0) {
-                    // If the currently selected ticker is no longer in the list, default to the first one
                     const currentTickers = res.data.quotes.map(q => q.symbol);
-                    if (!currentTickers.includes(selectedTicker)) {
+                    if (!selectedTicker || !currentTickers.includes(selectedTicker)) {
                         setSelectedTicker(currentTickers[0]);
                     }
                 } else {
@@ -65,7 +62,9 @@ const WatchlistPage = () => {
         if (!ticker) return;
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(() => {
-                if(action === 'add') setSelectedTicker(ticker);
+                if(action === 'add') {
+                    setSelectedTicker(ticker);
+                }
                 fetchData();
             });
         toast.promise(promise, {
@@ -79,6 +78,8 @@ const WatchlistPage = () => {
 
     const selectedPredictions = data.predictions[selectedTicker] || [];
     const selectedRecommended = data.recommendedUsers[selectedTicker] || [];
+    const selectedQuote = data.quotes.find(q => q.symbol === selectedTicker);
+    const currentPrice = selectedQuote?.regularMarketPrice || 0;
 
     return (
         <div className="animate-fade-in space-y-8">
@@ -113,16 +114,27 @@ const WatchlistPage = () => {
                              <h2 className="text-2xl font-bold text-white">Active Predictions for {selectedTicker}</h2>
                             {selectedPredictions.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {selectedPredictions.map(p => (
-                                        <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-800 p-4 rounded-lg hover:bg-gray-700">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <img src={p.userId.avatar} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
-                                                <p className="font-semibold text-white text-sm">{p.userId.username}</p>
-                                            </div>
-                                            <p className="text-center text-xl font-bold text-green-400">${p.targetPrice.toFixed(2)}</p>
-                                            <p className="text-center text-xs text-gray-400">{p.predictionType} by {new Date(p.deadline).toLocaleDateString()}</p>
-                                        </Link>
-                                    ))}
+                                    {selectedPredictions.map(p => {
+                                        let percentageChange = 0;
+                                        if (currentPrice > 0) {
+                                            percentageChange = ((p.targetPrice - currentPrice) / currentPrice) * 100;
+                                        }
+                                        return (
+                                            <Link to={`/prediction/${p._id}`} key={p._id} className="block bg-gray-800 p-4 rounded-lg hover:bg-gray-700">
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <img src={p.userId.avatar} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
+                                                    <p className="font-semibold text-white text-sm">{p.userId.username}</p>
+                                                </div>
+                                                <div className="text-center">
+                                                    <p className="text-xl font-bold text-white">${p.targetPrice.toFixed(2)}</p>
+                                                    <p className={`text-sm font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                                        ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
+                                                    </p>
+                                                </div>
+                                                <p className="text-center text-xs text-gray-400 mt-2">{p.predictionType} by {new Date(p.deadline).toLocaleDateString()}</p>
+                                            </Link>
+                                        );
+                                    })}
                                 </div>
                             ) : ( <p className="text-gray-500 text-center py-8">No active predictions for {selectedTicker}.</p> )}
                         </div>

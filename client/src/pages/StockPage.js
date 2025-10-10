@@ -72,6 +72,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
     if (!stockData.quote) return null;
 
     const { quote, topPredictors, activePredictions } = stockData;
+    const currentPrice = quote.regularMarketPrice || 0;
     const priceChange = quote.regularMarketChange || 0;
     const percentChange = quote.regularMarketChangePercent || 0;
     const isWatching = currentUser?.watchlist?.includes(ticker);
@@ -155,20 +156,30 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                 <div className="bg-gray-800 p-6 rounded-lg">
                     <h3 className="text-xl font-bold text-white mb-4">Active Predictions on {ticker}</h3>
                     <div className="space-y-3">
-                        {activePredictions && activePredictions.length > 0 ? activePredictions.map(p => (
-                            <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
-                                <img
-                                    src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`}
-                                    alt="avatar"
-                                    className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
-                                />
-                                <div className="ml-3 flex-grow">
-                                    <p className="text-sm font-semibold text-white">{p.userId.username}</p>
-                                    <p className="text-xs text-gray-400">{p.predictionType} Prediction</p>
-                                </div>
-                                <p className="text-sm font-bold text-white">Target: ${p.targetPrice.toFixed(2)}</p>
-                            </Link>
-                        )) : (
+                        {activePredictions && activePredictions.length > 0 ? activePredictions.map(p => {
+                            // --- START: NEW CALCULATION ---
+                            let percentageChange = 0;
+                            if (currentPrice > 0) {
+                                percentageChange = ((p.targetPrice - currentPrice) / currentPrice) * 100;
+                            }
+                            // --- END: NEW CALCULATION ---
+                            return (
+                                <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                                    <img src={p.userId.avatar} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
+                                    <div className="ml-3 flex-grow">
+                                        <p className="text-sm font-semibold text-white">{p.userId.username}</p>
+                                        <p className="text-xs text-gray-400">{p.predictionType} Prediction</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm font-bold text-white">Target: ${p.targetPrice.toFixed(2)}</p>
+                                        {/* --- NEW: DISPLAY PERCENTAGE --- */}
+                                        <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                            ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
+                                        </p>
+                                    </div>
+                                </Link>
+                            );
+                        }) : (
                             <p className="text-gray-500 text-center py-4">No active predictions for this stock yet.</p>
                         )}
                     </div>
