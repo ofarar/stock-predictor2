@@ -13,6 +13,88 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+// In server/routes/api.js, replace the GET '/watchlist' and PUT '/watchlist' routes
+
+// GET: Data for the user's multi-stock watchlist page
+router.get('/watchlist', async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    try {
+        const user = await User.findById(req.user._id);
+        const tickers = user.watchlist;
+
+        if (!tickers || tickers.length === 0) {
+            return res.json({ quotes: [], predictions: {}, recommendedUsers: {} });
+        }
+
+        const quotes = await yahooFinance.quote(tickers);
+
+        // Fetch predictions and recommended users for all watched stocks in parallel
+        const dataPromises = tickers.map(ticker => (
+            Promise.all([
+                Prediction.find({ stockTicker: ticker, status: 'Active' })
+                    .sort({ createdAt: -1 })
+                    .limit(10)
+                    .populate('userId', 'username avatar isGoldenMember score'),
+                Prediction.aggregate([
+                    { $match: { status: 'Assessed', stockTicker: ticker } },
+                    { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
+                    { $sort: { avgScore: -1 } },
+                    { $limit: 3 },
+                    { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
+                    { $unwind: '$user' },
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', avgScore: { $round: ['$avgScore', 1] } } }
+                ])
+            ])
+        ));
+
+        const results = await Promise.all(dataPromises);
+
+        const predictions = {};
+        const recommendedUsers = {};
+        tickers.forEach((ticker, index) => {
+            predictions[ticker] = results[index][0];
+            recommendedUsers[ticker] = results[index][1];
+        });
+
+        res.json({ quotes, predictions, recommendedUsers });
+
+    } catch (err) {
+        console.error("Watchlist fetch error:", err);
+        res.status(500).json({ message: 'Error fetching watchlist data.' });
+    }
+});
+
+// PUT: Update the user's watchlist array
+router.put('/watchlist', async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+    const { ticker, action } = req.body; // action can be 'add' or 'remove'
+
+    try {
+        const update = action === 'add'
+            ? { $addToSet: { watchlist: ticker } }
+            : { $pull: { watchlist: ticker } };
+
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, update, { new: true });
+        res.json({ watchlist: updatedUser.watchlist });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating watchlist.' });
+    }
+});
+
+// PUT: Update notification settings
+router.put('/notification-settings', async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+    try {
+        const user = await User.findById(req.user._id);
+        user.notificationSettings = req.body;
+        await user.save();
+        res.json(user.notificationSettings);
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating settings.' });
+    }
+});
+
 // GET: A list of the current user's subscriptions (for the filter dropdown)
 router.get('/my-subscriptions', async (req, res) => {
     if (!req.user) return res.status(401).json([]);
@@ -373,12 +455,11 @@ router.get('/predictions/:ticker', async (req, res) => {
 });
 
 // This route handles creating new predictions and sending notifications
-// server/routes/api.js
+// In server/routes/api.js, replace the entire POST '/predict' route
 
 router.post('/predict', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
-    // FIX: Destructure the new 'description' field from the request body
     const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
     try {
         const quote = await yahooFinance.quote(stockTicker);
@@ -391,27 +472,55 @@ router.post('/predict', async (req, res) => {
             deadline,
             predictionType,
             priceAtCreation: currentPrice,
-            description: description, // <-- FIX: Add the description to the new prediction
+            description,
             status: 'Active'
         });
         await prediction.save();
 
-        const user = await User.findById(req.user._id);
-        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
-        const directionText = targetPrice >= currentPrice ? 'increase to' : 'decrease to';
-        const formattedPercentage = `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%`;
-        const mainMessage = `${user.username} predicted ${stockTicker} will ${directionText} $${targetPrice.toFixed(2)}`;
+        // --- START: NEW NOTIFICATION LOGIC ---
+        const user = await User.findById(req.user._id).populate({
+            path: 'followers',
+            select: 'notificationSettings' // Only get the settings for followers
+        });
 
-        const notifications = user.followers.map(followerId => ({
-            recipient: followerId,
-            sender: user._id,
-            type: 'NewPrediction',
-            message: mainMessage,
-            metadata: { percentage: formattedPercentage },
-            link: `/prediction/${prediction._id}`
-        }));
+        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
+        const absPercentageChange = Math.abs(percentageChange);
+
+        // Define significance thresholds
+        const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
+        const isSignificant = absPercentageChange > (thresholds[predictionType] || 999);
+
+        const shortTermTypes = ['Hourly', 'Daily', 'Weekly'];
+        const isShortTerm = shortTermTypes.includes(predictionType);
+
+        const mainMessage = `${user.username} predicted ${stockTicker} will move by ${percentageChange.toFixed(1)}%`;
+
+        const notifications = [];
+        for (const follower of user.followers) {
+            const settings = follower.notificationSettings;
+            let shouldNotify = false;
+
+            if (settings.allFollowedPredictions) {
+                shouldNotify = true;
+            } else if (isSignificant && settings.trustedShortTerm && isShortTerm) {
+                shouldNotify = true;
+            } else if (isSignificant && settings.trustedLongTerm && !isShortTerm) {
+                shouldNotify = true;
+            }
+
+            if (shouldNotify) {
+                notifications.push({
+                    recipient: follower._id,
+                    sender: user._id,
+                    type: 'NewPrediction',
+                    message: mainMessage,
+                    link: `/prediction/${prediction._id}`
+                });
+            }
+        }
 
         if (notifications.length > 0) await Notification.insertMany(notifications);
+        // --- END: NEW NOTIFICATION LOGIC ---
 
         res.status(201).json(prediction);
     } catch (err) {
@@ -490,6 +599,18 @@ router.get('/profile/:userId', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // --- START: NEW LOGIC TO FETCH WATCHLIST QUOTES ---
+        let watchlistQuotes = [];
+        if (user.watchlist && user.watchlist.length > 0) {
+            try {
+                watchlistQuotes = await yahooFinance.quote(user.watchlist);
+            } catch (quoteError) {
+                console.error("Failed to fetch some watchlist quotes for profile:", quoteError.message);
+                // Continue without crashing, some stocks might be delisted
+            }
+        }
+        // --- END: NEW LOGIC ---
+
         // Populate both to check for broken links
         await user.populate(['goldenSubscriptions.user', 'goldenSubscribers.user']);
 
@@ -551,12 +672,12 @@ router.get('/profile/:userId', async (req, res) => {
         // --- Combine personal stats with global ranks ---
         const finalPerfByType = formattedPerfByType.map((p, index) => ({
             ...p,
-            accuracy: Math.round(p.accuracy),
+            accuracy: Math.round(p.accuracy * 10) / 10,
             rank: resolvedRanksByType[index]
         }));
         const finalPerfByStock = formattedPerfByStock.map((s, index) => ({
             ...s,
-            accuracy: Math.round(s.accuracy),
+            accuracy: Math.round(s.accuracy * 10) / 10,
             rank: resolvedRanksByStock[index]
         }));
 
@@ -577,6 +698,7 @@ router.get('/profile/:userId', async (req, res) => {
 
         res.json({
             user,
+            watchlistQuotes,
             predictions,
             performance,
             chartData,

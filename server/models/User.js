@@ -1,6 +1,5 @@
 // server/models/User.js
 
-// FIX: Changed from 'import' syntax
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -14,18 +13,28 @@ const UserSchema = new Schema({
     xLink: { type: String },
     isAdmin: { type: Boolean, default: false },
     score: { type: Number, default: 0, index: true },
+
+    // --- START: NEW FIELDS ---
+    //watchlistTicker: { type: String, uppercase: true, default: null },
+    watchlist: [{ type: String, uppercase: true }],
+    notificationSettings: {
+        allFollowedPredictions: { type: Boolean, default: false },
+        trustedShortTerm: { type: Boolean, default: true },
+        trustedLongTerm: { type: Boolean, default: true }
+    },
+    // --- END: NEW FIELDS ---
+
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     isGoldenMember: { type: Boolean, default: false },
     goldenMemberPrice: {
         type: Number,
         default: 5,
-        min: 1,   // ADD: Minimum price
-        max: 500  // ADD: Maximum price
+        min: 1,
+        max: 500
     },
     goldenMemberDescription: { type: String, maxLength: 300 },
     acceptingNewSubscribers: { type: Boolean, default: true },
-
     goldenSubscribers: [{
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         subscribedAt: { type: Date, default: Date.now }
@@ -34,7 +43,6 @@ const UserSchema = new Schema({
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         subscribedAt: { type: Date, default: Date.now }
     }],
-
     badges: [{
         badgeId: { type: String, required: true },
         tier: { type: String, enum: ['Bronze', 'Silver', 'Gold'], required: true },
@@ -42,5 +50,4 @@ const UserSchema = new Schema({
     }]
 }, { timestamps: true });
 
-// FIX: Changed from 'export default' syntax
 module.exports = mongoose.model('User', UserSchema);

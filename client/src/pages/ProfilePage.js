@@ -13,6 +13,7 @@ import BadgeDetailModal from '../components/BadgeDetailModal';
 import BadgeInfoModal from '../components/BadgeInfoModal';
 import GoldenFeed from '../components/GoldenFeed';
 import GoldenPostForm from '../components/GoldenPostForm';
+import WatchlistShowcase from '../components/WatchlistShowcase'; // <-- 1. Import the new component
 
 const MiniPredictionCard = ({ prediction }) => {
     const isAssessed = prediction.status === 'Assessed';
@@ -98,7 +99,7 @@ const ProfilePage = () => {
     if (loading) return <div className="text-center text-white mt-10">Loading profile...</div>;
     if (!profileData) return <div className="text-center text-white mt-10">User not found.</div>;
 
-    const { user, predictions, performance, followersCount, followingCount, chartData } = profileData;
+    const { user, predictions, performance, followersCount, followingCount, chartData, watchlistQuotes } = profileData;
     const activePredictions = predictions.filter(p => p.status === 'Active');
     const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
     const isOwnProfile = currentUser?._id === user._id;
@@ -197,6 +198,7 @@ const ProfilePage = () => {
                 {activeTab === 'Profile' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-8">
+                            <WatchlistShowcase stocks={watchlistQuotes} />
                             <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} onInfoClick={() => setIsBadgeInfoOpen(true)} />
                             <PerformanceTabs performance={performance} />
                             <PerformanceChart chartData={chartData} />
