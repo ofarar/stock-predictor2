@@ -57,9 +57,9 @@ const getPredictionDetails = (predictionType) => {
             marketCloseToday.setUTCHours(20, 0, 0, 0);
             const day = now.getUTCDay();
             const isAfterHours = now.getTime() > marketCloseToday.getTime();
-            if (day === 6) { deadline.setUTCDate(now.getUTCDate() + 2); } 
-            else if (day === 0) { deadline.setUTCDate(now.getUTCDate() + 1); } 
-            else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); } 
+            if (day === 6) { deadline.setUTCDate(now.getUTCDate() + 2); }
+            else if (day === 0) { deadline.setUTCDate(now.getUTCDate() + 1); }
+            else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); }
             else if (isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 1); }
             deadline.setUTCHours(20, 0, 0, 0);
             if (deadline.getUTCDate() !== now.getUTCDate() || deadline.getUTCMonth() !== now.getUTCMonth()) {
@@ -147,7 +147,13 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
     const [formState, setFormState] = useState({
         isOpen: true, message: 'Max Score: 100', deadline: null, barWidth: '100%'
     });
+    
     const currentPrice = selectedStock ? selectedStock.regularMarketPrice : 0;
+
+    let percentageChange = 0;
+    if (currentPrice > 0 && target) {
+        percentageChange = ((parseFloat(target) - currentPrice) / currentPrice) * 100;
+    }
 
     useEffect(() => {
         if (initialStock?.regularMarketPrice) {
@@ -226,13 +232,16 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
     
     return (
         <div className="w-full">
-            <h2 className="text-2xl font-bold text-white mb-4">Make a Prediction</h2>
-            {!initialStock && (
+            <h2 className="text-2xl font-bold text-white mb-6">Make a Prediction</h2>
+            
+            {!selectedStock && !initialStock ? (
                 <div className="relative mb-4">
-                    <input type="text" placeholder="Search for a stock (e.g., AAPL)" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"/>
+                    <input type="text" placeholder="Search for a stock (e.g., AAPL)" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value.toUpperCase())} className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"/>
+                    {isLoading && <p className="text-center text-gray-400 py-4">Searching...</p>}
                     {searchResults.length > 0 && (
                         <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
                             {searchResults.map((result) => (
+                                // --- FIX: Added the unique key prop here ---
                                 <li key={result.symbol} onClick={() => handleSelectStock(result.symbol)} className="px-4 py-2 text-white hover:bg-green-500 cursor-pointer">
                                     {result.symbol} - {result.shortname}
                                 </li>
@@ -240,39 +249,45 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
                         </ul>
                     )}
                 </div>
-            )}
-            {isLoading && <p className="text-center text-gray-400 py-2">Searching...</p>}
-            {error && <p className="text-center text-red-400 py-2">{error}</p>}
-            {selectedStock ? (
+            ) : (
                 <div className="animate-fade-in">
-                    <p className="text-center text-gray-400 mb-1">
-                        Predicting for <span className="font-bold text-white">{selectedStock.symbol}</span> | Current Price: <span className="font-semibold text-white ml-2">${currentPrice ? currentPrice.toFixed(2) : 'N/A'}</span>
-                    </p>
-                    <p className="text-center text-xs text-gray-500 mb-4">Data delayed up to 15 minutes</p>
-                    <div className="flex flex-wrap justify-center gap-2 mb-4">
-                        <button type="button" onClick={() => setPredictionType('Hourly')} className={`px-3 py-1 text-xs font-bold rounded ${predictionType === 'Hourly' ? 'bg-green-500' : 'bg-gray-700'}`}>Hourly</button>
-                        <button type="button" onClick={() => setPredictionType('Daily')} className={`px-3 py-1 text-xs font-bold rounded ${predictionType === 'Daily' ? 'bg-green-500' : 'bg-gray-700'}`}>Daily</button>
-                        <button type="button" onClick={() => setPredictionType('Weekly')} className={`px-3 py-1 text-xs font-bold rounded ${predictionType === 'Weekly' ? 'bg-green-500' : 'bg-gray-700'}`}>Weekly</button>
-                        <button type="button" onClick={() => setPredictionType('Monthly')} className={`px-3 py-1 text-xs font-bold rounded ${predictionType === 'Monthly' ? 'bg-green-500' : 'bg-gray-700'}`}>Monthly</button>
-                        <button type="button" onClick={() => setPredictionType('Quarterly')} className={`px-3 py-1 text-xs font-bold rounded ${predictionType === 'Quarterly' ? 'bg-green-500' : 'bg-gray-700'}`}>Quarterly</button>
-                        <button type="button" onClick={() => setPredictionType('Yearly')} className={`px-3 py-1 text-xs font-bold rounded ${predictionType === 'Yearly' ? 'bg-green-500' : 'bg-gray-700'}`}>Yearly</button>
+                    <div className="text-center mb-4">
+                        <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
+                        <p className="text-gray-400">Current Price: <span className="font-semibold text-white">${currentPrice ? currentPrice.toFixed(2) : 'N/A'}</span></p>
                     </div>
-                    <TimePenaltyBar message={formState.message} barWidth={formState.barWidth} onInfoClick={onInfoClick} />
-                    <form onSubmit={handleSubmit}>
-                        <div>
-                            <label className="block text-sm text-gray-300">Target Price for {selectedStock.symbol}</label>
-                            <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!formState.isOpen} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white disabled:opacity-50"/>
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <TimePenaltyBar message={formState.message} barWidth={formState.barWidth} onInfoClick={onInfoClick} />
+
+                        <div className="grid grid-cols-5 gap-3 bg-gray-700 p-4 rounded-lg">
+                            <div className="col-span-5 sm:col-span-2">
+                                <label className="block text-xs font-bold text-gray-400 mb-1">Type</label>
+                                <select value={predictionType} onChange={(e) => setPredictionType(e.target.value)} className="w-full bg-gray-900 text-white p-2 rounded-md">
+                                    <option>Hourly</option><option>Daily</option><option>Weekly</option>
+                                    <option>Monthly</option><option>Quarterly</option><option>Yearly</option>
+                                </select>
+                            </div>
+                            <div className="col-span-5 sm:col-span-3">
+                                <label className="block text-xs font-bold text-gray-400 mb-1">Target Price</label>
+                                <div className="flex items-center gap-2 bg-gray-900 rounded-md pr-2">
+                                    <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!formState.isOpen} className="w-full bg-transparent p-2 text-white disabled:opacity-50 focus:outline-none"/>
+                                    <span className={`font-bold text-sm flex-shrink-0 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                        {percentageChange.toFixed(1)}%
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="mt-4">
+
+                        <div>
                             <label className="block text-sm text-gray-300">Rationale (Optional)</label>
                             <textarea placeholder="Why do you think the price will move?" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm" rows="2"/>
                         </div>
-                        <button type="submit" disabled={!formState.isOpen} className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
+                        <button type="submit" disabled={!formState.isOpen} className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
                             Place Prediction
                         </button>
                     </form>
                 </div>
-            ) : (!initialStock && !isLoading && <p className="text-center text-gray-500 py-8">Search for a stock to begin.</p>)}
+            )}
         </div>
     );
 };
