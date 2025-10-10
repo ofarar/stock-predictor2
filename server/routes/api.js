@@ -14,6 +14,61 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+// Add this entire route anywhere inside your server/routes/api.js file.
+
+router.post('/posts/golden', async (req, res) => {
+    // 1. Security check
+    if (!req.user || !req.user.isGoldenMember) {
+        return res.status(403).json({ message: 'Only Golden Members can create posts.' });
+    }
+
+    const { message, attachedPrediction } = req.body;
+    if (!message) {
+        return res.status(400).json({ message: 'Post message cannot be empty.' });
+    }
+
+    try {
+        const newPostData = {
+            userId: req.user._id,
+            message,
+            isGoldenPost: true,
+        };
+
+        // 2. If a prediction is attached, get the current price and save it with the post
+        if (attachedPrediction && attachedPrediction.stockTicker) {
+            const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
+            newPostData.attachedPrediction = {
+                ...attachedPrediction,
+                priceAtCreation: quote.regularMarketPrice,
+            };
+        }
+
+        const post = await new Post(newPostData).save();
+
+        // 3. Send notifications to all golden subscribers
+        const user = await User.findById(req.user._id).populate('goldenSubscribers.user');
+        const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
+        
+        if (validSubscribers.length > 0) {
+            const notificationMessage = `${user.username} has published a new Golden Post.`;
+            const notifications = validSubscribers.map(sub => ({
+                recipient: sub.user._id,
+                sender: user._id,
+                type: 'GoldenPost',
+                message: notificationMessage,
+                link: `/profile/${user._id}?tab=GoldenFeed`
+            }));
+            await Notification.insertMany(notifications);
+        }
+
+        res.status(201).json(post);
+
+    } catch (error) {
+        console.error("Error creating golden post:", error);
+        res.status(500).json({ message: 'Server error while creating post.' });
+    }
+});
+
 router.post('/quotes', async (req, res) => {
     const { tickers } = req.body;
     if (!tickers || !Array.isArray(tickers) || tickers.length === 0) {

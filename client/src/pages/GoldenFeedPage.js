@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import StockFilterSearch from '../components/StockFilterSearch';
+import GoldenPostForm from '../components/GoldenPostForm';
 
 // This is a new, more detailed Post Card for the central feed
 const CentralPostCard = ({ post }) => {
@@ -12,7 +13,7 @@ const CentralPostCard = ({ post }) => {
         const target = post.attachedPrediction.targetPrice;
         percentChange = ((target - initial) / initial) * 100;
     }
-    
+
     return (
         <div className="bg-gray-800 p-4 rounded-lg">
             {/* Author Info */}
@@ -53,7 +54,21 @@ const GoldenFeedPage = () => {
         stock: '',
         predictionType: 'All'
     });
+
+    // --- START: NEW STATE ---
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+    // --- END: NEW STATE ---
+
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
+
+    // --- START: NEW EFFECT ---
+    // Fetch current user to check if they are a Golden Member
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
+            .then(res => setCurrentUser(res.data));
+    }, []);
+    // --- END: NEW EFFECT ---
 
     // Fetch the list of subscriptions for the filter dropdown
     useEffect(() => {
@@ -78,47 +93,68 @@ const GoldenFeedPage = () => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };
 
-    return (
-        <div className="max-w-4xl mx-auto animate-fade-in">
-            <h1 className="text-3xl font-bold text-white mb-6">Your Golden Feed</h1>
-            
-            <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Member</label>
-                        <select onChange={(e) => handleFilterChange('authorId', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
-                            <option value="All">All Subscriptions</option>
-                            {subscriptions.map(sub => <option key={sub._id} value={sub._id}>{sub.username}</option>)}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Stock</label>
-                        <StockFilterSearch onStockSelect={(stock) => handleFilterChange('stock', stock)} />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold text-gray-400 mb-1">Prediction Type</label>
-                        <select onChange={(e) => handleFilterChange('predictionType', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
-                            {predictionTypes.map(type => <option key={type} value={type}>{type}</option>)}
-                        </select>
-                    </div>
-                </div>
-            </div>
+        return (
+        <>
+            <GoldenPostForm
+                isOpen={isPostModalOpen}
+                onClose={() => setIsPostModalOpen(false)}
+                onPostCreated={fetchPosts} // This will refresh the feed after you post
+            />
 
-            {loading ? (
-                <p className="text-center text-gray-400 py-10">Loading Feed...</p>
-            ) : (
-                <div className="space-y-4">
-                    {posts.length > 0 ? (
-                        posts.map(post => <CentralPostCard key={post._id} post={post} />)
-                    ) : (
-                        <div className="text-center bg-gray-800 rounded-lg py-20">
-                            <p className="text-lg font-semibold text-gray-400">No posts found for these filters.</p>
-                            <p className="text-gray-500">Try broadening your search criteria or subscribing to more Golden Members.</p>
-                        </div>
+            <div className="max-w-4xl mx-auto animate-fade-in">
+                {/* --- START: UPDATED HEADER --- */}
+                <div className="flex flex-wrap gap-4 justify-between items-center mb-6">
+                    <h1 className="text-3xl font-bold text-white">Your Golden Feed</h1>
+                    {currentUser?.isGoldenMember && (
+                        <button 
+                            onClick={() => setIsPostModalOpen(true)}
+                            className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-400 flex items-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
+                            Create Post
+                        </button>
                     )}
                 </div>
-            )}
-        </div>
+                {/* --- END: UPDATED HEADER --- */}
+                
+                <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Member</label>
+                            <select onChange={(e) => handleFilterChange('authorId', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
+                                <option value="All">All Subscriptions</option>
+                                {subscriptions.map(sub => <option key={sub._id} value={sub._id}>{sub.username}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-1">Filter by Stock</label>
+                            <StockFilterSearch onStockSelect={(stock) => handleFilterChange('stock', stock)} />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-1">Prediction Type</label>
+                            <select onChange={(e) => handleFilterChange('predictionType', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
+                                {predictionTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {loading ? (
+                    <p className="text-center text-gray-400 py-10">Loading Feed...</p>
+                ) : (
+                    <div className="space-y-4">
+                        {posts.length > 0 ? (
+                            posts.map(post => <CentralPostCard key={post._id} post={post} />)
+                        ) : (
+                            <div className="text-center bg-gray-800 rounded-lg py-20">
+                                <p className="text-lg font-semibold text-gray-400">No posts found for these filters.</p>
+                                <p className="text-gray-500">Try broadening your search criteria or subscribing to more Golden Members.</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 
