@@ -662,20 +662,25 @@ router.get('/search/:keyword', async (req, res) => {
     }
 });
 
-// Route for getting the latest price (quote)
 router.get('/quote/:symbol', async (req, res) => {
     const symbol = req.params.symbol;
     try {
         const quote = await yahooFinance.quote(symbol);
-        res.json(quote);
+
+        // --- START: NEW LOGIC TO FIND A RELIABLE PRICE ---
+        // Create a new 'displayPrice' field by checking multiple price fields in order of preference.
+        // This ensures we almost always have a price to show on the frontend.
+        const displayPrice = quote.regularMarketPrice || quote.marketPrice || quote.regularMarketPreviousClose || null;
+        
+        // Return the original quote object with our new reliable price field added to it.
+        res.json({ ...quote, displayPrice });
+        // --- END: NEW LOGIC ---
+
     } catch (error) {
         console.error("Yahoo Finance quote error:", error);
         res.status(500).json({ message: 'Error fetching data from Yahoo Finance' });
     }
 });
-
-
-
 
 // Get all predictions for the logged-in user
 router.get('/my-predictions', async (req, res) => {
