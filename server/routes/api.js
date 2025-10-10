@@ -1326,6 +1326,8 @@ router.post('/users/:userId/cancel-golden', async (req, res) => {
 });
 
 // Find and update your /api/explore/feed route
+// In server/routes/api.js, replace your existing GET '/explore/feed' route with this one.
+
 router.get('/explore/feed', async (req, res) => {
     const { status = 'Active', stock, predictionType, sortBy = 'date' } = req.query;
 
@@ -1341,10 +1343,8 @@ router.get('/explore/feed', async (req, res) => {
         let predictions;
         const limit = 50;
 
-        // The aggregation pipeline is now used for both 'performance' and 'votes'
         if (sortBy === 'performance' || sortBy === 'votes') {
             let sortStage = {};
-
             if (sortBy === 'performance') {
                 sortStage = { 'userDetails.score': -1, createdAt: -1 };
             } else { // sortBy === 'votes'
@@ -1353,57 +1353,59 @@ router.get('/explore/feed', async (req, res) => {
 
             predictions = await Prediction.aggregate([
                 { $match: matchQuery },
-                {
-                    $addFields: {
-                        voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] }
-                    }
-                },
+                { $addFields: { voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] } } },
                 { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
                 { $unwind: '$userDetails' },
                 { $sort: sortStage },
                 { $limit: limit },
-                // FIX: This project stage is now complete and ensures all data is returned
                 {
                     $project: {
                         _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1,
                         status: 1, score: 1, actualPrice: 1, createdAt: 1, description: 1,
                         priceAtCreation: 1, likes: 1, dislikes: 1,
-                        userId: { // Manually reshape the userDetails to match the populate() structure
-                            _id: '$userDetails._id',
-                            username: '$userDetails.username',
-                            avatar: '$userDetails.avatar',
-                            isGoldenMember: '$userDetails.isGoldenMember',
-                            score: '$userDetails.score'
+                        userId: {
+                            _id: '$userDetails._id', username: '$userDetails.username', avatar: '$userDetails.avatar',
+                            isGoldenMember: '$userDetails.isGoldenMember', score: '$userDetails.score'
                         }
                     }
                 }
             ]);
 
         } else {
-            // Standard find for date-based sorting
             predictions = await Prediction.find(matchQuery)
                 .sort({ createdAt: -1 })
                 .limit(limit)
                 .populate('userId', 'username avatar isGoldenMember score')
-                .lean();
+                .lean(); // Use .lean() for better performance as we will modify the objects
         }
 
-        // Add current price to active predictions
+        // --- START: MODIFIED RESILIENT BLOCK ---
+        // Add current price to active predictions if possible, but don't fail if the API times out.
         if (status === 'Active' && predictions.length > 0) {
             const tickers = [...new Set(predictions.map(p => p.stockTicker))];
-            if (tickers.length > 0) {
-                const quotes = await yahooFinance.quote(tickers);
-                const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
-                predictions.forEach(p => {
-                    p.currentPrice = priceMap.get(p.stockTicker) || 0;
-                });
+            
+            try {
+                if (tickers.length > 0) {
+                    const quotes = await yahooFinance.quote(tickers);
+                    const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
+                    predictions.forEach(p => {
+                        p.currentPrice = priceMap.get(p.stockTicker) || 0;
+                    });
+                }
+            } catch (quoteError) {
+                // If fetching quotes fails, log it but don't fail the whole request.
+                console.error("Non-critical error: Failed to fetch live quotes for explore feed.", quoteError.message);
+                // The predictions will just be missing 'currentPrice', and will default to 0.
+                predictions.forEach(p => { p.currentPrice = 0; });
             }
         }
+        // --- END: MODIFIED RESILIENT BLOCK ---
 
-        res.json(predictions);
+        res.json(predictions); // Always send the main prediction data from the database
+
     } catch (err) {
-        console.error(`Error fetching explore feed:`, err);
-        res.status(500).json({ message: 'Server error' });
+        console.error(`CRITICAL Error fetching explore feed:`, err);
+        res.status(500).json({ message: 'Server error fetching prediction data.' });
     }
 });
 
