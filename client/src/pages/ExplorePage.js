@@ -164,7 +164,7 @@ const ExplorePage = ({ requestLogin }) => {
                 </div>
                 <div className="flex border-b border-gray-700 mb-6">
                     <button onClick={() => setActiveTab('Active')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Active' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>Active</button>
-                    <button onClick={() => setActiveTab('Assessed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Assessed' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>Recently Assessed</button>
+                    <button onClick={() => setActiveTab('Assessed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Assessed' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>Assessed</button>
                 </div>
                 {loading ? (<p className="text-center text-gray-400 py-10">Loading Predictions...</p>) : (
                     <>
