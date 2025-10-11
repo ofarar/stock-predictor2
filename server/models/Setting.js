@@ -30,6 +30,7 @@ const SettingSchema = new Schema({
     badgeSettings: { type: Object, default: defaultBadgeSettings },
     isVerificationEnabled: { type: Boolean, default: false },
     verificationPrice: { type: Number, default: 4.99 },
+    isAIWizardEnabled: { type: Boolean, default: false },
 });
 
 // FIX: Changed from 'export default mongoose.model(...);'

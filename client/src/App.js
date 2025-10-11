@@ -29,6 +29,7 @@ import GoldenFeedPage from './pages/GoldenFeedPage';
 import WatchlistPage from './pages/WatchlistPage';
 import NotificationSettingsPage from './pages/NotificationSettingsPage';
 import ContactPage from './pages/ContactPage';
+import AIWizardPage from './pages/AIWizardPage';
 
 
 // A small helper component to handle the conditional rendering
@@ -80,12 +81,12 @@ function App() {
     setStockToPredict(null);
   };
 
-return (
+  return (
     <Router>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
       <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
-        <Header user={user} onMakePredictionClick={handleOpenPredictionModal} />
+        <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} />
         <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
         <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
         <main className="flex-grow container mx-auto px-4 sm:px-6 pt-2 sm:pt-2 md:pt-0 pb-2 sm:pb-4">
@@ -109,6 +110,9 @@ return (
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/watchlist" element={<WatchlistPage settings={settings} />} />
             <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+            {settings?.isAIWizardEnabled && (
+              <Route path="/ai-wizard" element={<AIWizardPage user={user} />} />
+            )}
           </Routes>
         </main>
         <Footer />

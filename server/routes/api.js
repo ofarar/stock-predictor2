@@ -9,10 +9,61 @@ const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
 const { sendContactFormEmail } = require('../services/email');
+const AIWizardWaitlist = require('../models/AIWizardWaitlist');
 
 const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
+
+// --- START: NEW AI WIZARD ROUTES ---
+
+// Add this new route anywhere in the file.
+router.get('/admin/ai-wizard-waitlist', async (req, res) => {
+    // Security check
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+    try {
+        const waitlistEntries = await AIWizardWaitlist.find({})
+            .sort({ createdAt: 'asc' }) // Show oldest signups first
+            .populate('userId', 'username avatar isVerified'); // Get user details
+
+        res.json(waitlistEntries);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching waitlist.' });
+    }
+});
+
+// GET: Check if the current user is on the waitlist
+router.get('/ai-wizard/waitlist-status', async (req, res) => {
+    if (!req.user) {
+        return res.json({ isOnWaitlist: false });
+    }
+    try {
+        const entry = await AIWizardWaitlist.findOne({ userId: req.user.id });
+        res.json({ isOnWaitlist: !!entry });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// POST: Add the current user to the waitlist
+router.post('/ai-wizard/join-waitlist', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'You must be logged in to join.' });
+    }
+    try {
+        const existingEntry = await AIWizardWaitlist.findOne({ userId: req.user.id });
+        if (existingEntry) {
+            return res.status(409).json({ message: 'You are already on the waitlist.' });
+        }
+        await new AIWizardWaitlist({ userId: req.user.id }).save();
+        res.status(201).json({ message: 'Successfully joined the waitlist!' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+// --- END: NEW AI WIZARD ROUTES ---
 
 router.post('/profile/verify', async (req, res) => {
     if (!req.user) {
@@ -558,21 +609,23 @@ router.put('/settings/admin', async (req, res) => {
     try {
         const updateData = {};
 
-        // This logic dynamically builds the update object from whatever is sent.
+        // This logic now correctly handles all settings sent from the admin page
         if (req.body.isPromoBannerActive !== undefined) {
             updateData.isPromoBannerActive = req.body.isPromoBannerActive;
         }
         if (req.body.badgeSettings) {
             updateData.badgeSettings = req.body.badgeSettings;
         }
-
-        // --- START: ADDED FIX ---
-        // These checks were missing. They will now save the verification settings.
         if (req.body.isVerificationEnabled !== undefined) {
             updateData.isVerificationEnabled = req.body.isVerificationEnabled;
         }
         if (req.body.verificationPrice !== undefined) {
             updateData.verificationPrice = req.body.verificationPrice;
+        }
+        // --- START: ADDED FIX ---
+        // This check was missing. It will now save the AI Wizard setting.
+        if (req.body.isAIWizardEnabled !== undefined) {
+            updateData.isAIWizardEnabled = req.body.isAIWizardEnabled;
         }
         // --- END: ADDED FIX ---
 

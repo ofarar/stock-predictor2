@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import AdminPanel from '../components/AdminPanel';
 import AdminUserList from '../components/AdminUserList';
+import AIWizardWaitlist from '../components/AIWizardWaitlist';
 
 const AdminPage = () => {
     const [settings, setSettings] = useState({
         isVerificationEnabled: false,
         verificationPrice: 0,
+        isAIWizardEnabled: false, // Add initial state
         badgeSettings: {}
     });
     const [loading, setLoading] = useState(true);
@@ -50,6 +52,7 @@ const AdminPage = () => {
         const settingsToSave = {
             isVerificationEnabled: settings.isVerificationEnabled,
             verificationPrice: parseFloat(settings.verificationPrice) || 0,
+            isAIWizardEnabled: settings.isAIWizardEnabled,
             badgeSettings: badgeSettings
         };
 
@@ -67,6 +70,18 @@ const AdminPage = () => {
                     Save All Settings
                 </button>
             </div>
+
+            {/* --- NEW AI WIZARD SETTINGS SECTION --- */}
+            <div className="bg-gray-800 p-6 rounded-lg">
+                <h2 className="text-xl font-bold text-white mb-4">AI Wizard Feature</h2>
+                <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
+                    <label htmlFor="isAIWizardEnabled" className="font-medium text-gray-300">Enable "AI Wizard" Page</label>
+                    <input type="checkbox" id="isAIWizardEnabled" checked={settings.isAIWizardEnabled} onChange={(e) => handleSettingsChange('isAIWizardEnabled', e.target.checked)} />
+                </div>
+            </div>
+
+            {/* --- NEW: The waitlist component is now here, conditionally rendered --- */}
+            {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">Verification Feature</h2>
