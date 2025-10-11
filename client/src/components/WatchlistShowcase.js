@@ -6,12 +6,13 @@ const WatchlistShowcase = ({ stocks = [] }) => {
         <div className="bg-gray-800 rounded-lg py-6">
             <h3 className="text-xl font-bold text-white px-6 mb-4">Watchlist</h3>
             {stocks.length > 0 ? (
-                <div className="flex flex-wrap gap-3 px-6">
+                // --- FIX: The list is now left-aligned and horizontally scrollable ---
+                <div className="flex gap-3 overflow-x-auto pb-4 px-6 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                     {stocks.map(stock => (
                         <Link
                             key={stock.symbol}
                             to={`/stock/${stock.symbol}`}
-                            className="bg-gray-700 text-white font-bold text-sm py-2 px-4 rounded-full transition-colors hover:bg-green-500"
+                            className="flex-shrink-0 bg-gray-700 text-white font-bold text-sm py-2 px-4 rounded-full transition-colors hover:bg-green-500"
                             title={`View ${stock.longName || stock.symbol}`}
                         >
                             {stock.symbol}
