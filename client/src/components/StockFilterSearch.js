@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 // FIX: Accept an initialValue prop
-const StockFilterSearch = ({ onStockSelect, initialValue = '' }) => {
+const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder = 'e.g., AAPL' }) => {
     // FIX: Use the initialValue to set the starting state
     const [searchTerm, setSearchTerm] = useState(initialValue);
     const [results, setResults] = useState([]);
@@ -52,7 +52,7 @@ const StockFilterSearch = ({ onStockSelect, initialValue = '' }) => {
         <div className="relative" ref={searchRef}>
             <input 
                 type="text" 
-                placeholder="e.g., AAPL" 
+                placeholder={placeholder}
                 value={searchTerm} 
                 onChange={handleInputChange}
                 onFocus={() => setIsDropdownOpen(true)}

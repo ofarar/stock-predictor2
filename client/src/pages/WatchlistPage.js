@@ -147,7 +147,10 @@ const WatchlistPage = ({ settings }) => {
             <div>
                 <h1 className="text-3xl font-bold text-white mb-4">My Watchlist</h1>
                 <div className="bg-gray-800 p-4 rounded-lg flex flex-col sm:flex-row gap-4">
-                    <StockFilterSearch onStockSelect={(ticker) => handleWatchlistUpdate(ticker, 'add')} />
+                    <StockFilterSearch 
+                        onStockSelect={(ticker) => handleWatchlistUpdate(ticker, 'add')} 
+                        placeholder="Search for stocks to watch (e.g., AAPL)..."
+                    />
                 </div>
             </div>
 
