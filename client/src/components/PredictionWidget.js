@@ -135,7 +135,7 @@ const getPredictionDetails = (predictionType) => {
     return { isOpen, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
 };
 
-const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmation }) => {
+const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [selectedStock, setSelectedStock] = useState(null);
@@ -147,7 +147,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
     const [formState, setFormState] = useState({
         isOpen: true, message: 'Max Score: 100', deadline: null, barWidth: '100%'
     });
-    
+
     const currentPrice = selectedStock ? selectedStock.regularMarketPrice : 0;
 
     let percentageChange = 0;
@@ -229,14 +229,14 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
             executePrediction();
         }
     };
-    
+
     return (
         <div className="w-full">
             <h2 className="text-2xl font-bold text-white mb-6">Make a Prediction</h2>
-            
+
             {!selectedStock && !initialStock ? (
                 <div className="relative mb-4">
-                    <input type="text" placeholder="Search for a stock (e.g., AAPL)" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value.toUpperCase())} className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"/>
+                    <input type="text" placeholder="Search for a stock (e.g., AAPL)" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value.toUpperCase())} className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                     {isLoading && <p className="text-center text-gray-400 py-4">Searching...</p>}
                     {searchResults.length > 0 && (
                         <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
@@ -261,7 +261,17 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
 
                         <div className="grid grid-cols-5 gap-3 bg-gray-700 p-4 rounded-lg">
                             <div className="col-span-5 sm:col-span-2">
-                                <label className="block text-xs font-bold text-gray-400 mb-1">Type</label>
+                                <label className="block text-xs font-bold text-gray-400 mb-1 flex items-center gap-2">
+                                    Type
+                                    <button
+                                        type="button"
+                                        onClick={onTypesInfoClick}
+                                        className="w-4 h-4 flex items-center justify-center bg-gray-600 text-gray-300 rounded-full text-xs font-bold hover:bg-gray-500"
+                                        aria-label="Learn more about prediction types"
+                                    >
+                                        ?
+                                    </button>
+                                </label>
                                 <select value={predictionType} onChange={(e) => setPredictionType(e.target.value)} className="w-full bg-gray-900 text-white p-2 rounded-md">
                                     <option>Hourly</option><option>Daily</option><option>Weekly</option>
                                     <option>Monthly</option><option>Quarterly</option><option>Yearly</option>
@@ -270,7 +280,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
                             <div className="col-span-5 sm:col-span-3">
                                 <label className="block text-xs font-bold text-gray-400 mb-1">Target Price</label>
                                 <div className="flex items-center gap-2 bg-gray-900 rounded-md pr-2">
-                                    <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!formState.isOpen} className="w-full bg-transparent p-2 text-white disabled:opacity-50 focus:outline-none"/>
+                                    <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!formState.isOpen} className="w-full bg-transparent p-2 text-white disabled:opacity-50 focus:outline-none" />
                                     <span className={`font-bold text-sm flex-shrink-0 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                         {percentageChange.toFixed(1)}%
                                     </span>
@@ -280,7 +290,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, requestConfirmat
 
                         <div>
                             <label className="block text-sm text-gray-300">Rationale (Optional)</label>
-                            <textarea placeholder="Why do you think the price will move?" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm" rows="2"/>
+                            <textarea placeholder="Why do you think the price will move?" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm" rows="2" />
                         </div>
                         <button type="submit" disabled={!formState.isOpen} className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
                             Place Prediction
