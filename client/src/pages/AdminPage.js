@@ -47,12 +47,12 @@ const AdminPage = () => {
             return toast.error("Invalid JSON format in Badge Rules. Please check syntax.");
         }
 
-        const settingsToSave = { 
+        const settingsToSave = {
             isVerificationEnabled: settings.isVerificationEnabled,
             verificationPrice: parseFloat(settings.verificationPrice) || 0,
             badgeSettings: badgeSettings
         };
-        
+
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
         toast.promise(promise, { loading: 'Saving all settings...', success: 'Settings saved!', error: 'Error saving.' });
     };
@@ -77,10 +77,10 @@ const AdminPage = () => {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-300">Verification Price ($)</label>
-                        <input 
-                            type="number" 
-                            step="0.01" 
-                            value={settings.verificationPrice} 
+                        <input
+                            type="number"
+                            step="0.01"
+                            value={settings.verificationPrice}
                             onChange={(e) => handleSettingsChange('verificationPrice', e.target.value)}
                             className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"
                         />
@@ -88,7 +88,7 @@ const AdminPage = () => {
                 </div>
             </div>
 
-            <AdminUserList />
+            <AdminUserList settings={settings} />
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">Badge Rules JSON Editor</h2>
@@ -98,7 +98,7 @@ const AdminPage = () => {
                     className="w-full h-96 bg-gray-900 text-green-400 font-mono p-4 rounded-md border border-gray-700"
                 />
             </div>
-            
+
             <AdminPanel />
         </div>
     );

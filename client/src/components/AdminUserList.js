@@ -12,9 +12,10 @@ const UserCard = ({ user, settings }) => (
             className={`w-14 h-14 rounded-full border-4 flex-shrink-0 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
         />
         <div className="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
-            <p className="font-bold text-white truncate col-span-2 md:col-span-1">{user.username}</p>
-            {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
-
+            <div className="flex items-center gap-2 col-span-2 md:col-span-1">
+                <p className="font-bold text-white truncate">{user.username}</p>
+                {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+            </div>
             <div className="text-center">
                 <p className="text-xs text-gray-400">Followers</p>
                 <p className="font-bold text-white">{user.followersCount}</p>
