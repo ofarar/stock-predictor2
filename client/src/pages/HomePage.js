@@ -1,5 +1,3 @@
-// src/pages/HomePage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DailyLeaderboard from '../components/DailyLeaderboard';
@@ -8,26 +6,26 @@ import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
 import TopMovers from '../components/TopMovers';
 
-const HomePage = ({ user }) => {
+// FIX: The component now only uses the 'settings' passed in from App.js
+const HomePage = ({ user, settings }) => {
     const [widgetData, setWidgetData] = useState({
         dailyLeaders: [],
         longTermLeaders: [],
         hourlyWinners: []
     });
-    const [settings, setSettings] = useState(null);
+    // FIX: The duplicate local 'settings' state has been removed.
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-                const [settingsRes, hourlyRes, dailyRes, longTermRes] = await Promise.all([
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/settings`),
+                // FIX: The redundant API call for '/api/settings' has been removed.
+                const [hourlyRes, dailyRes, longTermRes] = await Promise.all([
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
                 ]);
 
-                setSettings(settingsRes.data);
                 setWidgetData({
                     hourlyWinners: hourlyRes.data,
                     dailyLeaders: dailyRes.data,
@@ -48,20 +46,22 @@ const HomePage = ({ user }) => {
 
     return (
         <div className="space-y-8">
+            {/* This now correctly uses the 'settings' prop */}
             {!user && settings?.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
                 {/* Main Column: Focused on recent results and top performers */}
                 <div className="lg:col-span-2 flex flex-col gap-8">
-                    <HourlyWinnersFeed winners={widgetData.hourlyWinners} />
-                    <DailyLeaderboard leaders={widgetData.dailyLeaders} />
+                    {/* The 'settings' prop is correctly passed down to the widgets */}
+                    <HourlyWinnersFeed winners={widgetData.hourlyWinners} settings={settings} />
+                    <DailyLeaderboard leaders={widgetData.dailyLeaders} settings={settings} />
                 </div>
 
                 {/* Sidebar Column: Focused on market context and all-time greats */}
                 <div className="lg:col-span-1 flex flex-col gap-8">
                     <TopMovers />
-                    <LongTermLeaders leaders={widgetData.longTermLeaders} />
+                    <LongTermLeaders leaders={widgetData.longTermLeaders} settings={settings} />
                 </div>
             </div>
         </div>

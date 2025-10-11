@@ -1114,7 +1114,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
             .sort({ score: -1 })
             .limit(3)
             // UPDATED: Populate more user fields
-            .populate('userId', 'username avatar isGoldenMember');
+            .populate('userId', 'username avatar isGoldenMember isVerified');
 
         const formattedWinners = winners.map(p => ({
             predictionId: p._id,
@@ -1152,6 +1152,7 @@ router.get('/widgets/daily-leaders', async (req, res) => {
                     avgScore: 1,
                     avatar: '$user.avatar',                 // Add avatar
                     isGoldenMember: '$user.isGoldenMember', // Add golden status
+                    isVerified: '$user.isVerified',
                     _id: 0
                 }
             }
@@ -1177,6 +1178,7 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
                     accuracy: { $round: ['$accuracy', 0] },
                     avatar: '$user.avatar',
                     isGoldenMember: '$user.isGoldenMember',
+                    isVerified: '$user.isVerified',
                     _id: 0
                 }
             }
@@ -1333,7 +1335,7 @@ router.get('/stock/:ticker', async (req, res) => {
         const [quote, activePredictions] = await Promise.all([
             yahooFinance.quote(ticker),
             Prediction.find({ stockTicker: ticker, status: 'Active' })
-                .populate('userId', 'username avatar isGoldenMember')
+                .populate('userId', 'username avatar isGoldenMember isVerified')
                 .sort({ createdAt: -1 })
         ]);
 
@@ -1357,6 +1359,7 @@ router.get('/stock/:ticker', async (req, res) => {
                     username: '$userDetails.username',
                     avatar: '$userDetails.avatar',
                     isGoldenMember: '$userDetails.isGoldenMember',
+                    isVerified: '$userDetails.isVerified',
                     avgScore: { $round: ['$avgScore', 1] }
                 }
             }
@@ -1377,7 +1380,7 @@ router.get('/prediction/:id', async (req, res) => {
     try {
         const prediction = await Prediction.findById(req.params.id)
             // FIX: Add 'isGoldenMember' to the fields being populated
-            .populate('userId', 'username avatar isGoldenMember');
+            .populate('userId', 'username avatar isGoldenMember isVerified');
 
         if (!prediction) {
             return res.status(404).json({ message: "Prediction not found" });

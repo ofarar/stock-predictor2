@@ -92,19 +92,19 @@ return (
           <PageSpecificContent />
           <Routes>
             {/* --- Pass 'settings' prop down to all relevant pages --- */}
-            <Route path="/" element={<HomePage user={user} />} />
+            <Route path="/" element={<HomePage user={user} settings={settings} />} />
             <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
             <Route path="/scoreboard" element={<ScoreboardPage settings={settings} />} />
             <Route path="/profile/:userId" element={<ProfilePage settings={settings} />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage settings={settings} />} />
             <Route path="/profile/edit" element={<EditProfilePage onProfileUpdate={fetchUser} />} />
-            <Route path="/stock/:ticker" element={<StockPage onPredictClick={handleOpenPredictionModal} />} />
+            <Route path="/stock/:ticker" element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/prediction/:predictionId" element={<PredictionDetailPage requestLogin={requestLogin} />} />
+            <Route path="/prediction/:predictionId" element={<PredictionDetailPage requestLogin={requestLogin} settings={settings} />} />
             <Route path="/golden-feed" element={<GoldenFeedPage settings={settings} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/watchlist" element={<WatchlistPage settings={settings} />} />

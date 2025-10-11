@@ -3,8 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
+import VerifiedTick from '../components/VerifiedTick';
 
-const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
+const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({
         quote: null,
@@ -40,7 +41,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
         }
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => setCurrentUser(res.data));
-            
+
         return () => {
             if (setPageDataRefresher) {
                 setPageDataRefresher(null);
@@ -56,7 +57,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
             .then(res => {
                 setCurrentUser(prev => ({ ...prev, watchlist: res.data.watchlist }));
             });
-        
+
         toast.promise(promise, {
             loading: 'Updating watchlist...',
             success: isWatching ? `Removed ${ticker} from watchlist.` : `Added ${ticker} to watchlist.`,
@@ -94,7 +95,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                         title={isWatching ? 'Remove from Watchlist' : 'Add to Watchlist'}
                         disabled={!currentUser}
                     >
-                        {isWatching 
+                        {isWatching
                             ? <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path></svg>
                             : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                         }
@@ -132,9 +133,12 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                                             alt="avatar"
                                             className={`w-10 h-10 rounded-full ml-2 sm:ml-4 border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                         />
-                                        <Link to={`/profile/${user._id}`} className="font-semibold text-white ml-3 sm:ml-4 hover:underline">
-                                            {user.username}
-                                        </Link>
+                                        <div className="flex items-center gap-2 ml-3 sm:ml-4">
+                                            <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline">
+                                                {user.username}
+                                            </Link>
+                                            {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                                        </div>
                                     </div>
                                     <div className="text-right">
                                         <span className="font-bold text-green-400 text-lg">{user.avgScore.toFixed(1)}</span>
@@ -161,9 +165,12 @@ const StockPage = ({ onPredictClick, setPageDataRefresher }) => {
                             }
                             return (
                                 <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
-                                    <img src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}/>
+                                    <img src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                                     <div className="ml-3 flex-grow">
-                                        <p className="text-sm font-semibold text-white">{p.userId.username}</p>
+                                        <div className="flex items-center gap-2">
+                                            <p className="text-sm font-semibold text-white">{p.userId.username}</p>
+                                            {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
+                                        </div>
                                         <p className="text-xs text-gray-400">{p.predictionType} Prediction</p>
                                     </div>
                                     <div className="text-right">

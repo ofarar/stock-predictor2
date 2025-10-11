@@ -4,6 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import DescriptionModal from '../components/DescriptionModal';
 import PredictionJourney from '../components/PredictionJourney';
+import VerifiedTick from '../components/VerifiedTick';
 
 const formatTimeLeft = (deadline) => {
     const total = Date.parse(deadline) - Date.parse(new Date());
@@ -41,7 +42,7 @@ const isMarketOpen = () => {
     return isWeekday && isAfterOpen && isBeforeClose;
 };
 
-const PredictionDetailPage = ({ requestLogin }) => {
+const PredictionDetailPage = ({ requestLogin, settings }) => {
     const { predictionId } = useParams();
     const [prediction, setPrediction] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
@@ -208,7 +209,12 @@ const PredictionDetailPage = ({ requestLogin }) => {
                         <img src={prediction.userId.avatar} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                         <div className="ml-3">
                             <p className="text-sm text-gray-400">Predicted by</p>
-                            <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline">{prediction.userId.username}</Link>
+                            <div className="flex items-center gap-2">
+                                <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline">
+                                    {prediction.userId.username}
+                                </Link>
+                                {settings?.isVerificationEnabled && prediction.userId.isVerified && <VerifiedTick />}
+                            </div>
                         </div>
                         <p className="ml-auto text-sm text-gray-500 text-right">Made on {new Date(prediction.createdAt).toLocaleDateString()}</p>
                     </div>
