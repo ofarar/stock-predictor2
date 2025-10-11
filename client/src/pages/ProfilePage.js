@@ -205,9 +205,11 @@ const ProfilePage = ({ settings }) => {
                     <div className="flex-grow text-center sm:text-left">
                         <div className="flex items-center justify-center sm:justify-start gap-2">
                             <h1 className="text-4xl font-bold text-white">{user.username}</h1>
-                            {user.isVerified && (
+                            {/* --- FIX: No longer wrapping VerifiedTick in a <button> --- */}
+                            {/* Instead, we pass a custom onClick prop when it's the user's own profile. */}
+                            {settings?.isVerificationEnabled && user.isVerified && (
                                 isOwnProfile ? (
-                                    <button onClick={() => setIsStatusModalOpen(true)}><VerifiedTick /></button>
+                                    <VerifiedTick onClick={() => setIsStatusModalOpen(true)} />
                                 ) : (
                                     <VerifiedTick />
                                 )

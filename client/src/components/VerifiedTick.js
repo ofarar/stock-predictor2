@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const VerifiedTick = () => {
+const VerifiedTick = ({ onClick }) => {
     const [isPopoverVisible, setIsPopoverVisible] = useState(false);
     const popoverRef = useRef(null);
 
-    // This effect handles closing the popover when you click outside of it
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popoverRef.current && !popoverRef.current.contains(event.target)) {
@@ -17,9 +16,18 @@ const VerifiedTick = () => {
         };
     }, [popoverRef]);
 
+    const handleClick = (e) => {
+        e.stopPropagation();
+        if (onClick) {
+            onClick(); // Use the custom onClick if provided
+        } else {
+            setIsPopoverVisible(prev => !prev); // Use default popover toggle
+        }
+    };
+
     return (
         <div className="relative flex-shrink-0" ref={popoverRef}>
-            <button onClick={() => setIsPopoverVisible(prev => !prev)} aria-label="Verified Predictor">
+            <button onClick={handleClick} aria-label="Verified Predictor">
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
