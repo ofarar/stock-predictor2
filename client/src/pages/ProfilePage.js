@@ -204,16 +204,18 @@ const ProfilePage = ({ settings }) => {
                     <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className={`w-24 h-24 rounded-full border-4 ${avatarBorder} transition-colors`} />
                     <div className="flex-grow text-center sm:text-left">
                         <div className="flex items-center justify-center sm:justify-start gap-2">
-                            <h1 className="text-4xl font-bold text-white">{user.username}</h1>
-                            {/* --- FIX: No longer wrapping VerifiedTick in a <button> --- */}
-                            {/* Instead, we pass a custom onClick prop when it's the user's own profile. */}
-                            {settings?.isVerificationEnabled && user.isVerified && (
-                                isOwnProfile ? (
-                                    <VerifiedTick onClick={() => setIsStatusModalOpen(true)} />
-                                ) : (
-                                    <VerifiedTick />
-                                )
-                            )}
+                            <h1 className="text-4xl font-bold text-white">
+                                {user.username}
+                                {settings?.isVerificationEnabled && user.isVerified && (
+                                    <div className="inline-block align-middle ml-2">
+                                        {isOwnProfile ? (
+                                            <VerifiedTick onClick={() => setIsStatusModalOpen(true)} />
+                                        ) : (
+                                            <VerifiedTick />
+                                        )}
+                                    </div>
+                                )}
+                            </h1>
                         </div>
                         <p className="text-gray-500 text-sm mt-1">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
                         <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">

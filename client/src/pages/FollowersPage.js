@@ -16,8 +16,14 @@ const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => (
                 className={`w-20 h-20 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
             />
         </Link>
-        <Link to={`/profile/${user._id}`} className="font-bold text-white text-lg hover:underline mt-3">{user.username}</Link>
-        {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+        <div className="mt-3 text-lg font-bold text-white">
+            <Link to={`/profile/${user._id}`} className="hover:underline">{user.username}</Link>
+            {settings?.isVerificationEnabled && user.isVerified && (
+                <div className="inline-block align-middle ml-1">
+                    <VerifiedTick />
+                </div>
+            )}
+        </div>
         <div className="text-sm text-gray-400 mt-1">
             Avg Score: <span className="font-bold text-green-400">{user.avgScore || 0}</span>
         </div>
