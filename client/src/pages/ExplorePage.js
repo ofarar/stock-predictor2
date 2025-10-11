@@ -19,18 +19,19 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
     const userDislike = currentUser && dislikes.includes(currentUser._id);
 
     return (
-        // --- FIX: Wrapper is now a div with an onClick handler ---
         <div
             onClick={() => navigate(`/prediction/${prediction._id}`)}
-            className="block bg-gray-800 rounded-lg overflow-hidden transition-all hover:shadow-lg hover:shadow-green-500/10 flex flex-col cursor-pointer"
+            className="block bg-gray-800 rounded-lg transition-all hover:shadow-lg hover:shadow-green-500/10 flex flex-col cursor-pointer"
         >
             <div className="p-4 flex-grow">
                 <div className="flex items-center mb-4">
+                    {/* --- REVERT: Avatar is now a simple image again --- */}
                     <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
+
                     <div className="ml-3 flex-grow">
-                        {/* --- NEW: TICK ADDED HERE --- */}
+                        {/* --- REVERT: Tick is now back next to the username --- */}
                         <div className="flex items-center gap-2">
-                            <Link to={`/profile/${prediction.userId._id}`} /* ... */>{prediction.userId.username}</Link>
+                            <Link to={`/profile/${prediction.userId._id}`} onClick={(e) => e.stopPropagation()} className="font-bold text-white hover:underline">{prediction.userId.username}</Link>
                             {settings?.isVerificationEnabled && prediction.userId.isVerified && <VerifiedTick />}
                         </div>
                         <p className="text-xs text-gray-400">@{prediction.userId.username}</p>
@@ -54,7 +55,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                     </div>
                 )}
             </div>
-            <div className={`flex justify-between items-center text-xs px-4 py-2 ${isAssessed ? 'bg-gray-700' : 'bg-gray-900'}`}>
+            <div className="flex justify-between items-center text-xs px-4 py-2 bg-gray-700">
                 <span className="font-semibold text-gray-300">{prediction.predictionType}</span>
                 <div className="flex items-center gap-3 text-gray-400">
                     <button onClick={(e) => { e.stopPropagation(); onVote(prediction._id, 'like'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userLike ? 'text-green-500' : ''}`} disabled={isAssessed} title="Agree">
