@@ -699,5 +699,9 @@
         "forDate": "Für {{date}}",
         "maxScore": "Max. Punktzahl: {{score}}",
         "invalidType": "Wählen Sie einen gültigen Vorhersagetyp."
+    },
+    "profile": {
+        "loading": "Profil wird geladen...",
+        "userNotFound": "Benutzer nicht gefunden."
     }
 }

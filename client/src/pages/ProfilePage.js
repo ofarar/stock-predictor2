@@ -163,8 +163,8 @@ const ProfilePage = ({ settings }) => {
         setIsCancelConfirmOpen(false);
     };
 
-    if (loading) return <div className="text-center text-white mt-10">Loading profile...</div>;
-    if (!profileData) return <div className="text-center text-white mt-10">User not found.</div>;
+    if (loading) return <div className="text-center text-white mt-10">{t('profile.loading')}</div>;
+    if (!profileData) return <div className="text-center text-white mt-10">{t('profile.userNotFound')}</div>;
 
     const { user, predictions, performance, followersCount, followingCount, chartData, watchlistQuotes, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const activePredictions = predictions.filter(p => p.status === 'Active');

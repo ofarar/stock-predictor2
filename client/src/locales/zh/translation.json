@@ -699,5 +699,9 @@
         "forDate": "截止于 {{date}}",
         "maxScore": "最高得分: {{score}}",
         "invalidType": "请选择一个有效的预测类型。"
+    },
+    "profile": {
+        "loading": "正在加载个人资料...",
+        "userNotFound": "未找到用户。"
     }
 }

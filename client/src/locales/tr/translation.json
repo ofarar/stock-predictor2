@@ -699,5 +699,9 @@
     "forDate": "Bitiş tarihi: {{date}}",
     "maxScore": "Maks Puan: {{score}}",
     "invalidType": "Geçerli bir tahmin türü seçin."
+  },
+  "profile": {
+    "loading": "Profil yükleniyor...",
+    "userNotFound": "Kullanıcı bulunamadı."
   }
 }

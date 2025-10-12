@@ -699,5 +699,9 @@
     "forDate": "For {{date}}",
     "maxScore": "Max Score: {{score}}",
     "invalidType": "Select a valid prediction type."
+  },
+  "profile": {
+    "loading": "Loading profile...",
+    "userNotFound": "User not found."
   }
 }
