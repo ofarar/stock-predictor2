@@ -44,18 +44,18 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                 toast.error(err.response?.data?.message || t('goldenMemberModal.updateFail'));
             });
     };
-    
+
     const handleDeactivate = () => {
-         const settings = { 
-            isGoldenMember: false, 
-            price, 
-            description, 
-            acceptingNewSubscribers: acceptingNew 
-         };
-         // --- LOGGING ---
-         console.log("Frontend: Sending DEACTIVATION settings:", settings);
-         // ---------------
-         axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
+        const settings = {
+            isGoldenMember: false,
+            price,
+            description,
+            acceptingNewSubscribers: acceptingNew
+        };
+        // --- LOGGING ---
+        console.log("Frontend: Sending DEACTIVATION settings:", settings);
+        // ---------------
+        axios.put(`${process.env.REACT_APP_API_URL}/api/profile/golden-member`, settings, { withCredentials: true })
             .then(() => {
                 toast.success(t('goldenMemberModal.deactivateSuccess'));
                 onUpdate();
@@ -69,7 +69,9 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
             <div className="relative bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg text-gray-300" onClick={e => e.stopPropagation()}>
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
                 <h2 className="text-2xl font-bold text-white mb-4">{t('goldenMemberModal.title')}</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -94,7 +96,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                             {user.isGoldenMember ? t('goldenMemberModal.updateButton') : t('goldenMemberModal.activateButton')}
                         </button>
                         {user.isGoldenMember && (
-                             <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700">{t('goldenMemberModal.deactivateButton')}</button>
+                            <button type="button" onClick={handleDeactivate} className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700">{t('goldenMemberModal.deactivateButton')}</button>
                         )}
                     </div>
                 </form>
