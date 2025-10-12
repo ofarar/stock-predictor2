@@ -364,15 +364,23 @@ router.put('/watchlist', async (req, res) => {
     }
 });
 
-// PUT: Update notification settings
+
 router.put('/notification-settings', async (req, res) => {
     if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
     try {
-        const user = await User.findById(req.user._id);
-        user.notificationSettings = req.body;
-        await user.save();
-        res.json(user.notificationSettings);
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            { $set: { notificationSettings: req.body } }, // Use the $set operator
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        res.json(updatedUser.notificationSettings);
     } catch (err) {
+        console.error("Error updating notification settings:", err); // Good for server logs
         res.status(500).json({ message: 'Error updating settings.' });
     }
 });
