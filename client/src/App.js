@@ -30,6 +30,7 @@ import WatchlistPage from './pages/WatchlistPage';
 import NotificationSettingsPage from './pages/NotificationSettingsPage';
 import ContactPage from './pages/ContactPage';
 import AIWizardPage from './pages/AIWizardPage';
+import FeatureRoute from './components/FeatureRoute';
 
 
 // A small helper component to handle the conditional rendering
@@ -110,9 +111,14 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/watchlist" element={<WatchlistPage settings={settings} />} />
             <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
-            {settings?.isAIWizardEnabled && (
-              <Route path="/ai-wizard" element={<AIWizardPage user={user} />} />
-            )}
+            <Route
+              path="/ai-wizard"
+              element={
+                <FeatureRoute settings={settings} featureFlag="isAIWizardEnabled">
+                  <AIWizardPage user={user} />
+                </FeatureRoute>
+              }
+            />
           </Routes>
         </main>
         <Footer />

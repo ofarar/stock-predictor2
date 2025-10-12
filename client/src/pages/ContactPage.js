@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const ContactPage = () => {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -13,33 +15,31 @@ const ContactPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!formData.name || !formData.email || !formData.message) {
-            toast.error('Please fill out all fields.');
+            toast.error(t('contact_fill_all_fields_error'));
             return;
         }
         setIsSubmitting(true);
         axios.post(`${process.env.REACT_APP_API_URL}/api/contact`, formData)
             .then(() => {
-                toast.success('Your message has been sent!');
+                toast.success(t('contact_success_message'));
                 setFormData({ name: '', email: '', message: '' });
             })
-            .catch(() => toast.error('Something went wrong. Please try again.'))
+            .catch(() => toast.error(t('contact_error_message')))
             .finally(() => setIsSubmitting(false));
     };
 
     return (
         <div className="max-w-4xl mx-auto animate-fade-in text-gray-300">
-            <h1 className="text-4xl font-bold text-white text-center mb-8">Contact Us</h1>
+            <h1 className="text-4xl font-bold text-white text-center mb-8">{t('contact_title')}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold text-green-400">Get in Touch</h2>
+                    <h2 className="text-2xl font-semibold text-green-400">{t('contact_get_in_touch')}</h2>
+                    <p>{t('contact_intro_text')}</p>
+                    <p>{t('contact_fill_form_text')}</p>
                     <p>
-                        Have a question, feedback, or a partnership inquiry? We'd love to hear from you.
-                        Fill out the form, and we'll get back to you as soon as possible.
-                    </p>
-                    <p>
-                        For urgent matters, you can also reach us directly at:
+                        {t('contact_urgent_text')}
                         <a href="mailto:predictostock@gmail.com" className="font-bold text-green-400 hover:underline ml-2">
-                            predictostock@gmail.com
+                            {t('contact_email')}
                         </a>
                     </p>
                 </div>
@@ -47,20 +47,20 @@ const ContactPage = () => {
                 <div className="bg-gray-800 p-8 rounded-lg">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-300">Your Name</label>
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-300">{t('contact_name_label')}</label>
                             <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                         </div>
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-300">Your Email</label>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-300">{t('contact_email_label')}</label>
                             <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                         </div>
                         <div>
-                            <label htmlFor="message" className="block text-sm font-medium text-gray-300">Message</label>
+                            <label htmlFor="message" className="block text-sm font-medium text-gray-300">{t('contact_message_label')}</label>
                             <textarea name="message" id="message" rows="5" value={formData.message} onChange={handleChange} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"></textarea>
                         </div>
                         <div className="text-right">
                              <button type="submit" disabled={isSubmitting} className="w-full sm:w-auto bg-green-500 text-white font-bold py-3 px-6 rounded-md hover:bg-green-600 disabled:bg-gray-500">
-                                {isSubmitting ? 'Sending...' : 'Send Message'}
+                                {isSubmitting ? t('contact_sending') : t('contact_send_button')}
                             </button>
                         </div>
                     </form>

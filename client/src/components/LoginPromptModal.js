@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const LoginPromptModal = ({ isOpen, onClose }) => {
+    const { t } = useTranslation();
+
     if (!isOpen) return null;
 
     return (
@@ -9,14 +12,13 @@ const LoginPromptModal = ({ isOpen, onClose }) => {
                 <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-                {/* FIX: Updated Title */}
-                <h2 className="text-2xl font-bold text-white mb-4">Join the Community</h2>
-                <p className="text-gray-300 mb-6">Create an account to make predictions, follow top predictors, and climb the leaderboards.</p>
+                <h2 className="text-2xl font-bold text-white mb-4">{t('loginPromptModal.title')}</h2>
+                <p className="text-gray-300 mb-6">{t('loginPromptModal.description')}</p>
                 <a 
                     href={`${process.env.REACT_APP_API_URL}/auth/google`} 
                     className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center space-x-3 hover:bg-blue-700 transition"
                 >
-                    <span>Sign Up with Google</span>
+                    <span>{t('loginPromptModal.signUpWithGoogle')}</span>
                 </a>
             </div>
         </div>

@@ -15,6 +15,26 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+router.put('/profile/language', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+    const { language } = req.body;
+
+    // Validate that the language is one of the supported codes
+    if (!['en', 'tr', 'de', 'es', 'zh', 'ru'].includes(language)) {
+        return res.status(400).json({ message: 'Unsupported language.' });
+    }
+
+    try {
+        await User.findByIdAndUpdate(req.user.id, { language: language });
+        res.status(200).json({ message: 'Language updated successfully.' });
+    } catch (err) {
+        console.error("Error saving language preference:", err);
+        res.status(500).json({ message: 'Error updating language.' });
+    }
+});
+
 // --- START: NEW AI WIZARD ROUTES ---
 
 // Add this new route anywhere in the file.

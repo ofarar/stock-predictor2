@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 
 const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
+    const { t } = useTranslation();
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({
         quote: null,
@@ -27,12 +29,12 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
             setStockData(response.data);
         } catch (err) {
             console.error("Failed to fetch stock data", err);
-            setError(`Could not load data for ${ticker}. Please try another symbol.`);
-            toast.error(`Failed to load data for ${ticker}.`);
+            setError(t('could_not_load_stock_data', { ticker }));
+            toast.error(t('error_loading_stock_data', { ticker }));
         } finally {
             setLoading(false);
         }
-    }, [ticker, filter]);
+    }, [ticker, filter, t]);
 
     useEffect(() => {
         fetchStockData();
@@ -59,13 +61,13 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
             });
 
         toast.promise(promise, {
-            loading: 'Updating watchlist...',
-            success: isWatching ? `Removed ${ticker} from watchlist.` : `Added ${ticker} to watchlist.`,
-            error: 'Failed to update.',
+            loading: t('loading_stock_data'),
+            success: isWatching ? t('remove_from_watchlist') + ` ${ticker}` : t('add_to_watchlist') + ` ${ticker}`,
+            error: t('error_loading_stock_data'),
         });
     };
 
-    if (loading) return <div className="text-center text-white mt-10">Loading stock data...</div>;
+    if (loading) return <div className="text-center text-white mt-10">{t('loading_stock_data')}</div>;
     if (error) return <div className="text-center text-red-400 mt-10">{error}</div>;
     if (!stockData.quote) return null;
 
@@ -88,11 +90,10 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    {/* --- START: UPDATED HEART ICON BUTTON --- */}
                     <button
                         onClick={handleWatchlistToggle}
                         className={`p-2 rounded-full transition-colors disabled:opacity-50 ${isWatching ? 'bg-red-500/10 text-red-500' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}
-                        title={isWatching ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                        title={isWatching ? t('remove_from_watchlist') : t('add_to_watchlist')}
                         disabled={!currentUser}
                     >
                         {isWatching
@@ -100,12 +101,11 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                             : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                         }
                     </button>
-                    {/* --- END: UPDATED HEART ICON BUTTON --- */}
 
                     <button
                         onClick={() => onPredictClick(quote)}
                         className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
-                        title="Make a Prediction"
+                        title={t('make_prediction')}
                     >
                         +
                     </button>
@@ -115,7 +115,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
             <div className="space-y-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 bg-gray-800 p-4 sm:p-6 rounded-lg">
-                        <h3 className="text-xl font-bold text-white mb-4">Top Predictors for {ticker}</h3>
+                        <h3 className="text-xl font-bold text-white mb-4">{t('top_predictors_for', { ticker })}</h3>
                         <div className="flex flex-wrap border-b border-gray-700 mb-4">
                             {predictionTypes.map(type => (
                                 <button key={type} onClick={() => setFilter(type)} className={`px-4 py-2 font-bold text-sm transition-colors ${filter === type ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
@@ -142,11 +142,11 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                                     </div>
                                     <div className="text-right">
                                         <span className="font-bold text-green-400 text-lg">{user.avgScore.toFixed(1)}</span>
-                                        <p className="text-xs text-gray-400">Avg Score</p>
+                                        <p className="text-xs text-gray-400">{t('avg_score')}</p>
                                     </div>
                                 </div>
                             )) : (
-                                <p className="text-gray-500 text-center py-8">No top predictors for this filter yet.</p>
+                                <p className="text-gray-500 text-center py-8">{t('no_top_predictors')}</p>
                             )}
                         </div>
                     </div>
@@ -156,7 +156,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                 </div>
 
                 <div className="bg-gray-800 p-6 rounded-lg">
-                    <h3 className="text-xl font-bold text-white mb-4">Active Predictions on {ticker}</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">{t('active_predictions_on', { ticker })}</h3>
                     <div className="space-y-3">
                         {activePredictions && activePredictions.length > 0 ? activePredictions.map(p => {
                             let percentageChange = 0;
@@ -171,10 +171,10 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                                             <p className="text-sm font-semibold text-white">{p.userId.username}</p>
                                             {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
                                         </div>
-                                        <p className="text-xs text-gray-400">{p.predictionType} Prediction</p>
+                                        <p className="text-xs text-gray-400">{t('prediction_type', { type: p.predictionType })}</p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-sm font-bold text-white">Target: ${p.targetPrice.toFixed(2)}</p>
+                                        <p className="text-sm font-bold text-white">{t('target', { targetPrice: p.targetPrice.toFixed(2) })}</p>
                                         <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                             ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
                                         </p>
@@ -182,7 +182,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                                 </Link>
                             );
                         }) : (
-                            <p className="text-gray-500 text-center py-4">No active predictions for this stock yet.</p>
+                            <p className="text-gray-500 text-center py-4">{t('no_active_predictions')}</p>
                         )}
                     </div>
                 </div>

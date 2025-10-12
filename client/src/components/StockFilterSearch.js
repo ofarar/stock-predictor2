@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 // FIX: Accept an initialValue prop
-const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder = 'e.g., AAPL' }) => {
+const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder }) => {
+    const { t } = useTranslation();
     // FIX: Use the initialValue to set the starting state
     const [searchTerm, setSearchTerm] = useState(initialValue);
     const [results, setResults] = useState([]);
@@ -39,7 +41,7 @@ const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder = 'e.
         setResults([]);
         setIsDropdownOpen(false);
     };
-    
+
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value.toUpperCase());
         if (e.target.value === '') {
@@ -50,10 +52,10 @@ const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder = 'e.
 
     return (
         <div className="relative" ref={searchRef}>
-            <input 
-                type="text" 
-                placeholder={placeholder}
-                value={searchTerm} 
+            <input
+                type="text"
+                placeholder={t('stockFilterSearch.placeholder')}
+                value={searchTerm}
                 onChange={handleInputChange}
                 onFocus={() => setIsDropdownOpen(true)}
                 className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -61,8 +63,8 @@ const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder = 'e.
             {results.length > 0 && isDropdownOpen && (
                 <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto">
                     {results.map((r, index) => (
-                        <li 
-                            key={`${r.symbol}-${index}`} 
+                        <li
+                            key={`${r.symbol}-${index}`}
                             onClick={() => handleSelect(r.symbol)}
                             className="px-4 py-2 hover:bg-green-500 cursor-pointer"
                         >

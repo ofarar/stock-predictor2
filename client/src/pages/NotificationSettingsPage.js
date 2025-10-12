@@ -1,8 +1,7 @@
-// src/pages/NotificationSettingsPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next'; // 1. Import the hook
 
 const Toggle = ({ label, description, isEnabled, onToggle }) => (
     <div className="flex items-center justify-between bg-gray-700 p-4 rounded-lg">
@@ -18,6 +17,7 @@ const Toggle = ({ label, description, isEnabled, onToggle }) => (
 );
 
 const NotificationSettingsPage = () => {
+    const { t } = useTranslation(); // 2. Get the translation function
     const [settings, setSettings] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -37,32 +37,33 @@ const NotificationSettingsPage = () => {
     const handleSave = () => {
         setIsSaving(true);
         axios.put(`${process.env.REACT_APP_API_URL}/api/notification-settings`, settings, { withCredentials: true })
-            .then(() => toast.success('Settings saved!'))
-            .catch(() => toast.error('Failed to save settings.'))
+            .then(() => toast.success(t('settings_saved_success')))
+            .catch(() => toast.error(t('settings_saved_error')))
             .finally(() => setIsSaving(false));
     };
 
-    if (!settings) return <div className="text-center text-gray-400 py-10">Loading Settings...</div>;
+    if (!settings) return <div className="text-center text-gray-400 py-10">{t('loading_settings')}</div>;
 
     return (
         <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg">
-            <h1 className="text-3xl font-bold text-white mb-6">Notification Settings</h1>
+            {/* 3. Replace all hard-coded text with the t() function */}
+            <h1 className="text-3xl font-bold text-white mb-6">{t('notification_settings_title')}</h1>
             <div className="space-y-6">
                 <Toggle
-                    label="All Predictions from Followed Users"
-                    description="Get a notification for every new prediction made by users you follow."
+                    label={t('toggle_all_predictions_label')}
+                    description={t('toggle_all_predictions_description')}
                     isEnabled={settings.allFollowedPredictions}
                     onToggle={() => handleToggle('allFollowedPredictions')}
                 />
                 <Toggle
-                    label="Significant Short-Term Predictions"
-                    description="Be notified when a followed user makes a significant Hourly, Daily, or Weekly prediction."
+                    label={t('toggle_short_term_label')}
+                    description={t('toggle_short_term_description')}
                     isEnabled={settings.trustedShortTerm}
                     onToggle={() => handleToggle('trustedShortTerm')}
                 />
                 <Toggle
-                    label="Significant Long-Term Predictions"
-                    description="Be notified when a followed user makes a significant Monthly, or longer prediction."
+                    label={t('toggle_long_term_label')}
+                    description={t('toggle_long_term_description')}
                     isEnabled={settings.trustedLongTerm}
                     onToggle={() => handleToggle('trustedLongTerm')}
                 />
@@ -73,7 +74,7 @@ const NotificationSettingsPage = () => {
                     disabled={isSaving}
                     className="bg-green-500 text-white font-bold py-3 px-6 rounded-md hover:bg-green-600 disabled:bg-gray-500"
                 >
-                    {isSaving ? 'Saving...' : 'Save Changes'}
+                    {isSaving ? t('saving') : t('save_changes')}
                 </button>
             </div>
         </div>

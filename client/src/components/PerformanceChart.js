@@ -1,24 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
-import { format } from 'date-fns'; // 'subDays' and 'subMonths' removed
+import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const PerformanceChart = ({ chartData = [] }) => {
+    const { t } = useTranslation();
     const [filter, setFilter] = useState('Overall');
     const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
 
     const filteredAndFormattedData = useMemo(() => {
-        // 'now' variable removed from here
         let dataPoints = chartData;
 
-        // Filter by prediction type if not 'Overall'
         if (filter !== 'Overall') {
             dataPoints = chartData.filter(p => p.predictionType === filter);
         }
 
-        // Aggregate data by day for a cleaner chart
         const dailyScores = dataPoints.reduce((acc, p) => {
             const day = format(new Date(p.createdAt), 'yyyy-MM-dd');
             if (!acc[day]) {
@@ -26,7 +25,7 @@ const PerformanceChart = ({ chartData = [] }) => {
             }
             acc[day].totalScore += p.score;
             acc[day].count++;
-            acc[day].predictions.push(p.id); // Store IDs for linking
+            acc[day].predictions.push(p.id);
             return acc;
         }, {});
 
@@ -36,7 +35,6 @@ const PerformanceChart = ({ chartData = [] }) => {
 
         return { labels, datasets: [{ data, predictionIds }] };
     }, [chartData, filter]);
-
 
     const options = {
         responsive: true,
@@ -67,12 +65,15 @@ const PerformanceChart = ({ chartData = [] }) => {
     return (
         <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                <h3 className="text-xl font-bold text-white mb-3 sm:mb-0">Performance Chart</h3>
+                <h3 className="text-xl font-bold text-white mb-3 sm:mb-0">{t('performanceChart.title')}</h3>
                 <div className="flex flex-wrap gap-1 bg-gray-700 p-1 rounded-md">
                     {types.map(type => (
-                        <button key={type} onClick={() => setFilter(type)}
-                            className={`px-3 py-1 text-xs font-bold rounded transition-colors ${filter === type ? 'bg-green-500 text-white' : 'hover:bg-gray-600 text-gray-300'}`}>
-                            {type}
+                        <button
+                            key={type}
+                            onClick={() => setFilter(type)}
+                            className={`px-3 py-1 text-xs font-bold rounded transition-colors ${filter === type ? 'bg-green-500 text-white' : 'hover:bg-gray-600 text-gray-300'}`}
+                        >
+                            {t(`performanceChart.filters.${type.toLowerCase()}`)}
                         </button>
                     ))}
                 </div>
@@ -81,7 +82,7 @@ const PerformanceChart = ({ chartData = [] }) => {
                 {filteredAndFormattedData.labels.length > 0 ? (
                     <Line options={options} data={filteredAndFormattedData} />
                 ) : (
-                    <div className="h-full flex items-center justify-center text-gray-500">No performance data for this filter.</div>
+                    <div className="h-full flex items-center justify-center text-gray-500">{t('performanceChart.noData')}</div>
                 )}
             </div>
         </div>

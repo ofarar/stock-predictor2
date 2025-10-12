@@ -5,9 +5,11 @@ import LongTermLeaders from '../components/LongTermLeaders';
 import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
 import TopMovers from '../components/TopMovers';
+import { useTranslation } from 'react-i18next';
 
 // FIX: The component now only uses the 'settings' passed in from App.js
 const HomePage = ({ user, settings }) => {
+    const { t } = useTranslation();
     const [widgetData, setWidgetData] = useState({
         dailyLeaders: [],
         longTermLeaders: [],
@@ -41,7 +43,7 @@ const HomePage = ({ user, settings }) => {
     }, []);
 
     if (loading) {
-        return <div className="text-center text-gray-400 py-10">Loading dashboard...</div>;
+        return <div className="text-center text-gray-400 py-10">{t('loading_dashboard')}</div>;
     }
 
     return (

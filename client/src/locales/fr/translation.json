@@ -1,0 +1,691 @@
+{
+    "header_golden_feed": "Fil d'Or",
+    "header_explore": "Explorer",
+    "header_scoreboard": "Classement",
+    "header_make_prediction": "Faire une Prédiction",
+    "header_my_profile": "Mon Profil",
+    "header_admin": "Admin",
+    "header_logout": "Déconnexion",
+    "header_login": "Connexion",
+    "notifications_title": "Notifications",
+    "notifications_none": "Aucune nouvelle notification.",
+    "footer_about": "À propos",
+    "footer_contact": "Contact",
+    "footer_terms": "Conditions d'Utilisation",
+    "footer_privacy": "Politique de Confidentialité",
+    "homepage_aim": "Prédisez le Marché. Suivez Votre Précision.",
+    "about_title": "À propos de StockPredictor",
+    "about_mission_title": "Notre Mission",
+    "about_mission_text": "StockPredictor a été fondé sur le principe que la sagesse collective d'individus informés peut être un outil puissant pour naviguer sur les marchés financiers. Notre mission est de fournir une plateforme où les investisseurs novices et les professionnels chevronnés peuvent tester leurs compétences analytiques, apprendre de la communauté et construire un historique transparent de leurs prédictions de marché.",
+    "about_how_it_works_title": "Comment ça Marche",
+    "about_how_it_works_predict_title": "1. Prédisez",
+    "about_how_it_works_predict_text": "Faites des prédictions sur des milliers d'actifs avec des délais variés, de l'heure à l'année.",
+    "about_how_it_works_track_title": "2. Suivez",
+    "about_how_it_works_track_text": "Suivez vos prédictions actives et voyez les performances de vos prévisions historiques.",
+    "about_how_it_works_compete_title": "3. Rivalisez",
+    "about_how_it_works_compete_text": "Grimpez dans les classements en faisant des prédictions précises et prouvez vos compétences à la communauté.",
+    "header_watchlist": "Liste de Suivi",
+    "header_ai_assist": "Assistant de Portefeuille IA",
+    "header_settings": "Paramètres",
+    "profile_followers": "Abonnés",
+    "profile_following": "Abonnements",
+    "profile_subscribers": "Souscripteurs",
+    "profile_subscriptions": "Souscriptions",
+    "profile_edit": "Modifier le Profil",
+    "profile_get_verified": "Obtenir la Vérification",
+    "profile_manage_gold": "Gérer le statut Or",
+    "profile_become_golden": "Devenir Or",
+    "profile_join_button": "Rejoindre (${{price}}/mois)",
+    "profile_subscribed_badge": "Abonné",
+    "profile_subscriptions_paused": "Souscriptions en pause",
+    "profile_follow_button": "Suivre",
+    "profile_following_button": "Abonné",
+    "profile_overall_rank": "Rang Global",
+    "profile_avg_score": "Score Moyen",
+    "profile_total_points": "Points Totaux",
+    "profile_total_predictions": "Prédictions Totales",
+    "profile_tab_profile": "Profil",
+    "profile_tab_golden_feed": "Fil d'Or",
+    "profile_watchlist_title": "Liste de Suivi",
+    "profile_watchlist_empty": "Cet utilisateur ne suit aucune action pour le moment.",
+    "profile_achievements_title": "Succès",
+    "profile_achievements_empty": "Aucun succès pour le moment. Continuez à faire des prédictions !",
+    "profile_achievements_how_work": "Comment gagner des badges ?",
+    "profile_active_predictions": "Prédictions Actives",
+    "profile_prediction_history": "Historique des Prédictions",
+    "profile_load_more": "Charger Plus",
+    "profile_no_active_predictions": "Aucune prédiction active.",
+    "profile_no_prediction_history": "Aucun historique de prédictions.",
+    "verified_tick_popover_title": "Prédicteur Vérifié",
+    "verified_tick_popover_text": "Cet utilisateur est un membre vérifié de la communauté, ce qui indique un engagement envers la plateforme.",
+    "verified_modal_title": "Devenez un Prédicteur Vérifié",
+    "verified_modal_text": "Gagnez en crédibilité et en visibilité dans la communauté avec un badge vérifié.",
+    "verified_modal_benefit1": "Obtenez une coche verte à côté de votre nom sur tout le site.",
+    "verified_modal_benefit2": "Vos prédictions sont mises en avant dans le filtre \"Vérifiés Uniquement\" de la page Explorer.",
+    "verified_modal_benefit3": "Soyez recommandé comme Expert Vérifié sur les pages de Liste de Suivi pertinentes.",
+    "verified_modal_button": "Obtenir la vérification pour ${{price}}",
+    "verified_status_modal_title": "Vous êtes un Prédicteur Vérifié !",
+    "verified_status_modal_text": "Vous avez augmenté la confiance et la visibilité au sein de la communauté.",
+    "verified_status_modal_close": "Fermer",
+    "verified_status_modal_remove": "Supprimer le statut de vérification",
+    "scoring_explained_title": "Explication du Score",
+    "scoring_explained_text1": "Notre plateforme utilise un **Système de Score par Proximité** pour récompenser la précision. Au lieu d'un simple \"correct\" ou \"incorrect\", votre score est basé sur la proximité de votre prédiction par rapport au résultat réel.",
+    "scoring_explained_text2": "Par exemple, si une action est à 152 $ et que vous prédisez qu'elle sera à 150 $, vous recevrez un score beaucoup plus élevé que quelqu'un qui a prédit 180 $. Ce système est conçu pour récompenser l'analyse réfléchie plutôt que les suppositions aléatoires. Le score maximum pour une prédiction parfaite est de 100 points, les points diminuant à mesure que votre prédiction s'éloigne du prix final.",
+    "aiwizard_coming_soon": "BIENTÔT DISPONIBLE",
+    "aiwizard_title": "Assistant de Portefeuille IA",
+    "aiwizard_description": "Obtenez des recommandations d'actions personnalisées basées sur les habitudes de nos meilleurs prédicteurs.",
+    "aiwizard_how_it_works": "Comment ça Marche",
+    "aiwizard_step1_title": "Définissez Votre Style",
+    "aiwizard_step1_text": "Répondez à quelques questions sur votre horizon d'investissement et vos intérêts.",
+    "aiwizard_step2_title": "L'IA Analyse les Données",
+    "aiwizard_step2_text": "Notre système trouve les meilleurs prédicteurs qui excellent constamment dans vos domaines d'intérêt.",
+    "aiwizard_step3_title": "Obtenez des Perspectives",
+    "aiwizard_step3_text": "Recevez un flux d'actions sélectionnées que nos meilleurs analystes surveillent.",
+    "aiwizard_join_waitlist": "Rejoindre la Liste d'Attente pour l'Accès Anticipé",
+    "aiwizard_checking_status": "Vérification du statut...",
+    "aiwizard_on_waitlist": "Vous êtes sur la liste d'attente !",
+    "aiwizard_signin_to_join": "Connectez-vous pour rejoindre la liste d'attente",
+    "aiwizard_early_access_note": "Soyez le premier informé du lancement. Les premiers inscrits bénéficieront d'un accès gratuit pour une durée limitée !",
+    "aiwizard_legal_note": "**Note légale :** L'Assistant IA fournit des informations basées sur des données historiques d'utilisateurs à des fins informatives uniquement. Il ne s'agit pas de conseils financiers. Toutes les décisions d'investissement doivent être prises avec vos propres recherches.",
+    "aiwizard_joining": "Inscription...",
+    "aiwizard_join_success": "Vous êtes sur la liste ! Nous vous informerons lors du lancement.",
+    "aiwizard_join_error": "Impossible de rejoindre la liste d'attente.",
+    "contact_title": "Nous Contacter",
+    "contact_get_in_touch": "Prendre Contact",
+    "contact_intro_text": "Vous avez une question, un commentaire ou une proposition de partenariat ? Nous serions ravis de vous entendre.",
+    "contact_fill_form_text": "Remplissez le formulaire et nous vous répondrons dès que possible.",
+    "contact_urgent_text": "Pour les questions urgentes, vous pouvez aussi nous joindre directement à :",
+    "contact_email": "predictostock@gmail.com",
+    "contact_name_label": "Votre Nom",
+    "contact_email_label": "Votre E-mail",
+    "contact_message_label": "Message",
+    "contact_sending": "Envoi en cours...",
+    "contact_send_button": "Envoyer le Message",
+    "contact_fill_all_fields_error": "Veuillez remplir tous les champs.",
+    "contact_success_message": "Votre message a été envoyé !",
+    "contact_error_message": "Une erreur s'est produite. Veuillez réessayer.",
+    "editprofile_title": "Modifier Votre Profil",
+    "editprofile_avatar_label": "Avatar",
+    "editprofile_change_avatar": "Changer d'Avatar",
+    "editprofile_username_label": "Nom d'utilisateur",
+    "editprofile_about_label": "À propos",
+    "editprofile_about_counter": "{{current}} / {{limit}}",
+    "editprofile_xlink_label": "Lien X (Twitter)",
+    "editprofile_xlink_placeholder": "https://x.com/votreprofil",
+    "editprofile_youtube_label": "Lien YouTube",
+    "editprofile_youtube_placeholder": "https://youtube.com/votrechaine",
+    "editprofile_save_changes": "Enregistrer les Modifications",
+    "editprofile_saving": "Enregistrement...",
+    "editprofile_cancel": "Annuler",
+    "editprofile_success": "Profil mis à jour avec succès !",
+    "editprofile_error": "Échec de la mise à jour du profil.",
+    "explore_title": "Explorer les Prédictions",
+    "explore_filter_stock": "Filtrer par Action",
+    "explore_prediction_type": "Type de Prédiction",
+    "explore_sort_by": "Trier par",
+    "explore_sort_by_date": "Plus Récentes",
+    "explore_sort_by_performance": "Meilleurs Prédicteurs",
+    "explore_sort_by_votes": "Plus Votées",
+    "explore_sort_by_potential": "Plus Grand Potentiel",
+    "explore_verified_only": "Afficher Uniquement les Prédicteurs Vérifiés",
+    "explore_tab_active": "Actives",
+    "explore_tab_assessed": "Évaluées",
+    "explore_loading": "Chargement des prédictions...",
+    "explore_no_predictions": "Aucune prédiction trouvée pour ces filtres.",
+    "explore_predicts_price_of": "Prédit un prix de",
+    "explore_by_deadline": "d'ici le {{date}}",
+    "explore_predicted": "Prédit",
+    "explore_actual_price": "Prix Réel",
+    "explore_view_rationale": "Voir la Justification",
+    "explore_agree": "D'accord",
+    "explore_disagree": "Pas d'accord",
+    "explore_vote_failed": "Le vote a échoué.",
+    "followers_avg_score": "Score Moy.",
+    "followers_subscribed_on": "Abonné le {{date}}",
+    "followers_cancel_subscription": "Annuler l'abonnement",
+    "followers_could_not_load_lists": "Impossible de charger les listes d'utilisateurs.",
+    "followers_subscription_canceled": "Abonnement à {{username}} annulé.",
+    "followers_failed_to_cancel": "Échec de l'annulation de l'abonnement.",
+    "followers_tab_followers": "Abonnés",
+    "followers_tab_following": "Abonnements",
+    "followers_tab_subscribers": "Souscripteurs",
+    "followers_tab_subscriptions": "Souscriptions",
+    "followers_loading": "Chargement...",
+    "followers_confirm_cancel_message": "Êtes-vous sûr de vouloir annuler votre souscription à {{username}} ?",
+    "followers_no_users": "Aucun utilisateur à afficher dans cette liste.",
+    "golden_feed_new_label": "NOUVEAU",
+    "golden_feed_failed_mark_read": "Échec de la mise à jour du statut de lecture.",
+    "golden_feed_failed_fetch": "Échec du chargement du fil d'or.",
+    "golden_feed_header": "Votre Fil d'Or",
+    "golden_feed_create_post": "Créer une Publication",
+    "golden_feed_filter_by_member": "Filtrer par Membre",
+    "golden_feed_all_subscriptions": "Toutes les Souscriptions",
+    "golden_feed_filter_by_stock": "Filtrer par Action",
+    "golden_feed_prediction_type": "Type de Prédiction",
+    "golden_feed_loading": "Chargement du fil...",
+    "golden_feed_no_posts_title": "Aucune publication trouvée pour ces filtres.",
+    "golden_feed_no_posts_subtitle": "Essayez d'élargir vos critères de recherche ou de vous abonner à plus de Membres Or.",
+    "loading_dashboard": "Chargement du tableau de bord...",
+    "welcome_message": "Bienvenue sur StockPredictor",
+    "description": "Connectez-vous pour commencer à faire des prédictions et construire votre portefeuille virtuel.",
+    "google_signin": "Se connecter avec Google",
+    "loading_settings": "Chargement des paramètres...",
+    "notification_settings_title": "Paramètres de Notification",
+    "toggle_all_predictions_label": "Toutes les prédictions des utilisateurs suivis",
+    "toggle_all_predictions_description": "Recevez une notification pour chaque nouvelle prédiction faite par les utilisateurs que vous suivez.",
+    "toggle_short_term_label": "Prédictions importantes à court terme",
+    "toggle_short_term_description": "Soyez notifié lorsqu'un utilisateur suivi fait une prédiction importante (horaire, quotidienne ou hebdomadaire).",
+    "toggle_long_term_label": "Prédictions importantes à long terme",
+    "toggle_long_term_description": "Soyez notifié lorsqu'un utilisateur suivi fait une prédiction importante (mensuelle ou plus).",
+    "saving": "Enregistrement...",
+    "save_changes": "Enregistrer les Modifications",
+    "settings_saved_success": "Paramètres enregistrés !",
+    "settings_saved_error": "Échec de l'enregistrement des paramètres.",
+    "Awaiting Assessment": "En attente d'évaluation",
+    "...": "...",
+    "Could not load prediction details.": "Impossible de charger les détails de la prédiction.",
+    "Loading Prediction...": "Chargement de la prédiction...",
+    "Prediction not found.": "Prédiction non trouvée.",
+    "Live Score": "Score en Direct",
+    "Score at Close": "Score à la Clôture",
+    "Current": "Actuel",
+    "Closing Price": "Prix de Clôture",
+    "(Price journey visual is not available for this older prediction)": "(Le parcours visuel du prix n'est pas disponible pour cette ancienne prédiction)",
+    "Target Price": "Prix Cible",
+    "View Rationale": "Voir la Justification",
+    "Final Score": "Score Final",
+    "Time Remaining": "Temps Restant",
+    "DO YOU AGREE?": "ÊTES-VOUS D'ACCORD ?",
+    "Agree": "D'accord",
+    "Disagree": "Pas d'accord",
+    "Predicted by": "Prédit par",
+    "Made on": "Fait le",
+    "Prediction": "Prédiction",
+    "privacy_title": "Politique de Confidentialité",
+    "info_collection_title": "1. Collecte d'informations",
+    "info_collection_text": "Nous collectons des informations pour fournir et améliorer notre Service. Lorsque vous vous inscrivez avec Google, nous recevons votre nom, votre adresse e-mail et votre photo de profil, conformément aux autorisations de votre compte Google.",
+    "use_info_title": "2. Utilisation des informations",
+    "use_info_text": "Nous utilisons les informations que nous collectons pour exploiter et maintenir notre Service, créer votre profil d'utilisateur et communiquer avec vous. Nous ne vendons pas vos informations personnelles à des tiers.",
+    "cookies_title": "3. Cookies",
+    "cookies_text": "Nous utilisons des cookies pour maintenir votre session après votre connexion. Un cookie est un petit fichier de données stocké sur votre ordinateur. Vous pouvez configurer votre navigateur pour refuser tous les cookies, mais vous ne pourrez peut-être pas utiliser certaines parties de notre Service.",
+    "security_title": "4. Sécurité",
+    "security_text": "La sécurité de vos données est importante pour nous, mais n'oubliez pas qu'aucune méthode de transmission sur Internet n'est sécurisée à 100 %. Nous nous efforçons d'utiliser des moyens commercialement acceptables pour protéger vos Informations Personnelles, mais nous ne pouvons garantir leur sécurité absolue.",
+    "profile_title": "Profil",
+    "followers_label": "Abonnés",
+    "following_label": "Abonnements",
+    "subscribers_label": "Souscripteurs",
+    "subscriptions_label": "Souscriptions",
+    "manage_gold_label": "Gérer le statut Or",
+    "become_golden_label": "Devenir Or",
+    "edit_profile_label": "Modifier le Profil",
+    "get_verified_label": "Obtenir la Vérification",
+    "following_btn": "Abonné",
+    "follow_btn": "Suivre",
+    "subscribed_label": "Abonné",
+    "join_label": "Rejoindre (${{price}}/mois)",
+    "subscriptions_paused_label": "Souscriptions en pause",
+    "member_since_label": "Membre depuis le {{date}}",
+    "no_bio_label": "Aucune biographie fournie.",
+    "active_predictions_title": "Prédictions Actives",
+    "prediction_history_title": "Historique des Prédictions",
+    "no_active_predictions_label": "Aucune prédiction active.",
+    "no_prediction_history_label": "Aucun historique de prédictions.",
+    "load_more_label": "Charger Plus",
+    "overall_rank_label": "Rang Global",
+    "average_score_label": "Score Moyen",
+    "total_points_label": "Points Totaux",
+    "total_predictions_label": "Prédictions Totales",
+    "profile_tab_label": "Profil",
+    "golden_feed_tab_label": "Fil d'Or",
+    "create_golden_post_btn": "Créer une Publication Or",
+    "processing_verification_msg": "Traitement de la vérification...",
+    "verification_success_msg": "Vérification réussie !",
+    "verification_failed_msg": "Échec de la vérification.",
+    "cancel_verification_title": "Annuler la Vérification",
+    "cancel_verification_msg": "Êtes-vous sûr ? Vous perdrez votre statut vérifié et ses avantages.",
+    "title_top_performers": "🏆 Meilleurs Prédicteurs",
+    "label_prediction_type": "Type de Prédiction",
+    "label_filter_by_stock": "Filtrer par Action",
+    "text_avg_score": "Score Moy.",
+    "msg_loading_scoreboard_error": "Impossible de charger le classement.",
+    "msg_no_users_found": "Aucun utilisateur trouvé pour ces filtres.",
+    "msg_try_broaden_search": "Essayez d'élargir vos critères de recherche.",
+    "loading_stock_data": "Chargement des données de l'action...",
+    "error_loading_stock_data": "Échec du chargement des données pour {{ticker}}.",
+    "could_not_load_stock_data": "Impossible de charger les données pour {{ticker}}. Veuillez essayer un autre symbole.",
+    "add_to_watchlist": "Ajouter à la liste de suivi",
+    "remove_from_watchlist": "Retirer de la liste de suivi",
+    "make_prediction": "Faire une Prédiction",
+    "top_predictors_for": "Meilleurs Prédicteurs pour {{ticker}}",
+    "avg_score": "Score Moy.",
+    "no_top_predictors": "Aucun meilleur prédicteur pour ce filtre pour le moment.",
+    "active_predictions_on": "Prédictions Actives sur {{ticker}}",
+    "prediction_type": "Prédiction {{type}}",
+    "target": "Cible : ${{targetPrice}}",
+    "no_active_predictions": "Aucune prédiction active pour cette action pour le moment.",
+    "terms_page": {
+        "title": "Conditions d'Utilisation",
+        "sections": {
+            "acceptance_of_terms": {
+                "title": "1. Acceptation des Conditions",
+                "content": "En accédant ou en utilisant le site web StockPredictor (\"Service\"), vous acceptez d'être lié par ces Conditions d'Utilisation. Si vous n'êtes pas d'accord avec une partie des conditions, vous ne pouvez pas accéder au Service."
+            },
+            "no_financial_advice": {
+                "title": "2. Aucun Conseil Financier",
+                "content": "Les informations, prédictions et scores fournis sur ce Service sont uniquement à des fins d'information et de divertissement. Rien sur ce site ne constitue un conseil financier, d'investissement, juridique ou fiscal. Vous êtes seul responsable de vos propres décisions d'investissement."
+            },
+            "user_conduct": {
+                "title": "3. Conduite de l'Utilisateur",
+                "content": "Vous acceptez de ne pas utiliser le Service pour publier ou transmettre tout matériel malveillant, diffamatoire ou violant de toute autre manière la loi. Vous êtes responsable de toutes les prédictions et contenus publiés sous votre compte."
+            },
+            "limitation_of_liability": {
+                "title": "4. Limitation de Responsabilité",
+                "content": "En aucun cas, StockPredictor, ni ses administrateurs ou employés, ne pourront être tenus responsables de tout dommage indirect, accessoire, spécial, consécutif ou punitif, y compris, sans limitation, la perte de profits, de données ou d'autres pertes immatérielles, résultant de votre accès ou de votre utilisation du Service."
+            }
+        }
+    },
+    "watchlist_page": {
+        "title": "Ma Liste de Suivi",
+        "search_placeholder": "Rechercher des actions à suivre (ex: AAPL)...",
+        "empty_watchlist": {
+            "title": "Votre liste de suivi est vide.",
+            "subtitle": "Recherchez une action ci-dessus pour commencer à la suivre."
+        },
+        "active_predictions_title": "Prédictions Actives pour {{ticker}}",
+        "filter_by_type": "Filtrer par Type",
+        "sort_by": "Trier par",
+        "sort_options": {
+            "date": "Plus Récentes",
+            "votes": "Plus Votées",
+            "potential": "Plus Grand Potentiel"
+        },
+        "no_predictions": "Aucune prédiction active ne correspond à vos filtres.",
+        "load_more": "Charger Plus",
+        "recommended_experts_title": "Experts Recommandés",
+        "no_recommended_experts": "Aucun meilleur prédicteur pour cette action pour le moment.",
+        "watchlist_card": {
+            "remove_title": "Retirer {{symbol}} de la liste de suivi"
+        },
+        "follow_button": "Suivre"
+    },
+    "prediction_types": {
+        "All": "Tous",
+        "Hourly": "Horaire",
+        "Daily": "Quotidien",
+        "Weekly": "Hebdomadaire",
+        "Monthly": "Mensuel",
+        "Quarterly": "Trimestriel",
+        "Yearly": "Annuel"
+    },
+    "aim": {
+        "title": "Prédisez le Marché. <0>Suivez Votre Précision.</0>"
+    },
+    "avatarModal": {
+        "title": "Changer Votre Avatar",
+        "styleLabel": "Style",
+        "shuffleButton": "Aléatoire",
+        "cancelButton": "Annuler",
+        "saveButton": "Enregistrer l'Avatar",
+        "styles": {
+            "adventurer": "Aventurier",
+            "lorelei": "Lorelei",
+            "miniavs": "Mini AVs",
+            "openPeeps": "Open Peeps",
+            "personas": "Personas",
+            "pixelArt": "Pixel Art",
+            "notionists": "Notionistes",
+            "bottts": "Robots",
+            "shapes": "Formes",
+            "thumbs": "Pouces",
+            "funEmoji": "Emoji Amusant",
+            "identicon": "Identicon",
+            "initials": "Initiales",
+            "rings": "Anneaux"
+        }
+    },
+    "badgeInfoModal": {
+        "title": "Comment fonctionnent les Succès",
+        "loadingText": "Chargement des détails...",
+        "scoreLabel": "Score > {{score}}",
+        "minPredictions": "Nécessite au moins {{count}} prédictions.",
+        "closeButton": "Fermer"
+    },
+    "badgeShowcase": {
+        "title": "Succès",
+        "noAchievements": "Aucun succès pour le moment. Continuez à faire des prédictions !",
+        "infoButtonTitle": "Comment gagner des badges ?",
+        "unknownBadge": "Badge Inconnu"
+    },
+    "communityFeed": {
+        "title": "Fil de la Communauté",
+        "noRecentPredictions": "Aucune prédiction récente."
+    },
+    "confirmationModal": {
+        "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "defaultTitle": "Êtes-vous sûr ?",
+        "defaultMessage": "Cette action est irréversible."
+    },
+    "dailyLeaderboard": {
+        "title": "Meilleurs Prédicteurs du Jour",
+        "subtitle": "(Basé sur les prédictions horaires d'aujourd'hui)",
+        "noData": "Aucune donnée pour aujourd'hui.",
+        "averageScoreSuffix": "moy."
+    },
+    "descriptionModal": {
+        "title": "Justification du Prédicteur"
+    },
+    "famousStocks": {
+        "title": "Prédictions Tendances",
+        "predictionsText": "{{count}} prédictions aujourd'hui",
+        "noData": "Aucune action tendance pour le moment."
+    },
+    "footer": {
+        "about": "À propos",
+        "contact": "Contact",
+        "terms": "Conditions d'Utilisation",
+        "privacy": "Politique de Confidentialité",
+        "copyright": "Tous droits réservés."
+    },
+    "globalSearch": {
+        "placeholder": "Rechercher des actions..."
+    },
+    "goldenFeed": {
+        "newTag": "NOUVEAU",
+        "attachedPrediction": "Prédiction jointe :",
+        "loading": "Chargement du fil...",
+        "exclusiveContentTitle": "Contenu Exclusif",
+        "exclusiveContentDescription": "Rejoignez les abonnés de {{username}} pour voir leur fil privé, y compris les justifications détaillées des prédictions et les analyses de marché.",
+        "joinButton": "Rejoindre pour ${{price}}/mois",
+        "noPosts": "{{username}} n'a pas encore publié de contenu exclusif."
+    },
+    "goldenMemberModal": {
+        "title": "Paramètres de Membre Or",
+        "priceLabel": "Prix Mensuel (1 $ - 500 $)",
+        "descriptionLabel": "Description",
+        "defaultDescription": "Obtenez des informations exclusives et soutenez mes prédictions !",
+        "acceptingNewLabel": "Accepter les Nouveaux Abonnés",
+        "updateSuccess": "Paramètres de Membre Or mis à jour !",
+        "updateFail": "Échec de la mise à jour des paramètres.",
+        "deactivateSuccess": "Statut de Membre Or désactivé.",
+        "deactivateFail": "Échec de la mise à jour des paramètres.",
+        "updateButton": "Mettre à jour les Paramètres",
+        "activateButton": "Activer le Statut Or",
+        "deactivateButton": "Désactiver"
+    },
+    "goldenPostForm": {
+        "title": "Créer une Publication Or",
+        "messagePlaceholder": "Partagez votre analyse exclusive avec vos abonnés...",
+        "attachPredictionLabel": "Joindre une Prédiction",
+        "stockLabel": "Action",
+        "targetPriceLabel": "Prix Cible",
+        "typeLabel": "Type",
+        "hourly": "Horaire",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel",
+        "quarterly": "Trimestriel",
+        "yearly": "Annuel",
+        "cancelButton": "Annuler",
+        "postingButton": "Publication...",
+        "postButton": "Publier",
+        "emptyMessageError": "Le message de la publication ne peut pas être vide.",
+        "fetchPriceError": "Impossible de récupérer le prix pour {{ticker}}.",
+        "createSuccess": "Publication Or publiée !",
+        "createFail": "Impossible de créer la publication."
+    },
+    "header": {
+        "aiWizard": "Assistant de Portefeuille IA",
+        "watchlist": "Liste de Suivi",
+        "goldenFeed": "Fil d'Or",
+        "explore": "Explorer",
+        "scoreboard": "Classement",
+        "makePrediction": "Faire une Prédiction",
+        "userMenu": {
+            "myProfile": "Mon Profil",
+            "settings": "Paramètres",
+            "admin": "Admin",
+            "logout": "Déconnexion"
+        },
+        "notifications": {
+            "title": "Notifications",
+            "noNew": "Aucune nouvelle notification."
+        },
+        "mobileMenu": {
+            "myProfile": "Mon Profil",
+            "watchlist": "Liste de Suivi",
+            "goldenFeed": "Fil d'Or",
+            "explore": "Explorer",
+            "scoreboard": "Classement",
+            "settings": "Paramètres",
+            "adminPanel": "Panneau d'Admin",
+            "logout": "Déconnexion",
+            "login": "Connexion"
+        },
+        "buttons": {
+            "login": "Connexion",
+            "logout": "Déconnexion",
+            "makePrediction": "Faire une Prédiction"
+        }
+    },
+    "notifications": {
+        "types": {
+            "newFollower": "Nouvel Abonné",
+            "badgeEarned": "Badge Obtenu",
+            "goldenPost": "Publication Or",
+            "newPrediction": "Nouvelle Prédiction"
+        }
+    },
+    "hourlyWinnersFeed": {
+        "title": "Gagnants de la Dernière Heure",
+        "nextResults": "Prochains résultats dans : {{timeLeft}}",
+        "marketClosed": "Marché Fermé",
+        "noPredictions": "Aucune prédiction évaluée pour le moment.",
+        "pointsSuffix": "+{{score}} pts"
+    },
+    "infoModal": {
+        "title": "Explication du Bonus de Temps",
+        "description": "Pour récompenser une analyse précoce, une pénalité basée sur le temps est appliquée aux prédictions. Le score maximum que vous pouvez atteindre pour une prédiction diminue à mesure que l'échéance approche.",
+        "hourlyPredictions": {
+            "title": "Prédictions Horaires :",
+            "description": "La pénalité est appliquée minute par minute. Les 10 premières minutes n'ont pas de pénalité (Score Max : 100). La pénalité augmente de façon linéaire jusqu'aux 10 dernières minutes de l'heure, où le Score Max est de 80."
+        },
+        "dailyPredictions": {
+            "title": "Prédictions Quotidiennes :",
+            "description": "La pénalité est appliquée tout au long de la journée de bourse. Les prédictions faites juste à l'ouverture du marché ont le potentiel de score le plus élevé."
+        },
+        "longerTermPredictions": {
+            "title": "Prédictions à Plus Long Terme :",
+            "description": "Pour les prédictions hebdomadaires, mensuelles et plus longues, la pénalité est proportionnelle au pourcentage de la période de prédiction qui s'est déjà écoulé."
+        },
+        "closeButton": "Fermer"
+    },
+    "joinGoldenModal": {
+        "title": "Rejoindre les Abonnés de {{username}}",
+        "pricePerMonth": "{{price}} / mois",
+        "whatYouGet": "Ce que vous obtenez :",
+        "noDescription": "Aucune description fournie.",
+        "joinButton": "Rejoindre Maintenant",
+        "toast": {
+            "success": "Vous êtes maintenant abonné à {{username}} !",
+            "error": "L'abonnement a échoué. Veuillez réessayer."
+        }
+    },
+    "loginPromptModal": {
+        "title": "Rejoignez la Communauté",
+        "description": "Créez un compte pour faire des prédictions, suivre les meilleurs prédicteurs et grimper dans les classements.",
+        "signUpWithGoogle": "S'inscrire avec Google"
+    },
+    "longTermLeaders": {
+        "title": "Leaders à Long Terme",
+        "description": "(Basé sur la précision Trimestrielle & Annuelle)",
+        "noData": "Pas encore de données.",
+        "accuracyLabel": "Moy."
+    },
+    "performanceChart": {
+        "title": "Graphique de Performance",
+        "filters": {
+            "overall": "Global",
+            "hourly": "Horaire",
+            "daily": "Quotidien",
+            "weekly": "Hebdomadaire",
+            "monthly": "Mensuel",
+            "yearly": "Annuel"
+        },
+        "noData": "Aucune donnée de performance pour ce filtre."
+    },
+    "performanceTabs": {
+        "tabs": {
+            "byType": "Par Type",
+            "byStock": "Par Action"
+        },
+        "statCard": {
+            "averageScore": "Score Moyen",
+            "rank": "RANG",
+            "topRankTitle": "Top {{rank}}"
+        },
+        "noData": {
+            "byType": "Aucune donnée disponible pour les types de prédictions.",
+            "byStock": "Aucune donnée disponible pour les actions individuelles."
+        }
+    },
+    "predictionJourney": {
+        "initial": "Initial",
+        "target": "Cible",
+        "currentPriceTooltip": "${value} {priceLabel}"
+    },
+    "predictionModal": {
+        "confirmationTitle": "Êtes-vous sûr ?",
+        "closeButtonAria": "Fermer la modale"
+    },
+    "predictionTypes": {
+        "modalTitle": "Explication des Types de Prédiction",
+        "hourly": "Horaire",
+        "hourlyDescription": "Prédisez le prix de l'action pour la fin de l'heure de bourse actuelle ou suivante. Idéal pour la volatilité à court terme.",
+        "daily": "Quotidien",
+        "dailyDescription": "Prédisez le prix de l'action pour la fin de la journée de bourse actuelle ou suivante. Un cadre temporel classique pour les mouvements de marché au jour le jour.",
+        "weekly": "Hebdomadaire",
+        "weeklyDescription": "Prédisez le prix de l'action pour la fin de la semaine de bourse en cours (vendredi). Bon pour suivre les tendances hebdomadaires.",
+        "monthly": "Mensuel",
+        "monthlyDescription": "Prédisez le prix de l'action pour la fin du mois civil en cours. Idéal pour capturer la dynamique mensuelle.",
+        "quarterly": "Trimestriel",
+        "quarterlyDescription": "Prédisez le prix de l'action pour la fin du trimestre financier en cours (par ex. Mars, Juin, Septembre, Décembre).",
+        "yearly": "Annuel",
+        "yearlyDescription": "Prédisez le prix de l'action pour la fin de l'année civile en cours. Une prédiction à long terme pour les changements majeurs du marché."
+    },
+    "common": {
+        "close": "Fermer"
+    },
+    "prediction": {
+        "makePrediction": "Faire une Prédiction",
+        "searchPlaceholder": "Rechercher une action (ex: AAPL)",
+        "searching": "Recherche...",
+        "currentPrice": "Prix Actuel",
+        "na": "N/A",
+        "type": "Type",
+        "learnMore": "En savoir plus sur les types de prédictions",
+        "targetPrice": "Prix Cible",
+        "rationale": "Justification (Optionnel)",
+        "rationalePlaceholder": "Pourquoi pensez-vous que le prix va évoluer ?",
+        "placePrediction": "Placer la Prédiction",
+        "maxScore": "Score Max : {{score}}"
+    },
+    "scoreboard": {
+        "title": "Classements",
+        "trophy": "🏆",
+        "loadError": "Impossible de charger les données du classement.",
+        "predictionType": "Type de Prédiction",
+        "filterStock": "Filtrer par Action",
+        "avgScore": "Score Moy.",
+        "noUsers": "Aucun utilisateur trouvé pour ces filtres.",
+        "noUsersHint": "Essayez d'élargir vos critères de recherche.",
+        "rank": "Rang : {{number}}",
+        "currentPrice": "Prix Actuel : ${{price}}"
+    },
+    "stockChart": {
+        "loading": "Chargement du graphique...",
+        "priceLabel": "Prix de {{ticker}}"
+    },
+    "stockFilterSearch": {
+        "placeholder": "ex. AAPL"
+    },
+    "stockSearch": {
+        "title": "Rechercher un Actif",
+        "placeholder": "Rechercher des actions, des cryptos...",
+        "loading": "Chargement...",
+        "errorNoResults": "Aucun résultat trouvé.",
+        "errorFetchFailed": "Échec de la récupération des résultats de recherche.",
+        "errorQuoteFailed": "Échec de la récupération de la cotation de l'action.",
+        "errorQuoteNotFound": "Impossible de récupérer la cotation pour {{symbol}}. Veuillez essayer un autre symbole.",
+        "dataDelayed": "Données retardées jusqu'à 15 minutes"
+    },
+    "timePenaltyBar": {
+        "label": "Bonus de Temps",
+        "infoAriaLabel": "En savoir plus sur le Bonus de Temps"
+    },
+    "topMovers": {
+        "loading": "Chargement des Top Movers...",
+        "title": "Actions Tendances"
+    },
+    "verificationModal": {
+        "title": "Devenez un Prédicteur Vérifié",
+        "description": "Gagnez en crédibilité et en visibilité dans la communauté avec un badge vérifié.",
+        "benefits": {
+            "greenCheck": "Obtenez une coche verte à côté de votre nom sur tout le site.",
+            "verifiedFilter": "Vos prédictions sont mises en avant dans le filtre \"Vérifiés Uniquement\" de la page Explorer.",
+            "verifiedExpert": "Soyez recommandé comme Expert Vérifié sur les pages de Liste de Suivi pertinentes."
+        },
+        "button": "Obtenir la vérification pour ${price}"
+    },
+    "verifiedStatusModal": {
+        "title": "Vous êtes un Prédicteur Vérifié !",
+        "description": "Vous avez augmenté la confiance et la visibilité au sein de la communauté.",
+        "closeButton": "Fermer",
+        "removeButton": "Supprimer le statut de vérification"
+    },
+    "verifiedTick": {
+        "ariaLabel": "Prédicteur Vérifié",
+        "title": "Prédicteur Vérifié",
+        "description": "Cet utilisateur est un membre vérifié de la communauté, ce qui indique un engagement envers la plateforme."
+    },
+    "watchlistShowcase": {
+        "title": "Liste de Suivi",
+        "viewStock": "Voir {{stock}}",
+        "noStocks": "Cet utilisateur ne suit aucune action pour le moment."
+    },
+    "watchlistPage": {
+        "title": "Ma liste de suivi",
+        "searchPlaceholder": "Rechercher des actions à suivre (ex: AAPL)...",
+        "emptyWatchlist": {
+            "title": "Votre liste de suivi est vide.",
+            "description": "Recherchez une action ci-dessus pour commencer à la suivre."
+        },
+        "activePredictions": "Prédictions actives pour {{ticker}}",
+        "filterByTypeLabel": "Filtrer par type",
+        "sortByLabel": "Trier par",
+        "sortOptions": {
+            "date": "Les plus récentes",
+            "votes": "Les plus votées",
+            "potential": "Plus grand potentiel"
+        },
+        "noPredictions": "Aucune prédiction active ne correspond à vos filtres.",
+        "loadMore": "Charger plus",
+        "recommendedPredictors": "Prédicteurs recommandés",
+        "noRecommendedUsers": "Aucun meilleur prédicteur pour cette action pour l’instant.",
+        "avgScoreLabel": "Score moy. : ",
+        "followingButton": "Suivre",
+        "toast": {
+            "loadingAdd": "Ajout de {{ticker}}...",
+            "loadingRemove": "Suppression de {{ticker}}...",
+            "successUpdate": "Liste de suivi mise à jour avec succès.",
+            "errorUpdate": "Échec de la mise à jour.",
+            "errorLoadWatchlist": "Impossible de charger la liste de suivi.",
+            "loadingFollow": "Abonnement à l’utilisateur...",
+            "successFollow": "Utilisateur suivi !",
+            "errorFollow": "Impossible de suivre l’utilisateur."
+        }
+    },
+    "watchlistStockCard": {
+        "removeButtonTitle": "Supprimer {{symbol}} de la liste de suivi"
+    }
+}

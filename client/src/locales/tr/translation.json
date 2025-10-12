@@ -1,0 +1,691 @@
+{
+  "header_golden_feed": "Altın Akış",
+  "header_explore": "Keşfet",
+  "header_scoreboard": "Skor Tablosu",
+  "header_make_prediction": "Tahmin Yap",
+  "header_my_profile": "Profilim",
+  "header_admin": "Yönetici",
+  "header_logout": "Çıkış Yap",
+  "header_login": "Giriş Yap",
+  "notifications_title": "Bildirimler",
+  "notifications_none": "Yeni bildirim yok.",
+  "footer_about": "Hakkında",
+  "footer_contact": "İletişim",
+  "footer_terms": "Hizmet Şartları",
+  "footer_privacy": "Gizlilik Politikası",
+  "homepage_aim": "Piyasayı Tahmin Et. İsabet Oranını Takip Et.",
+  "about_title": "StockPredictor Hakkında",
+  "about_mission_title": "Misyonumuz",
+  "about_mission_text": "StockPredictor, bilgili bireylerin kolektif bilgeliğinin finansal piyasalarda gezinmede güçlü bir araç olabileceği ilkesi üzerine kurulmuştur. Misyonumuz, hem acemi yatırımcıların hem de deneyimli profesyonellerin analitik becerilerini test edebilecekleri, topluluktan öğrenebilecekleri ve piyasa tahminlerinin şeffaf bir kaydını oluşturabilecekleri bir platform sağlamaktır.",
+  "about_how_it_works_title": "Nasıl Çalışır",
+  "about_how_it_works_predict_title": "1. Tahmin Et",
+  "about_how_it_works_predict_text": "Saatlikten yıllık periyotlara kadar çeşitli zaman dilimlerinde binlerce varlık üzerinde tahminler yapın.",
+  "about_how_it_works_track_title": "2. Takip Et",
+  "about_how_it_works_track_text": "Aktif tahminlerinizi takip edin ve geçmiş tahminlerinizin nasıl performans gösterdiğini görün.",
+  "about_how_it_works_compete_title": "3. Rekabet Et",
+  "about_how_it_works_compete_text": "Doğru tahminler yaparak liderlik tablolarında tırmanın ve becerilerinizi topluluğa kanıtlayın.",
+  "header_watchlist": "İzleme Listesi",
+  "header_ai_assist": "Yapay Zeka Portföy Asistanı",
+  "header_settings": "Ayarlar",
+  "profile_followers": "Takipçiler",
+  "profile_following": "Takip Edilenler",
+  "profile_subscribers": "Aboneler",
+  "profile_subscriptions": "Abonelikler",
+  "profile_edit": "Profili Düzenle",
+  "profile_get_verified": "Doğrulan",
+  "profile_manage_gold": "Altın Üyeliği Yönet",
+  "profile_become_golden": "Altın Üye Ol",
+  "profile_join_button": "Katıl (${{price}}/ay)",
+  "profile_subscribed_badge": "Abone Olundu",
+  "profile_subscriptions_paused": "Abonelikler Duraklatıldı",
+  "profile_follow_button": "Takip Et",
+  "profile_following_button": "Takip Ediliyor",
+  "profile_overall_rank": "Genel Sıralama",
+  "profile_avg_score": "Ortalama Puan",
+  "profile_total_points": "Toplam Puan",
+  "profile_total_predictions": "Toplam Tahmin",
+  "profile_tab_profile": "Profil",
+  "profile_tab_golden_feed": "Altın Akış",
+  "profile_watchlist_title": "İzleme Listesi",
+  "profile_watchlist_empty": "Bu kullanıcı henüz hiçbir hisseyi izlemiyor.",
+  "profile_achievements_title": "Başarımlar",
+  "profile_achievements_empty": "Henüz başarım yok. Tahmin yapmaya devam et!",
+  "profile_achievements_how_work": "Rozetler nasıl kazanılır?",
+  "profile_active_predictions": "Aktif Tahminler",
+  "profile_prediction_history": "Tahmin Geçmişi",
+  "profile_load_more": "Daha Fazla Yükle",
+  "profile_no_active_predictions": "Aktif tahmin yok.",
+  "profile_no_prediction_history": "Henüz tahmin geçmişi yok.",
+  "verified_tick_popover_title": "Doğrulanmış Tahminci",
+  "verified_tick_popover_text": "Bu kullanıcı, platforma olan bağlılığını gösteren, topluluğun doğrulanmış bir üyesidir.",
+  "verified_modal_title": "Doğrulanmış Tahminci Olun",
+  "verified_modal_text": "Doğrulanmış bir rozet ile toplulukta güvenilirlik ve görünürlük kazanın.",
+  "verified_modal_benefit1": "Site genelinde adınızın yanında yeşil bir onay işareti alın.",
+  "verified_modal_benefit2": "Tahminleriniz Keşfet sayfasındaki \"Sadece Doğrulanmışlar\" filtresinde öne çıksın.",
+  "verified_modal_benefit3": "İlgili İzleme Listesi sayfalarında Doğrulanmış Uzman olarak önerilin.",
+  "verified_modal_button": "${{price}} karşılığında Doğrulan",
+  "verified_status_modal_title": "Siz bir Doğrulanmış Tahmincisiniz!",
+  "verified_status_modal_text": "Topluluktaki güvenilirliğinizi ve görünürlüğünüzü artırdınız.",
+  "verified_status_modal_close": "Kapat",
+  "verified_status_modal_remove": "Doğrulama durumunu kaldır",
+  "scoring_explained_title": "Puanlama Açıklaması",
+  "scoring_explained_text1": "Platformumuz, doğruluğu ödüllendirmek için bir **Yakınlık Puanlama Sistemi (Proximity Scoring System)** kullanır. Basit bir \"doğru\" veya \"yanlış\" yerine, puanınız tahmininizin gerçek sonuca ne kadar yakın olduğuna göre belirlenir.",
+  "scoring_explained_text2": "Örneğin, bir hissenin fiyatı 152 $ ise ve siz 150 $ tahmin ettiyseniz, 180 $ tahmin eden birinden çok daha yüksek bir puan alırsınız. Bu sistem, rastgele tahminler yerine düşünülmüş analizleri ödüllendirmek üzere tasarlanmıştır. Mükemmel bir tahmin için maksimum puan 100’dür ve tahmininiz nihai fiyattan uzaklaştıkça puanlar azalır.",
+  "aiwizard_coming_soon": "ÇOK YAKINDA",
+  "aiwizard_title": "Yapay Zeka Portföy Asistanı",
+  "aiwizard_description": "En başarılı tahmincilerimizin modellerine göre kişisel hisse önerileri alın.",
+  "aiwizard_how_it_works": "Nasıl Çalışır",
+  "aiwizard_step1_title": "Tarzınızı Belirleyin",
+  "aiwizard_step1_text": "Yatırım süreniz ve ilgi alanlarınız hakkında birkaç soruyu yanıtlayın.",
+  "aiwizard_step2_title": "Yapay Zeka Verileri Analiz Eder",
+  "aiwizard_step2_text": "Sistemimiz, ilgi alanlarınızda sürekli olarak başarılı olan tahmincileri bulur.",
+  "aiwizard_step3_title": "Bilgileri Alın",
+  "aiwizard_step3_text": "En iyi analistlerin takip ettiği hisselerden oluşan bir akış alın.",
+  "aiwizard_join_waitlist": "Erken Erişim Listesine Katıl",
+  "aiwizard_checking_status": "Durum kontrol ediliyor...",
+  "aiwizard_on_waitlist": "Bekleme listesindesiniz!",
+  "aiwizard_signin_to_join": "Listeye Katılmak İçin Giriş Yapın",
+  "aiwizard_early_access_note": "Yayınlandığında ilk siz öğrenin. Erken kayıt olanlar sınırlı süreli ücretsiz erişim kazanacak!",
+  "aiwizard_legal_note": "**Yasal Uyarı:** AI Wizard yalnızca bilgilendirme amacıyla geçmiş kullanıcı verilerine dayalı analiz sunar. Finansal tavsiye değildir. Tüm yatırım kararlarınızı kendi araştırmanıza göre yapmalısınız.",
+  "aiwizard_joining": "Katılıyor...",
+  "aiwizard_join_success": "Listeye eklendiniz! Başladığında sizi bilgilendireceğiz.",
+  "aiwizard_join_error": "Bekleme listesine katılamadı.",
+  "contact_title": "Bizimle İletişime Geçin",
+  "contact_get_in_touch": "İletişimde Olun",
+  "contact_intro_text": "Bir sorunuz, geri bildiriminiz veya iş ortaklığı talebiniz mi var? Sizden haber almayı çok isteriz.",
+  "contact_fill_form_text": "Formu doldurun, en kısa sürede size geri döneceğiz.",
+  "contact_urgent_text": "Acil durumlar için, bize doğrudan ulaşabilirsiniz:",
+  "contact_email": "predictostock@gmail.com",
+  "contact_name_label": "Adınız",
+  "contact_email_label": "E-posta Adresiniz",
+  "contact_message_label": "Mesaj",
+  "contact_sending": "Gönderiliyor...",
+  "contact_send_button": "Mesaj Gönder",
+  "contact_fill_all_fields_error": "Lütfen tüm alanları doldurun.",
+  "contact_success_message": "Mesajınız gönderildi!",
+  "contact_error_message": "Bir hata oluştu. Lütfen tekrar deneyin.",
+  "editprofile_title": "Profilinizi Düzenleyin",
+  "editprofile_avatar_label": "Avatar",
+  "editprofile_change_avatar": "Avatarı Değiştir",
+  "editprofile_username_label": "Kullanıcı Adı",
+  "editprofile_about_label": "Hakkında",
+  "editprofile_about_counter": "{{current}} / {{limit}}",
+  "editprofile_xlink_label": "X (Twitter) Linki",
+  "editprofile_xlink_placeholder": "https://x.com/profiliniz",
+  "editprofile_youtube_label": "YouTube Linki",
+  "editprofile_youtube_placeholder": "https://youtube.com/kanaliniz",
+  "editprofile_save_changes": "Değişiklikleri Kaydet",
+  "editprofile_saving": "Kaydediliyor...",
+  "editprofile_cancel": "İptal",
+  "editprofile_success": "Profil başarıyla güncellendi!",
+  "editprofile_error": "Profil güncellenemedi.",
+  "explore_title": "Tahminleri Keşfet",
+  "explore_filter_stock": "Hisseye Göre Filtrele",
+  "explore_prediction_type": "Tahmin Türü",
+  "explore_sort_by": "Sırala",
+  "explore_sort_by_date": "En Yeni",
+  "explore_sort_by_performance": "En İyi Performans",
+  "explore_sort_by_votes": "En Çok Oy Alan",
+  "explore_sort_by_potential": "En Yüksek Potansiyel",
+  "explore_verified_only": "Sadece Doğrulanmış Tahmincileri Göster",
+  "explore_tab_active": "Aktif",
+  "explore_tab_assessed": "Değerlendirilmiş",
+  "explore_loading": "Tahminler yükleniyor...",
+  "explore_no_predictions": "Bu filtrelere uygun tahmin bulunamadı.",
+  "explore_predicts_price_of": "Tahmini fiyat",
+  "explore_by_deadline": "{{date}} tarihine kadar",
+  "explore_predicted": "Tahmin Edilen",
+  "explore_actual_price": "Gerçek Fiyat",
+  "explore_view_rationale": "Gerekçeyi Görüntüle",
+  "explore_agree": "Katılıyorum",
+  "explore_disagree": "Katılmıyorum",
+  "explore_vote_failed": "Oylama başarısız.",
+  "followers_avg_score": "Ort. Puan",
+  "followers_subscribed_on": "{{date}} tarihinde abone olundu",
+  "followers_cancel_subscription": "Aboneliği İptal Et",
+  "followers_could_not_load_lists": "Kullanıcı listeleri yüklenemedi.",
+  "followers_subscription_canceled": "{{username}} aboneliğiniz iptal edildi.",
+  "followers_failed_to_cancel": "Abonelik iptal edilemedi.",
+  "followers_tab_followers": "Takipçiler",
+  "followers_tab_following": "Takip Edilenler",
+  "followers_tab_subscribers": "Aboneler",
+  "followers_tab_subscriptions": "Abonelikler",
+  "followers_loading": "Yükleniyor...",
+  "followers_confirm_cancel_message": "{{username}} aboneliğinizi iptal etmek istediğinizden emin misiniz?",
+  "followers_no_users": "Bu listede görüntülenecek kullanıcı yok.",
+  "golden_feed_new_label": "YENİ",
+  "golden_feed_failed_mark_read": "Akış okundu olarak işaretlenemedi.",
+  "golden_feed_failed_fetch": "Altın Akış yüklenemedi.",
+  "golden_feed_header": "Altın Akışınız",
+  "golden_feed_create_post": "Gönderi Oluştur",
+  "golden_feed_filter_by_member": "Üyeye Göre Filtrele",
+  "golden_feed_all_subscriptions": "Tüm Abonelikler",
+  "golden_feed_filter_by_stock": "Hiseye Göre Filtrele",
+  "golden_feed_prediction_type": "Tahmin Türü",
+  "golden_feed_loading": "Akış Yükleniyor...",
+  "golden_feed_no_posts_title": "Bu filtrelere uygun gönderi bulunamadı.",
+  "golden_feed_no_posts_subtitle": "Arama kriterlerinizi genişletmeyi veya daha fazla Altın Üyeye abone olmayı deneyin.",
+  "loading_dashboard": "Pano yükleniyor...",
+  "welcome_message": "StockPredictor'a Hoş Geldiniz",
+  "description": "Tahmin yapmaya başlamak ve sanal portföyünüzü oluşturmak için giriş yapın.",
+  "google_signin": "Google ile Giriş Yap",
+  "loading_settings": "Ayarlar Yükleniyor...",
+  "notification_settings_title": "Bildirim Ayarları",
+  "toggle_all_predictions_label": "Takip Edilen Kullanıcıların Tüm Tahminleri",
+  "toggle_all_predictions_description": "Takip ettiğiniz kullanıcıların yaptığı her yeni tahmin için bir bildirim alın.",
+  "toggle_short_term_label": "Önemli Kısa Vadeli Tahminler",
+  "toggle_short_term_description": "Takip edilen bir kullanıcı önemli bir Saatlik, Günlük veya Haftalık tahmin yaptığında bildirim alın.",
+  "toggle_long_term_label": "Önemli Uzun Vadeli Tahminler",
+  "toggle_long_term_description": "Takip edilen bir kullanıcı önemli bir Aylık veya daha uzun vadeli bir tahmin yaptığında bildirim alın.",
+  "saving": "Kaydediliyor...",
+  "save_changes": "Değişiklikleri Kaydet",
+  "settings_saved_success": "Ayarlar kaydedildi!",
+  "settings_saved_error": "Ayarlar kaydedilemedi.",
+  "Awaiting Assessment": "Değerlendirme Bekleniyor",
+  "...": "...",
+  "Could not load prediction details.": "Tahmin detayları yüklenemedi.",
+  "Loading Prediction...": "Tahmin Yükleniyor...",
+  "Prediction not found.": "Tahmin bulunamadı.",
+  "Live Score": "Canlı Puan",
+  "Score at Close": "Kapanış Puanı",
+  "Current": "Mevcut",
+  "Closing Price": "Kapanış Fiyatı",
+  "(Price journey visual is not available for this older prediction)": "(Bu eski tahmin için fiyat yolculuğu görseli mevcut değil)",
+  "Target Price": "Hedef Fiyat",
+  "View Rationale": "Gerekçeyi Görüntüle",
+  "Final Score": "Nihai Puan",
+  "Time Remaining": "Kalan Süre",
+  "DO YOU AGREE?": "KATILIYOR MUSUNUZ?",
+  "Agree": "Katılıyorum",
+  "Disagree": "Katılmıyorum",
+  "Predicted by": "Tahmin eden",
+  "Made on": "Tarih",
+  "Prediction": "Tahmin",
+  "privacy_title": "Gizlilik Politikası",
+  "info_collection_title": "1. Bilgi Toplama",
+  "info_collection_text": "Hizmetimizi sağlamak ve iyileştirmek için bilgi topluyoruz. Google kullanarak kaydolduğunuzda, Google hesap izinleriniz tarafından sağlanan adınızı, e-posta adresinizi ve profil resminizi alırız.",
+  "use_info_title": "2. Bilginin Kullanımı",
+  "use_info_text": "Topladığımız bilgileri Hizmetimizi işletmek ve sürdürmek, kullanıcı profilinizi oluşturmak ve sizinle iletişim kurmak için kullanırız. Kişisel bilgilerinizi üçüncü taraflara satmıyoruz.",
+  "cookies_title": "3. Çerezler",
+  "cookies_text": "Giriş yaptıktan sonra oturumunuzu sürdürmek için çerezler kullanıyoruz. Çerez, bilgisayarınızda saklanan küçük bir veri parçasıdır. Tarayıcınıza tüm çerezleri reddetmesi talimatını verebilirsiniz, ancak bu durumda Hizmetimizin bazı bölümlerini kullanamayabilirsiniz.",
+  "security_title": "4. Güvenlik",
+  "security_text": "Verilerinizin güvenliği bizim için önemlidir, ancak internet üzerinden hiçbir aktarım yönteminin %100 güvenli olmadığını unutmayın. Kişisel Bilgilerinizi korumak için ticari olarak kabul edilebilir yöntemler kullanmaya çalışıyoruz, ancak mutlak güvenliğini garanti edemeyiz.",
+  "profile_title": "Profil",
+  "followers_label": "Takipçiler",
+  "following_label": "Takip Edilenler",
+  "subscribers_label": "Aboneler",
+  "subscriptions_label": "Abonelikler",
+  "manage_gold_label": "Altın Üyeliği Yönet",
+  "become_golden_label": "Altın Üye Ol",
+  "edit_profile_label": "Profili Düzenle",
+  "get_verified_label": "Doğrulan",
+  "following_btn": "Takip Ediliyor",
+  "follow_btn": "Takip Et",
+  "subscribed_label": "Abone Olundu",
+  "join_label": "Katıl (${{price}}/ay)",
+  "subscriptions_paused_label": "Abonelikler Duraklatıldı",
+  "member_since_label": "{{date}} tarihinden beri üye",
+  "no_bio_label": "Biyografi eklenmemiş.",
+  "active_predictions_title": "Aktif Tahminler",
+  "prediction_history_title": "Tahmin Geçmişi",
+  "no_active_predictions_label": "Aktif tahmin yok.",
+  "no_prediction_history_label": "Henüz tahmin geçmişi yok.",
+  "load_more_label": "Daha Fazla Yükle",
+  "overall_rank_label": "Genel Sıralama",
+  "average_score_label": "Ortalama Puan",
+  "total_points_label": "Toplam Puan",
+  "total_predictions_label": "Toplam Tahmin",
+  "profile_tab_label": "Profil",
+  "golden_feed_tab_label": "Altın Akış",
+  "create_golden_post_btn": "Altın Gönderi Oluştur",
+  "processing_verification_msg": "Doğrulama işleniyor...",
+  "verification_success_msg": "Doğrulama başarılı!",
+  "verification_failed_msg": "Doğrulama başarısız oldu.",
+  "cancel_verification_title": "Doğrulamayı İptal Et",
+  "cancel_verification_msg": "Emin misiniz? Doğrulanmış durumunuzu ve avantajlarınızı kaybedeceksiniz.",
+  "title_top_performers": "🏆 En İyi Performans Gösterenler",
+  "label_prediction_type": "Tahmin Türü",
+  "label_filter_by_stock": "Hiseye Göre Filtrele",
+  "text_avg_score": "Ort. Puan",
+  "msg_loading_scoreboard_error": "Skor tablosu verileri yüklenemedi.",
+  "msg_no_users_found": "Bu filtrelere uygun kullanıcı bulunamadı.",
+  "msg_try_broaden_search": "Arama kriterlerinizi genişletmeyi deneyin.",
+  "loading_stock_data": "Hisse senedi verileri yükleniyor...",
+  "error_loading_stock_data": "{{ticker}} için veri yüklenemedi.",
+  "could_not_load_stock_data": "{{ticker}} için veri yüklenemedi. Lütfen başka bir sembol deneyin.",
+  "add_to_watchlist": "İzleme Listesine Ekle",
+  "remove_from_watchlist": "İzleme Listesinden Kaldır",
+  "make_prediction": "Tahmin Yap",
+  "top_predictors_for": "{{ticker}} İçin En İyi Tahminciler",
+  "avg_score": "Ort. Puan",
+  "no_top_predictors": "Bu filtre için henüz en iyi tahminci yok.",
+  "active_predictions_on": "{{ticker}} Üzerine Aktif Tahminler",
+  "prediction_type": "{{type}} Tahmini",
+  "target": "Hedef: ${{targetPrice}}",
+  "no_active_predictions": "Bu hisse senedi için henüz aktif tahmin yok.",
+  "terms_page": {
+    "title": "Hizmet Şartları",
+    "sections": {
+      "acceptance_of_terms": {
+        "title": "1. Şartların Kabulü",
+        "content": "StockPredictor web sitesine (\"Hizmet\") erişerek veya kullanarak, bu Hizmet Şartları'na bağlı kalmayı kabul edersiniz. Şartların herhangi bir bölümünü kabul etmiyorsanız, Hizmete erişemezsiniz."
+      },
+      "no_financial_advice": {
+        "title": "2. Finansal Tavsiye Değildir",
+        "content": "Bu Hizmette sunulan bilgiler, tahminler ve puanlar yalnızca bilgilendirme ve eğlence amaçlıdır. Bu web sitesindeki hiçbir şey finansal, yatırım, yasal veya vergi tavsiyesi niteliği taşımaz. Kendi yatırım kararlarınızdan yalnızca siz sorumlusunuz."
+      },
+      "user_conduct": {
+        "title": "3. Kullanıcı Davranışı",
+        "content": "Hizmeti, kötü niyetli, karalayıcı veya başka bir şekilde yasaları ihlal eden herhangi bir materyali yayınlamak veya iletmek için kullanmamayı kabul edersiniz. Hesabınız altında yayınlanan tüm tahminlerden ve içeriklerden siz sorumlusunuz."
+      },
+      "limitation_of_liability": {
+        "title": "4. Sorumluluğun Sınırlandırılması",
+        "content": "StockPredictor, yöneticileri veya çalışanları, Hizmete erişiminizden veya kullanımınızdan kaynaklanan kar kaybı, veri kaybı veya diğer maddi olmayan kayıplar dahil ancak bunlarla sınırlı olmamak üzere dolaylı, arızi, özel, sonuç olarak ortaya çıkan veya cezai zararlardan hiçbir durumda sorumlu tutulamaz."
+      }
+    }
+  },
+  "watchlist_page": {
+    "title": "İzleme Listem",
+    "search_placeholder": "İzlemek için hisse senedi arayın (örn. AAPL)...",
+    "empty_watchlist": {
+      "title": "İzleme listeniz boş.",
+      "subtitle": "Takip etmeye başlamak için yukarıdan bir hisse senedi arayın."
+    },
+    "active_predictions_title": "{{ticker}} İçin Aktif Tahminler",
+    "filter_by_type": "Türe Göre Filtrele",
+    "sort_by": "Sırala",
+    "sort_options": {
+      "date": "En Yeni",
+      "votes": "En Çok Oy Alan",
+      "potential": "En Yüksek Potansiyel"
+    },
+    "no_predictions": "Filtrelerinize uygun aktif tahmin bulunamadı.",
+    "load_more": "Daha Fazla Yükle",
+    "recommended_experts_title": "Önerilen Uzmanlar",
+    "no_recommended_experts": "Bu hisse için henüz en iyi tahminci yok.",
+    "watchlist_card": {
+      "remove_title": "{{symbol}}'i izleme listesinden kaldır"
+    },
+    "follow_button": "Takip Et"
+  },
+  "prediction_types": {
+    "All": "Tümü",
+    "Hourly": "Saatlik",
+    "Daily": "Günlük",
+    "Weekly": "Haftalık",
+    "Monthly": "Aylık",
+    "Quarterly": "Üç Aylık",
+    "Yearly": "Yıllık"
+  },
+  "aim": {
+    "title": "Piyasayı Tahmin Et. <0>İsabet Oranını Takip Et.</0>"
+  },
+  "avatarModal": {
+    "title": "Avatarını Değiştir",
+    "styleLabel": "Stil",
+    "shuffleButton": "Karıştır",
+    "cancelButton": "İptal",
+    "saveButton": "Avatarı Kaydet",
+    "styles": {
+      "adventurer": "Maceracı",
+      "lorelei": "Lorelei",
+      "miniavs": "Mini Avatarlar",
+      "openPeeps": "Açık Karakterler",
+      "personas": "Personalar",
+      "pixelArt": "Piksel Sanatı",
+      "notionists": "Notionistler",
+      "bottts": "Robotlar",
+      "shapes": "Şekiller",
+      "thumbs": "Başparmaklar",
+      "funEmoji": "Eğlenceli Emoji",
+      "identicon": "Kimlik Simgesi",
+      "initials": "Baş Harfler",
+      "rings": "Halkalar"
+    }
+  },
+  "badgeInfoModal": {
+    "title": "Başarımlar Nasıl Çalışır",
+    "loadingText": "Detaylar yükleniyor...",
+    "scoreLabel": "Puan > {{score}}",
+    "minPredictions": "En az {{count}} tahmin gerektirir.",
+    "closeButton": "Kapat"
+  },
+  "badgeShowcase": {
+    "title": "Başarımlar",
+    "noAchievements": "Henüz başarım yok. Tahmin yapmaya devam et!",
+    "infoButtonTitle": "Rozetler nasıl kazanılır?",
+    "unknownBadge": "Bilinmeyen Rozet"
+  },
+  "communityFeed": {
+    "title": "Topluluk Akışı",
+    "noRecentPredictions": "Yakın zamanda yapılmış tahmin yok."
+  },
+  "confirmationModal": {
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "defaultTitle": "Emin misiniz?",
+    "defaultMessage": "Bu işlem geri alınamaz."
+  },
+  "dailyLeaderboard": {
+    "title": "Günün En İyi Performans Gösterenleri",
+    "subtitle": "(Bugünün saatlik tahminlerine göre)",
+    "noData": "Bugün için henüz veri yok.",
+    "averageScoreSuffix": "ort"
+  },
+  "descriptionModal": {
+    "title": "Tahmin Gerekçesi"
+  },
+  "famousStocks": {
+    "title": "Popüler Tahminler",
+    "predictionsText": "bugün {{count}} tahmin",
+    "noData": "Şu anda popüler hisse senedi yok."
+  },
+  "footer": {
+    "about": "Hakkında",
+    "contact": "İletişim",
+    "terms": "Hizmet Şartları",
+    "privacy": "Gizlilik Politikası",
+    "copyright": "Tüm hakları saklıdır."
+  },
+  "globalSearch": {
+    "placeholder": "Hisse senedi ara..."
+  },
+  "goldenFeed": {
+    "newTag": "YENİ",
+    "attachedPrediction": "Ekli Tahmin:",
+    "loading": "Akış Yükleniyor...",
+    "exclusiveContentTitle": "Özel İçerik",
+    "exclusiveContentDescription": "{{username}}'in özel akışını, detaylı tahmin gerekçelerini ve piyasa analizlerini görmek için abonelerine katılın.",
+    "joinButton": "Aylık ${{price}} ile Katıl",
+    "noPosts": "{{username}} henüz özel bir içerik yayınlamadı."
+  },
+  "goldenMemberModal": {
+    "title": "Altın Üye Ayarları",
+    "priceLabel": "Aylık Ücret ($1 - $500)",
+    "descriptionLabel": "Açıklama",
+    "defaultDescription": "Özel analizler alın ve tahminlerimi destekleyin!",
+    "acceptingNewLabel": "Yeni Aboneleri Kabul Et",
+    "updateSuccess": "Altın Üye ayarları güncellendi!",
+    "updateFail": "Ayarlar güncellenemedi.",
+    "deactivateSuccess": "Altın Üye durumu devre dışı bırakıldı.",
+    "deactivateFail": "Ayarlar güncellenemedi.",
+    "updateButton": "Ayarları Güncelle",
+    "activateButton": "Altın Durumunu Etkinleştir",
+    "deactivateButton": "Devre Dışı Bırak"
+  },
+  "goldenPostForm": {
+    "title": "Altın Gönderi Oluştur",
+    "messagePlaceholder": "Özel analizinizi abonelerinizle paylaşın...",
+    "attachPredictionLabel": "Bir Tahmin Ekle",
+    "stockLabel": "Hisse Senedi",
+    "targetPriceLabel": "Hedef Fiyat",
+    "typeLabel": "Tür",
+    "hourly": "Saatlik",
+    "daily": "Günlük",
+    "weekly": "Haftalık",
+    "monthly": "Aylık",
+    "quarterly": "Üç Aylık",
+    "yearly": "Yıllık",
+    "cancelButton": "İptal",
+    "postingButton": "Gönderiliyor...",
+    "postButton": "Gönder",
+    "emptyMessageError": "Gönderi mesajı boş olamaz.",
+    "fetchPriceError": "{{ticker}} için fiyat alınamadı.",
+    "createSuccess": "Altın Gönderi yayınlandı!",
+    "createFail": "Gönderi oluşturulamadı."
+  },
+  "header": {
+    "aiWizard": "Yapay Zeka Portföy Asistanı",
+    "watchlist": "İzleme Listesi",
+    "goldenFeed": "Altın Akış",
+    "explore": "Keşfet",
+    "scoreboard": "Skor Tablosu",
+    "makePrediction": "Tahmin Yap",
+    "userMenu": {
+      "myProfile": "Profilim",
+      "settings": "Ayarlar",
+      "admin": "Yönetici",
+      "logout": "Çıkış Yap"
+    },
+    "notifications": {
+      "title": "Bildirimler",
+      "noNew": "Yeni bildirim yok."
+    },
+    "mobileMenu": {
+      "myProfile": "Profilim",
+      "watchlist": "İzleme Listesi",
+      "goldenFeed": "Altın Akış",
+      "explore": "Keşfet",
+      "scoreboard": "Skor Tablosu",
+      "settings": "Ayarlar",
+      "adminPanel": "Yönetici Paneli",
+      "logout": "Çıkış Yap",
+      "login": "Giriş Yap"
+    },
+    "buttons": {
+      "login": "Giriş Yap",
+      "logout": "Çıkış Yap",
+      "makePrediction": "Tahmin Yap"
+    }
+  },
+  "notifications": {
+    "types": {
+      "newFollower": "Yeni Takipçi",
+      "badgeEarned": "Kazanılan Rozet",
+      "goldenPost": "Altın Gönderi",
+      "newPrediction": "Yeni Tahmin"
+    }
+  },
+  "hourlyWinnersFeed": {
+    "title": "Son Saatin Kazananları",
+    "nextResults": "Sonraki sonuçlar: {{timeLeft}}",
+    "marketClosed": "Piyasa Kapalı",
+    "noPredictions": "Henüz değerlendirilmiş tahmin yok.",
+    "pointsSuffix": "+{{score}} puan"
+  },
+  "infoModal": {
+    "title": "Zaman Bonusu Açıklaması",
+    "description": "Erken analizi ödüllendirmek için tahminlere zaman bazlı bir ceza uygulanır. Bir tahminden elde edebileceğiniz maksimum puan, son tarih yaklaştıkça azalır.",
+    "hourlyPredictions": {
+      "title": "Saatlik Tahminler:",
+      "description": "Ceza dakika dakika uygulanır. İlk 10 dakikada ceza yoktur (Maksimum Puan: 100). Ceza, saatin son 10 dakikasına kadar doğrusal olarak artar ve burada Maksimum Puan 80'dir."
+    },
+    "dailyPredictions": {
+      "title": "Günlük Tahminler:",
+      "description": "Ceza, işlem günü boyunca uygulanır. Piyasa açılışında yapılan tahminler en yüksek potansiyel puana sahiptir."
+    },
+    "longerTermPredictions": {
+      "title": "Daha Uzun Vadeli Tahminler:",
+      "description": "Haftalık, Aylık ve daha uzun süreli tahminler için ceza, tahmin süresinin geçmiş olan yüzdesiyle orantılıdır."
+    },
+    "closeButton": "Kapat"
+  },
+  "joinGoldenModal": {
+    "title": "{{username}}'in Abonelerine Katıl",
+    "pricePerMonth": "{{price}} / ay",
+    "whatYouGet": "Elde Edecekleriniz:",
+    "noDescription": "Açıklama sağlanmadı.",
+    "joinButton": "Şimdi Katıl",
+    "toast": {
+      "success": "Artık {{username}}'e abonesiniz!",
+      "error": "Katılma başarısız. Lütfen tekrar deneyin."
+    }
+  },
+  "loginPromptModal": {
+    "title": "Topluluğa Katıl",
+    "description": "Tahmin yapmak, en iyi tahmincileri takip etmek ve liderlik tablolarında yükselmek için bir hesap oluşturun.",
+    "signUpWithGoogle": "Google ile Kaydol"
+  },
+  "longTermLeaders": {
+    "title": "Uzun Vadeli Liderler",
+    "description": "(Üç Aylık ve Yıllık doğruluğa göre)",
+    "noData": "Henüz veri yok.",
+    "accuracyLabel": "Ort"
+  },
+  "performanceChart": {
+    "title": "Performans Grafiği",
+    "filters": {
+      "overall": "Genel",
+      "hourly": "Saatlik",
+      "daily": "Günlük",
+      "weekly": "Haftalık",
+      "monthly": "Aylık",
+      "yearly": "Yıllık"
+    },
+    "noData": "Bu filtre için performans verisi yok."
+  },
+  "performanceTabs": {
+    "tabs": {
+      "byType": "Türe Göre",
+      "byStock": "Hiseye Göre"
+    },
+    "statCard": {
+      "averageScore": "Ortalama Puan",
+      "rank": "SIRA",
+      "topRankTitle": "İlk {{rank}} Sırasında"
+    },
+    "noData": {
+      "byType": "Tahmin türleri için veri mevcut değil.",
+      "byStock": "Bireysel hisseler için veri mevcut değil."
+    }
+  },
+  "predictionJourney": {
+    "initial": "Başlangıç",
+    "target": "Hedef",
+    "currentPriceTooltip": "${value} {priceLabel}"
+  },
+  "predictionModal": {
+    "confirmationTitle": "Emin misiniz?",
+    "closeButtonAria": "Modalı kapat"
+  },
+  "predictionTypes": {
+    "modalTitle": "Tahmin Türleri Açıklandı",
+    "hourly": "Saatlik",
+    "hourlyDescription": "Hisse senedi fiyatını mevcut veya bir sonraki işlem saatinin sonu için tahmin edin. Kısa vadeli dalgalanmalar için idealdir.",
+    "daily": "Günlük",
+    "dailyDescription": "Hisse senedi fiyatını mevcut veya bir sonraki işlem gününün sonu için tahmin edin. Günlük piyasa hareketleri için klasik bir zaman dilimidir.",
+    "weekly": "Haftalık",
+    "weeklyDescription": "Hisse senedi fiyatını mevcut işlem haftasının sonu (Cuma) için tahmin edin. Haftalık trendleri takip etmek için iyidir.",
+    "monthly": "Aylık",
+    "monthlyDescription": "Hisse senedi fiyatını mevcut takvim ayının sonu için tahmin edin. Aylık momentumu yakalamak için en iyisidir.",
+    "quarterly": "Üç Aylık",
+    "quarterlyDescription": "Hisse senedi fiyatını mevcut mali çeyreğin sonu (örn. Mart, Haziran, Eylül, Aralık) için tahmin edin.",
+    "yearly": "Yıllık",
+    "yearlyDescription": "Hisse senedi fiyatını mevcut takvim yılının sonu için tahmin edin. Büyük piyasa değişimleri için uzun vadeli bir tahmindir."
+  },
+  "common": {
+    "close": "Kapat"
+  },
+  "prediction": {
+    "makePrediction": "Tahmin Yap",
+    "searchPlaceholder": "Hisse senedi arayın (örn. AAPL)",
+    "searching": "Aranıyor...",
+    "currentPrice": "Mevcut Fiyat",
+    "na": "Yok",
+    "type": "Tür",
+    "learnMore": "Tahmin türleri hakkında daha fazla bilgi edinin",
+    "targetPrice": "Hedef Fiyat",
+    "rationale": "Gerekçe (İsteğe Bağlı)",
+    "rationalePlaceholder": "Fiyatın neden hareket edeceğini düşünüyorsunuz?",
+    "placePrediction": "Tahmini Yap",
+    "maxScore": "Maks Puan: {{score}}"
+  },
+  "scoreboard": {
+    "title": "Liderler Tablosu",
+    "trophy": "🏆",
+    "loadError": "Skor tablosu verileri yüklenemedi.",
+    "predictionType": "Tahmin Türü",
+    "filterStock": "Hiseye Göre Filtrele",
+    "avgScore": "Ort. Puan",
+    "noUsers": "Bu filtrelere uygun kullanıcı bulunamadı.",
+    "noUsersHint": "Arama kriterlerinizi genişletmeyi deneyin.",
+    "rank": "Sıra: {{number}}",
+    "currentPrice": "Mevcut Fiyat: ${{price}}"
+  },
+  "stockChart": {
+    "loading": "Grafik Yükleniyor...",
+    "priceLabel": "{{ticker}} Fiyatı"
+  },
+  "stockFilterSearch": {
+    "placeholder": "örn. AAPL"
+  },
+  "stockSearch": {
+    "title": "Varlık Ara",
+    "placeholder": "Hisse senedi, kripto para ara...",
+    "loading": "Yükleniyor...",
+    "errorNoResults": "Sonuç bulunamadı.",
+    "errorFetchFailed": "Arama sonuçları getirilemedi.",
+    "errorQuoteFailed": "Hisse senedi fiyatı alınamadı.",
+    "errorQuoteNotFound": "{{symbol}} için fiyat alınamadı. Lütfen başka bir sembol deneyin.",
+    "dataDelayed": "Veriler 15 dakikaya kadar gecikmelidir"
+  },
+  "timePenaltyBar": {
+    "label": "Zaman Bonusu",
+    "infoAriaLabel": "Zaman Bonusu hakkında daha fazla bilgi edinin"
+  },
+  "topMovers": {
+    "loading": "En Çok Hareket Edenler Yükleniyor...",
+    "t,itle": "Trend Olan Hisseler"
+  },
+  "verificationModal": {
+    "title": "Doğrulanmış Tahminci Olun",
+    "description": "Doğrulanmış bir rozet ile toplulukta güvenilirlik ve görünürlük kazanın.",
+    "benefits": {
+      "greenCheck": "Site genelinde adınızın yanında yeşil bir onay işareti alın.",
+      "verifiedFilter": "Tahminleriniz Keşfet sayfasındaki \"Sadece Doğrulanmışlar\" filtresinde öne çıksın.",
+      "verifiedExpert": "İlgili İzleme Listesi sayfalarında Doğrulanmış Uzman olarak önerilin."
+    },
+    "button": "${price} karşılığında Doğrulan"
+  },
+  "verifiedStatusModal": {
+    "title": "Doğrulanmış bir Tahmincisiniz!",
+    "description": "Topluluktaki güvenilirliğinizi ve görünürlüğünüzü artırdınız.",
+    "closeButton": "Kapat",
+    "removeButton": "Doğrulama durumunu kaldır"
+  },
+  "verifiedTick": {
+    "ariaLabel": "Doğrulanmış Tahminci",
+    "title": "Doğrulanmış Tahminci",
+    "description": "Bu kullanıcı, platforma olan bağlılığını gösteren, topluluğun doğrulanmış bir üyesidir."
+  },
+  "watchlistShowcase": {
+    "title": "İzleme Listesi",
+    "viewStock": "{{stock}} Görüntüle",
+    "noStocks": "Bu kullanıcı henüz hiçbir hisseyi izlemiyor."
+  },
+  "watchlistPage": {
+    "title": "İzleme Listem",
+    "searchPlaceholder": "İzlenecek hisseleri ara (örnek: AAPL)...",
+    "emptyWatchlist": {
+      "title": "İzleme listen boş.",
+      "description": "Takip etmeye başlamak için yukarıdan bir hisse ara."
+    },
+    "activePredictions": "{{ticker}} için Aktif Tahminler",
+    "filterByTypeLabel": "Türe Göre Filtrele",
+    "sortByLabel": "Sırala",
+    "sortOptions": {
+      "date": "En Yeni",
+      "votes": "En Çok Oy Alan",
+      "potential": "En Yüksek Potansiyel"
+    },
+    "noPredictions": "Filtrelerine uyan aktif tahmin yok.",
+    "loadMore": "Daha Fazla Yükle",
+    "recommendedPredictors": "Önerilen Tahminciler",
+    "noRecommendedUsers": "Bu hisse için henüz üst düzey tahminci yok.",
+    "avgScoreLabel": "Ort. Puan: ",
+    "followingButton": "Takip Et",
+    "toast": {
+      "loadingAdd": "{{ticker}} ekleniyor...",
+      "loadingRemove": "{{ticker}} kaldırılıyor...",
+      "successUpdate": "İzleme listesi başarıyla güncellendi.",
+      "errorUpdate": "Güncelleme başarısız.",
+      "errorLoadWatchlist": "İzleme listesi yüklenemedi.",
+      "loadingFollow": "Kullanıcı takip ediliyor...",
+      "successFollow": "Kullanıcı takip edildi!",
+      "errorFollow": "Kullanıcı takip edilemedi."
+    }
+  },
+  "watchlistStockCard": {
+    "removeButtonTitle": "{{symbol}} hissesini izleme listesinden kaldır"
+  }
+}

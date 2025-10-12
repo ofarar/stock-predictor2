@@ -6,47 +6,53 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import ConfirmationModal from '../components/ConfirmationModal';
 import VerifiedTick from '../components/VerifiedTick';
+import { useTranslation } from 'react-i18next';
 
-const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => (
-    <div className="bg-gray-800 p-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:bg-gray-700 flex flex-col items-center text-center">
-        <Link to={`/profile/${user._id}`}>
-            <img
-                src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
-                alt="avatar"
-                className={`w-20 h-20 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
-            />
-        </Link>
-        <div className="mt-3 text-lg font-bold text-white">
-            <Link to={`/profile/${user._id}`} className="hover:underline">{user.username}</Link>
-            {settings?.isVerificationEnabled && user.isVerified && (
-                <div className="inline-block align-middle ml-1">
-                    <VerifiedTick />
+const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => {
+    const { t } = useTranslation(); // <-- add this line
+
+    return (
+        <div className="bg-gray-800 p-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:bg-gray-700 flex flex-col items-center text-center">
+            <Link to={`/profile/${user._id}`}>
+                <img
+                    src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
+                    alt={t('followers_avatar_alt')}
+                    className={`w-20 h-20 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                />
+            </Link>
+            <div className="mt-3 text-lg font-bold text-white">
+                <Link to={`/profile/${user._id}`} className="hover:underline">{user.username}</Link>
+                {settings?.isVerificationEnabled && user.isVerified && (
+                    <div className="inline-block align-middle ml-1">
+                        <VerifiedTick />
+                    </div>
+                )}
+            </div>
+            <div className="text-sm text-gray-400 mt-1">
+                {t('followers_avg_score')}: <span className="font-bold text-green-400">{user.avgScore || 0}</span>
+            </div>
+
+            {showDate && user.subscribedAt && (
+                <div className="text-xs text-gray-500 mt-2">
+                    {t('followers_subscribed_on', { date: new Date(user.subscribedAt).toLocaleDateString() })}
                 </div>
             )}
+
+            {isSubscription && (
+                <button
+                    onClick={() => onCancel(user)}
+                    className="w-full mt-auto pt-3 text-red-500 text-xs font-bold hover:underline"
+                >
+                    {t('followers_cancel_subscription')}
+                </button>
+            )}
         </div>
-        <div className="text-sm text-gray-400 mt-1">
-            Avg Score: <span className="font-bold text-green-400">{user.avgScore || 0}</span>
-        </div>
-
-        {showDate && user.subscribedAt && (
-            <div className="text-xs text-gray-500 mt-2">
-                Subscribed on {new Date(user.subscribedAt).toLocaleDateString()}
-            </div>
-        )}
-
-        {isSubscription && (
-            <button
-                onClick={() => onCancel(user)}
-                className="w-full mt-auto pt-3 text-red-500 text-xs font-bold hover:underline"
-            >
-                Cancel Subscription
-            </button>
-        )}
-    </div>
-);
-
+    );
+};
 
 const FollowersPage = ({ settings }) => {
+    const { t } = useTranslation(); 
+    
     const { userId } = useParams();
     const location = useLocation();
     const [userData, setUserData] = useState({
@@ -70,14 +76,13 @@ const FollowersPage = ({ settings }) => {
             setUserData(response.data);
             setProfileUser(response.data.profileUser);
         } catch (err) {
-            toast.error("Could not load user lists.");
+            toast.error(t("followers_error_load_users"));
         } finally {
             setLoading(false);
         }
     }, [userId]);
 
     useEffect(() => {
-        // --- FIX: Fetch current user to determine if we're viewing our own profile ---
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => setCurrentUser(res.data));
         fetchFollowData();
@@ -93,10 +98,10 @@ const FollowersPage = ({ settings }) => {
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userToUnsubscribe._id}/cancel-golden`, {}, { withCredentials: true })
             .then(() => {
-                toast.success(`Subscription to ${userToUnsubscribe.username} canceled.`);
+                toast.success(t("followers_subscription_canceled", { username: userToUnsubscribe.username }));
                 fetchFollowData();
             })
-            .catch(() => toast.error("Failed to cancel subscription."))
+            .catch(() => toast.error(t("followers_error_cancel_subscription")))
             .finally(() => {
                 setIsModalOpen(false);
                 setUserToUnsubscribe(null);
@@ -106,16 +111,15 @@ const FollowersPage = ({ settings }) => {
     const isOwnProfile = currentUser?._id === userId;
 
     const tabs = [
-        { name: 'Followers', count: userData.followers.length, data: userData.followers },
-        { name: 'Following', count: userData.following.length, data: userData.following },
-        // --- FIX: Conditionally add private tabs only if it's the user's own profile ---
-        ...(isOwnProfile && profileUser?.isGoldenMember ? [{ name: 'Subscribers', count: userData.goldenSubscribers.length, data: userData.goldenSubscribers, isGolden: true }] : []),
-        ...(isOwnProfile ? [{ name: 'Subscriptions', count: userData.goldenSubscriptions.length, data: userData.goldenSubscriptions, isGolden: true }] : []),
+        { name: t("followers_tab_followers"), count: userData.followers.length, data: userData.followers },
+        { name: t("followers_tab_following"), count: userData.following.length, data: userData.following },
+        ...(isOwnProfile && profileUser?.isGoldenMember ? [{ name: t("followers_tab_subscribers"), count: userData.goldenSubscribers.length, data: userData.goldenSubscribers, isGolden: true }] : []),
+        ...(isOwnProfile ? [{ name: t("followers_tab_subscriptions"), count: userData.goldenSubscriptions.length, data: userData.goldenSubscriptions, isGolden: true }] : []),
     ];
 
     const currentTabData = tabs.find(tab => tab.name === activeTab)?.data || [];
 
-    if (loading) return <div className="text-center text-white mt-10">Loading...</div>;
+    if (loading) return <div className="text-center text-white mt-10">{t("followers_loading")}</div>;
 
     return (
         <>
@@ -123,8 +127,8 @@ const FollowersPage = ({ settings }) => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={handleConfirmCancel}
-                title="Cancel Subscription"
-                message={`Are you sure you want to cancel your subscription to ${userToUnsubscribe?.username}?`}
+                title={t("followers_confirm_cancel_title")}
+                message={t("followers_confirm_cancel_message", { username: userToUnsubscribe?.username })}
             />
 
             <div className="max-w-5xl mx-auto animate-fade-in px-4">
@@ -158,11 +162,11 @@ const FollowersPage = ({ settings }) => {
                             key={item._id}
                             user={item}
                             settings={settings}
-                            isSubscription={activeTab === 'Subscriptions'}
-                            showDate={activeTab === 'Subscriptions' || activeTab === 'Subscribers'}
+                            isSubscription={activeTab === t("followers_tab_subscriptions")}
+                            showDate={activeTab === t("followers_tab_subscriptions") || activeTab === t("followers_tab_subscribers")}
                             onCancel={handleCancelClick}
                         />
-                    )) : <p className="col-span-full text-gray-500 text-center py-8">No users to display in this list.</p>}
+                    )) : <p className="col-span-full text-gray-500 text-center py-8">{t("followers_no_users")}</p>}
                 </div>
             </div>
         </>

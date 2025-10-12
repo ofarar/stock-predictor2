@@ -1,11 +1,15 @@
+// src/components/StockChart.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const StockChart = ({ ticker }) => {
+    const { t } = useTranslation();
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
@@ -16,20 +20,20 @@ const StockChart = ({ ticker }) => {
                     setChartData({
                         labels: historicalData.map(v => new Date(v.date).toLocaleDateString()),
                         datasets: [{
-                            label: `${ticker} Price`,
+                            label: t('stockChart.priceLabel', { ticker }),
                             data: historicalData.map(v => v.close),
                             borderColor: '#22c55e',
                             backgroundColor: 'rgba(34, 197, 94, 0.1)',
                             fill: true,
                             tension: 0.1,
                             pointRadius: 0,
-                            pointHoverRadius: 5, // Show a point on hover/tap
+                            pointHoverRadius: 5,
                         }]
                     });
                 }
             })
             .catch(err => console.error("Failed to fetch chart data", err));
-    }, [ticker]);
+    }, [ticker, t]);
 
     const options = {
         responsive: true,
@@ -41,7 +45,6 @@ const StockChart = ({ ticker }) => {
                 intersect: false,
             },
         },
-        // ADDED: This makes the tooltips work better on mobile
         events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
         scales: {
             x: {
@@ -56,7 +59,11 @@ const StockChart = ({ ticker }) => {
     };
 
     if (!chartData) {
-        return <div className="h-96 flex items-center justify-center text-gray-500 bg-gray-800 rounded-lg">Loading Chart...</div>;
+        return (
+            <div className="h-96 flex items-center justify-center text-gray-500 bg-gray-800 rounded-lg">
+                {t('stockChart.loading')}
+            </div>
+        );
     }
 
     return (

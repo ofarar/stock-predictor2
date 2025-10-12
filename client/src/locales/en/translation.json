@@ -1,0 +1,690 @@
+{
+  "header_golden_feed": "Golden Feed",
+  "header_explore": "Explore",
+  "header_scoreboard": "Scoreboard",
+  "header_make_prediction": "Make a Prediction",
+  "header_my_profile": "My Profile",
+  "header_admin": "Admin",
+  "header_logout": "Logout",
+  "header_login": "Log In",
+  "notifications_title": "Notifications",
+  "notifications_none": "No new notifications.",
+  "footer_about": "About",
+  "footer_contact": "Contact",
+  "footer_terms": "Terms of Service",
+  "footer_privacy": "Privacy Policy",
+  "homepage_aim": "Predict the Market. Track Your Accuracy.",
+  "about_title": "About StockPredictor",
+  "about_mission_title": "Our Mission",
+  "about_mission_text": "StockPredictor was founded on the principle that the collective wisdom of informed individuals can be a powerful tool in navigating the financial markets. Our mission is to provide a platform where both novice investors and seasoned professionals can test their analytical skills, learn from the community, and build a transparent track record of their market predictions.",
+  "about_how_it_works_title": "How It Works",
+  "about_how_it_works_predict_title": "1. Predict",
+  "about_how_it_works_predict_text": "Make predictions on thousands of assets with various timeframes, from hourly to yearly.",
+  "about_how_it_works_track_title": "2. Track",
+  "about_how_it_works_track_text": "Follow your active predictions and see how your historical forecasts have performed.",
+  "about_how_it_works_compete_title": "3. Compete",
+  "about_how_it_works_compete_text": "Climb the leaderboards by making accurate predictions and prove your skills to the community.",
+  "header_watchlist": "Watchlist",
+  "header_ai_assist": "AI Portfolio Assist",
+  "header_settings": "Settings",
+  "profile_followers": "Followers",
+  "profile_following": "Following",
+  "profile_subscribers": "Subscribers",
+  "profile_subscriptions": "Subscriptions",
+  "profile_edit": "Edit Profile",
+  "profile_get_verified": "Get Verified",
+  "profile_manage_gold": "Manage Gold",
+  "profile_become_golden": "Become Golden",
+  "profile_join_button": "Join (${{price}}/mo)",
+  "profile_subscribed_badge": "Subscribed",
+  "profile_subscriptions_paused": "Subscriptions Paused",
+  "profile_follow_button": "Follow",
+  "profile_following_button": "Following",
+  "profile_overall_rank": "Overall Rank",
+  "profile_avg_score": "Average Score",
+  "profile_total_points": "Total Points",
+  "profile_total_predictions": "Total Predictions",
+  "profile_tab_profile": "Profile",
+  "profile_tab_golden_feed": "Golden Feed",
+  "profile_watchlist_title": "Watchlist",
+  "profile_watchlist_empty": "This user is not watching any stocks yet.",
+  "profile_achievements_title": "Achievements",
+  "profile_achievements_empty": "No achievements yet. Keep making predictions!",
+  "profile_achievements_how_work": "How are badges earned?",
+  "profile_active_predictions": "Active Predictions",
+  "profile_prediction_history": "Prediction History",
+  "profile_load_more": "Load More",
+  "profile_no_active_predictions": "No active predictions.",
+  "profile_no_prediction_history": "No prediction history yet.",
+  "verified_tick_popover_title": "Verified Predictor",
+  "verified_tick_popover_text": "This user is a verified member of the community, indicating a commitment to the platform.",
+  "verified_modal_title": "Become a Verified Predictor",
+  "verified_modal_text": "Gain credibility and visibility in the community with a verified badge.",
+  "verified_modal_benefit1": "Get a green checkmark next to your name across the site.",
+  "verified_modal_benefit2": "Your predictions get featured in the \"Verified Only\" filter on the Explore page.",
+  "verified_modal_benefit3": "Get recommended as a Verified Expert on relevant Watchlist pages.",
+  "verified_modal_button": "Get Verified for ${{price}}",
+  "verified_status_modal_title": "You are a Verified Predictor!",
+  "verified_status_modal_text": "You have increased trust and visibility in the community.",
+  "verified_status_modal_close": "Close",
+  "verified_status_modal_remove": "Remove verification status",
+  "scoring_explained_title": "Scoring Explained",
+  "scoring_explained_text1": "Our platform uses a **Proximity Scoring System** to reward accuracy. Instead of a simple \"correct\" or \"incorrect,\" your score is based on how close your prediction was to the actual outcome.",
+  "scoring_explained_text2": "For example, if a stock is at $152 and you predict it will be $150, you will receive a much higher score than someone who predicted $180. This system is designed to reward thoughtful analysis over random guesses. The maximum score for a perfect prediction is 100 points, with points decreasing the further your prediction is from the final price.",
+  "aiwizard_coming_soon": "COMING SOON",
+  "aiwizard_title": "AI Portfolio Assist",
+  "aiwizard_description": "Get personalized stock recommendations based on the patterns of our top-performing predictors.",
+  "aiwizard_how_it_works": "How It Works",
+  "aiwizard_step1_title": "Define Your Style",
+  "aiwizard_step1_text": "Answer a few questions about your investment timeframe and interests.",
+  "aiwizard_step2_title": "AI Analyzes Data",
+  "aiwizard_step2_text": "Our system finds top predictors who consistently win in your areas of interest.",
+  "aiwizard_step3_title": "Get Insights",
+  "aiwizard_step3_text": "Receive a curated feed of stocks that our best analysts are watching.",
+  "aiwizard_join_waitlist": "Join the Early Access Waitlist",
+  "aiwizard_checking_status": "Checking status...",
+  "aiwizard_on_waitlist": "You're on the waitlist!",
+  "aiwizard_signin_to_join": "Sign In to Join the Waitlist",
+  "aiwizard_early_access_note": "Be the first to know when it launches. Early registrants will get free access for a limited time!",
+  "aiwizard_legal_note": "**Legal Note:** The AI Wizard provides insights based on historical user data for informational purposes only. It is not financial advice. All investment decisions should be made with your own research and due diligence.",
+  "aiwizard_joining": "Joining...",
+  "aiwizard_join_success": "You're on the list! We'll notify you on launch.",
+  "aiwizard_join_error": "Could not join the waitlist.",
+  "contact_title": "Contact Us",
+  "contact_get_in_touch": "Get in Touch",
+  "contact_intro_text": "Have a question, feedback, or a partnership inquiry? We'd love to hear from you.",
+  "contact_fill_form_text": "Fill out the form, and we'll get back to you as soon as possible.",
+  "contact_urgent_text": "For urgent matters, you can also reach us directly at:",
+  "contact_email": "predictostock@gmail.com",
+  "contact_name_label": "Your Name",
+  "contact_email_label": "Your Email",
+  "contact_message_label": "Message",
+  "contact_sending": "Sending...",
+  "contact_send_button": "Send Message",
+  "contact_fill_all_fields_error": "Please fill out all fields.",
+  "contact_success_message": "Your message has been sent!",
+  "contact_error_message": "Something went wrong. Please try again.",
+  "editprofile_title": "Edit Your Profile",
+  "editprofile_avatar_label": "Avatar",
+  "editprofile_change_avatar": "Change Avatar",
+  "editprofile_username_label": "Username",
+  "editprofile_about_label": "About",
+  "editprofile_about_counter": "{{current}} / {{limit}}",
+  "editprofile_xlink_label": "X (Twitter) Link",
+  "editprofile_xlink_placeholder": "https://x.com/yourprofile",
+  "editprofile_youtube_label": "YouTube Link",
+  "editprofile_youtube_placeholder": "https://youtube.com/yourchannel",
+  "editprofile_save_changes": "Save Changes",
+  "editprofile_saving": "Saving...",
+  "editprofile_cancel": "Cancel",
+  "editprofile_success": "Profile updated successfully!",
+  "editprofile_error": "Failed to update profile.",
+  "explore_title": "Explore Predictions",
+  "explore_filter_stock": "Filter by Stock",
+  "explore_prediction_type": "Prediction Type",
+  "explore_sort_by": "Sort By",
+  "explore_sort_by_date": "Most Recent",
+  "explore_sort_by_performance": "Top Performers",
+  "explore_sort_by_votes": "Most Voted",
+  "explore_sort_by_potential": "Highest Potential",
+  "explore_verified_only": "Show Verified Predictors Only",
+  "explore_tab_active": "Active",
+  "explore_tab_assessed": "Assessed",
+  "explore_loading": "Loading Predictions...",
+  "explore_no_predictions": "No predictions found for these filters.",
+  "explore_predicts_price_of": "Predicts a price of",
+  "explore_by_deadline": "by {{date}}",
+  "explore_predicted": "Predicted",
+  "explore_actual_price": "Actual Price",
+  "explore_view_rationale": "View Rationale",
+  "explore_agree": "Agree",
+  "explore_disagree": "Disagree",
+  "explore_vote_failed": "Vote failed.",
+  "followers_avg_score": "Avg Score",
+  "followers_subscribed_on": "Subscribed on {{date}}",
+  "followers_cancel_subscription": "Cancel Subscription",
+  "followers_could_not_load_lists": "Could not load user lists.",
+  "followers_subscription_canceled": "Subscription to {{username}} canceled.",
+  "followers_failed_to_cancel": "Failed to cancel subscription.",
+  "followers_tab_followers": "Followers",
+  "followers_tab_following": "Following",
+  "followers_tab_subscribers": "Subscribers",
+  "followers_tab_subscriptions": "Subscriptions",
+  "followers_loading": "Loading...",
+  "followers_confirm_cancel_message": "Are you sure you want to cancel your subscription to {{username}}?",
+  "followers_no_users": "No users to display in this list.",
+  "golden_feed_new_label": "NEW",
+  "golden_feed_failed_mark_read": "Failed to mark feed as read.",
+  "golden_feed_failed_fetch": "Failed to fetch golden feed",
+  "golden_feed_header": "Your Golden Feed",
+  "golden_feed_create_post": "Create Post",
+  "golden_feed_filter_by_member": "Filter by Member",
+  "golden_feed_all_subscriptions": "All Subscriptions",
+  "golden_feed_filter_by_stock": "Filter by Stock",
+  "golden_feed_prediction_type": "Prediction Type",
+  "golden_feed_loading": "Loading Feed...",
+  "golden_feed_no_posts_title": "No posts found for these filters.",
+  "golden_feed_no_posts_subtitle": "Try broadening your search criteria or subscribing to more Golden Members.",
+  "loading_dashboard": "Loading dashboard...",
+  "welcome_message": "Welcome to StockPredictor",
+  "description": "Sign in to start making predictions and build your virtual portfolio.",
+  "google_signin": "Sign in with Google",
+  "loading_settings": "Loading Settings...",
+  "notification_settings_title": "Notification Settings",
+  "toggle_all_predictions_label": "All Predictions from Followed Users",
+  "toggle_all_predictions_description": "Get a notification for every new prediction made by users you follow.",
+  "toggle_short_term_label": "Significant Short-Term Predictions",
+  "toggle_short_term_description": "Be notified when a followed user makes a significant Hourly, Daily, or Weekly prediction.",
+  "toggle_long_term_label": "Significant Long-Term Predictions",
+  "toggle_long_term_description": "Be notified when a followed user makes a significant Monthly, or longer prediction.",
+  "saving": "Saving...",
+  "save_changes": "Save Changes",
+  "settings_saved_success": "Settings saved!",
+  "settings_saved_error": "Failed to save settings.",
+  "Awaiting Assessment": "Awaiting Assessment",
+  "...": "...",
+  "Could not load prediction details.": "Could not load prediction details.",
+  "Loading Prediction...": "Loading Prediction...",
+  "Prediction not found.": "Prediction not found.",
+  "Live Score": "Live Score",
+  "Score at Close": "Score at Close",
+  "Current": "Current",
+  "Closing Price": "Closing Price",
+  "(Price journey visual is not available for this older prediction)": "(Price journey visual is not available for this older prediction)",
+  "Target Price": "Target Price",
+  "View Rationale": "View Rationale",
+  "Final Score": "Final Score",
+  "Time Remaining": "Time Remaining",
+  "DO YOU AGREE?": "DO YOU AGREE?",
+  "Agree": "Agree",
+  "Disagree": "Disagree",
+  "Predicted by": "Predicted by",
+  "Made on": "Made on",
+  "Prediction": "Prediction",
+  "privacy_title": "Privacy Policy",
+  "info_collection_title": "1. Information Collection",
+  "info_collection_text": "We collect information to provide and improve our Service. When you register using Google, we receive your name, email address, and profile picture as provided by your Google account permissions.",
+  "use_info_title": "2. Use of Information",
+  "use_info_text": "We use the information we collect to operate and maintain our Service, create your user profile, and communicate with you. We do not sell your personal information to third parties.",
+  "cookies_title": "3. Cookies",
+  "cookies_text": "We use cookies to maintain your session after you log in. A cookie is a small piece of data stored on your computer. You can instruct your browser to refuse all cookies, but you may not be able to use some portions of our Service.",
+  "security_title": "4. Security",
+  "security_text": "The security of your data is important to us, but remember that no method of transmission over the Internet is 100% secure. We strive to use commercially acceptable means to protect your Personal Information, but we cannot guarantee its absolute security.",
+  "profile_title": "Profile",
+  "followers_label": "Followers",
+  "following_label": "Following",
+  "subscribers_label": "Subscribers",
+  "subscriptions_label": "Subscriptions",
+  "manage_gold_label": "Manage Gold",
+  "become_golden_label": "Become Golden",
+  "edit_profile_label": "Edit Profile",
+  "get_verified_label": "Get Verified",
+  "following_btn": "Following",
+  "follow_btn": "Follow",
+  "subscribed_label": "Subscribed",
+  "join_label": "Join (${{price}}/mo)",
+  "subscriptions_paused_label": "Subscriptions Paused",
+  "member_since_label": "Member since {{date}}",
+  "no_bio_label": "No bio provided.",
+  "active_predictions_title": "Active Predictions",
+  "prediction_history_title": "Prediction History",
+  "no_active_predictions_label": "No active predictions.",
+  "no_prediction_history_label": "No prediction history yet.",
+  "load_more_label": "Load More",
+  "overall_rank_label": "Overall Rank",
+  "average_score_label": "Average Score",
+  "total_points_label": "Total Points",
+  "total_predictions_label": "Total Predictions",
+  "profile_tab_label": "Profile",
+  "golden_feed_tab_label": "Golden Feed",
+  "create_golden_post_btn": "Create Golden Post",
+  "processing_verification_msg": "Processing verification...",
+  "verification_success_msg": "Verification successful!",
+  "verification_failed_msg": "Verification failed.",
+  "cancel_verification_title": "Cancel Verification",
+  "cancel_verification_msg": "Are you sure? You will lose your verified status and benefits.",
+  "title_top_performers": "🏆 Top Performers",
+  "label_prediction_type": "Prediction Type",
+  "label_filter_by_stock": "Filter by Stock",
+  "text_avg_score": "Avg Score",
+  "msg_loading_scoreboard_error": "Could not load scoreboard data.",
+  "msg_no_users_found": "No users found for these filters.",
+  "msg_try_broaden_search": "Try broadening your search criteria.",
+  "loading_stock_data": "Loading stock data...",
+  "error_loading_stock_data": "Failed to load data for {{ticker}}.",
+  "could_not_load_stock_data": "Could not load data for {{ticker}}. Please try another symbol.",
+  "add_to_watchlist": "Add to Watchlist",
+  "remove_from_watchlist": "Remove from Watchlist",
+  "make_prediction": "Make a Prediction",
+  "top_predictors_for": "Top Predictors for {{ticker}}",
+  "avg_score": "Avg Score",
+  "no_top_predictors": "No top predictors for this filter yet.",
+  "active_predictions_on": "Active Predictions on {{ticker}}",
+  "prediction_type": "{{type}} Prediction",
+  "target": "Target: ${{targetPrice}}",
+  "no_active_predictions": "No active predictions for this stock yet.",
+  "terms_page": {
+    "title": "Terms of Service",
+    "sections": {
+      "acceptance_of_terms": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing or using the StockPredictor website (\"Service\"), you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the Service."
+      },
+      "no_financial_advice": {
+        "title": "2. No Financial Advice",
+        "content": "The information, predictions, and scores provided on this Service are for informational and entertainment purposes only. Nothing on this website constitutes financial, investment, legal, or tax advice. You are solely responsible for your own investment decisions."
+      },
+      "user_conduct": {
+        "title": "3. User Conduct",
+        "content": "You agree not to use the Service to post or transmit any material which is malicious, defamatory, or otherwise violates any law. You are responsible for all predictions and content posted under your account."
+      },
+      "limitation_of_liability": {
+        "title": "4. Limitation of Liability",
+        "content": "In no event shall StockPredictor, nor its directors or employees, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, or other intangible losses, resulting from your access to or use of the Service."
+      }
+    }
+  },
+  "watchlist_page": {
+    "title": "My Watchlist",
+    "search_placeholder": "Search for stocks to watch (e.g., AAPL)...",
+    "empty_watchlist": {
+      "title": "Your watchlist is empty.",
+      "subtitle": "Search for a stock above to start tracking it."
+    },
+    "active_predictions_title": "Active Predictions for {{ticker}}",
+    "filter_by_type": "Filter by Type",
+    "sort_by": "Sort By",
+    "sort_options": {
+      "date": "Most Recent",
+      "votes": "Most Voted",
+      "potential": "Highest Potential"
+    },
+    "no_predictions": "No active predictions match your filters.",
+    "load_more": "Load More",
+    "recommended_experts_title": "Recommended Experts",
+    "no_recommended_experts": "No top predictors for this stock yet.",
+    "watchlist_card": {
+      "remove_title": "Remove {{symbol}} from watchlist"
+    },
+    "follow_button": "Follow"
+  },
+  "prediction_types": {
+    "All": "All",
+    "Hourly": "Hourly",
+    "Daily": "Daily",
+    "Weekly": "Weekly",
+    "Monthly": "Monthly",
+    "Quarterly": "Quarterly",
+    "Yearly": "Yearly"
+  },
+  "aim": {
+    "title": "Predict the Market. <0>Track Your Accuracy.</0>"
+  },
+  "avatarModal": {
+    "title": "Change Your Avatar",
+    "styleLabel": "Style",
+    "shuffleButton": "Shuffle",
+    "cancelButton": "Cancel",
+    "saveButton": "Save Avatar",
+    "styles": {
+      "adventurer": "Adventurer",
+      "lorelei": "Lorelei",
+      "miniavs": "Mini AVs",
+      "openPeeks": "Open Peeks",
+      "personas": "Personas",
+      "pixelArt": "Pixel Art",
+      "notionists": "Notionists",
+      "bottts": "Bottts",
+      "shapes": "Shapes",
+      "thumbs": "Thumbs",
+      "funEmoji": "Fun Emoji",
+      "identicon": "Identicon",
+      "initials": "Initials",
+      "rings": "Rings"
+    }
+  },
+  "badgeInfoModal": {
+    "title": "How Achievements Work",
+    "loadingText": "Loading details...",
+    "scoreLabel": "Score > {{score}}",
+    "minPredictions": "Requires at least {{count}} predictions.",
+    "closeButton": "Close"
+  },
+  "badgeShowcase": {
+    "title": "Achievements",
+    "noAchievements": "No achievements yet. Keep making predictions!",
+    "infoButtonTitle": "How are badges earned?",
+    "unknownBadge": "Unknown Badge"
+  },
+  "communityFeed": {
+    "title": "Community Feed",
+    "noRecentPredictions": "No recent predictions."
+  },
+  "confirmationModal": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "defaultTitle": "Are you sure?",
+    "defaultMessage": "This action cannot be undone."
+  },
+  "dailyLeaderboard": {
+    "title": "Today's Top Performers",
+    "subtitle": "(Based on today's hourly predictions)",
+    "noData": "No data yet today.",
+    "averageScoreSuffix": "avg"
+  },
+  "descriptionModal": {
+    "title": "Predictor's Rationale"
+  },
+  "famousStocks": {
+    "title": "Trending Predictions",
+    "predictionsText": "{{count}} predictions today",
+    "noData": "No trending stocks right now."
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "copyright": "All rights reserved."
+  },
+  "globalSearch": {
+    "placeholder": "Search stocks..."
+  },
+  "goldenFeed": {
+    "newTag": "NEW",
+    "attachedPrediction": "Attached Prediction:",
+    "loading": "Loading Feed...",
+    "exclusiveContentTitle": "Exclusive Content",
+    "exclusiveContentDescription": "Join {{username}}'s subscribers to view their private feed, including detailed prediction rationales and market analysis.",
+    "joinButton": "Join for ${{price}}/mo",
+    "noPosts": "{{username}} hasn't posted any exclusive content yet."
+  },
+  "goldenMemberModal": {
+    "title": "Golden Member Settings",
+    "priceLabel": "Monthly Price ($1 - $500)",
+    "descriptionLabel": "Description",
+    "defaultDescription": "Get exclusive insights and support my predictions!",
+    "acceptingNewLabel": "Accepting New Subscribers",
+    "updateSuccess": "Golden Member settings updated!",
+    "updateFail": "Failed to update settings.",
+    "deactivateSuccess": "Golden Member status deactivated.",
+    "deactivateFail": "Failed to update settings.",
+    "updateButton": "Update Settings",
+    "activateButton": "Activate Golden Status",
+    "deactivateButton": "Deactivate"
+  },
+  "goldenPostForm": {
+    "title": "Create Golden Post",
+    "messagePlaceholder": "Share your exclusive analysis with your subscribers...",
+    "attachPredictionLabel": "Attach a Prediction",
+    "stockLabel": "Stock",
+    "targetPriceLabel": "Target Price",
+    "typeLabel": "Type",
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "yearly": "Yearly",
+    "cancelButton": "Cancel",
+    "postingButton": "Posting...",
+    "postButton": "Post",
+    "emptyMessageError": "Post message cannot be empty.",
+    "fetchPriceError": "Could not fetch price for {{ticker}}.",
+    "createSuccess": "Golden Post published!",
+    "createFail": "Could not create post."
+  },
+  "header": {
+    "aiWizard": "AI Portfolio Assist",
+    "watchlist": "Watchlist",
+    "goldenFeed": "Golden Feed",
+    "explore": "Explore",
+    "scoreboard": "Scoreboard",
+    "makePrediction": "Make a Prediction",
+    "userMenu": {
+      "myProfile": "My Profile",
+      "settings": "Settings",
+      "admin": "Admin",
+      "logout": "Logout"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "noNew": "No new notifications."
+    },
+    "mobileMenu": {
+      "myProfile": "My Profile",
+      "watchlist": "Watchlist",
+      "goldenFeed": "Golden Feed",
+      "explore": "Explore",
+      "scoreboard": "Scoreboard",
+      "settings": "Settings",
+      "adminPanel": "Admin Panel",
+      "logout": "Logout",
+      "login": "Log In"
+    },
+    "buttons": {
+      "login": "Log In",
+      "logout": "Logout",
+      "makePrediction": "Make a Prediction"
+    }
+  },
+  "notifications": {
+    "types": {
+      "newFollower": "New Follower",
+      "badgeEarned": "Badge Earned",
+      "goldenPost": "Golden Post",
+      "newPrediction": "New Prediction"
+    }
+  },
+  "hourlyWinnersFeed": {
+    "title": "Last Hour's Winners",
+    "nextResults": "Next results in: {{timeLeft}}",
+    "marketClosed": "Market Closed",
+    "noPredictions": "No predictions assessed yet.",
+    "pointsSuffix": "+{{score}} pts"
+  },
+  "infoModal": {
+    "title": "Time Bonus Explained",
+    "description": "To reward early analysis, a time-based penalty is applied to predictions. The maximum score you can achieve from a prediction decreases as the deadline approaches.",
+    "hourlyPredictions": {
+      "title": "Hourly Predictions:",
+      "description": "The penalty is applied minute-by-minute. The first 10 minutes have no penalty (Max Score: 100). The penalty increases linearly until the last 10 minutes of the hour, where the Max Score is 80."
+    },
+    "dailyPredictions": {
+      "title": "Daily Predictions:",
+      "description": "The penalty is applied throughout the trading day. Predictions made right at market open have the highest potential score."
+    },
+    "longerTermPredictions": {
+      "title": "Longer-Term Predictions:",
+      "description": "For Weekly, Monthly, and longer predictions, the penalty is proportional to the percentage of the prediction period that has already passed."
+    },
+    "closeButton": "Close"
+  },
+  "joinGoldenModal": {
+    "title": "Join {{username}}'s Subscribers",
+    "pricePerMonth": "{{price}} / month",
+    "whatYouGet": "What you get:",
+    "noDescription": "No description provided.",
+    "joinButton": "Join Now",
+    "toast": {
+      "success": "You are now subscribed to {{username}}!",
+      "error": "Failed to join. Please try again."
+    }
+  },
+  "loginPromptModal": {
+    "title": "Join the Community",
+    "description": "Create an account to make predictions, follow top predictors, and climb the leaderboards.",
+    "signUpWithGoogle": "Sign Up with Google"
+  },
+  "longTermLeaders": {
+    "title": "Long-Term Leaders",
+    "description": "(Based on Quarterly & Yearly accuracy)",
+    "noData": "No data yet.",
+    "accuracyLabel": "Avg"
+  },
+  "performanceChart": {
+    "title": "Performance Chart",
+    "filters": {
+      "overall": "Overall",
+      "hourly": "Hourly",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "noData": "No performance data for this filter."
+  },
+  "performanceTabs": {
+    "tabs": {
+      "byType": "By Type",
+      "byStock": "By Stock"
+    },
+    "statCard": {
+      "averageScore": "Average Score",
+      "rank": "RANK",
+      "topRankTitle": "Top {{rank}} Rank"
+    },
+    "noData": {
+      "byType": "No data available for prediction types.",
+      "byStock": "No data available for individual stocks."
+    }
+  },
+  "predictionJourney": {
+    "initial": "Initial",
+    "target": "Target",
+    "currentPriceTooltip": "${value} {priceLabel}"
+  },
+  "predictionModal": {
+    "confirmationTitle": "Are you sure?",
+    "closeButtonAria": "Close modal"
+  },
+  "predictionTypes": {
+    "modalTitle": "Prediction Types Explained",
+    "hourlyDescription": "Predict the stock price for the end of the current or next trading hour. Ideal for short-term volatility.",
+    "daily": "Daily",
+    "dailyDescription": "Predict the stock price for the end of the current or next trading day. A classic timeframe for day-to-day market moves.",
+    "weekly": "Weekly",
+    "weeklyDescription": "Predict the stock price for the end of the current trading week (Friday). Good for tracking weekly trends.",
+    "monthly": "Monthly",
+    "monthlyDescription": "Predict the stock price for the end of the current calendar month. Best for capturing monthly momentum.",
+    "quarterly": "Quarterly",
+    "quarterlyDescription": "Predict the stock price for the end of the current financial quarter (e.g., March, June, September, December).",
+    "yearly": "Yearly",
+    "yearlyDescription": "Predict the stock price for the end of the current calendar year. A long-term prediction for major market shifts."
+  },
+  "common": {
+    "close": "Close"
+  },
+  "prediction": {
+    "makePrediction": "Make a Prediction",
+    "searchPlaceholder": "Search for a stock (e.g., AAPL)",
+    "searching": "Searching...",
+    "currentPrice": "Current Price",
+    "na": "N/A",
+    "type": "Type",
+    "learnMore": "Learn more about prediction types",
+    "targetPrice": "Target Price",
+    "rationale": "Rationale (Optional)",
+    "rationalePlaceholder": "Why do you think the price will move?",
+    "placePrediction": "Place Prediction",
+    "maxScore": "Max Score: {{score}}"
+  },
+  "scoreboard": {
+    "title": "Leaderboards",
+    "trophy": "🏆",
+    "loadError": "Could not load scoreboard data.",
+    "predictionType": "Prediction Type",
+    "filterStock": "Filter by Stock",
+    "avgScore": "Avg Score",
+    "noUsers": "No users found for these filters.",
+    "noUsersHint": "Try broadening your search criteria.",
+    "rank": "Rank: {{number}}",
+    "currentPrice": "Current Price: ${{price}}"
+  },
+  "stockChart": {
+    "loading": "Loading Chart...",
+    "priceLabel": "{{ticker}} Price"
+  },
+  "stockFilterSearch": {
+    "placeholder": "e.g., AAPL"
+  },
+  "stockSearch": {
+    "title": "Search Asset",
+    "placeholder": "Search for stocks, crypto...",
+    "loading": "Loading...",
+    "errorNoResults": "No results found.",
+    "errorFetchFailed": "Failed to fetch search results.",
+    "errorQuoteFailed": "Failed to fetch stock quote.",
+    "errorQuoteNotFound": "Could not retrieve quote for {{symbol}}. Please try another symbol.",
+    "dataDelayed": "Data delayed up to 15 minutes"
+  },
+  "timePenaltyBar": {
+    "label": "Time Bonus",
+    "infoAriaLabel": "Learn more about the Time Bonus"
+  },
+  "topMovers": {
+    "loading": "Loading Top Movers...",
+    "title": "Trending Stocks"
+  },
+  "verificationModal": {
+    "title": "Become a Verified Predictor",
+    "description": "Gain credibility and visibility in the community with a verified badge.",
+    "benefits": {
+      "greenCheck": "Get a green checkmark next to your name across the site.",
+      "verifiedFilter": "Your predictions get featured in the \"Verified Only\" filter on the Explore page.",
+      "verifiedExpert": "Get recommended as a Verified Expert on relevant Watchlist pages."
+    },
+    "button": "Get Verified for ${price}"
+  },
+  "verifiedStatusModal": {
+    "title": "You are a Verified Predictor!",
+    "description": "You have increased trust and visibility in the community.",
+    "closeButton": "Close",
+    "removeButton": "Remove verification status"
+  },
+  "verifiedTick": {
+    "ariaLabel": "Verified Predictor",
+    "title": "Verified Predictor",
+    "description": "This user is a verified member of the community, indicating a commitment to the platform."
+  },
+  "watchlistShowcase": {
+    "title": "Watchlist",
+    "viewStock": "View {{stock}}",
+    "noStocks": "This user is not watching any stocks yet."
+  },
+  "watchlistPage": {
+    "title": "My Watchlist",
+    "searchPlaceholder": "Search for stocks to watch (e.g., AAPL)...",
+    "emptyWatchlist": {
+      "title": "Your watchlist is empty.",
+      "description": "Search for a stock above to start tracking it."
+    },
+    "activePredictions": "Active Predictions for {{ticker}}",
+    "filterByTypeLabel": "Filter by Type",
+    "sortByLabel": "Sort By",
+    "sortOptions": {
+      "date": "Most Recent",
+      "votes": "Most Voted",
+      "potential": "Highest Potential"
+    },
+    "noPredictions": "No active predictions match your filters.",
+    "loadMore": "Load More",
+    "recommendedPredictors": "Recommended Predictors",
+    "noRecommendedUsers": "No top predictors for this stock yet.",
+    "avgScoreLabel": "Avg Score: ",
+    "followingButton": "Follow",
+    "toast": {
+      "loadingAdd": "Adding {{ticker}}...",
+      "loadingRemove": "Removing {{ticker}}...",
+      "successUpdate": "Successfully updated watchlist.",
+      "errorUpdate": "Failed to update.",
+      "errorLoadWatchlist": "Could not load watchlist.",
+      "loadingFollow": "Following user...",
+      "successFollow": "User followed!",
+      "errorFollow": "Could not follow user."
+    }
+  },
+  "watchlistStockCard": {
+    "removeButtonTitle": "Remove {{symbol}} from watchlist"
+  }
+}

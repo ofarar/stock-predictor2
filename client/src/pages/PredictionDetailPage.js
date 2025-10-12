@@ -1,3 +1,5 @@
+// src/pages/PredictionDetailPage.js
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -5,10 +7,11 @@ import toast from 'react-hot-toast';
 import DescriptionModal from '../components/DescriptionModal';
 import PredictionJourney from '../components/PredictionJourney';
 import VerifiedTick from '../components/VerifiedTick';
+import { useTranslation } from 'react-i18next';
 
-const formatTimeLeft = (deadline) => {
+const formatTimeLeft = (deadline, t) => {
     const total = Date.parse(deadline) - Date.parse(new Date());
-    if (total < 0) return "Awaiting Assessment";
+    if (total < 0) return t("Awaiting Assessment");
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
@@ -43,6 +46,7 @@ const isMarketOpen = () => {
 };
 
 const PredictionDetailPage = ({ requestLogin, settings }) => {
+    const { t } = useTranslation();
     const { predictionId } = useParams();
     const [prediction, setPrediction] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
@@ -66,16 +70,16 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
             if (quoteRes) {
                 setCurrentQuote(quoteRes.data);
             }
-        }).catch(() => toast.error("Could not load prediction details."))
-            .finally(() => setLoading(false));
-    }, [predictionId]);
+        }).catch(() => toast.error(t("Could not load prediction details.")))
+          .finally(() => setLoading(false));
+    }, [predictionId, t]);
 
     useEffect(() => {
         if (prediction?.status === 'Active') {
-            const timer = setInterval(() => setTimeLeft(formatTimeLeft(prediction.deadline)), 1000);
+            const timer = setInterval(() => setTimeLeft(formatTimeLeft(prediction.deadline, t)), 1000);
             return () => clearInterval(timer);
         }
-    }, [prediction]);
+    }, [prediction, t]);
 
     const handleVote = (voteType) => {
         if (!currentUser) return requestLogin();
@@ -94,32 +98,24 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
         }
         setPrediction(newPrediction);
         axios.post(`${process.env.REACT_APP_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
-            .catch(() => { toast.error("Vote failed."); setPrediction(originalPrediction); });
+            .catch(() => { toast.error(t("Vote failed.")); setPrediction(originalPrediction); });
     };
 
-    if (loading) return <div className="text-center text-white">Loading Prediction...</div>;
-    if (!prediction) return <div className="text-center text-white">Prediction not found.</div>;
+    if (loading) return <div className="text-center text-white">{t("Loading Prediction...")}</div>;
+    if (!prediction) return <div className="text-center text-white">{t("Prediction not found.")}</div>;
 
     const isAssessed = prediction.status === 'Assessed';
-
     const marketIsOpenNow = isMarketOpen();
-    const currentPrice = isAssessed
-        ? prediction.actualPrice
-        : currentQuote?.displayPrice;
+    const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
+    const scoreLabel = marketIsOpenNow ? t("Live Score") : t("Score at Close");
+    const priceLabel = marketIsOpenNow ? t("Current") : t("Closing Price");
 
-    const scoreLabel = marketIsOpenNow ? 'Live Score' : 'Score at Close';
-    const priceLabel = marketIsOpenNow ? 'Current' : 'Closing Price';
-
-    let score = isAssessed
-        ? prediction.score
-        : calculateLiveScore(prediction.targetPrice, currentPrice);
-
+    let score = isAssessed ? prediction.score : calculateLiveScore(prediction.targetPrice, currentPrice);
     const formattedScore = typeof score === 'number' ? score.toFixed(1) : score;
     const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
     const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
-
     const hasInitialPrice = typeof prediction.priceAtCreation === 'number';
-    // --- FIX: Percentage calculation is now based on CURRENT price ---
+
     let percentFromCurrent = null;
     if (typeof currentPrice === 'number' && currentPrice > 0) {
         percentFromCurrent = ((prediction.targetPrice - currentPrice) / currentPrice) * 100;
@@ -138,7 +134,7 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                     <div className="flex justify-between items-start">
                         <div>
                             <Link to={`/stock/${prediction.stockTicker}`} className="text-3xl font-bold text-white hover:underline">{prediction.stockTicker}</Link>
-                            <p className="text-gray-400">{prediction.predictionType} Prediction</p>
+                            <p className="text-gray-400">{t("Prediction")} {prediction.predictionType}</p>
                         </div>
                         <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
                             {prediction.status}
@@ -154,22 +150,20 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                         />
                     ) : (
                         <div className="my-8 text-center text-gray-500 text-sm">
-                            (Price journey visual is not available for this older prediction)
+                            {t("(Price journey visual is not available for this older prediction)")}
                         </div>
                     )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                         <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
-                            {/* --- START: INFO ICON MOVED HERE --- */}
                             <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
-                                Target Price
+                                {t("Target Price")}
                                 {prediction.description && (
-                                    <button onClick={() => setIsDescModalOpen(true)} className="text-gray-500 hover:text-white" title="View Rationale">
+                                    <button onClick={() => setIsDescModalOpen(true)} className="text-gray-500 hover:text-white" title={t("View Rationale")}>
                                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
                                     </button>
                                 )}
                             </p>
-                            {/* --- END: INFO ICON MOVED HERE --- */}
                             <p className="text-3xl font-bold text-white">${prediction.targetPrice.toFixed(2)}</p>
                             {percentFromCurrent !== null && (
                                 <p className={`text-sm font-bold ${percentFromCurrent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -177,28 +171,30 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                                 </p>
                             )}
                         </div>
+
                         <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
                             <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
-                                {isAssessed ? 'Final Score' : scoreLabel}
+                                {isAssessed ? t("Final Score") : scoreLabel}
                             </p>
                             <p className={`text-3xl font-bold ${typeof score === 'number' && score > 60 ? 'text-green-400' : 'text-red-400'}`}>{formattedScore}</p>
                         </div>
                     </div>
+
                     {!isAssessed && (
                         <div className="mt-4 text-center bg-gray-700 p-2 rounded-lg">
-                            <p className="text-sm text-gray-400">Time Remaining</p>
+                            <p className="text-sm text-gray-400">{t("Time Remaining")}</p>
                             <p className="font-mono text-white">{timeLeft}</p>
                         </div>
                     )}
 
                     <div className="mt-6 pt-6 border-t border-gray-700">
-                        <h3 className="text-center text-sm text-gray-400 font-bold mb-4">DO YOU AGREE?</h3>
+                        <h3 className="text-center text-sm text-gray-400 font-bold mb-4">{t("DO YOU AGREE?")}</h3>
                         <div className="flex justify-center items-center gap-6 text-gray-400">
-                            <button onClick={() => handleVote('like')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userLike ? 'text-green-500' : 'hover:text-white'}`} disabled={isAssessed} title="Agree">
+                            <button onClick={() => handleVote('like')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userLike ? 'text-green-500' : 'hover:text-white'}`} disabled={isAssessed} title={t("Agree")}>
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
                                 <span>{(prediction.likes || []).length}</span>
                             </button>
-                            <button onClick={() => handleVote('dislike')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userDislike ? 'text-red-500' : 'hover:text-white'}`} disabled={isAssessed} title="Disagree">
+                            <button onClick={() => handleVote('dislike')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userDislike ? 'text-red-500' : 'hover:text-white'}`} disabled={isAssessed} title={t("Disagree")}>
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.438 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.2-1.867a4 4 0 00.8-2.4z"></path></svg>
                                 <span>{(prediction.dislikes || []).length}</span>
                             </button>
@@ -208,7 +204,7 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                     <div className="border-t border-gray-700 mt-6 pt-4 flex items-center">
                         <img src={prediction.userId.avatar} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                         <div className="ml-3">
-                            <p className="text-sm text-gray-400">Predicted by</p>
+                            <p className="text-sm text-gray-400">{t("Predicted by")}</p>
                             <div className="flex items-center gap-2">
                                 <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline">
                                     {prediction.userId.username}
@@ -216,7 +212,7 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                                 {settings?.isVerificationEnabled && prediction.userId.isVerified && <VerifiedTick />}
                             </div>
                         </div>
-                        <p className="ml-auto text-sm text-gray-500 text-right">Made on {new Date(prediction.createdAt).toLocaleDateString()}</p>
+                        <p className="ml-auto text-sm text-gray-500 text-right">{t("Made on")} {new Date(prediction.createdAt).toLocaleDateString()}</p>
                     </div>
                 </div>
             </div>

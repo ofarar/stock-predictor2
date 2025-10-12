@@ -1,0 +1,691 @@
+{
+    "header_watchlist": "观察列表",
+    "header_golden_feed": "黄金动态",
+    "header_explore": "发现",
+    "header_scoreboard": "排行榜",
+    "header_ai_assist": "AI投资组合助手",
+    "header_make_prediction": "做出预测",
+    "header_my_profile": "我的个人资料",
+    "header_settings": "设置",
+    "header_admin": "管理员",
+    "header_logout": "登出",
+    "header_login": "登录",
+    "notifications_title": "通知",
+    "notifications_none": "没有新通知。",
+    "footer_about": "关于",
+    "footer_contact": "联系",
+    "footer_terms": "服务条款",
+    "footer_privacy": "隐私政策",
+    "profile_followers": "关注者",
+    "profile_following": "正在关注",
+    "profile_subscribers": "订阅者",
+    "profile_subscriptions": "订阅",
+    "profile_edit": "编辑个人资料",
+    "profile_get_verified": "获取认证",
+    "profile_manage_gold": "管理黄金会员",
+    "profile_become_golden": "成为黄金会员",
+    "profile_join_button": "加入（${{price}}/月）",
+    "profile_subscribed_badge": "已订阅",
+    "profile_subscriptions_paused": "订阅已暂停",
+    "profile_follow_button": "关注",
+    "profile_following_button": "正在关注",
+    "profile_overall_rank": "总排名",
+    "profile_avg_score": "平均得分",
+    "profile_total_points": "总积分",
+    "profile_total_predictions": "总预测数",
+    "profile_tab_profile": "个人资料",
+    "profile_tab_golden_feed": "黄金动态",
+    "profile_watchlist_title": "观察列表",
+    "profile_watchlist_empty": "该用户尚未关注任何股票。",
+    "profile_achievements_title": "成就",
+    "profile_achievements_empty": "暂无成就。继续做出预测！",
+    "profile_achievements_how_work": "如何获得徽章？",
+    "profile_active_predictions": "当前预测",
+    "profile_prediction_history": "预测历史",
+    "profile_load_more": "加载更多",
+    "profile_no_active_predictions": "没有当前预测。",
+    "profile_no_prediction_history": "暂无预测历史。",
+    "verified_tick_popover_title": "已认证预测者",
+    "verified_tick_popover_text": "该用户是社区的认证成员，表明对平台的承诺。",
+    "verified_modal_title": "成为认证预测者",
+    "verified_modal_text": "通过认证徽章在社区中获得信誉和知名度。",
+    "verified_modal_benefit1": "在网站各处您的姓名旁边获得一个绿色勾选标记。",
+    "verified_modal_benefit2": "您的预测将在“发现”页面的“仅限认证”过滤器中突出显示。",
+    "verified_modal_benefit3": "在相关的观察列表页面上被推荐为认证专家。",
+    "verified_modal_button": "以${{price}}获取认证",
+    "verified_status_modal_title": "您是认证预测者！",
+    "verified_status_modal_text": "您在社区中的信任度和知名度得到了提升。",
+    "verified_status_modal_close": "关闭",
+    "verified_status_modal_remove": "移除认证状态",
+    "homepage_aim": "预测市场。追踪你的准确率。",
+    "about_title": "关于 StockPredictor",
+    "about_mission_title": "我们的使命",
+    "about_mission_text": "StockPredictor 的创立基于一个原则：有见识的群体智慧可以成为驾驭金融市场的强大工具。我们的使命是提供一个平台，让新手投资者和专业人士都能测试自己的分析能力，向社区学习，并建立透明的市场预测记录。",
+    "about_how_it_works_title": "运作方式",
+    "about_how_it_works_predict_title": "1. 预测",
+    "about_how_it_works_predict_text": "对成千上万的资产进行不同时间范围的预测，从每小时到每年。",
+    "about_how_it_works_track_title": "2. 追踪",
+    "about_how_it_works_track_text": "追踪你的活跃预测，查看你的历史预测表现如何。",
+    "about_how_it_works_compete_title": "3. 竞争",
+    "about_how_it_works_compete_text": "通过准确的预测攀升排行榜，向社区展示你的分析能力。",
+    "scoring_explained_title": "评分说明",
+    "scoring_explained_text1": "我们的平台采用 **接近度评分系统（Proximity Scoring System）** 来奖励预测的准确性。与其简单地判定“正确”或“错误”，评分将根据你的预测结果与实际结果的接近程度而定。",
+    "scoring_explained_text2": "例如，如果一只股票的价格是 152 美元，而你预测它将是 150 美元，你将获得比预测 180 美元的人更高的分数。该系统旨在奖励有深思熟虑的分析，而非随意的猜测。完美预测的最高得分为 100 分，预测结果与最终价格的差距越大，得分越低。",
+    "aiwizard_coming_soon": "即将推出",
+    "aiwizard_title": "AI 投资组合助手",
+    "aiwizard_description": "根据我们顶级预测者的模式，获取个性化的股票推荐。",
+    "aiwizard_how_it_works": "工作原理",
+    "aiwizard_step1_title": "定义你的投资风格",
+    "aiwizard_step1_text": "回答一些关于投资周期和兴趣的问题。",
+    "aiwizard_step2_title": "AI 分析数据",
+    "aiwizard_step2_text": "系统会找到在你感兴趣的领域中持续表现出色的预测者。",
+    "aiwizard_step3_title": "获取洞察",
+    "aiwizard_step3_text": "收到我们顶级分析师关注的精选股票列表。",
+    "aiwizard_join_waitlist": "加入早期访问名单",
+    "aiwizard_checking_status": "正在检查状态...",
+    "aiwizard_on_waitlist": "您已在等待名单中！",
+    "aiwizard_signin_to_join": "登录以加入等待名单",
+    "aiwizard_early_access_note": "第一时间获知上线消息。早期注册用户可在限定时间内免费使用！",
+    "aiwizard_legal_note": "**法律声明：** AI Wizard 基于历史用户数据提供信息，仅供参考，不构成投资建议。所有投资决策应基于您自己的研究。",
+    "aiwizard_joining": "加入中...",
+    "aiwizard_join_success": "您已在名单上！启动时我们会通知您。",
+    "aiwizard_join_error": "无法加入候补名单。",
+    "contact_title": "联系我们",
+    "contact_get_in_touch": "保持联系",
+    "contact_intro_text": "有问题、反馈或合作咨询吗？我们希望收到您的消息。",
+    "contact_fill_form_text": "请填写表格，我们会尽快回复您。",
+    "contact_urgent_text": "如有紧急事项，也可以直接联系我们：",
+    "contact_email": "predictostock@gmail.com",
+    "contact_name_label": "您的姓名",
+    "contact_email_label": "您的电子邮件",
+    "contact_message_label": "信息",
+    "contact_sending": "发送中...",
+    "contact_send_button": "发送信息",
+    "contact_fill_all_fields_error": "请填写所有字段。",
+    "contact_success_message": "您的信息已发送！",
+    "contact_error_message": "发生错误。请再试一次。",
+    "editprofile_title": "编辑个人资料",
+    "editprofile_avatar_label": "头像",
+    "editprofile_change_avatar": "更改头像",
+    "editprofile_username_label": "用户名",
+    "editprofile_about_label": "关于我",
+    "editprofile_about_counter": "{{current}} / {{limit}}",
+    "editprofile_xlink_label": "X（Twitter）链接",
+    "editprofile_xlink_placeholder": "https://x.com/你的个人资料",
+    "editprofile_youtube_label": "YouTube 链接",
+    "editprofile_youtube_placeholder": "https://youtube.com/你的频道",
+    "editprofile_save_changes": "保存更改",
+    "editprofile_saving": "保存中...",
+    "editprofile_cancel": "取消",
+    "editprofile_success": "个人资料更新成功！",
+    "editprofile_error": "更新个人资料失败。",
+    "explore_title": "探索预测",
+    "explore_filter_stock": "按股票筛选",
+    "explore_prediction_type": "预测类型",
+    "explore_sort_by": "排序方式",
+    "explore_sort_by_date": "最新",
+    "explore_sort_by_performance": "最佳表现",
+    "explore_sort_by_votes": "最多投票",
+    "explore_sort_by_potential": "最高潜力",
+    "explore_verified_only": "仅显示已验证预测者",
+    "explore_tab_active": "活跃",
+    "explore_tab_assessed": "已评估",
+    "explore_loading": "正在加载预测...",
+    "explore_no_predictions": "未找到符合这些筛选条件的预测。",
+    "explore_predicts_price_of": "预测价格为",
+    "explore_by_deadline": "截止至 {{date}}",
+    "explore_predicted": "预测值",
+    "explore_actual_price": "实际价格",
+    "explore_view_rationale": "查看理由",
+    "explore_agree": "同意",
+    "explore_disagree": "不同意",
+    "explore_vote_failed": "投票失败。",
+    "followers_avg_score": "平均得分",
+    "followers_subscribed_on": "订阅于 {{date}}",
+    "followers_cancel_subscription": "取消订阅",
+    "followers_could_not_load_lists": "无法加载用户列表。",
+    "followers_subscription_canceled": "已取消对 {{username}} 的订阅。",
+    "followers_failed_to_cancel": "取消订阅失败。",
+    "followers_tab_followers": "关注者",
+    "followers_tab_following": "正在关注",
+    "followers_tab_subscribers": "订阅者",
+    "followers_tab_subscriptions": "订阅",
+    "followers_loading": "加载中...",
+    "followers_confirm_cancel_message": "您确定要取消对 {{username}} 的订阅吗？",
+    "followers_no_users": "此列表中没有要显示的用户。",
+    "golden_feed_new_label": "新",
+    "golden_feed_failed_mark_read": "无法将动态标记为已读。",
+    "golden_feed_failed_fetch": "无法加载黄金动态。",
+    "golden_feed_header": "您的黄金动态",
+    "golden_feed_create_post": "创建帖子",
+    "golden_feed_filter_by_member": "按成员筛选",
+    "golden_feed_all_subscriptions": "所有订阅",
+    "golden_feed_filter_by_stock": "按股票筛选",
+    "golden_feed_prediction_type": "预测类型",
+    "golden_feed_loading": "正在加载动态...",
+    "golden_feed_no_posts_title": "未找到符合这些筛选条件的帖子。",
+    "golden_feed_no_posts_subtitle": "尝试扩大搜索范围或订阅更多黄金会员。",
+    "loading_dashboard": "正在加载仪表板...",
+    "welcome_message": "欢迎来到 StockPredictor",
+    "description": "登录以开始做出预测并建立您的虚拟投资组合。",
+    "google_signin": "使用谷歌登录",
+    "loading_settings": "正在加载设置...",
+    "notification_settings_title": "通知设置",
+    "toggle_all_predictions_label": "来自已关注用户的所有预测",
+    "toggle_all_predictions_description": "每当您关注的用户做出新的预测时，都会收到通知。",
+    "toggle_short_term_label": "重要的短期预测",
+    "toggle_short_term_description": "当已关注用户做出重要的小时、每日或每周预测时收到通知。",
+    "toggle_long_term_label": "重要的长期预测",
+    "toggle_long_term_description": "当已关注用户做出重要的每月或更长期的预测时收到通知。",
+    "saving": "保存中...",
+    "save_changes": "保存更改",
+    "settings_saved_success": "设置已保存！",
+    "settings_saved_error": "无法保存设置。",
+    "Awaiting Assessment": "等待评估",
+    "...": "...",
+    "Could not load prediction details.": "无法加载预测详情。",
+    "Loading Prediction...": "正在加载预测...",
+    "Prediction not found.": "未找到预测。",
+    "Live Score": "实时得分",
+    "Score at Close": "收盘时得分",
+    "Current": "当前",
+    "Closing Price": "收盘价",
+    "(Price journey visual is not available for this older prediction)": "(此旧预测的价格走势图不可用)",
+    "Target Price": "目标价格",
+    "View Rationale": "查看理由",
+    "Final Score": "最终得分",
+    "Time Remaining": "剩余时间",
+    "DO YOU AGREE?": "您同意吗？",
+    "Agree": "同意",
+    "Disagree": "不同意",
+    "Predicted by": "预测者",
+    "Made on": "创建于",
+    "Prediction": "预测",
+    "privacy_title": "隐私政策",
+    "info_collection_title": "1. 信息收集",
+    "info_collection_text": "我们收集信息以提供和改进我们的服务。当您使用谷歌注册时，我们会根据您的谷歌账户权限接收您的姓名、电子邮件地址和个人资料图片。",
+    "use_info_title": "2. 信息的使用",
+    "use_info_text": "我们使用收集到的信息来运营和维护我们的服务、创建您的用户个人资料以及与您沟通。我们不会将您的个人信息出售给第三方。",
+    "cookies_title": "3. Cookies",
+    "cookies_text": "您登录后，我们使用 Cookie 来维持您的会话。Cookie 是存储在您计算机上的一个小数据片段。您可以指示您的浏览器拒绝所有 Cookie，但这可能会导致您无法使用我们服务的某些部分。",
+    "security_title": "4. 安全性",
+    "security_text": "我们重视您的数据安全，但请记住，没有任何通过互联网传输的方法是 100% 安全的。我们努力使用商业上可接受的方式来保护您的个人信息，但我们不能保证其绝对安全。",
+    "profile_title": "个人资料",
+    "followers_label": "关注者",
+    "following_label": "正在关注",
+    "subscribers_label": "订阅者",
+    "subscriptions_label": "订阅",
+    "manage_gold_label": "管理黄金会员",
+    "become_golden_label": "成为黄金会员",
+    "edit_profile_label": "编辑个人资料",
+    "get_verified_label": "获取认证",
+    "following_btn": "正在关注",
+    "follow_btn": "关注",
+    "subscribed_label": "已订阅",
+    "join_label": "加入（${{price}}/月）",
+    "subscriptions_paused_label": "订阅已暂停",
+    "member_since_label": "始于 {{date}} 的成员",
+    "no_bio_label": "未提供简介。",
+    "active_predictions_title": "当前预测",
+    "prediction_history_title": "预测历史",
+    "no_active_predictions_label": "没有当前预测。",
+    "no_prediction_history_label": "暂无预测历史。",
+    "load_more_label": "加载更多",
+    "overall_rank_label": "总排名",
+    "average_score_label": "平均得分",
+    "total_points_label": "总积分",
+    "total_predictions_label": "总预测数",
+    "profile_tab_label": "个人资料",
+    "golden_feed_tab_label": "黄金动态",
+    "create_golden_post_btn": "创建黄金帖子",
+    "processing_verification_msg": "正在处理认证...",
+    "verification_success_msg": "认证成功！",
+    "verification_failed_msg": "认证失败。",
+    "cancel_verification_title": "取消认证",
+    "cancel_verification_msg": "您确定吗？您将失去您的认证状态和权益。",
+    "title_top_performers": "🏆 表现最佳者",
+    "label_prediction_type": "预测类型",
+    "label_filter_by_stock": "按股票筛选",
+    "text_avg_score": "平均得分",
+    "msg_loading_scoreboard_error": "无法加载排行榜数据。",
+    "msg_no_users_found": "未找到符合这些筛选条件的用户。",
+    "msg_try_broaden_search": "请尝试扩大您的搜索标准。",
+    "loading_stock_data": "正在加载股票数据...",
+    "error_loading_stock_data": "无法加载 {{ticker}} 的数据。",
+    "could_not_load_stock_data": "无法加载 {{ticker}} 的数据。请尝试其他股票代码。",
+    "add_to_watchlist": "添加到观察列表",
+    "remove_from_watchlist": "从观察列表中移除",
+    "make_prediction": "做出预测",
+    "top_predictors_for": "{{ticker}} 的顶尖预测者",
+    "avg_score": "平均得分",
+    "no_top_predictors": "此筛选条件下暂无顶尖预测者。",
+    "active_predictions_on": "关于 {{ticker}} 的当前预测",
+    "prediction_type": "{{type}}预测",
+    "target": "目标价: ${{targetPrice}}",
+    "no_active_predictions": "此股票暂无当前预测。",
+    "terms_page": {
+        "title": "服务条款",
+        "sections": {
+            "acceptance_of_terms": {
+                "title": "1. 接受条款",
+                "content": "访问或使用 StockPredictor 网站（“服务”），即表示您同意受本服务条款的约束。如果您不同意条款的任何部分，则不得访问本服务。"
+            },
+            "no_financial_advice": {
+                "title": "2. 无财务建议",
+                "content": "本服务提供的信息、预测和评分仅供参考和娱乐之用。本网站上的任何内容均不构成财务、投资、法律或税务建议。您需自行对自己的投资决策负责。"
+            },
+            "user_conduct": {
+                "title": "3. 用户行为",
+                "content": "您同意不使用本服务发布或传播任何恶意、诽谤或以其他方式违反任何法律的材料。您应对您账户下发布的所有预测和内容负责。"
+            },
+            "limitation_of_liability": {
+                "title": "4. 责任限制",
+                "content": "在任何情况下，StockPredictor 及其董事或员工均不对因您访问或使用本服务而导致的任何间接、附带、特殊、后果性或惩罚性损害负责，包括但不限于利润、数据或其他无形损失。"
+            }
+        }
+    },
+    "watchlist_page": {
+        "title": "我的观察列表",
+        "search_placeholder": "搜索要观察的股票（例如 AAPL）...",
+        "empty_watchlist": {
+            "title": "您的观察列表是空的。",
+            "subtitle": "在上方搜索股票以开始追踪。"
+        },
+        "active_predictions_title": "{{ticker}} 的当前预测",
+        "filter_by_type": "按类型筛选",
+        "sort_by": "排序方式",
+        "sort_options": {
+            "date": "最新",
+            "votes": "最多投票",
+            "potential": "最高潜力"
+        },
+        "no_predictions": "没有符合您筛选条件的当前预测。",
+        "load_more": "加载更多",
+        "recommended_experts_title": "推荐专家",
+        "no_recommended_experts": "此股票暂无顶尖预测者。",
+        "watchlist_card": {
+            "remove_title": "从观察列表中移除 {{symbol}}"
+        },
+        "follow_button": "关注"
+    },
+    "prediction_types": {
+        "All": "全部",
+        "Hourly": "每小时",
+        "Daily": "每日",
+        "Weekly": "每周",
+        "Monthly": "每月",
+        "Quarterly": "每季度",
+        "Yearly": "每年"
+    },
+    "aim": {
+        "title": "预测市场。 <0>追踪你的准确率。</0>"
+    },
+    "avatarModal": {
+        "title": "更换您的头像",
+        "styleLabel": "风格",
+        "shuffleButton": "随机",
+        "cancelButton": "取消",
+        "saveButton": "保存头像",
+        "styles": {
+            "adventurer": "冒险家",
+            "lorelei": "罗蕾莱",
+            "miniavs": "迷你头像",
+            "openPeeps": "开放人物",
+            "personas": "人物角色",
+            "pixelArt": "像素艺术",
+            "notionists": "Notionist风格",
+            "bottts": "机器人",
+            "shapes": "形状",
+            "thumbs": "拇指",
+            "funEmoji": "趣味表情",
+            "identicon": "Identicon",
+            "initials": "首字母",
+            "rings": "圆环"
+        }
+    },
+    "badgeInfoModal": {
+        "title": "成就系统如何运作",
+        "loadingText": "正在加载详情...",
+        "scoreLabel": "得分 > {{score}}",
+        "minPredictions": "至少需要 {{count}} 次预测。",
+        "closeButton": "关闭"
+    },
+    "badgeShowcase": {
+        "title": "成就",
+        "noAchievements": "暂无成就。继续做出预测！",
+        "infoButtonTitle": "如何获得徽章？",
+        "unknownBadge": "未知徽章"
+    },
+    "communityFeed": {
+        "title": "社区动态",
+        "noRecentPredictions": "暂无近期预测。"
+    },
+    "confirmationModal": {
+        "cancel": "取消",
+        "confirm": "确认",
+        "defaultTitle": "您确定吗？",
+        "defaultMessage": "此操作无法撤销。"
+    },
+    "dailyLeaderboard": {
+        "title": "今日最佳表现者",
+        "subtitle": "(基于今日的每小时预测)",
+        "noData": "今日暂无数据。",
+        "averageScoreSuffix": "平均"
+    },
+    "descriptionModal": {
+        "title": "预测者的理由"
+    },
+    "famousStocks": {
+        "title": "热门预测",
+        "predictionsText": "今日 {{count}} 条预测",
+        "noData": "目前没有热门股票。"
+    },
+    "footer": {
+        "about": "关于",
+        "contact": "联系",
+        "terms": "服务条款",
+        "privacy": "隐私政策",
+        "copyright": "版权所有。"
+    },
+    "globalSearch": {
+        "placeholder": "搜索股票..."
+    },
+    "goldenFeed": {
+        "newTag": "新",
+        "attachedPrediction": "附加预测：",
+        "loading": "正在加载动态...",
+        "exclusiveContentTitle": "独家内容",
+        "exclusiveContentDescription": "加入 {{username}} 的订阅者，查看他们的私人动态，包括详细的预测理由和市场分析。",
+        "joinButton": "以每月 ${{price}} 加入",
+        "noPosts": "{{username}} 尚未发布任何独家内容。"
+    },
+    "goldenMemberModal": {
+        "title": "黄金会员设置",
+        "priceLabel": "月费 ($1 - $500)",
+        "descriptionLabel": "描述",
+        "defaultDescription": "获取独家见解并支持我的预测！",
+        "acceptingNewLabel": "接受新订阅者",
+        "updateSuccess": "黄金会员设置已更新！",
+        "updateFail": "无法更新设置。",
+        "deactivateSuccess": "黄金会员状态已停用。",
+        "deactivateFail": "无法更新设置。",
+        "updateButton": "更新设置",
+        "activateButton": "激活黄金状态",
+        "deactivateButton": "停用"
+    },
+    "goldenPostForm": {
+        "title": "创建黄金帖子",
+        "messagePlaceholder": "与您的订阅者分享您的独家分析...",
+        "attachPredictionLabel": "附加一个预测",
+        "stockLabel": "股票",
+        "targetPriceLabel": "目标价格",
+        "typeLabel": "类型",
+        "hourly": "每小时",
+        "daily": "每日",
+        "weekly": "每周",
+        "monthly": "每月",
+        "quarterly": "每季度",
+        "yearly": "每年",
+        "cancelButton": "取消",
+        "postingButton": "正在发布...",
+        "postButton": "发布",
+        "emptyMessageError": "帖子信息不能为空。",
+        "fetchPriceError": "无法获取 {{ticker}} 的价格。",
+        "createSuccess": "黄金帖子已发布！",
+        "createFail": "无法创建帖子。"
+    },
+    "header": {
+        "aiWizard": "AI投资组合助手",
+        "watchlist": "观察列表",
+        "goldenFeed": "黄金动态",
+        "explore": "发现",
+        "scoreboard": "排行榜",
+        "makePrediction": "做出预测",
+        "userMenu": {
+            "myProfile": "我的个人资料",
+            "settings": "设置",
+            "admin": "管理员",
+            "logout": "登出"
+        },
+        "notifications": {
+            "title": "通知",
+            "noNew": "没有新通知。"
+        },
+        "mobileMenu": {
+            "myProfile": "我的个人资料",
+            "watchlist": "观察列表",
+            "goldenFeed": "黄金动态",
+            "explore": "发现",
+            "scoreboard": "排行榜",
+            "settings": "设置",
+            "adminPanel": "管理面板",
+            "logout": "登出",
+            "login": "登录"
+        },
+        "buttons": {
+            "login": "登录",
+            "logout": "登出",
+            "makePrediction": "做出预测"
+        }
+    },
+    "notifications": {
+        "types": {
+            "newFollower": "新关注者",
+            "badgeEarned": "获得徽章",
+            "goldenPost": "黄金帖子",
+            "newPrediction": "新预测"
+        }
+    },
+    "hourlyWinnersFeed": {
+        "title": "上一小时的获胜者",
+        "nextResults": "距离下次结果：{{timeLeft}}",
+        "marketClosed": "市场已关闭",
+        "noPredictions": "暂无已评估的预测。",
+        "pointsSuffix": "+{{score}}分"
+    },
+    "infoModal": {
+        "title": "时间奖励说明",
+        "description": "为奖励早期分析，预测会应用基于时间的惩罚。随着截止日期的临近，您可以通过预测获得的最高分数会降低。",
+        "hourlyPredictions": {
+            "title": "每小时预测：",
+            "description": "惩罚按分钟计算。前10分钟没有惩罚（最高分：100）。惩罚会线性增加，直到小时的最后10分钟，最高分为80。"
+        },
+        "dailyPredictions": {
+            "title": "每日预测：",
+            "description": "惩罚在整个交易日内应用。在市场开盘时做出的预测具有最高的潜在得分。"
+        },
+        "longerTermPredictions": {
+            "title": "长期预测：",
+            "description": "对于每周、每月和更长期的预测，惩罚与已过去预测期的百分比成正比。"
+        },
+        "closeButton": "关闭"
+    },
+    "joinGoldenModal": {
+        "title": "加入 {{username}} 的订阅者",
+        "pricePerMonth": "{{price}} / 月",
+        "whatYouGet": "您将获得：",
+        "noDescription": "未提供描述。",
+        "joinButton": "立即加入",
+        "toast": {
+            "success": "您现在已订阅 {{username}}！",
+            "error": "加入失败。请重试。"
+        }
+    },
+    "loginPromptModal": {
+        "title": "加入社区",
+        "description": "创建一个帐户来做出预测，关注顶尖预测者，并攀登排行榜。",
+        "signUpWithGoogle": "使用谷歌注册"
+    },
+    "longTermLeaders": {
+        "title": "长期领先者",
+        "description": "(基于季度和年度准确率)",
+        "noData": "暂无数据。",
+        "accuracyLabel": "平均"
+    },
+    "performanceChart": {
+        "title": "表现图表",
+        "filters": {
+            "overall": "全部",
+            "hourly": "每小时",
+            "daily": "每日",
+            "weekly": "每周",
+            "monthly": "每月",
+            "yearly": "每年"
+        },
+        "noData": "此筛选条件下没有表现数据。"
+    },
+    "performanceTabs": {
+        "tabs": {
+            "byType": "按类型",
+            "byStock": "按股票"
+        },
+        "statCard": {
+            "averageScore": "平均得分",
+            "rank": "排名",
+            "topRankTitle": "排名前 {{rank}}"
+        },
+        "noData": {
+            "byType": "没有可用于预测类型的数据。",
+            "byStock": "没有可用于个别股票的数据。"
+        }
+    },
+    "predictionJourney": {
+        "initial": "初始",
+        "target": "目标",
+        "currentPriceTooltip": "${value} {priceLabel}"
+    },
+    "predictionModal": {
+        "confirmationTitle": "您确定吗？",
+        "closeButtonAria": "关闭模式窗口"
+    },
+    "predictionTypes": {
+        "modalTitle": "预测类型说明",
+        "hourly": "每小时",
+        "hourlyDescription": "预测当前或下一个交易小时结束时的股价。非常适合短期波动。",
+        "daily": "每日",
+        "dailyDescription": "预测当前或下一个交易日结束时的股价。是日常市场波动的经典时间框架。",
+        "weekly": "每周",
+        "weeklyDescription": "预测当前交易周（星期五）结束时的股价。适合追踪每周趋势。",
+        "monthly": "每月",
+        "monthlyDescription": "预测当前日历月结束时的股价。最适合捕捉月度势头。",
+        "quarterly": "每季度",
+        "quarterlyDescription": "预测当前财政季度（例如3月、6月、9月、12月）结束时的股价。",
+        "yearly": "每年",
+        "yearlyDescription": "预测当前日历年结束时的股价。适用于重大市场变化的长期预测。"
+    },
+    "common": {
+        "close": "关闭"
+    },
+    "prediction": {
+        "makePrediction": "做出预测",
+        "searchPlaceholder": "搜索股票（例如 AAPL）",
+        "searching": "正在搜索...",
+        "currentPrice": "当前价格",
+        "na": "不适用",
+        "type": "类型",
+        "learnMore": "了解更多关于预测类型的信息",
+        "targetPrice": "目标价格",
+        "rationale": "理由（可选）",
+        "rationalePlaceholder": "您为什么认为价格会变动？",
+        "placePrediction": "提交预测",
+        "maxScore": "最高分: {{score}}"
+    },
+    "scoreboard": {
+        "title": "排行榜",
+        "trophy": "🏆",
+        "loadError": "无法加载排行榜数据。",
+        "predictionType": "预测类型",
+        "filterStock": "按股票筛选",
+        "avgScore": "平均得分",
+        "noUsers": "未找到符合这些筛选条件的用户。",
+        "noUsersHint": "请尝试扩大您的搜索标准。",
+        "rank": "排名: {{number}}",
+        "currentPrice": "当前价格: ${{price}}"
+    },
+    "stockChart": {
+        "loading": "正在加载图表...",
+        "priceLabel": "{{ticker}} 价格"
+    },
+    "stockFilterSearch": {
+        "placeholder": "例如 AAPL"
+    },
+    "stockSearch": {
+        "title": "搜索资产",
+        "placeholder": "搜索股票、加密货币...",
+        "loading": "加载中...",
+        "errorNoResults": "未找到结果。",
+        "errorFetchFailed": "无法获取搜索结果。",
+        "errorQuoteFailed": "无法获取股票报价。",
+        "errorQuoteNotFound": "无法检索到 {{symbol}} 的报价。请尝试其他代码。",
+        "dataDelayed": "数据延迟最多15分钟"
+    },
+    "timePenaltyBar": {
+        "label": "时间奖励",
+        "infoAriaLabel": "了解更多关于时间奖励的信息"
+    },
+    "topMovers": {
+        "loading": "正在加载热门股票...",
+        "title": "热门股票"
+    },
+    "verificationModal": {
+        "title": "成为认证预测者",
+        "description": "通过认证徽章在社区中获得信誉和知名度。",
+        "benefits": {
+            "greenCheck": "在网站各处您的姓名旁边获得一个绿色勾选标记。",
+            "verifiedFilter": "您的预测将在“发现”页面的“仅限认证”过滤器中突出显示。",
+            "verifiedExpert": "在相关的观察列表页面上被推荐为认证专家。"
+        },
+        "button": "以 ${price} 获取认证"
+    },
+    "verifiedStatusModal": {
+        "title": "您是已认证的预测者！",
+        "description": "您在社区中的信誉和知名度得到了提升。",
+        "closeButton": "关闭",
+        "removeButton": "移除认证状态"
+    },
+    "verifiedTick": {
+        "ariaLabel": "已认证预测者",
+        "title": "已认证预测者",
+        "description": "该用户是社区的认证成员，表明对平台的承诺。"
+    },
+    "watchlistShowcase": {
+        "title": "观察列表",
+        "viewStock": "查看 {{stock}}",
+        "noStocks": "该用户尚未关注任何股票。"
+    },
+    "watchlistPage": {
+        "title": "我的自选股",
+        "searchPlaceholder": "搜索要关注的股票（例如：AAPL）...",
+        "emptyWatchlist": {
+            "title": "你的自选股列表是空的。",
+            "description": "在上方搜索股票以开始跟踪。"
+        },
+        "activePredictions": "{{ticker}} 的活跃预测",
+        "filterByTypeLabel": "按类型筛选",
+        "sortByLabel": "排序方式",
+        "sortOptions": {
+            "date": "最新",
+            "votes": "最多投票",
+            "potential": "最高潜力"
+        },
+        "noPredictions": "没有符合筛选条件的活跃预测。",
+        "loadMore": "加载更多",
+        "recommendedPredictors": "推荐预测者",
+        "noRecommendedUsers": "此股票暂无顶级预测者。",
+        "avgScoreLabel": "平均分：",
+        "followingButton": "关注",
+        "toast": {
+            "loadingAdd": "正在添加 {{ticker}}...",
+            "loadingRemove": "正在移除 {{ticker}}...",
+            "successUpdate": "自选股列表已成功更新。",
+            "errorUpdate": "更新失败。",
+            "errorLoadWatchlist": "无法加载自选股列表。",
+            "loadingFollow": "正在关注用户...",
+            "successFollow": "已成功关注用户！",
+            "errorFollow": "无法关注用户。"
+        }
+    },
+    "watchlistStockCard": {
+        "removeButtonTitle": "从自选股中移除 {{symbol}}"
+    }
+}

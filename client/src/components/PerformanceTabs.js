@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const StatCard = ({ label, avgScore, rank, isStock }) => {
+    const { t } = useTranslation();
     const circumference = 2 * Math.PI * 20;
     const offset = circumference - (avgScore / 100) * circumference;
 
@@ -25,17 +27,15 @@ const StatCard = ({ label, avgScore, rank, isStock }) => {
                 ) : (
                     <p className="font-bold text-white text-lg">{label}</p>
                 )}
-                <p className="text-sm text-gray-400">Average Score</p>
+                <p className="text-sm text-gray-400">{t('performanceTabs.statCard.averageScore')}</p>
             </div>
 
             {/* Rank Display */}
             <div className="relative flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2 text-center w-20">
-                {/* --- START: NEW STAR ICON --- */}
                 {rank <= 3 && (
-                    <span className="absolute -top-2 -right-2 text-2xl" title={`Top ${rank} Rank`}>⭐</span>
+                    <span className="absolute -top-2 -right-2 text-2xl" title={t('performanceTabs.statCard.topRankTitle', { rank })}>⭐</span>
                 )}
-                {/* --- END: NEW STAR ICON --- */}
-                <p className="text-xs text-blue-400 font-bold">RANK</p>
+                <p className="text-xs text-blue-400 font-bold">{t('performanceTabs.statCard.rank')}</p>
                 <p className="text-xl font-bold text-white">#{rank}</p>
             </div>
         </div>
@@ -44,6 +44,7 @@ const StatCard = ({ label, avgScore, rank, isStock }) => {
 
 
 const PerformanceTabs = ({ performance }) => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('ByType');
 
     if (!performance) return null;
@@ -51,21 +52,27 @@ const PerformanceTabs = ({ performance }) => {
     return (
         <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
             <div className="flex border-b border-gray-700 mb-4">
-                <button onClick={() => setActiveTab('ByType')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'ByType' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>By Type</button>
-                <button onClick={() => setActiveTab('ByStock')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'ByStock' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>By Stock</button>
+                <button onClick={() => setActiveTab('ByType')}
+                        className={`px-4 py-2 font-bold transition-colors ${activeTab === 'ByType' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
+                    {t('performanceTabs.tabs.byType')}
+                </button>
+                <button onClick={() => setActiveTab('ByStock')}
+                        className={`px-4 py-2 font-bold transition-colors ${activeTab === 'ByStock' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
+                    {t('performanceTabs.tabs.byStock')}
+                </button>
             </div>
             {activeTab === 'ByType' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                     {performance.byType?.length > 0 ? performance.byType.map(p => (
                         <StatCard key={p.type} label={p.type} avgScore={p.accuracy} rank={p.rank} />
-                    )) : <p className="md:col-span-2 text-gray-500 text-center py-4">No data available for prediction types.</p>}
+                    )) : <p className="md:col-span-2 text-gray-500 text-center py-4">{t('performanceTabs.noData.byType')}</p>}
                 </div>
             )}
             {activeTab === 'ByStock' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                     {performance.byStock?.length > 0 ? performance.byStock.map(s => (
                         <StatCard key={s.ticker} label={s.ticker} avgScore={s.accuracy} rank={s.rank} isStock={true} />
-                    )) : <p className="md:col-span-2 text-gray-500 text-center py-4">No data available for individual stocks.</p>}
+                    )) : <p className="md:col-span-2 text-gray-500 text-center py-4">{t('performanceTabs.noData.byStock')}</p>}
                 </div>
             )}
         </div>
