@@ -189,10 +189,10 @@ const ProfilePage = ({ settings }) => {
                 <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
                     <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className={`w-24 h-24 rounded-full border-4 ${avatarBorder} transition-colors`} />
                     <div className="flex-grow text-center sm:text-left">
-                        <h1 className="text-4xl font-bold text-white inline-flex items-center gap-2">
+                        <h1 className="text-4xl font-bold text-white">
                             {user.username}
                             {settings?.isVerificationEnabled && user.isVerified && (
-                                <div className="inline-block align-middle">
+                                <div className="inline-block align-middle ml-2">
                                     {isOwnProfile ? (
                                         <VerifiedTick onClick={() => setIsStatusModalOpen(true)} />
                                     ) : (
