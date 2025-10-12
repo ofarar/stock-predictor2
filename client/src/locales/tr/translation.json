@@ -625,7 +625,7 @@
   },
   "topMovers": {
     "loading": "En Çok Hareket Edenler Yükleniyor...",
-    "t,itle": "Trend Olan Hisseler"
+    "title": "Trend Olan Hisseler"
   },
   "verificationModal": {
     "title": "Doğrulanmış Tahminci Olun",
