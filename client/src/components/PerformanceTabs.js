@@ -64,7 +64,7 @@ const PerformanceTabs = ({ performance }) => {
             {activeTab === 'ByType' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                     {performance.byType?.length > 0 ? performance.byType.map(p => (
-                        <StatCard key={p.type} label={p.type} avgScore={p.accuracy} rank={p.rank} />
+                        <StatCard key={p.type} label={t(`predictionTypes.${p.type.toLowerCase()}`)} avgScore={p.accuracy} rank={p.rank} />
                     )) : <p className="md:col-span-2 text-gray-500 text-center py-4">{t('performanceTabs.noData.byType')}</p>}
                 </div>
             )}

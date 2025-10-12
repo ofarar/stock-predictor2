@@ -3,11 +3,12 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '../utils/formatters';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const PerformanceChart = ({ chartData = [] }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [filter, setFilter] = useState('Overall');
     const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
 
@@ -41,7 +42,19 @@ const PerformanceChart = ({ chartData = [] }) => {
         maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-            x: { ticks: { color: '#9ca3af', maxTicksLimit: 10 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+            x: {
+                ticks: {
+                    color: '#9ca3af',
+                    maxTicksLimit: 10,
+                    // Add this callback to format the date
+                    callback: function (value, index, ticks) {
+                        const label = this.getLabelForValue(value);
+                        // Convert the string label into a Date object before formatting
+                        return formatDate(new Date(label), i18n.language);
+                    }
+                },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' }
+            },
             y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, min: 0, max: 100 }
         },
         elements: {
