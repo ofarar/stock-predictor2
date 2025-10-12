@@ -6,9 +6,10 @@ import DescriptionModal from '../components/DescriptionModal';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
+import { formatPercentage } from '../utils/formatters';
 
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     if (!prediction.userId) return null;
 
@@ -49,7 +50,9 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                         <p className="text-gray-300">{t('explore_predicts_price_of')}</p>
                         <div className="flex justify-center items-center gap-2">
                             <p className="text-3xl font-bold text-green-400 my-2">${prediction.targetPrice.toFixed(2)}</p>
-                            <p className={`text-lg font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>({percentChange >= 0 ? '+' : ''}{percentChange.toFixed(1)}%)</p>
+                            <p className={`text-lg font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                ({formatPercentage(percentChange, i18n.language)})
+                            </p>
                             {prediction.description && (
                                 <button onClick={(e) => { e.stopPropagation(); onInfoClick(prediction.description); }} className="text-gray-500 hover:text-white" title={t('explore_view_rationale')}>
                                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>

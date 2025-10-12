@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { formatPercentage } from '../utils/formatters';
 
 const TopMovers = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [movers, setMovers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -33,7 +34,7 @@ const TopMovers = () => {
                             <p className="text-sm text-gray-400">${mover.price}</p>
                         </div>
                         <span className={`font-semibold px-2 py-1 rounded-md text-sm ${mover.isUp ? 'bg-green-500 bg-opacity-20 text-green-400' : 'bg-red-500 bg-opacity-20 text-red-400'}`}>
-                            {mover.percentChange}%
+                            {formatPercentage(parseFloat(mover.percentChange), i18n.language)}
                         </span>
                     </div>
                 ))}

@@ -17,9 +17,10 @@ import VerificationModal from '../components/VerificationModal';
 import VerifiedTick from '../components/VerifiedTick';
 import VerifiedStatusModal from '../components/VerifiedStatusModal';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { formatPercentage } from '../utils/formatters';
 
 const MiniPredictionCard = ({ prediction, currentPrice }) => {
-    const { t } = useTranslation();
+    const { i18n } = useTranslation();
     const isAssessed = prediction.status === 'Assessed';
     let percentageChange = null;
     if (!isAssessed && currentPrice > 0) {
@@ -42,7 +43,7 @@ const MiniPredictionCard = ({ prediction, currentPrice }) => {
                         <p className="font-semibold text-lg text-white">${prediction.targetPrice.toFixed(2)}</p>
                         {percentageChange !== null && (
                             <p className={`text-sm font-bold -mt-1 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                {percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%
+                                {formatPercentage(percentageChange, i18n.language)}
                             </p>
                         )}
                     </div>

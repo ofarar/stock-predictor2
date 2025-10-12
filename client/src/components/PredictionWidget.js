@@ -5,6 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import TimePenaltyBar from './TimePenaltyBar';
 import { useTranslation } from 'react-i18next';
+import { formatPercentage } from '../utils/formatters';
 
 const isMarketOpen = () => {
     const now = new Date();
@@ -137,8 +138,8 @@ const getPredictionDetails = (predictionType) => {
 };
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
-    const { t } = useTranslation();
-    
+    const { t, i18n } = useTranslation();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [selectedStock, setSelectedStock] = useState(null);
@@ -296,7 +297,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                                 <div className="flex items-center gap-2 bg-gray-900 rounded-md pr-2">
                                     <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!formState.isOpen} className="w-full bg-transparent p-2 text-white disabled:opacity-50 focus:outline-none" />
                                     <span className={`font-bold text-sm flex-shrink-0 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                        {percentageChange.toFixed(1)}%
+                                        {formatPercentage(percentageChange, i18n.language)}
                                     </span>
                                 </div>
                             </div>
