@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
+import { formatCurrency } from '../utils/formatters';
 
 const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { ticker } = useParams();
     const [stockData, setStockData] = useState({
         quote: null,
@@ -83,7 +84,9 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                 <div className="flex items-center gap-4">
                     <h1 className="text-3xl md:text-4xl font-bold text-white">{quote.longName || ticker} ({quote.symbol})</h1>
                     <div className="flex items-baseline gap-4">
-                        <p className="text-3xl md:text-4xl font-bold text-white">${quote.regularMarketPrice?.toFixed(2)}</p>
+                        <p className="text-3xl md:text-4xl font-bold text-white">
+                            {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
+                        </p>
                         <p className={`font-semibold ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2)} ({percentChange?.toFixed(2)}%)
                         </p>

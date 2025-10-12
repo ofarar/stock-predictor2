@@ -586,9 +586,10 @@
         "learnMore": "了解更多关于预测类型的信息",
         "targetPrice": "目标价格",
         "rationale": "理由（可选）",
-        "rationalePlaceholder": "您为什么认为价格会变动？",
+        "rationalePlaceholder": "请说明您预测此价格变动的理由。",
         "placePrediction": "提交预测",
-        "maxScore": "最高分: {{score}}"
+        "maxScore": "最高分: {{score}}",
+        "confirmationMessage": "您对 {{price}} 的预测是 {{percent}} 的变动，超过了通常的 {{limit}}% 范围。您确定吗？"
     },
     "scoreboard": {
         "title": "排行榜",
@@ -687,5 +688,12 @@
     },
     "watchlistStockCard": {
         "removeButtonTitle": "从自选股中移除 {{symbol}}"
+    },
+    "predictionWidgetMessages": {
+        "openingHourPrediction": "开盘小时预测",
+        "marketClosed": "市场当前已关闭",
+        "forDate": "截止于 {{date}}",
+        "maxScore": "最高得分: {{score}}",
+        "invalidType": "请选择一个有效的预测类型。"
     }
 }

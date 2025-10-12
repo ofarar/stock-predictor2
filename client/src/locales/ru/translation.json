@@ -586,9 +586,10 @@
         "learnMore": "Узнать больше о типах прогнозов",
         "targetPrice": "Целевая цена",
         "rationale": "Обоснование (необязательно)",
-        "rationalePlaceholder": "Как вы думаете, почему цена изменится?",
+        "rationalePlaceholder": "Опишите причины вашего прогноза.",
         "placePrediction": "Сделать прогноз",
-        "maxScore": "Макс. балл: {{score}}"
+        "maxScore": "Макс. балл: {{score}}",
+        "confirmationMessage": "Ваш прогноз в {{price}} — это изменение на {{percent}}, что превышает обычный диапазон в {{limit}} %. Вы уверены?"
     },
     "scoreboard": {
         "title": "Таблицы лидеров",
@@ -687,5 +688,12 @@
     },
     "watchlistStockCard": {
         "removeButtonTitle": "Удалить {{symbol}} из списка наблюдения"
+    },
+    "predictionWidgetMessages": {
+        "openingHourPrediction": "Прогноз на час открытия",
+        "marketClosed": "Рынок в настоящее время закрыт",
+        "forDate": "На {{date}}",
+        "maxScore": "Макс. счёт: {{score}}",
+        "invalidType": "Выберите действительный тип прогноза."
     }
 }

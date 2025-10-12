@@ -6,7 +6,7 @@ import DescriptionModal from '../components/DescriptionModal';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
-import { formatPercentage } from '../utils/formatters';
+import { formatPercentage, formatCurrency } from '../utils/formatters';
 
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
     const { t, i18n } = useTranslation();
@@ -42,8 +42,12 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                 </div>
                 {isAssessed ? (
                     <div className="grid grid-cols-2 gap-4 text-center">
-                        <div><p className="text-xs text-gray-400">{t('explore_predicted')}</p><p className="font-semibold text-white">${prediction.targetPrice.toFixed(2)}</p></div>
-                        <div><p className="text-xs text-gray-400">{t('explore_actual_price')}</p><p className="font-bold text-lg text-green-400">${(prediction.actualPrice || 0).toFixed(2)}</p></div>
+                        <div><p className="text-xs text-gray-400">{t('explore_predicted')}</p><p className="font-semibold text-white">
+                            {formatCurrency(prediction.targetPrice, i18n.language, prediction.currency)}
+                        </p></div>
+                        <div><p className="text-xs text-gray-400">{t('explore_actual_price')}</p><p className="font-bold text-lg text-green-400">
+                            {formatCurrency(prediction.actualPrice || 0, i18n.language, prediction.currency)}
+                        </p></div>
                     </div>
                 ) : (
                     <div className="text-center">

@@ -560,6 +560,7 @@
   },
   "predictionTypes": {
     "modalTitle": "Prediction Types Explained",
+    "hourly": "Hourly",
     "hourlyDescription": "Predict the stock price for the end of the current or next trading hour. Ideal for short-term volatility.",
     "daily": "Daily",
     "dailyDescription": "Predict the stock price for the end of the current or next trading day. A classic timeframe for day-to-day market moves.",
@@ -585,9 +586,10 @@
     "learnMore": "Learn more about prediction types",
     "targetPrice": "Target Price",
     "rationale": "Rationale (Optional)",
-    "rationalePlaceholder": "Why do you think the price will move?",
+    "rationalePlaceholder": "What is your rationale for this prediction?",
     "placePrediction": "Place Prediction",
-    "maxScore": "Max Score: {{score}}"
+    "maxScore": "Max Score: {{score}}",
+    "confirmationMessage": "Your prediction of {{price}} is a {{percent}} change, which is more than the typical {{limit}}% range. Are you sure?"
   },
   "scoreboard": {
     "title": "Leaderboards",
@@ -686,5 +688,12 @@
   },
   "watchlistStockCard": {
     "removeButtonTitle": "Remove {{symbol}} from watchlist"
+  },
+  "predictionWidgetMessages": {
+    "openingHourPrediction": "Opening Hour Prediction",
+    "marketClosed": "Market is currently closed",
+    "forDate": "For {{date}}",
+    "maxScore": "Max Score: {{score}}",
+    "invalidType": "Select a valid prediction type."
   }
 }

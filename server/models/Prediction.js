@@ -11,6 +11,7 @@ const PredictionSchema = new Schema({
     score: { type: Number, default: 0 },
     actualPrice: { type: Number },
     priceAtCreation: { type: Number },
+    currency: { type: String, default: 'USD' },
     description: { type: String, maxLength: 500 },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dislikes: [{ type: Schema.Types.ObjectId, ref: 'User' }]

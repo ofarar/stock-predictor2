@@ -586,9 +586,10 @@
     "learnMore": "Tahmin türleri hakkında daha fazla bilgi edinin",
     "targetPrice": "Hedef Fiyat",
     "rationale": "Gerekçe (İsteğe Bağlı)",
-    "rationalePlaceholder": "Fiyatın neden hareket edeceğini düşünüyorsunuz?",
-    "placePrediction": "Tahmini Yap",
-    "maxScore": "Maks Puan: {{score}}"
+    "rationalePlaceholder": "Bu fiyat hareketinin arkasındaki gerekçeniz nedir?",
+    "placePrediction": "Tahmin Yap",
+    "maxScore": "Maks Puan: {{score}}",
+    "confirmationMessage": "Yaptığınız {{price}} tutarındaki tahmin, tipik %{{limit}} aralığının üzerinde, {{percent}}'lik bir değişime denk geliyor. Emin misiniz?"
   },
   "scoreboard": {
     "title": "Liderler Tablosu",
@@ -687,5 +688,12 @@
   },
   "watchlistStockCard": {
     "removeButtonTitle": "{{symbol}} hissesini izleme listesinden kaldır"
+  },
+  "predictionWidgetMessages": {
+    "openingHourPrediction": "Açılış Saati Tahmini",
+    "marketClosed": "Piyasa şu anda kapalı",
+    "forDate": "Bitiş tarihi: {{date}}",
+    "maxScore": "Maks Puan: {{score}}",
+    "invalidType": "Geçerli bir tahmin türü seçin."
   }
 }

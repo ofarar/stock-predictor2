@@ -586,9 +586,10 @@
         "learnMore": "Erfahren Sie mehr über Prognosetypen",
         "targetPrice": "Zielpreis",
         "rationale": "Begründung (Optional)",
-        "rationalePlaceholder": "Warum glauben Sie, dass sich der Preis bewegen wird?",
+        "rationalePlaceholder": "Erläutern Sie Ihre Gründe für diese Preisvorhersage.",
         "placePrediction": "Prognose abgeben",
-        "maxScore": "Max. Punktzahl: {{score}}"
+        "maxScore": "Max. Punktzahl: {{score}}",
+        "confirmationMessage": "Ihre Vorhersage von {{price}} ist eine Änderung von {{percent}}, was über dem üblichen Bereich von {{limit}} % liegt. Sind Sie sicher?"
     },
     "scoreboard": {
         "title": "Bestenlisten",
@@ -687,5 +688,12 @@
     },
     "watchlistStockCard": {
         "removeButtonTitle": "{{symbol}} aus der Watchlist entfernen"
+    },
+    "predictionWidgetMessages": {
+        "openingHourPrediction": "Eröffnungsstunden-Prognose",
+        "marketClosed": "Markt ist derzeit geschlossen",
+        "forDate": "Für {{date}}",
+        "maxScore": "Max. Punktzahl: {{score}}",
+        "invalidType": "Wählen Sie einen gültigen Vorhersagetyp."
     }
 }

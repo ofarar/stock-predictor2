@@ -21,3 +21,38 @@ export const formatPercentage = (value, locale) => {
 
     return formatter.format(decimalValue);
 };
+
+/**
+ * Formats a number into a locale-specific currency string (e.g., $245.50).
+ * @param {number} value - The numerical value to format.
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted currency string.
+ */
+export const formatCurrency = (value, locale, currency = 'USD') => {
+    if (typeof value !== 'number') return '';
+
+    const formatter = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency, // <-- USE THE DYNAMIC CURRENCY
+    });
+
+    return formatter.format(value);
+};
+
+/**
+ * Formats a date object into a locale-specific string (e.g., "Oct 12, 2025").
+ * @param {Date} date - The date object to format.
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted date string.
+ */
+export const formatDate = (date, locale) => {
+    if (!(date instanceof Date)) return '';
+
+    const options = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+    };
+
+    return new Intl.DateTimeFormat(locale, options).format(date);
+};

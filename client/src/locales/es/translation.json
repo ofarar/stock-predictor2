@@ -586,9 +586,10 @@
         "learnMore": "Aprende más sobre los tipos de predicción",
         "targetPrice": "Precio Objetivo",
         "rationale": "Justificación (Opcional)",
-        "rationalePlaceholder": "¿Por qué crees que el precio se moverá?",
+        "rationalePlaceholder": "¿Cuál es su razonamiento para este movimiento de precios?",
         "placePrediction": "Realizar Predicción",
-        "maxScore": "Puntuación Máx.: {{score}}"
+        "maxScore": "Puntuación Máx.: {{score}}",
+        "confirmationMessage": "Su predicción de {{price}} representa un cambio de {{percent}}, que es superior al rango típico de {{limit}} %. ¿Está seguro?"
     },
     "scoreboard": {
         "title": "Tabla de Clasificación",
@@ -687,5 +688,12 @@
     },
     "watchlistStockCard": {
         "removeButtonTitle": "Eliminar {{symbol}} de la lista de seguimiento"
+    },
+    "predictionWidgetMessages": {
+        "openingHourPrediction": "Predicción para la hora de apertura",
+        "marketClosed": "El mercado está cerrado actualmente",
+        "forDate": "Para el {{date}}",
+        "maxScore": "Puntuación Máx.: {{score}}",
+        "invalidType": "Seleccione un tipo de predicción válido."
     }
 }

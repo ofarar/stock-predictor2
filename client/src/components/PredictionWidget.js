@@ -5,7 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import TimePenaltyBar from './TimePenaltyBar';
 import { useTranslation } from 'react-i18next';
-import { formatPercentage } from '../utils/formatters';
+import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 
 const isMarketOpen = () => {
     const now = new Date();
@@ -26,7 +26,7 @@ const isPreMarketWindow = () => {
     return isWeekday && isInWindow;
 };
 
-const getPredictionDetails = (predictionType) => {
+const getPredictionDetails = (predictionType, t, i18n) => {
     const now = new Date();
     let deadline = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     let message = '';
@@ -38,7 +38,8 @@ const getPredictionDetails = (predictionType) => {
         case 'Hourly': {
             if (isPreMarketWindow()) {
                 deadline.setUTCHours(14, 0, 0, 0);
-                message = 'Opening Hour Prediction';
+                // CORRECTED: Use the "Opening Hour" message
+                message = t('predictionWidgetMessages.openingHourPrediction');
                 isOpen = true;
             } else if (isMarketOpen()) {
                 const elapsedMinutes = now.getMinutes();
@@ -49,7 +50,8 @@ const getPredictionDetails = (predictionType) => {
                 isOpen = true;
             } else {
                 isOpen = false;
-                message = 'Market is currently closed';
+                // FIXED: Use translation key
+                message = t('predictionWidgetMessages.marketClosed');
                 barWidth = 0;
             }
             break;
@@ -64,8 +66,10 @@ const getPredictionDetails = (predictionType) => {
             else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); }
             else if (isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 1); }
             deadline.setUTCHours(20, 0, 0, 0);
+
             if (deadline.getUTCDate() !== now.getUTCDate() || deadline.getUTCMonth() !== now.getUTCMonth()) {
-                message = `For ${deadline.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}`;
+                // FIXED: Use formatDate utility
+                message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline, i18n.language) });
             } else {
                 const marketOpen = new Date().setUTCHours(13, 30, 0, 0);
                 const elapsedMinutes = Math.max(0, (now.getTime() - marketOpen) / 60000);
@@ -73,9 +77,11 @@ const getPredictionDetails = (predictionType) => {
                 const penalty = Math.floor(elapsedMinutes / (totalMinutes / 20));
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / totalMinutes * 100);
-                message = `Max Score: ${maxScore}`;
+                // FIXED: Use translation key
+                message = t('predictionWidgetMessages.maxScore', { score: maxScore });
             }
-            return { isOpen: true, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
+            // REMOVED premature return, using break for consistency
+            break;
         }
         case 'Weekly': {
             let weeklyDeadline = new Date(now.getTime());
@@ -96,7 +102,8 @@ const getPredictionDetails = (predictionType) => {
             const penalty = Math.floor(percentElapsed / (100 / 20));
             maxScore = 100 - penalty;
             barWidth = 100 - percentElapsed;
-            message = `For ${deadline.toLocaleDateString()}`;
+            // FIXED: Use formatDate utility
+            message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline, i18n.language) });
             break;
         }
         case 'Monthly': {
@@ -129,11 +136,13 @@ const getPredictionDetails = (predictionType) => {
         }
         default:
             isOpen = false;
-            message = 'Select a valid prediction type.';
+            // This message is a fallback and may not appear, but is now translated.
+            message = t('predictionWidgetMessages.invalidType');
             break;
     }
 
-    message = message || `Max Score: ${maxScore}`;
+    // FIXED: Default message now uses translation key
+    message = message || t('predictionWidgetMessages.maxScore', { score: maxScore });
     return { isOpen, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
 };
 
@@ -180,11 +189,11 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
 
     useEffect(() => {
         if (!selectedStock) return;
-        const details = getPredictionDetails(predictionType);
+        const details = getPredictionDetails(predictionType, t, i18n);
         setFormState(details);
         if ((predictionType === 'Hourly' || predictionType === 'Daily') && (isMarketOpen() || isPreMarketWindow())) {
             const timer = setInterval(() => {
-                const updatedDetails = getPredictionDetails(predictionType);
+                const updatedDetails = getPredictionDetails(predictionType, t, i18n);
                 setFormState(updatedDetails);
             }, 1000);
             return () => clearInterval(timer);
@@ -226,13 +235,24 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
         const percentChange = Math.abs(((parseFloat(target) - currentPrice) / currentPrice) * 100);
         const limit = thresholds[predictionType];
+
         if (requestConfirmation && percentChange > limit) {
-            const message = `Your prediction of $${parseFloat(target).toFixed(2)} is a ${percentChange.toFixed(1)}% change, which is more than the typical ${limit}% range. Are you sure?`;
+            const formattedPrice = formatCurrency(parseFloat(target), i18n.language, selectedStock.currency);
+            const formattedPercent = formatPercentage(percentChange, i18n.language);
+
+            const message = t('prediction.confirmationMessage', {
+                price: formattedPrice,
+                percent: formattedPercent,
+                limit: limit
+            });
+
             requestConfirmation(message, executePrediction);
         } else {
             executePrediction();
         }
     };
+
+    const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     return (
         <div className="w-full">
@@ -263,7 +283,12 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                     <div className="text-center mb-4">
                         <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
                         <p className="text-gray-400">
-                            {t('prediction.currentPrice')}: <span className="font-semibold text-white">${selectedStock.regularMarketPrice?.toFixed(2) || t('prediction.na')}</span>
+                            {t('prediction.currentPrice')}:&nbsp;
+                            <span className="font-semibold text-white">
+                                {selectedStock?.regularMarketPrice != null
+                                    ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)
+                                    : t('prediction.na')}
+                            </span>
                         </p>
                     </div>
 
@@ -283,13 +308,16 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                                         ?
                                     </button>
                                 </label>
-                                <select value={predictionType} onChange={(e) => setPredictionType(e.target.value)} className="w-full bg-gray-900 text-white p-2 rounded-md">
-                                    <option>{t('predictionTypes.hourly')}</option>
-                                    <option>{t('predictionTypes.daily')}</option>
-                                    <option>{t('predictionTypes.weekly')}</option>
-                                    <option>{t('predictionTypes.monthly')}</option>
-                                    <option>{t('predictionTypes.quarterly')}</option>
-                                    <option>{t('predictionTypes.yearly')}</option>
+                                <select
+                                    value={predictionType}
+                                    onChange={(e) => setPredictionType(e.target.value)}
+                                    className="w-full bg-gray-900 text-white p-2 rounded-md"
+                                >
+                                    {predictionTypes.map(type => (
+                                        <option key={type} value={type}>
+                                            {t(`predictionTypes.${type.toLowerCase()}`)}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="col-span-5 sm:col-span-3">

@@ -139,6 +139,7 @@ router.post('/posts/golden', async (req, res) => {
             newPostData.attachedPrediction = {
                 ...attachedPrediction,
                 priceAtCreation: quote.regularMarketPrice,
+                currency: quote.currency,
             };
         }
 
@@ -751,6 +752,7 @@ router.post('/predict', async (req, res) => {
             deadline,
             predictionType,
             priceAtCreation: currentPrice,
+            currency: quote.currency,
             description,
             status: 'Active'
         });

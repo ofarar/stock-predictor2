@@ -21,6 +21,7 @@ const PostSchema = new Schema({
         priceAtCreation: { type: Number },
         predictionType: { type: String, enum: ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'] },
         deadline: { type: Date },
+        currency: { type: String }
     },
     isGoldenPost: {
         type: Boolean,
