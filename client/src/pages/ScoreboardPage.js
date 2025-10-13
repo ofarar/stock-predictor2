@@ -52,7 +52,11 @@ const ScoreboardPage = ({ settings }) => {
                             onChange={e => setPredictionTypeFilter(e.target.value)}
                             className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
-                            {predictionTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                            {predictionTypes.map(type => (
+                                <option key={type} value={type}>
+                                    {t(`predictionTypes.${type.toLowerCase()}`)}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div>
