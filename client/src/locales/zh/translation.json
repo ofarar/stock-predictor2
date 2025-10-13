@@ -732,5 +732,22 @@
         "chartLabelActual": "更新时的实际价格",
         "tabHistory": "历史",
         "tabChart": "图表"
+    },
+    "aggressiveness": {
+        "title": "预测风格",
+        "defensive": "保守型",
+        "neutral": "中性",
+        "offensive": "激进型",
+        "noData": "近期没有足够数据的预测。"
+    },
+    "aggressivenessInfoModal": {
+        "title": "理解预测风格",
+        "description": "该指标分析用户预测的风险水平。每种风格的阈值根据预测的时间范围而变化。",
+        "defensiveTitle": "保守型",
+        "defensiveText": "价格目标较小的谨慎预测，注重一致性（例如，每日 <3%，每年 <15%）。",
+        "neutralTitle": "中性",
+        "neutralText": "在风险和潜在回报之间取得平衡的适度预测。",
+        "offensiveTitle": "激进型",
+        "offensiveText": "价格目标较大的大胆、高风险预测（例如，每日 >7%，每年 >35%）。"
     }
 }

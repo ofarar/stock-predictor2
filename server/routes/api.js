@@ -950,28 +950,21 @@ router.get('/my-predictions', async (req, res) => {
 
 router.get('/profile/:userId', async (req, res) => {
     try {
-        // This is the potential fix. We now compare the '.id' property (string)
-        // instead of the '_id' property (ObjectId).
         const isOwnProfile = req.user ? req.user.id === req.params.userId : false;
-        // --- END ---
         const user = await User.findById(req.params.userId).select('-googleId');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // --- START: NEW LOGIC TO FETCH WATCHLIST QUOTES ---
         let watchlistQuotes = [];
         if (user.watchlist && user.watchlist.length > 0) {
             try {
                 watchlistQuotes = await yahooFinance.quote(user.watchlist);
             } catch (quoteError) {
                 console.error("Failed to fetch some watchlist quotes for profile:", quoteError.message);
-                // Continue without crashing, some stocks might be delisted
             }
         }
-        // --- END: NEW LOGIC ---
 
-        // Populate both to check for broken links
         await user.populate(['goldenSubscriptions.user', 'goldenSubscribers.user']);
 
         const predictions = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
@@ -980,6 +973,14 @@ router.get('/profile/:userId', async (req, res) => {
         const overallRank = (await User.countDocuments({ score: { $gt: user.score } })) + 1;
         const totalScore = assessedPredictions.reduce((sum, p) => sum + p.score, 0);
         let overallAccuracy = assessedPredictions.length > 0 ? Math.round((totalScore / assessedPredictions.length) * 10) / 10 : 0;
+
+        // --- Start of Corrected Logic ---
+
+        // 1. Initialize the performance object early
+        const performance = {
+            overallRank: overallRank,
+            overallAccuracy,
+        };
 
         // --- Helper function to calculate global rank for a specific category ---
         const getGlobalRank = async (field, value, userScore) => {
@@ -1021,7 +1022,48 @@ router.get('/profile/:userId', async (req, res) => {
             count: data.total
         })).sort((a, b) => b.accuracy - a.accuracy);
 
-        // --- Run all global rank calculations in parallel ---
+        // 2. Now calculate aggressiveness
+        const aggressivenessData = { defensive: 0, neutral: 0, offensive: 0 };
+        let totalAbsoluteChange = 0;
+        let analyzedCount = 0;
+
+        const thresholds = {
+            Hourly: { def: 1, neu: 3 },
+            Daily: { def: 3, neu: 7 },
+            Weekly: { def: 5, neu: 10 },
+            Monthly: { def: 8, neu: 20 },
+            Quarterly: { def: 10, neu: 25 },
+            Yearly: { def: 15, neu: 35 }
+        };
+
+        assessedPredictions.forEach(p => {
+            if (p.priceAtCreation > 0) {
+                analyzedCount++;
+                const absoluteChange = Math.abs((p.targetPrice - p.priceAtCreation) / p.priceAtCreation) * 100;
+                totalAbsoluteChange += absoluteChange;
+
+                const typeThresholds = thresholds[p.predictionType] || { def: 5, neu: 15 }; // Default fallback
+
+                if (absoluteChange <= typeThresholds.def) {
+                    aggressivenessData.defensive++;
+                } else if (absoluteChange <= typeThresholds.neu) {
+                    aggressivenessData.neutral++;
+                } else {
+                    aggressivenessData.offensive++;
+                }
+            }
+        });
+
+        const overallAggressiveness = analyzedCount > 0 ? totalAbsoluteChange / analyzedCount : 0;
+
+        // 3. Add the aggressiveness data to the existing object
+        performance.aggressiveness = {
+            distribution: aggressivenessData,
+            overallScore: parseFloat(overallAggressiveness.toFixed(1)),
+            analyzedCount: analyzedCount
+        };
+
+        // 4. Run all global rank calculations in parallel
         const rankPromisesByType = formattedPerfByType.map(p => getGlobalRank('predictionType', p.type, p.accuracy));
         const rankPromisesByStock = formattedPerfByStock.map(s => getGlobalRank('stockTicker', s.ticker, s.accuracy));
         const [resolvedRanksByType, resolvedRanksByStock] = await Promise.all([
@@ -1029,24 +1071,19 @@ router.get('/profile/:userId', async (req, res) => {
             Promise.all(rankPromisesByStock)
         ]);
 
-        // --- Combine personal stats with global ranks ---
-        const finalPerfByType = formattedPerfByType.map((p, index) => ({
+        // 5. Combine personal stats with global ranks and add to performance object
+        performance.byType = formattedPerfByType.map((p, index) => ({
             ...p,
             accuracy: Math.round(p.accuracy * 10) / 10,
             rank: resolvedRanksByType[index]
         }));
-        const finalPerfByStock = formattedPerfByStock.map((s, index) => ({
+        performance.byStock = formattedPerfByStock.map((s, index) => ({
             ...s,
             accuracy: Math.round(s.accuracy * 10) / 10,
             rank: resolvedRanksByStock[index]
         }));
 
-        const performance = {
-            overallRank: overallRank,
-            overallAccuracy,
-            byType: finalPerfByType,
-            byStock: finalPerfByStock
-        };
+        // --- End of Corrected Logic ---
 
         const chartData = assessedPredictions.map(p => ({
             id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
@@ -1056,12 +1093,12 @@ router.get('/profile/:userId', async (req, res) => {
             user,
             watchlistQuotes,
             predictions,
-            performance,
+            performance, // This now contains all performance data
             chartData,
             followersCount: user.followers.length,
             followingCount: user.following.length,
         };
-        // --- FIX: Conditionally add subscriber/subscription counts only for the owner ---
+
         if (isOwnProfile) {
             const validSubscriptions = user.goldenSubscriptions.filter(sub => sub.user);
             const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);

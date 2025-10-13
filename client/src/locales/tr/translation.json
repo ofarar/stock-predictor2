@@ -733,5 +733,22 @@
     "chartLabelActual": "Güncelleme Anındaki Fiyat",
     "tabHistory": "Geçmiş",
     "tabChart": "Grafik"
+  },
+  "aggressiveness": {
+    "title": "Tahmin Stili",
+    "defensive": "Temkinli",
+    "neutral": "Dengeli",
+    "offensive": "İddialı",
+    "noData": "Yeterli veriye sahip güncel tahmin yok."
+  },
+  "aggressivenessInfoModal": {
+    "title": "Tahmin Stilini Anlama",
+    "description": "Bu ölçer, bir kullanıcının tahminlerinin risk seviyesini, tahminin zaman aralığına göre değişen eşik değerlere göre analiz eder.",
+    "defensiveTitle": "Temkinli",
+    "defensiveText": "İstikrara odaklanan, küçük fiyat hedefleriyle yapılan tahminler (Örn: Günlük için <%3, Yıllık için <%15).",
+    "neutralTitle": "Dengeli",
+    "neutralText": "Risk ve potansiyel ödülü dengeleyen, orta düzeyde iddialı tahminler.",
+    "offensiveTitle": "İddialı",
+    "offensiveText": "Büyük fiyat hedefleriyle yapılan cesur, yüksek riskli tahminler (Örn: Günlük için >%7, Yıllık için >%35)."
   }
 }

@@ -1,6 +1,24 @@
 // src/utils/formatters.js
 
 /**
+ * Formats a score (0-100) into a locale-specific percentage string without a sign.
+ * @param {number} value - The score value (e.g., 75 for 75%).
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted percentage string.
+ */
+export const formatScorePercentage = (value, locale) => {
+    if (typeof value !== 'number') return '';
+
+    const decimalValue = value / 100;
+    const formatter = new Intl.NumberFormat(locale, {
+        style: 'percent',
+        maximumFractionDigits: 0,
+    });
+
+    return formatter.format(decimalValue);
+};
+
+/**
  * Formats a number into a locale-specific percentage string (e.g., +10.5%, %-5,2).
  * @param {number} value - The percentage value (e.g., 25.5 for 25.5%).
  * @param {string} locale - The language code (e.g., "en", "tr").
@@ -64,16 +82,16 @@ export const formatDate = (date, locale) => {
  * @returns {string} The formatted date and time string.
  */
 export const formatDateTime = (dateInput, locale) => {
-  const date = new Date(dateInput);
-  if (isNaN(date)) return '';
+    const date = new Date(dateInput);
+    if (isNaN(date)) return '';
 
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  };
+    const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+    };
 
-  return new Intl.DateTimeFormat(locale, options).format(date);
+    return new Intl.DateTimeFormat(locale, options).format(date);
 };

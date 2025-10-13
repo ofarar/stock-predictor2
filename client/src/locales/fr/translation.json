@@ -732,5 +732,22 @@
         "chartLabelActual": "Prix réel lors de la mise à jour",
         "tabHistory": "Historique",
         "tabChart": "Graphique"
+    },
+    "aggressiveness": {
+        "title": "Style de Prédiction",
+        "defensive": "Défensif",
+        "neutral": "Neutre",
+        "offensive": "Offensif",
+        "noData": "Aucune prédiction récente avec suffisamment de données."
+    },
+    "aggressivenessInfoModal": {
+        "title": "Comprendre le Style de Prédiction",
+        "description": "Cet indicateur analyse le niveau de risque des prédictions d'un utilisateur. Les seuils pour chaque style changent en fonction de l'horizon temporel de la prédiction.",
+        "defensiveTitle": "Défensif",
+        "defensiveText": "Prédictions prudentes avec de petits objectifs de prix, axées sur la cohérence (par ex. <3 % pour Quotidien, <15 % pour Annuel).",
+        "neutralTitle": "Neutre",
+        "neutralText": "Prédictions modérément ambitieuses qui équilibrent le risque et la récompense potentielle.",
+        "offensiveTitle": "Offensif",
+        "offensiveText": "Prédictions audacieuses à haut risque avec de grands objectifs de prix (par ex. >7 % pour Quotidien, >35 % pour Annuel)."
     }
 }

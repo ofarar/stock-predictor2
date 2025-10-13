@@ -732,5 +732,22 @@
         "chartLabelActual": "Tatsächlicher Preis bei Update",
         "tabHistory": "Verlauf",
         "tabChart": "Diagramm"
+    },
+    "aggressiveness": {
+        "title": "Prognosestil",
+        "defensive": "Defensiv",
+        "neutral": "Neutral",
+        "offensive": "Offensiv",
+        "noData": "Keine aktuellen Prognosen mit ausreichenden Daten."
+    },
+    "aggressivenessInfoModal": {
+        "title": "Prognosestil verstehen",
+        "description": "Diese Anzeige analysiert das Risikoniveau der Prognosen eines Benutzers. Die Schwellenwerte für jeden Stil ändern sich je nach Zeitrahmen der Prognose.",
+        "defensiveTitle": "Defensiv",
+        "defensiveText": "Vorsichtige Prognosen mit kleinen Kurszielen, die auf Konsistenz abzielen (z. B. <3% für Täglich, <15% für Jährlich).",
+        "neutralTitle": "Neutral",
+        "neutralText": "Mäßig ehrgeizige Prognosen, die Risiko und potenzielle Belohnung ausbalancieren.",
+        "offensiveTitle": "Offensiv",
+        "offensiveText": "Mutige, risikoreiche Prognosen mit großen Kurszielen (z. B. >7% für Täglich, >35% für Jährlich)."
     }
 }

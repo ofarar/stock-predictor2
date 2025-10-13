@@ -19,6 +19,8 @@ import VerifiedStatusModal from '../components/VerifiedStatusModal';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { formatPercentage, formatCurrency } from '../utils/formatters';
 import EditPredictionModal from '../components/EditPredictionModal';
+import AggressivenessProgressBar from '../components/AggressivenessProgressBar';
+import AggressivenessInfoModal from '../components/AggressivenessInfoModal';
 
 const MiniPredictionCard = ({ prediction, currentPrice, isOwnProfile, onEditClick }) => {
     const { t, i18n } = useTranslation();
@@ -112,6 +114,7 @@ const ProfilePage = ({ settings }) => {
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [predictionToEdit, setPredictionToEdit] = useState(null);
+    const [isAggressivenessInfoOpen, setIsAggressivenessInfoOpen] = useState(false);
 
     const handleEditClick = (prediction) => {
         setPredictionToEdit(prediction);
@@ -310,11 +313,18 @@ const ProfilePage = ({ settings }) => {
                     </div>
                 </div>
 
+                <AggressivenessInfoModal isOpen={isAggressivenessInfoOpen} onClose={() => setIsAggressivenessInfoOpen(false)} />
+
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <StatCard label={t('overall_rank_label')} value={performance.overallRank} isRank={true} />
                     <StatCard label={t('average_score_label')} value={performance.overallAccuracy.toFixed(1)} />
                     <StatCard label={t('total_points_label')} value={user.score} />
                     <StatCard label={t('total_predictions_label')} value={predictions.length} />
+                    <AggressivenessProgressBar
+                        data={performance.aggressiveness.distribution}
+                        analyzedCount={performance.aggressiveness.analyzedCount}
+                        onInfoClick={() => setIsAggressivenessInfoOpen(true)}
+                    />
                 </div>
 
                 <div className="flex border-b border-gray-700 mb-8">

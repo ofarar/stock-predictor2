@@ -733,5 +733,22 @@
     "chartLabelActual": "Actual Price at Update",
     "tabHistory": "History",
     "tabChart": "Chart"
+  },
+  "aggressiveness": {
+    "title": "Prediction Style",
+    "defensive": "Defensive",
+    "neutral": "Neutral",
+    "offensive": "Offensive",
+    "noData": "No recent predictions with sufficient data."
+  },
+  "aggressivenessInfoModal": {
+    "title": "Understanding Prediction Style",
+    "description": "This meter analyzes the risk level of a user's predictions. The thresholds for each style change based on the prediction's timeframe.",
+    "defensiveTitle": "Defensive",
+    "defensiveText": "Cautious predictions with small price targets, focusing on consistency (e.g., <3% for Daily, <15% for Yearly).",
+    "neutralTitle": "Neutral",
+    "neutralText": "Moderately ambitious predictions that balance risk with potential reward.",
+    "offensiveTitle": "Offensive",
+    "offensiveText": "Bold, high-risk predictions with large price targets (e.g., >7% for Daily, >35% for Yearly)."
   }
 }
