@@ -14,9 +14,8 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
         <div className="relative flex-shrink-0 w-56">
             <button
                 onClick={onClick}
-                className={`w-full p-4 rounded-lg text-left transition-colors ${
-                    isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                }`}
+                className={`w-full p-4 rounded-lg text-left transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                    }`}
             >
                 <div className="flex justify-between items-baseline">
                     <p className="font-bold text-lg text-white">{quote.symbol}</p>
@@ -27,9 +26,8 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
                 <div className="flex justify-between items-baseline mt-1">
                     <p className="text-xs w-2/3 truncate">{quote.longName}</p>
                     <p
-                        className={`text-xs font-bold ${
-                            isSelected ? 'text-white' : priceChange >= 0 ? 'text-green-400' : 'text-red-400'
-                        }`}
+                        className={`text-xs font-bold ${isSelected ? 'text-white' : priceChange >= 0 ? 'text-green-400' : 'text-red-400'
+                            }`}
                     >
                         {priceChange >= 0 ? '+' : ''}
                         {priceChange?.toFixed(2)}%
@@ -233,7 +231,7 @@ const WatchlistPage = ({ settings }) => {
                                     >
                                         {predictionTypes.map((type) => (
                                             <option key={type} value={type}>
-                                                {type}
+                                                {t(`predictionTypes.${type.toLowerCase()}`)}
                                             </option>
                                         ))}
                                     </select>
@@ -272,11 +270,10 @@ const WatchlistPage = ({ settings }) => {
                                                     <img
                                                         src={p.userId.avatar}
                                                         alt="avatar"
-                                                        className={`w-8 h-8 rounded-full border-2 ${
-                                                            p.userId.isGoldenMember
+                                                        className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember
                                                                 ? 'border-yellow-400'
                                                                 : 'border-gray-600'
-                                                        }`}
+                                                            }`}
                                                     />
                                                     <p className="font-semibold text-white text-sm">
                                                         {p.userId.username}
@@ -289,11 +286,10 @@ const WatchlistPage = ({ settings }) => {
                                                         ${p.targetPrice.toFixed(2)}
                                                     </p>
                                                     <p
-                                                        className={`text-sm font-bold ${
-                                                            percentageChange >= 0
+                                                        className={`text-sm font-bold ${percentageChange >= 0
                                                                 ? 'text-green-400'
                                                                 : 'text-red-400'
-                                                        }`}
+                                                            }`}
                                                     >
                                                         ({percentageChange >= 0 ? '+' : ''}
                                                         {percentageChange.toFixed(1)}%)
@@ -343,11 +339,10 @@ const WatchlistPage = ({ settings }) => {
                                                 <img
                                                     src={user.avatar}
                                                     alt="avatar"
-                                                    className={`w-10 h-10 rounded-full border-2 ${
-                                                        user.isGoldenMember
+                                                    className={`w-10 h-10 rounded-full border-2 ${user.isGoldenMember
                                                             ? 'border-yellow-400'
                                                             : 'border-gray-600'
-                                                    }`}
+                                                        }`}
                                                 />
                                                 <div className="ml-3 flex-grow">
                                                     <div className="flex items-center gap-2">
