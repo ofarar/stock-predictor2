@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
@@ -75,22 +75,6 @@ const WatchlistPage = ({ settings }) => {
     const stockCardRefs = useRef({});
 
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
-
-    const fetchData = useCallback(() => {
-        setLoading(true);
-        axios
-            .get(`${process.env.REACT_APP_API_URL}/api/watchlist`, { withCredentials: true })
-            .then((res) => {
-                setData(res.data);
-                if (res.data.quotes.length > 0 && !selectedTicker) {
-                    setSelectedTicker(res.data.quotes[0].symbol);
-                } else if (res.data.quotes.length === 0) {
-                    setSelectedTicker(null);
-                }
-            })
-            .catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
-            .finally(() => setLoading(false));
-    }, [selectedTicker, t]);
 
     useEffect(() => {
         setLoading(true);

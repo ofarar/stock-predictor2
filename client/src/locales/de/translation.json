@@ -464,7 +464,8 @@
             "settings": "Einstellungen",
             "adminPanel": "Admin-Panel",
             "logout": "Abmelden",
-            "login": "Anmelden"
+            "login": "Anmelden",
+            "aiWizard": "KI-Portfolio-Assistent"
         },
         "buttons": {
             "login": "Anmelden",

@@ -464,7 +464,8 @@
       "settings": "Ayarlar",
       "adminPanel": "Yönetici Paneli",
       "logout": "Çıkış Yap",
-      "login": "Giriş Yap"
+      "login": "Giriş Yap",
+      "aiWizard": "Yapay Zeka Portföy Asistanı"
     },
     "buttons": {
       "login": "Giriş Yap",

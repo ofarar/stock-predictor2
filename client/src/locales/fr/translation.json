@@ -464,7 +464,8 @@
             "settings": "Paramètres",
             "adminPanel": "Panneau d'Admin",
             "logout": "Déconnexion",
-            "login": "Connexion"
+            "login": "Connexion",
+            "aiWizard": "Assistant de Portefeuille IA"
         },
         "buttons": {
             "login": "Connexion",

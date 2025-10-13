@@ -464,7 +464,8 @@
       "settings": "Settings",
       "adminPanel": "Admin Panel",
       "logout": "Logout",
-      "login": "Log In"
+      "login": "Log In",
+      "aiWizard": "AI Portfolio Assist"
     },
     "buttons": {
       "login": "Log In",

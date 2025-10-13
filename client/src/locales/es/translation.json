@@ -464,7 +464,8 @@
             "settings": "Ajustes",
             "adminPanel": "Panel de Admin",
             "logout": "Cerrar Sesión",
-            "login": "Iniciar Sesión"
+            "login": "Iniciar Sesión",
+            "aiWizard": "Asistente de Cartera IA"
         },
         "buttons": {
             "login": "Iniciar Sesión",
