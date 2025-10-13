@@ -6,7 +6,7 @@ import DescriptionModal from '../components/DescriptionModal';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
-import { formatPercentage, formatCurrency } from '../utils/formatters';
+import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
     const { t, i18n } = useTranslation();
@@ -63,7 +63,9 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                                 </button>
                             )}
                         </div>
-                        <p className="text-sm text-gray-500">{t('explore_by_deadline', { date: new Date(prediction.deadline).toLocaleDateString() })}</p>
+                        <p className="text-sm text-gray-500">
+                            {t('explore_by_deadline', { date: formatDate(new Date(prediction.deadline), i18n.language) })}
+                        </p>
                     </div>
                 )}
             </div>
