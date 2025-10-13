@@ -94,21 +94,51 @@ const WatchlistPage = ({ settings }) => {
     }, [selectedTicker, t]);
 
     useEffect(() => {
-        axios
-            .get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
-            .then((res) => setCurrentUser(res.data));
-        fetchData();
-    }, [fetchData]);
+        setLoading(true);
+
+        const fetchAll = async () => {
+            try {
+                const [userRes, watchlistRes] = await Promise.all([
+                    axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/watchlist`, { withCredentials: true })
+                ]);
+
+                const user = userRes.data;
+                const watchlistData = watchlistRes.data;
+
+                setCurrentUser(user);
+                setData(watchlistData);
+
+                // Initialize ticker only once
+                if (watchlistData.quotes.length > 0) {
+                    setSelectedTicker((prev) => prev || watchlistData.quotes[0].symbol);
+                } else {
+                    setSelectedTicker(null);
+                }
+            } catch (err) {
+                toast.error(t('watchlistPage.toast.errorLoadWatchlist'));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAll();
+    }, [t]);
+
 
     useEffect(() => {
-        if (selectedTicker && stockCardRefs.current[selectedTicker]) {
-            stockCardRefs.current[selectedTicker].scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'center'
-            });
+        if (!loading && selectedTicker && stockCardRefs.current[selectedTicker]) {
+            // Slight delay to ensure element exists in the DOM
+            const timer = setTimeout(() => {
+                stockCardRefs.current[selectedTicker].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }, 150);
+            return () => clearTimeout(timer);
         }
-    }, [selectedTicker]);
+    }, [loading, selectedTicker]);
 
     const handleWatchlistUpdate = (ticker, action) => {
         if (!ticker) return;
@@ -116,18 +146,20 @@ const WatchlistPage = ({ settings }) => {
             .put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(() => {
                 if (action === 'add') setSelectedTicker(ticker);
-                fetchData();
-            });
+                // 🔄 re-fetch updated watchlist only (not user)
+                return axios.get(`${process.env.REACT_APP_API_URL}/api/watchlist`, { withCredentials: true });
+            })
+            .then((res) => setData(res.data));
 
         toast.promise(promise, {
-            loading:
-                action === 'add'
-                    ? t('watchlistPage.toast.loadingAdd', { ticker })
-                    : t('watchlistPage.toast.loadingRemove', { ticker }),
+            loading: action === 'add'
+                ? t('watchlistPage.toast.loadingAdd', { ticker })
+                : t('watchlistPage.toast.loadingRemove', { ticker }),
             success: t('watchlistPage.toast.successUpdate'),
             error: t('watchlistPage.toast.errorUpdate')
         });
     };
+
 
     const handleFollow = (userIdToFollow) => {
         const promise = axios
