@@ -164,7 +164,7 @@
   "golden_feed_create_post": "Gönderi Oluştur",
   "golden_feed_filter_by_member": "Üyeye Göre Filtrele",
   "golden_feed_all_subscriptions": "Tüm Abonelikler",
-  "golden_feed_filter_by_stock": "Hiseye Göre Filtrele",
+  "golden_feed_filter_by_stock": "Hisseye Göre Filtrele",
   "golden_feed_prediction_type": "Tahmin Türü",
   "golden_feed_loading": "Akış Yükleniyor...",
   "golden_feed_no_posts_title": "Bu filtrelere uygun gönderi bulunamadı.",
@@ -249,7 +249,7 @@
   "cancel_verification_msg": "Emin misiniz? Doğrulanmış durumunuzu ve avantajlarınızı kaybedeceksiniz.",
   "title_top_performers": "🏆 En İyi Performans Gösterenler",
   "label_prediction_type": "Tahmin Türü",
-  "label_filter_by_stock": "Hiseye Göre Filtrele",
+  "label_filter_by_stock": "Hisseye Göre Filtrele",
   "text_avg_score": "Ort. Puan",
   "msg_loading_scoreboard_error": "Skor tablosu verileri yüklenemedi.",
   "msg_no_users_found": "Bu filtrelere uygun kullanıcı bulunamadı.",
@@ -543,7 +543,7 @@
   "performanceTabs": {
     "tabs": {
       "byType": "Türe Göre",
-      "byStock": "Hiseye Göre"
+      "byStock": "Hisseye Göre"
     },
     "statCard": {
       "averageScore": "Ortalama Puan",
@@ -605,7 +605,7 @@
     "trophy": "🏆",
     "loadError": "Skor tablosu verileri yüklenemedi.",
     "predictionType": "Tahmin Türü",
-    "filterStock": "Hiseye Göre Filtrele",
+    "filterStock": "Hisseye Göre Filtrele",
     "avgScore": "Ort. Puan",
     "noUsers": "Bu filtrelere uygun kullanıcı bulunamadı.",
     "noUsersHint": "Arama kriterlerinizi genişletmeyi deneyin.",
