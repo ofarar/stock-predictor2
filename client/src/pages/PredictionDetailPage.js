@@ -139,7 +139,7 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                             </p>
                         </div>
                         <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
-                            {prediction.status}
+                            {t(`predictionStatus.${prediction.status}`)}
                         </div>
                     </div>
 

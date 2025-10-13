@@ -704,5 +704,9 @@
     "profile": {
         "loading": "Загрузка профиля...",
         "userNotFound": "Пользователь не найден."
+    },
+    "predictionStatus": {
+        "Active": "Активный",
+        "Assessed": "Оценен"
     }
 }

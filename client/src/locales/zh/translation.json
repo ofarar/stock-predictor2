@@ -704,5 +704,9 @@
     "profile": {
         "loading": "正在加载个人资料...",
         "userNotFound": "未找到用户。"
+    },
+    "predictionStatus": {
+        "Active": "进行中",
+        "Assessed": "已评估"
     }
 }
