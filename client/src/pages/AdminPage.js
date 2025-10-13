@@ -71,6 +71,11 @@ const AdminPage = () => {
                 </button>
             </div>
 
+            {/* --- NEW: The waitlist component is now here, conditionally rendered --- */}
+            {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}
+
+            <AdminUserList settings={settings} />
+
             {/* --- NEW AI WIZARD SETTINGS SECTION --- */}
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">AI Wizard Feature</h2>
@@ -79,9 +84,6 @@ const AdminPage = () => {
                     <input type="checkbox" id="isAIWizardEnabled" checked={settings.isAIWizardEnabled} onChange={(e) => handleSettingsChange('isAIWizardEnabled', e.target.checked)} />
                 </div>
             </div>
-
-            {/* --- NEW: The waitlist component is now here, conditionally rendered --- */}
-            {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">Verification Feature</h2>
@@ -102,8 +104,6 @@ const AdminPage = () => {
                     </div>
                 </div>
             </div>
-
-            <AdminUserList settings={settings} />
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">Badge Rules JSON Editor</h2>
