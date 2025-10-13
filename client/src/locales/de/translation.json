@@ -556,7 +556,7 @@
     "predictionJourney": {
         "initial": "Anfänglich",
         "target": "Ziel",
-        "currentPriceTooltip": "${value} {priceLabel}"
+        "currentPriceTooltip": "{{priceLabel}}: {{value}}"
     },
     "predictionModal": {
         "confirmationTitle": "Sind Sie sicher?",

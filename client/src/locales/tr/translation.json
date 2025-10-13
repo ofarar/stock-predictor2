@@ -556,7 +556,7 @@
   "predictionJourney": {
     "initial": "Başlangıç",
     "target": "Hedef",
-    "currentPriceTooltip": "${value} {priceLabel}"
+    "currentPriceTooltip": "{{priceLabel}}: {{value}}"
   },
   "predictionModal": {
     "confirmationTitle": "Emin misiniz?",

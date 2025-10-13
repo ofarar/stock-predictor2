@@ -556,7 +556,7 @@
     "predictionJourney": {
         "initial": "初始",
         "target": "目标",
-        "currentPriceTooltip": "${value} {priceLabel}"
+        "currentPriceTooltip": "{{priceLabel}}: {{value}}"
     },
     "predictionModal": {
         "confirmationTitle": "您确定吗？",

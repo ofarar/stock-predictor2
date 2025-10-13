@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../utils/formatters';
 
 const PredictionJourney = ({ initial, target, current, priceLabel }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [visibleTooltip, setVisibleTooltip] = useState(null);
 
   if (typeof initial !== 'number' || typeof target !== 'number') {
@@ -60,7 +61,7 @@ const PredictionJourney = ({ initial, target, current, priceLabel }) => {
           {visibleTooltip === 'current' && (
             <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
               {t('predictionJourney.currentPriceTooltip', {
-                value: current.toFixed(2),
+                value: formatCurrency(current, i18n.language),
                 priceLabel
               })}
             </span>
@@ -117,9 +118,8 @@ const PredictionJourney = ({ initial, target, current, priceLabel }) => {
                 className="relative z-10"
               >
                 <div
-                  className={`w-3 h-3 ${
-                    isUpward ? 'bg-green-400' : 'bg-red-400'
-                  } rounded-full ring-2 ring-gray-800 transition-transform hover:scale-125`}
+                  className={`w-3 h-3 ${isUpward ? 'bg-green-400' : 'bg-red-400'
+                    } rounded-full ring-2 ring-gray-800 transition-transform hover:scale-125`}
                 ></div>
                 {visibleTooltip === 'target' && (
                   <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
@@ -128,9 +128,8 @@ const PredictionJourney = ({ initial, target, current, priceLabel }) => {
                 )}
               </button>
               <span
-                className={`absolute top-full mt-2 text-xs font-bold ${
-                  isUpward ? 'text-green-400' : 'text-red-400'
-                }`}
+                className={`absolute top-full mt-2 text-xs font-bold ${isUpward ? 'text-green-400' : 'text-red-400'
+                  }`}
               >
                 {t('predictionJourney.target')}
               </span>
