@@ -565,6 +565,7 @@
     "predictionTypes": {
         "modalTitle": "预测类型说明",
         "overall": "总体",
+        "all": "全部",
         "hourly": "每小时",
         "hourlyDescription": "预测当前或下一个交易小时结束时的股价。非常适合短期波动。",
         "daily": "每日",

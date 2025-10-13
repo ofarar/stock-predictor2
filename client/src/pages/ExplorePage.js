@@ -68,7 +68,9 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                 )}
             </div>
             <div className="flex justify-between items-center text-xs px-4 py-2 bg-gray-700">
-                <span className="font-semibold text-gray-300">{prediction.predictionType}</span>
+                <span className="font-semibold text-gray-300">
+                    {t(`predictionTypes.${prediction.predictionType.toLowerCase()}`)}
+                </span>
                 <div className="flex items-center gap-3 text-gray-400">
                     <button onClick={(e) => { e.stopPropagation(); onVote(prediction._id, 'like'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userLike ? 'text-green-500' : ''}`} disabled={isAssessed} title={t('explore_agree')}>
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
@@ -174,7 +176,11 @@ const ExplorePage = ({ requestLogin, settings }) => {
                         <div>
                             <label className="block text-xs font-bold text-gray-400 mb-1">{t('explore_prediction_type')}</label>
                             <select onChange={(e) => handleFilterChange('predictionType', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                                {predictionTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                                {predictionTypes.map(type => (
+                                    <option key={type} value={type}>
+                                        {t(`predictionTypes.${type.toLowerCase()}`)}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div>

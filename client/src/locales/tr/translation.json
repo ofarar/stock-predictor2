@@ -565,6 +565,7 @@
   "predictionTypes": {
     "modalTitle": "Tahmin Türleri Açıklandı",
     "overall": "Genel",
+    "all": "Tümü",
     "hourly": "Saatlik",
     "hourlyDescription": "Hisse senedi fiyatını mevcut veya bir sonraki işlem saatinin sonu için tahmin edin. Kısa vadeli dalgalanmalar için idealdir.",
     "daily": "Günlük",

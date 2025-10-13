@@ -565,6 +565,7 @@
     "predictionTypes": {
         "modalTitle": "Explicación de Tipos de Predicción",
         "overall": "General",
+        "all": "Todos",
         "hourly": "Por Hora",
         "hourlyDescription": "Predice el precio de la acción para el final de la hora de negociación actual o siguiente. Ideal para la volatilidad a corto plazo.",
         "daily": "Diario",
