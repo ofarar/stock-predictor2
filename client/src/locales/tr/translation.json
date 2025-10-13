@@ -579,7 +579,8 @@
     "yearlyDescription": "Hisse senedi fiyatını mevcut takvim yılının sonu için tahmin edin. Büyük piyasa değişimleri için uzun vadeli bir tahmindir."
   },
   "common": {
-    "close": "Kapat"
+    "close": "Kapat",
+    "score": "Puan"
   },
   "prediction": {
     "makePrediction": "Tahmin Yap",

@@ -579,7 +579,8 @@
         "yearlyDescription": "Prédisez le prix de l'action pour la fin de l'année civile en cours. Une prédiction à long terme pour les changements majeurs du marché."
     },
     "common": {
-        "close": "Fermer"
+        "close": "Fermer",
+        "score": "Score"
     },
     "prediction": {
         "makePrediction": "Faire une Prédiction",

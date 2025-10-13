@@ -579,7 +579,8 @@
         "yearlyDescription": "预测当前日历年结束时的股价。适用于重大市场变化的长期预测。"
     },
     "common": {
-        "close": "关闭"
+        "close": "关闭",
+        "score": "分数"
     },
     "prediction": {
         "makePrediction": "做出预测",

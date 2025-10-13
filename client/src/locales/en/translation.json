@@ -579,7 +579,8 @@
     "yearlyDescription": "Predict the stock price for the end of the current calendar year. A long-term prediction for major market shifts."
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "score": "Score"
   },
   "prediction": {
     "makePrediction": "Make a Prediction",

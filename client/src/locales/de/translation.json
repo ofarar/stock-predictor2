@@ -579,7 +579,8 @@
         "yearlyDescription": "Prognostizieren Sie den Aktienkurs für das Ende des aktuellen Kalenderjahres. Eine langfristige Prognose für große Marktverschiebungen."
     },
     "common": {
-        "close": "Schließen"
+        "close": "Schließen",
+        "score": "Punktzahl"
     },
     "prediction": {
         "makePrediction": "Prognose erstellen",

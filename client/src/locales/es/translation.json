@@ -579,7 +579,8 @@
         "yearlyDescription": "Predice el precio de la acción para el final del año calendario actual. Una predicción a largo plazo para cambios importantes en el mercado."
     },
     "common": {
-        "close": "Cerrar"
+        "close": "Cerrar",
+        "score": "Puntuación"
     },
     "prediction": {
         "makePrediction": "Hacer una Predicción",

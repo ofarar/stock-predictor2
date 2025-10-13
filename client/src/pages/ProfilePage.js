@@ -20,7 +20,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import { formatPercentage, formatCurrency } from '../utils/formatters';
 
 const MiniPredictionCard = ({ prediction, currentPrice }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation(); // Get the 't' function
     const isAssessed = prediction.status === 'Assessed';
     let percentageChange = null;
     if (!isAssessed && currentPrice > 0) {
@@ -31,12 +31,15 @@ const MiniPredictionCard = ({ prediction, currentPrice }) => {
             <div className="flex justify-between items-center">
                 <div className="flex flex-col">
                     <span className="font-bold text-white text-lg">{prediction.stockTicker}</span>
-                    <span className="text-xs text-gray-400">{prediction.predictionType}</span>
+                    <span className="text-xs text-gray-400">
+                        {/* This line is now fixed to use the translation function */}
+                        {t(`predictionTypes.${prediction.predictionType.toLowerCase()}`)}
+                    </span>
                 </div>
                 {isAssessed ? (
                     <div className="text-right">
                         <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score.toFixed(1)}</p>
-                        <p className="text-xs text-gray-500 -mt-1">Score</p>
+                        <p className="text-xs text-gray-500 -mt-1">{t('common.score')}</p>
                     </div>
                 ) : (
                     <div className="text-right">
