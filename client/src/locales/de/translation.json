@@ -644,7 +644,7 @@
             "verifiedFilter": "Ihre Prognosen werden im Filter „Nur verifizierte“ auf der Entdeckungsseite hervorgehoben.",
             "verifiedExpert": "Werden Sie als verifizierter Experte auf relevanten Beobachtungslistenseiten empfohlen."
         },
-        "button": "Verifizieren für ${price}"
+        "button": "Für {{price}} verifizieren lassen"
     },
     "verifiedStatusModal": {
         "title": "Sie sind ein verifizierter Prognostiker!",

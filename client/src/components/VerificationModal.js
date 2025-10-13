@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../utils/formatters';
 
 const VerificationModal = ({ isOpen, onClose, onConfirm, price }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     if (!isOpen) return null;
 
@@ -43,7 +44,9 @@ const VerificationModal = ({ isOpen, onClose, onConfirm, price }) => {
                     onClick={onConfirm}
                     className="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600"
                 >
-                    {t('verificationModal.button', { price })}
+                    {t('verificationModal.button', {
+                        price: formatCurrency(parseFloat(price), i18n.language, 'USD')
+                    })}
                 </button>
             </div>
         </div>
