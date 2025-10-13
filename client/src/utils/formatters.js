@@ -56,3 +56,24 @@ export const formatDate = (date, locale) => {
 
     return new Intl.DateTimeFormat(locale, options).format(date);
 };
+
+/**
+ * Formats a date object into a locale-specific date and time string.
+ * @param {string | Date} dateInput - The date object or string to format.
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted date and time string.
+ */
+export const formatDateTime = (dateInput, locale) => {
+  const date = new Date(dateInput);
+  if (isNaN(date)) return '';
+
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  };
+
+  return new Intl.DateTimeFormat(locale, options).format(date);
+};

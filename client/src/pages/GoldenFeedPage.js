@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
 import VerifiedTick from '../components/VerifiedTick';
+import { formatPercentage, formatCurrency, formatDateTime } from '../utils/formatters';
 
 const CentralPostCard = ({ post, settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     let percentChange = null;
     if (post.attachedPrediction?.priceAtCreation > 0) {
         const initial = post.attachedPrediction.priceAtCreation;
@@ -39,11 +40,15 @@ const CentralPostCard = ({ post, settings }) => {
                                 </span>
                             )}
                         </div>
-                        <span className="text-sm bg-gray-600 px-2 py-1 rounded-md">{post.attachedPrediction.predictionType}</span>
+                        <span className="text-sm bg-gray-600 px-2 py-1 rounded-md">
+                            {t(`predictionTypes.${post.attachedPrediction.predictionType.toLowerCase()}`)}
+                        </span>
                     </div>
                 </div>
             )}
-            <p className="text-xs text-gray-500 text-right mt-3">{new Date(post.createdAt).toLocaleString()}</p>
+            <p className="text-xs text-gray-500 text-right mt-3">
+                {formatDateTime(post.createdAt, i18n.language)}
+            </p>
         </div>
     );
 };
@@ -134,7 +139,11 @@ const GoldenFeedPage = ({ settings }) => {
                         <div>
                             <label className="block text-xs font-bold text-gray-400 mb-1">{t('golden_feed_prediction_type')}</label>
                             <select onChange={(e) => handleFilterChange('predictionType', e.target.value)} className="w-full bg-gray-700 text-white p-2 rounded-md">
-                                {predictionTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                                {predictionTypes.map(type => (
+                                    <option key={type} value={type}>
+                                        {t(`predictionTypes.${type.toLowerCase()}`)}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
