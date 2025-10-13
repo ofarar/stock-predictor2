@@ -8,7 +8,7 @@ import VerifiedTick from '../components/VerifiedTick';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 
 const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const priceChange = quote?.regularMarketChangePercent || 0;
 
     return (
@@ -30,8 +30,7 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
                         className={`text-xs font-bold ${isSelected ? 'text-white' : priceChange >= 0 ? 'text-green-400' : 'text-red-400'
                             }`}
                     >
-                        {priceChange >= 0 ? '+' : ''}
-                        {priceChange?.toFixed(2)}%
+                        {formatPercentage(priceChange, i18n.language)}
                     </p>
                 </div>
             </button>
