@@ -2,31 +2,34 @@ const router = require('express').Router();
 const passport = require('passport');
 
 // Auth with Google
-router.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email'] // What we want from the user's profile
-}));
+router.get('/google', (req, res, next) => {
+  const redirectPath = req.query.redirect || '/';
+  const authenticator = passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    state: redirectPath // Pass the path in the state parameter
+  });
+  authenticator(req, res, next);
+});
 
-// Callback route for Google to redirect to
 router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    // --- ADD THIS CRITICAL DEBUGGING LOG ---
-    console.log('--- GOOGLE CALLBACK SUCCESS! I AM HERE! ---');
-    // ---------------------------------------------
-
-    const redirectURL =
+    const baseURL =
       process.env.NODE_ENV === 'production'
         ? 'https://predictostock.vercel.app'
         : 'http://localhost:3000';
 
-    res.redirect(redirectURL);
+    // Get the redirect path from the state query parameter
+    const redirectPath = req.query.state || '/';
+
+    res.redirect(baseURL + redirectPath);
   }
 );
 
 // Route to check current user
 router.get('/current_user', (req, res) => {
-    res.send(req.user); // req.user is automatically added by Passport
+  res.send(req.user); // req.user is automatically added by Passport
 });
 
 router.get('/logout', (req, res, next) => {

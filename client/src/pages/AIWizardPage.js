@@ -30,21 +30,21 @@ const AIWizardPage = ({ user }) => {
             error: t('aiwizard_join_error'),
         });
     };
-    
+
     // Define steps as an array to match the AboutPage structure
     const steps = [
-        { 
-            title: t('aiwizard_step1_title'), 
+        {
+            title: t('aiwizard_step1_title'),
             text: t('aiwizard_step1_text'),
             icon: <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
         },
-        { 
-            title: t('aiwizard_step2_title'), 
+        {
+            title: t('aiwizard_step2_title'),
             text: t('aiwizard_step2_text'),
             icon: <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0m-8.486-2.828l-.707.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
         },
-        { 
-            title: t('aiwizard_step3_title'), 
+        {
+            title: t('aiwizard_step3_title'),
             text: t('aiwizard_step3_text'),
             icon: <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
         }
@@ -86,7 +86,8 @@ const AIWizardPage = ({ user }) => {
                         {isLoading ? t('aiwizard_checking_status') : (isOnWaitlist ? t('aiwizard_on_waitlist') : t('aiwizard_join_waitlist'))}
                     </button>
                 ) : (
-                    <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="bg-green-500 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-green-600">
+
+                    <a href={`${process.env.REACT_APP_API_URL}/auth/google?redirect=/ai-wizard`} className="bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-blue-700 ...">
                         {t('aiwizard_signin_to_join')}
                     </a>
                 )}
