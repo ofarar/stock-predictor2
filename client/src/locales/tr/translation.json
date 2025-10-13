@@ -264,7 +264,7 @@
   "avg_score": "Ort. Puan",
   "no_top_predictors": "Bu filtre için henüz en iyi tahminci yok.",
   "active_predictions_on": "{{ticker}} Üzerine Aktif Tahminler",
-  "prediction_type": "{{type}} Tahmini",
+  "prediction_type": "{{type}} Tahmin",
   "target": "Hedef: ${{targetPrice}}",
   "no_active_predictions": "Bu hisse senedi için henüz aktif tahmin yok.",
   "terms_page": {

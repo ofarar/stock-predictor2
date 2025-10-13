@@ -71,7 +71,7 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                 setCurrentQuote(quoteRes.data);
             }
         }).catch(() => toast.error(t("Could not load prediction details.")))
-          .finally(() => setLoading(false));
+            .finally(() => setLoading(false));
     }, [predictionId, t]);
 
     useEffect(() => {
@@ -134,7 +134,9 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                     <div className="flex justify-between items-start">
                         <div>
                             <Link to={`/stock/${prediction.stockTicker}`} className="text-3xl font-bold text-white hover:underline">{prediction.stockTicker}</Link>
-                            <p className="text-gray-400">{t("Prediction")} {prediction.predictionType}</p>
+                            <p className="text-gray-400">
+                                {t('prediction_type', { type: t(`predictionTypes.${prediction.predictionType.toLowerCase()}`) })}
+                            </p>
                         </div>
                         <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
                             {prediction.status}
