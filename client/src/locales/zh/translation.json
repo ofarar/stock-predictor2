@@ -536,7 +536,8 @@
             "monthly": "每月",
             "yearly": "每年"
         },
-        "noData": "此筛选条件下没有表现数据。"
+        "noData": "此筛选条件下没有表现数据。",
+        "tooltipLabel": "分数: {{score}}"
     },
     "performanceTabs": {
         "tabs": {

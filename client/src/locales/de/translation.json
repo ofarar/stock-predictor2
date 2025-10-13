@@ -536,7 +536,8 @@
             "monthly": "Monatlich",
             "yearly": "Jährlich"
         },
-        "noData": "Keine Leistungsdaten für diesen Filter."
+        "noData": "Keine Leistungsdaten für diesen Filter.",
+        "tooltipLabel": "Punktzahl: {{score}}"
     },
     "performanceTabs": {
         "tabs": {

@@ -536,7 +536,8 @@
       "monthly": "Aylık",
       "yearly": "Yıllık"
     },
-    "noData": "Bu filtre için performans verisi yok."
+    "noData": "Bu filtre için performans verisi yok.",
+    "tooltipLabel": "Puan: {{score}}"
   },
   "performanceTabs": {
     "tabs": {

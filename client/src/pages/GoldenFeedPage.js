@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
 import VerifiedTick from '../components/VerifiedTick';
-import { formatPercentage, formatCurrency, formatDateTime } from '../utils/formatters';
+import { formatDateTime } from '../utils/formatters';
 
 const CentralPostCard = ({ post, settings }) => {
     const { t, i18n } = useTranslation();

@@ -536,7 +536,8 @@
       "monthly": "Monthly",
       "yearly": "Yearly"
     },
-    "noData": "No performance data for this filter."
+    "noData": "No performance data for this filter.",
+    "tooltipLabel": "Score: {{score}}"
   },
   "performanceTabs": {
     "tabs": {

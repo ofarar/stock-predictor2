@@ -40,7 +40,22 @@ const PerformanceChart = ({ chartData = [] }) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    // This will format the title (the date) of the tooltip
+                    title: function (context) {
+                        const label = context[0].label;
+                        return formatDate(new Date(label), i18n.language);
+                    },
+                    // This will format the body of the tooltip
+                    label: function (context) {
+                        return t('performanceChart.tooltipLabel', { score: context.formattedValue });
+                    }
+                }
+            }
+        },
         scales: {
             x: {
                 ticks: {
