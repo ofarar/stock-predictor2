@@ -15,6 +15,66 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
+// In server/routes/api.js
+
+router.put('/predictions/:id/edit', async (req, res) => {
+    // 1. Authentication
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+
+    const { newTargetPrice, reason } = req.body;
+    if (!newTargetPrice || isNaN(newTargetPrice)) {
+        return res.status(400).json({ message: 'A valid new target price is required.' });
+    }
+
+    try {
+        const prediction = await Prediction.findById(req.params.id);
+
+        if (!prediction) {
+            return res.status(404).json({ message: 'Prediction not found.' });
+        }
+
+        // 2. Authorization
+        if (prediction.userId.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'You are not authorized to edit this prediction.' });
+        }
+
+        // 3. Validation
+        if (prediction.status !== 'Active') {
+            return res.status(400).json({ message: 'Only active predictions can be edited.' });
+        }
+
+        // 4. Logic: Get current price for the history log
+        const quote = await yahooFinance.quote(prediction.stockTicker);
+        const priceAtTimeOfUpdate = quote.regularMarketPrice;
+
+        // 5. Create the history entry
+        const historyEntry = {
+            previousTargetPrice: prediction.targetPrice,
+            newTargetPrice: parseFloat(newTargetPrice),
+            reason: reason || '', // Default to empty string if no reason
+            priceAtTimeOfUpdate: priceAtTimeOfUpdate
+        };
+
+        // 6. Update the prediction
+        prediction.history.push(historyEntry);
+        prediction.targetPrice = parseFloat(newTargetPrice);
+
+        // Also update the description with the new reason if provided
+        if (reason) {
+            prediction.description = reason;
+        }
+
+        await prediction.save();
+        res.json(prediction);
+
+    } catch (err) {
+        console.error("Error editing prediction:", err);
+        res.status(500).json({ message: 'Server error while editing prediction.' });
+    }
+});
+
 router.put('/profile/language', async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ message: 'Not authenticated.' });
@@ -757,11 +817,13 @@ router.post('/predict', async (req, res) => {
             userId: req.user._id,
             stockTicker,
             targetPrice,
+            targetPriceAtCreation: targetPrice,
             deadline,
             predictionType,
             priceAtCreation: currentPrice,
             currency: quote.currency,
             description,
+            initialDescription: description,
             status: 'Active'
         });
         await prediction.save();

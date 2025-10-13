@@ -713,5 +713,24 @@
     "predictionStatus": {
         "Active": "进行中",
         "Assessed": "已评估"
+    },
+    "editPredictionModal": {
+        "title": "编辑 {{ticker}} 的预测",
+        "newTargetPriceLabel": "新目标价",
+        "reasonLabel": "更新原因（可选）",
+        "reasonPlaceholder": "新信息、市场变化等",
+        "cancelButton": "取消",
+        "savingButton": "正在保存...",
+        "saveButton": "保存更改",
+        "successToast": "预测更新成功！",
+        "errorToast": "预测更新失败。"
+    },
+    "predictionHistoryModal": {
+        "title": "{{ticker}} 的编辑历史",
+        "initialReason": "初始预测",
+        "chartLabelPredicted": "预测价格",
+        "chartLabelActual": "更新时的实际价格",
+        "tabHistory": "历史",
+        "tabChart": "图表"
     }
 }

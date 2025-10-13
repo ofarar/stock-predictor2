@@ -18,43 +18,59 @@ import VerifiedTick from '../components/VerifiedTick';
 import VerifiedStatusModal from '../components/VerifiedStatusModal';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { formatPercentage, formatCurrency } from '../utils/formatters';
+import EditPredictionModal from '../components/EditPredictionModal';
 
-const MiniPredictionCard = ({ prediction, currentPrice }) => {
-    const { t, i18n } = useTranslation(); // Get the 't' function
+const MiniPredictionCard = ({ prediction, currentPrice, isOwnProfile, onEditClick }) => {
+    const { t, i18n } = useTranslation();
     const isAssessed = prediction.status === 'Assessed';
     let percentageChange = null;
     if (!isAssessed && currentPrice > 0) {
         percentageChange = ((prediction.targetPrice - currentPrice) / currentPrice) * 100;
     }
     return (
-        <Link to={`/prediction/${prediction._id}`} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
-            <div className="flex justify-between items-center">
-                <div className="flex flex-col">
-                    <span className="font-bold text-white text-lg">{prediction.stockTicker}</span>
-                    <span className="text-xs text-gray-400">
-                        {/* This line is now fixed to use the translation function */}
-                        {t(`predictionTypes.${prediction.predictionType.toLowerCase()}`)}
-                    </span>
-                </div>
-                {isAssessed ? (
-                    <div className="text-right">
-                        <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score.toFixed(1)}</p>
-                        <p className="text-xs text-gray-500 -mt-1">{t('common.score')}</p>
+        <div className="relative"> {/* Wrapper for positioning the edit icon */}
+            <Link to={`/prediction/${prediction._id}`} className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                <div className="flex justify-between items-center pr-8">
+                    <div className="flex flex-col">
+                        <span className="font-bold text-white text-lg">{prediction.stockTicker}</span>
+                        <span className="text-xs text-gray-400">
+                            {t(`predictionTypes.${prediction.predictionType.toLowerCase()}`)}
+                        </span>
                     </div>
-                ) : (
-                    <div className="text-right">
-                        <p className="font-semibold text-lg text-white">
-                            {formatCurrency(prediction.targetPrice, i18n.language, prediction.currency)}
-                        </p>
-                        {percentageChange !== null && (
-                            <p className={`text-sm font-bold -mt-1 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                {formatPercentage(percentageChange, i18n.language)}
+                    {isAssessed ? (
+                        <div className="text-right">
+                            <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score.toFixed(1)}</p>
+                            <p className="text-xs text-gray-500 -mt-1">{t('common.score')}</p>
+                        </div>
+                    ) : (
+                        <div className="text-right">
+                            <p className="font-semibold text-lg text-white">
+                                {formatCurrency(prediction.targetPrice, i18n.language, prediction.currency)}
                             </p>
-                        )}
-                    </div>
-                )}
-            </div>
-        </Link>
+                            {percentageChange !== null && (
+                                <p className={`text-sm font-bold -mt-1 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                    {formatPercentage(percentageChange, i18n.language)}
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </Link>
+            {/* Conditionally render the edit button */}
+            {isOwnProfile && prediction.status === 'Active' && (
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onEditClick(prediction);
+                    }}
+                    className="absolute top-1/2 right-2 -translate-y-1/2 p-1 bg-gray-800 rounded-full text-gray-400 hover:text-white"
+                    title="Edit Prediction"
+                >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l10.732-10.732z"></path></svg>
+                </button>
+            )}
+        </div>
     );
 };
 
@@ -93,6 +109,14 @@ const ProfilePage = ({ settings }) => {
     const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
     const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [predictionToEdit, setPredictionToEdit] = useState(null);
+
+    const handleEditClick = (prediction) => {
+        setPredictionToEdit(prediction);
+        setIsEditModalOpen(true);
+    };
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -187,6 +211,14 @@ const ProfilePage = ({ settings }) => {
             <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData} />
             <JoinGoldenModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} goldenMember={user} onUpdate={fetchData} />
             <GoldenPostForm isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} onPostCreated={fetchData} />
+
+            {/* ADD THE NEW MODAL HERE */}
+            <EditPredictionModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                prediction={predictionToEdit}
+                onUpdate={fetchData}
+            />
 
             <div className="animate-fade-in max-w-6xl mx-auto">
                 <div className="relative flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
@@ -303,7 +335,15 @@ const ProfilePage = ({ settings }) => {
                                 <h3 className="text-xl font-bold text-white mb-4">{t('active_predictions_title')}</h3>
                                 {activePredictions.length > 0 ? (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-                                        {activePredictions.slice(0, visibleActive).map(p => <MiniPredictionCard key={p._id} prediction={p} currentPrice={activePredictionQuotes[p.stockTicker]} />)}
+                                        {activePredictions.slice(0, visibleActive).map(p =>
+                                            <MiniPredictionCard
+                                                key={p._id}
+                                                prediction={p}
+                                                currentPrice={activePredictionQuotes[p.stockTicker]}
+                                                isOwnProfile={isOwnProfile}
+                                                onEditClick={handleEditClick}
+                                            />
+                                        )}
                                     </div>
                                 ) : <p className="text-gray-500 text-center py-4">{t('no_active_predictions_label')}</p>}
                                 {activePredictions.length > visibleActive && (<button onClick={() => setVisibleActive(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">{t('load_more_label')}</button>)}
@@ -312,7 +352,14 @@ const ProfilePage = ({ settings }) => {
                                 <h3 className="text-xl font-bold text-white mb-4">{t('prediction_history_title')}</h3>
                                 {assessedPredictions.length > 0 ? (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-                                        {assessedPredictions.slice(0, visiblePredictions).map(p => <MiniPredictionCard key={p._id} prediction={p} />)}
+                                        {assessedPredictions.slice(0, visiblePredictions).map(p =>
+                                            <MiniPredictionCard
+                                                key={p._id}
+                                                prediction={p}
+                                                isOwnProfile={isOwnProfile}
+                                                onEditClick={handleEditClick}
+                                            />
+                                        )}
                                     </div>
                                 ) : <p className="text-gray-500 text-center py-4">{t('no_prediction_history_label')}</p>}
                                 {assessedPredictions.length > visiblePredictions && (<button onClick={() => setVisiblePredictions(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">{t('load_more_label')}</button>)}

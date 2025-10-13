@@ -5,155 +5,17 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import TimePenaltyBar from './TimePenaltyBar';
 import { useTranslation } from 'react-i18next';
-import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
-
-const isMarketOpen = () => {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const day = now.getUTCDay();
-    const isWeekday = day >= 1 && day <= 5;
-    const isAfterOpen = utcHour > 13 || (utcHour === 13 && now.getUTCMinutes() >= 30);
-    const isBeforeClose = utcHour < 20;
-    return isWeekday && isAfterOpen && isBeforeClose;
-};
-
-const isPreMarketWindow = () => {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const day = now.getUTCDay();
-    const isWeekday = day >= 1 && day <= 5;
-    const isInWindow = utcHour === 13 && now.getUTCMinutes() < 30;
-    return isWeekday && isInWindow;
-};
-
-const getPredictionDetails = (predictionType, t, i18n) => {
-    const now = new Date();
-    let deadline = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    let message = '';
-    let barWidth = 100;
-    let maxScore = 100;
-    let isOpen = true;
-
-    switch (predictionType) {
-        case 'Hourly': {
-            if (isPreMarketWindow()) {
-                deadline.setUTCHours(14, 0, 0, 0);
-                // CORRECTED: Use the "Opening Hour" message
-                message = t('predictionWidgetMessages.openingHourPrediction');
-                isOpen = true;
-            } else if (isMarketOpen()) {
-                const elapsedMinutes = now.getMinutes();
-                const penalty = elapsedMinutes > 10 ? Math.floor(((elapsedMinutes - 10) / 50) * 20) : 0;
-                maxScore = 100 - penalty;
-                barWidth = 100 - (elapsedMinutes / 60 * 100);
-                deadline.setUTCHours(now.getUTCHours() + 1, 0, 0, 0);
-                isOpen = true;
-            } else {
-                isOpen = false;
-                // FIXED: Use translation key
-                message = t('predictionWidgetMessages.marketClosed');
-                barWidth = 0;
-            }
-            break;
-        }
-        case 'Daily': {
-            const marketCloseToday = new Date(now.getTime());
-            marketCloseToday.setUTCHours(20, 0, 0, 0);
-            const day = now.getUTCDay();
-            const isAfterHours = now.getTime() > marketCloseToday.getTime();
-            if (day === 6) { deadline.setUTCDate(now.getUTCDate() + 2); }
-            else if (day === 0) { deadline.setUTCDate(now.getUTCDate() + 1); }
-            else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); }
-            else if (isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 1); }
-            deadline.setUTCHours(20, 0, 0, 0);
-
-            if (deadline.getUTCDate() !== now.getUTCDate() || deadline.getUTCMonth() !== now.getUTCMonth()) {
-                // FIXED: Use formatDate utility
-                message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline, i18n.language) });
-            } else {
-                const marketOpen = new Date().setUTCHours(13, 30, 0, 0);
-                const elapsedMinutes = Math.max(0, (now.getTime() - marketOpen) / 60000);
-                const totalMinutes = 390;
-                const penalty = Math.floor(elapsedMinutes / (totalMinutes / 20));
-                maxScore = 100 - penalty;
-                barWidth = 100 - (elapsedMinutes / totalMinutes * 100);
-                // FIXED: Use translation key
-                message = t('predictionWidgetMessages.maxScore', { score: maxScore });
-            }
-            // REMOVED premature return, using break for consistency
-            break;
-        }
-        case 'Weekly': {
-            let weeklyDeadline = new Date(now.getTime());
-            const dayOfWeek = now.getUTCDay();
-            const daysUntilFriday = dayOfWeek <= 5 ? 5 - dayOfWeek : 6;
-            weeklyDeadline.setUTCDate(now.getUTCDate() + daysUntilFriday);
-            weeklyDeadline.setUTCHours(20, 0, 0, 0);
-            if (now.getTime() > weeklyDeadline.getTime()) {
-                weeklyDeadline.setUTCDate(weeklyDeadline.getUTCDate() + 7);
-            }
-            deadline = weeklyDeadline;
-            const startOfWeek = new Date(deadline.getTime());
-            startOfWeek.setUTCDate(startOfWeek.getUTCDate() - 4);
-            startOfWeek.setUTCHours(13, 30, 0, 0);
-            const elapsedMillis = Math.max(0, now.getTime() - startOfWeek.getTime());
-            const totalMillis = deadline.getTime() - startOfWeek.getTime();
-            const percentElapsed = (elapsedMillis / totalMillis) * 100;
-            const penalty = Math.floor(percentElapsed / (100 / 20));
-            maxScore = 100 - penalty;
-            barWidth = 100 - percentElapsed;
-            // FIXED: Use formatDate utility
-            message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline, i18n.language) });
-            break;
-        }
-        case 'Monthly': {
-            deadline = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0));
-            deadline.setUTCHours(20, 0, 0, 0);
-            const totalDaysInMonth = deadline.getUTCDate();
-            const elapsedDays = now.getUTCDate();
-            const penalty = Math.floor((elapsedDays / totalDaysInMonth) * 25);
-            maxScore = 100 - penalty;
-            barWidth = 100 - (elapsedDays / totalDaysInMonth * 100);
-            break;
-        }
-        case 'Quarterly': {
-            deadline.setUTCMonth(now.getUTCMonth() + 3);
-            const startOfQuarter = new Date(Date.UTC(now.getUTCFullYear(), Math.floor(now.getUTCMonth() / 3) * 3, 1));
-            const elapsedDays = (now - startOfQuarter) / (1000 * 60 * 60 * 24);
-            const penalty = Math.floor((elapsedDays / 90) * 25);
-            maxScore = 100 - penalty;
-            barWidth = 100 - (elapsedDays / 90 * 100);
-            break;
-        }
-        case 'Yearly': {
-            deadline.setUTCFullYear(now.getUTCFullYear(), 11, 31);
-            const startOfYear = new Date(Date.UTC(now.getUTCFullYear(), 0, 1));
-            const elapsedDays = (now - startOfYear) / (1000 * 60 * 60 * 24);
-            const penalty = Math.floor((elapsedDays / 365) * 30);
-            maxScore = 100 - penalty;
-            barWidth = 100 - (elapsedDays / 365 * 100);
-            break;
-        }
-        default:
-            isOpen = false;
-            // This message is a fallback and may not appear, but is now translated.
-            message = t('predictionWidgetMessages.invalidType');
-            break;
-    }
-
-    // FIXED: Default message now uses translation key
-    message = message || t('predictionWidgetMessages.maxScore', { score: maxScore });
-    return { isOpen, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
-};
+import { formatCurrency, formatPercentage } from '../utils/formatters';
+import { getPredictionDetails, isMarketOpen, isPreMarketWindow } from '../utils/timeHelpers';
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
     const { t, i18n } = useTranslation();
-
+    
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [selectedStock, setSelectedStock] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [ setError] = useState('');
+    const [error, setError] = useState('');
     const [target, setTarget] = useState('');
     const [description, setDescription] = useState('');
     const [predictionType, setPredictionType] = useState('Weekly');
@@ -161,8 +23,9 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         isOpen: true, message: 'Max Score: 100', deadline: null, barWidth: '100%'
     });
 
-    const currentPrice = selectedStock ? selectedStock.regularMarketPrice : 0;
+    const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
+    const currentPrice = selectedStock ? selectedStock.regularMarketPrice : 0;
     let percentageChange = 0;
     if (currentPrice > 0 && target) {
         percentageChange = ((parseFloat(target) - currentPrice) / currentPrice) * 100;
@@ -198,7 +61,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
             }, 1000);
             return () => clearInterval(timer);
         }
-    }, [predictionType, selectedStock]);
+    }, [predictionType, selectedStock, t, i18n]);
 
     const handleSelectStock = (symbol) => {
         setIsLoading(true); setError(''); setSearchTerm(''); setSearchResults([]);
@@ -235,24 +98,20 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
         const percentChange = Math.abs(((parseFloat(target) - currentPrice) / currentPrice) * 100);
         const limit = thresholds[predictionType];
-
+        
         if (requestConfirmation && percentChange > limit) {
             const formattedPrice = formatCurrency(parseFloat(target), i18n.language, selectedStock.currency);
             const formattedPercent = formatPercentage(percentChange, i18n.language);
-
-            const message = t('prediction.confirmationMessage', {
+            const message = t('prediction.confirmationMessage', { 
                 price: formattedPrice,
                 percent: formattedPercent,
-                limit: limit
+                limit: limit 
             });
-
             requestConfirmation(message, executePrediction);
         } else {
             executePrediction();
         }
     };
-
-    const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     return (
         <div className="w-full">
@@ -280,14 +139,13 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 </div>
             ) : (
                 <div className="animate-fade-in">
-                    {/* Prediction Form JSX */}
                     <div className="text-center mb-4">
                         <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
                         <p className="text-gray-400">
                             {t('prediction.currentPrice')}:&nbsp;
                             <span className="font-semibold text-white">
-                                {selectedStock?.regularMarketPrice != null
-                                    ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)
+                                {selectedStock?.regularMarketPrice != null 
+                                    ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency) 
                                     : t('prediction.na')}
                             </span>
                         </p>
@@ -309,9 +167,9 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                                         ?
                                     </button>
                                 </label>
-                                <select
-                                    value={predictionType}
-                                    onChange={(e) => setPredictionType(e.target.value)}
+                                <select 
+                                    value={predictionType} 
+                                    onChange={(e) => setPredictionType(e.target.value)} 
                                     className="w-full bg-gray-900 text-white p-2 rounded-md"
                                 >
                                     {predictionTypes.map(type => (

@@ -714,5 +714,24 @@
   "predictionStatus": {
     "Active": "Active",
     "Assessed": "Assessed"
+  },
+  "editPredictionModal": {
+    "title": "Edit Prediction for {{ticker}}",
+    "newTargetPriceLabel": "New Target Price",
+    "reasonLabel": "Reason for Update (Optional)",
+    "reasonPlaceholder": "New information, market shift, etc.",
+    "cancelButton": "Cancel",
+    "savingButton": "Saving...",
+    "saveButton": "Save Changes",
+    "successToast": "Prediction updated successfully!",
+    "errorToast": "Failed to update prediction."
+  },
+  "predictionHistoryModal": {
+    "title": "Edit History for {{ticker}}",
+    "initialReason": "Initial Prediction",
+    "chartLabelPredicted": "Predicted Price",
+    "chartLabelActual": "Actual Price at Update",
+    "tabHistory": "History",
+    "tabChart": "Chart"
   }
 }

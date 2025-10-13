@@ -1,6 +1,6 @@
 // src/pages/PredictionDetailPage.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -8,6 +8,9 @@ import DescriptionModal from '../components/DescriptionModal';
 import PredictionJourney from '../components/PredictionJourney';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
+import EditPredictionModal from '../components/EditPredictionModal';
+import PredictionHistoryModal from '../components/PredictionHistoryModal';
+import { formatPercentage, formatCurrency } from '../utils/formatters';
 
 const formatTimeLeft = (deadline, t) => {
     const total = Date.parse(deadline) - Date.parse(new Date());
@@ -46,7 +49,7 @@ const isMarketOpen = () => {
 };
 
 const PredictionDetailPage = ({ requestLogin, settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { predictionId } = useParams();
     const [prediction, setPrediction] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
@@ -54,6 +57,40 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
     const [timeLeft, setTimeLeft] = useState('');
     const [loading, setLoading] = useState(true);
     const [isDescModalOpen, setIsDescModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+
+    const fetchData = useCallback(() => {
+        setLoading(true);
+        Promise.all([
+            axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }),
+            axios.get(`${process.env.REACT_APP_API_URL}/api/prediction/${predictionId}`)
+        ]).then(([userRes, predictionRes]) => {
+            setCurrentUser(userRes.data);
+            const pred = predictionRes.data;
+            setPrediction(pred);
+            if (pred.status === 'Active') {
+                return axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${pred.stockTicker}`);
+            }
+        }).then(quoteRes => {
+            if (quoteRes) {
+                setCurrentQuote(quoteRes.data);
+            }
+        }).catch(() => toast.error(t("Could not load prediction details.")))
+            .finally(() => setLoading(false));
+    }, [predictionId, t]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    useEffect(() => {
+        if (prediction?.status === 'Active') {
+            const timer = setInterval(() => setTimeLeft(formatTimeLeft(prediction.deadline, t)), 1000);
+            return () => clearInterval(timer);
+        }
+    }, [prediction, t]);
+
 
     useEffect(() => {
         Promise.all([
@@ -123,11 +160,9 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
 
     return (
         <>
-            <DescriptionModal
-                isOpen={isDescModalOpen}
-                onClose={() => setIsDescModalOpen(false)}
-                description={prediction.description}
-            />
+            <DescriptionModal isOpen={isDescModalOpen} onClose={() => setIsDescModalOpen(false)} description={prediction.description} />
+            <EditPredictionModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} prediction={prediction} onUpdate={fetchData} />
+            <PredictionHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} prediction={prediction} />
 
             <div className="max-w-2xl mx-auto animate-fade-in">
                 <div className="bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl">
@@ -163,6 +198,17 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                                 {prediction.description && (
                                     <button onClick={() => setIsDescModalOpen(true)} className="text-gray-500 hover:text-white" title={t("View Rationale")}>
                                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                )}
+                                {/* --- ADD THESE ICONS --- */}
+                                {currentUser?._id === prediction.userId._id && prediction.status === 'Active' && (
+                                    <button onClick={() => setIsEditModalOpen(true)} title="Edit Prediction" className="text-gray-500 hover:text-white">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l10.732-10.732z"></path></svg>
+                                    </button>
+                                )}
+                                {prediction.history && prediction.history.length > 0 && (
+                                    <button onClick={() => setIsHistoryModalOpen(true)} title="View Edit History" className="text-gray-500 hover:text-white">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </button>
                                 )}
                             </p>

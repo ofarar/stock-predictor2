@@ -9,7 +9,7 @@ const InfoModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-[60] p-4" onClick={onClose}>
             <div className="relative bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-lg text-gray-300" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-white">{t('infoModal.title')}</h2>
@@ -22,7 +22,7 @@ const InfoModal = ({ isOpen, onClose }) => {
 
                 <div className="space-y-4 text-sm max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                     <p>{t('infoModal.description')}</p>
-                    
+
                     <div>
                         <h3 className="font-bold text-white">{t('infoModal.hourlyPredictions.title')}</h3>
                         <p>{t('infoModal.hourlyPredictions.description')}</p>

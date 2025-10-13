@@ -714,5 +714,24 @@
   "predictionStatus": {
     "Active": "Aktif",
     "Assessed": "Değerlendirildi"
+  },
+  "editPredictionModal": {
+    "title": "{{ticker}} için Tahmini Düzenle",
+    "newTargetPriceLabel": "Yeni Hedef Fiyat",
+    "reasonLabel": "Güncelleme Nedeni (İsteğe Bağlı)",
+    "reasonPlaceholder": "Yeni bilgi, piyasa değişikliği vb.",
+    "cancelButton": "İptal",
+    "savingButton": "Kaydediliyor...",
+    "saveButton": "Değişiklikleri Kaydet",
+    "successToast": "Tahmin başarıyla güncellendi!",
+    "errorToast": "Tahmin güncellenemedi."
+  },
+  "predictionHistoryModal": {
+    "title": "{{ticker}} için Düzenleme Geçmişi",
+    "initialReason": "İlk Tahmin",
+    "chartLabelPredicted": "Tahmin Edilen Fiyat",
+    "chartLabelActual": "Güncelleme Anındaki Fiyat",
+    "tabHistory": "Geçmiş",
+    "tabChart": "Grafik"
   }
 }

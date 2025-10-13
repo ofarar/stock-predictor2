@@ -713,5 +713,24 @@
     "predictionStatus": {
         "Active": "Активный",
         "Assessed": "Оценен"
+    },
+    "editPredictionModal": {
+        "title": "Изменить прогноз для {{ticker}}",
+        "newTargetPriceLabel": "Новая целевая цена",
+        "reasonLabel": "Причина обновления (необязательно)",
+        "reasonPlaceholder": "Новая информация, изменение рынка и т.д.",
+        "cancelButton": "Отмена",
+        "savingButton": "Сохранение...",
+        "saveButton": "Сохранить",
+        "successToast": "Прогноз успешно обновлен!",
+        "errorToast": "Не удалось обновить прогноз."
+    },
+    "predictionHistoryModal": {
+        "title": "История изменений для {{ticker}}",
+        "initialReason": "Первоначальный прогноз",
+        "chartLabelPredicted": "Прогнозируемая цена",
+        "chartLabelActual": "Фактическая цена при обновлении",
+        "tabHistory": "История",
+        "tabChart": "График"
     }
 }

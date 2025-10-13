@@ -713,5 +713,24 @@
     "predictionStatus": {
         "Active": "Aktiv",
         "Assessed": "Bewertet"
+    },
+    "editPredictionModal": {
+        "title": "Prognose für {{ticker}} bearbeiten",
+        "newTargetPriceLabel": "Neuer Zielkurs",
+        "reasonLabel": "Grund für Update (Optional)",
+        "reasonPlaceholder": "Neue Informationen, Marktveränderung usw.",
+        "cancelButton": "Abbrechen",
+        "savingButton": "Speichern...",
+        "saveButton": "Änderungen speichern",
+        "successToast": "Prognose erfolgreich aktualisiert!",
+        "errorToast": "Fehler beim Aktualisieren der Prognose."
+    },
+    "predictionHistoryModal": {
+        "title": "Änderungsverlauf für {{ticker}}",
+        "initialReason": "Ursprüngliche Prognose",
+        "chartLabelPredicted": "Prognostizierter Preis",
+        "chartLabelActual": "Tatsächlicher Preis bei Update",
+        "tabHistory": "Verlauf",
+        "tabChart": "Diagramm"
     }
 }
