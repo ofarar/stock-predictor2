@@ -258,7 +258,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         <div className="w-full">
             <h2 className="text-2xl font-bold text-white mb-6">{t('prediction.makePrediction')}</h2>
 
-            {!selectedStock && !initialStock ? (
+            {!selectedStock ? (
                 <div className="relative mb-4">
                     <input
                         type="text"
@@ -280,6 +280,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 </div>
             ) : (
                 <div className="animate-fade-in">
+                    {/* Prediction Form JSX */}
                     <div className="text-center mb-4">
                         <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
                         <p className="text-gray-400">
