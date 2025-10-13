@@ -136,7 +136,7 @@
   "explore_tab_assessed": "Değerlendirilmiş",
   "explore_loading": "Tahminler yükleniyor...",
   "explore_no_predictions": "Bu filtrelere uygun tahmin bulunamadı.",
-  "explore_predicts_price_of": "Tahmini fiyat",
+  "explore_predicts_price_of": "Fiyat tahmini",
   "explore_by_deadline": "{{date}} tarihine kadar",
   "explore_predicted": "Tahmin Edilen",
   "explore_actual_price": "Gerçek Fiyat",
