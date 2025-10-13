@@ -564,6 +564,7 @@
   },
   "predictionTypes": {
     "modalTitle": "Prediction Types Explained",
+    "overall": "Overall",
     "hourly": "Hourly",
     "hourlyDescription": "Predict the stock price for the end of the current or next trading hour. Ideal for short-term volatility.",
     "daily": "Daily",

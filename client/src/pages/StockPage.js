@@ -119,10 +119,11 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 bg-gray-800 p-4 sm:p-6 rounded-lg">
                         <h3 className="text-xl font-bold text-white mb-4">{t('top_predictors_for', { ticker })}</h3>
+
                         <div className="flex flex-wrap border-b border-gray-700 mb-4">
                             {predictionTypes.map(type => (
                                 <button key={type} onClick={() => setFilter(type)} className={`px-4 py-2 font-bold text-sm transition-colors ${filter === type ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
-                                    {type}
+                                    {t(`predictionTypes.${type.toLowerCase()}`)}
                                 </button>
                             ))}
                         </div>
@@ -174,7 +175,9 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                                             <p className="text-sm font-semibold text-white">{p.userId.username}</p>
                                             {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
                                         </div>
-                                        <p className="text-xs text-gray-400">{t('prediction_type', { type: p.predictionType })}</p>
+                                        <p className="text-xs text-gray-400">
+                                            {t('prediction_type', { type: t(`predictionTypes.${p.predictionType.toLowerCase()}`) })}
+                                        </p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-sm font-bold text-white">{t('target', { targetPrice: p.targetPrice.toFixed(2) })}</p>

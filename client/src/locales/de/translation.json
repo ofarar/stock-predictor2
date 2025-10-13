@@ -564,6 +564,7 @@
     },
     "predictionTypes": {
         "modalTitle": "Prognosetypen erklärt",
+        "overall": "Gesamt",
         "hourly": "Stündlich",
         "hourlyDescription": "Prognostizieren Sie den Aktienkurs für das Ende der aktuellen oder nächsten Handelsstunde. Ideal für kurzfristige Volatilität.",
         "daily": "Täglich",

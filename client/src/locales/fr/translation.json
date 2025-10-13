@@ -564,6 +564,7 @@
     },
     "predictionTypes": {
         "modalTitle": "Explication des Types de Prédiction",
+        "overall": "Général",
         "hourly": "Horaire",
         "hourlyDescription": "Prédisez le prix de l'action pour la fin de l'heure de bourse actuelle ou suivante. Idéal pour la volatilité à court terme.",
         "daily": "Quotidien",
