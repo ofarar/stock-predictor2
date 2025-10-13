@@ -663,6 +663,7 @@
   },
   "watchlistPage": {
     "loading": "İzleme listeniz yükleniyor...",
+    "predictionCardFooter": "{{type}}, Bitiş: {{date}}",
     "title": "İzleme Listem",
     "searchPlaceholder": "İzlenecek hisseleri ara (örnek: AAPL)...",
     "emptyWatchlist": {

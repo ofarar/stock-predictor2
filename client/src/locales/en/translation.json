@@ -663,6 +663,7 @@
   },
   "watchlistPage": {
     "loading": "Loading your watchlist...",
+    "predictionCardFooter": "{{type}} by {{date}}",
     "title": "My Watchlist",
     "searchPlaceholder": "Search for stocks to watch (e.g., AAPL)...",
     "emptyWatchlist": {

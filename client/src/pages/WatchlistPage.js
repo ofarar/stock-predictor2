@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import StockFilterSearch from '../components/StockFilterSearch';
 import VerifiedTick from '../components/VerifiedTick';
+import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 
 const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
     const { t } = useTranslation();
@@ -61,7 +62,7 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
 };
 
 const WatchlistPage = ({ settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
@@ -271,8 +272,8 @@ const WatchlistPage = ({ settings }) => {
                                                         src={p.userId.avatar}
                                                         alt="avatar"
                                                         className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember
-                                                                ? 'border-yellow-400'
-                                                                : 'border-gray-600'
+                                                            ? 'border-yellow-400'
+                                                            : 'border-gray-600'
                                                             }`}
                                                     />
                                                     <p className="font-semibold text-white text-sm">
@@ -283,21 +284,22 @@ const WatchlistPage = ({ settings }) => {
                                                 </div>
                                                 <div className="text-center">
                                                     <p className="text-xl font-bold text-white">
-                                                        ${p.targetPrice.toFixed(2)}
+                                                        {formatCurrency(p.targetPrice, i18n.language, p.currency)}
                                                     </p>
                                                     <p
                                                         className={`text-sm font-bold ${percentageChange >= 0
-                                                                ? 'text-green-400'
-                                                                : 'text-red-400'
+                                                            ? 'text-green-400'
+                                                            : 'text-red-400'
                                                             }`}
                                                     >
-                                                        ({percentageChange >= 0 ? '+' : ''}
-                                                        {percentageChange.toFixed(1)}%)
+                                                        ({formatPercentage(percentageChange, i18n.language)})
                                                     </p>
                                                 </div>
                                                 <p className="text-center text-xs text-gray-400 mt-2">
-                                                    {p.predictionType} by{' '}
-                                                    {new Date(p.deadline).toLocaleDateString()}
+                                                    {t('watchlistPage.predictionCardFooter', {
+                                                        type: t(`predictionTypes.${p.predictionType.toLowerCase()}`),
+                                                        date: formatDate(new Date(p.deadline), i18n.language)
+                                                    })}
                                                 </p>
                                             </Link>
                                         );
@@ -340,8 +342,8 @@ const WatchlistPage = ({ settings }) => {
                                                     src={user.avatar}
                                                     alt="avatar"
                                                     className={`w-10 h-10 rounded-full border-2 ${user.isGoldenMember
-                                                            ? 'border-yellow-400'
-                                                            : 'border-gray-600'
+                                                        ? 'border-yellow-400'
+                                                        : 'border-gray-600'
                                                         }`}
                                                 />
                                                 <div className="ml-3 flex-grow">
