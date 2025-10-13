@@ -176,7 +176,7 @@ const WatchlistPage = ({ settings }) => {
         return processed;
     }, [selectedPredictions, predictionTypeFilter, sortBy, currentPrice]);
 
-    if (loading) return <div className="text-center text-gray-400 py-10">{t('watchlistPage.toast.errorLoadWatchlist')}</div>;
+    if (loading) return <div className="text-center text-gray-400 py-10">{t('watchlistPage.loading')}</div>;
 
     return (
         <div className="animate-fade-in space-y-8">

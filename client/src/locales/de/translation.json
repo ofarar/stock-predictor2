@@ -661,6 +661,7 @@
         "noStocks": "Dieser Benutzer beobachtet noch keine Aktien."
     },
     "watchlistPage": {
+        "loading": "Deine Watchlist wird geladen...",
         "title": "Meine Watchlist",
         "searchPlaceholder": "Nach Aktien suchen (z. B. AAPL)...",
         "emptyWatchlist": {

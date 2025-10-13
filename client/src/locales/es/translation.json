@@ -661,6 +661,7 @@
         "noStocks": "Este usuario aún no sigue ninguna acción."
     },
     "watchlistPage": {
+        "loading": "Cargando tu lista de seguimiento...",
         "title": "Mi lista de seguimiento",
         "searchPlaceholder": "Busca acciones para seguir (ej. AAPL)...",
         "emptyWatchlist": {

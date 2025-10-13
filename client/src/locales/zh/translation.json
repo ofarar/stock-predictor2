@@ -661,6 +661,7 @@
         "noStocks": "该用户尚未关注任何股票。"
     },
     "watchlistPage": {
+        "loading": "正在加载您的关注列表...",
         "title": "我的自选股",
         "searchPlaceholder": "搜索要关注的股票（例如：AAPL）...",
         "emptyWatchlist": {

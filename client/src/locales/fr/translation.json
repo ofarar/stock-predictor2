@@ -661,6 +661,7 @@
         "noStocks": "Cet utilisateur ne suit aucune action pour le moment."
     },
     "watchlistPage": {
+        "loading": "Chargement de votre liste de surveillance...",
         "title": "Ma liste de suivi",
         "searchPlaceholder": "Rechercher des actions à suivre (ex: AAPL)...",
         "emptyWatchlist": {

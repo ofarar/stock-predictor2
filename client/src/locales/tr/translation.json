@@ -661,6 +661,7 @@
     "noStocks": "Bu kullanıcı henüz hiçbir hisseyi izlemiyor."
   },
   "watchlistPage": {
+    "loading": "İzleme listeniz yükleniyor...",
     "title": "İzleme Listem",
     "searchPlaceholder": "İzlenecek hisseleri ara (örnek: AAPL)...",
     "emptyWatchlist": {

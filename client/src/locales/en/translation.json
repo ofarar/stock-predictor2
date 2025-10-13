@@ -661,6 +661,7 @@
     "noStocks": "This user is not watching any stocks yet."
   },
   "watchlistPage": {
+    "loading": "Loading your watchlist...",
     "title": "My Watchlist",
     "searchPlaceholder": "Search for stocks to watch (e.g., AAPL)...",
     "emptyWatchlist": {
