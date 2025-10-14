@@ -56,7 +56,7 @@ const Footer = () => {
                     <div className="relative" ref={langRef}>
                         <button
                             onClick={() => setIsLangOpen(prev => !prev)}
-                            className="bg-gray-700 text-white py-2 px-4 rounded-md border border-gray-600 flex items-center gap-2"
+                            className="bg-gray-700 text-white py-2 px-4 rounded-md border border-gray-600 flex items-center justify-between w-36"
                         >
                             <span>{languages[i18n.language]?.flag}</span>
                             <span>{languages[i18n.language]?.nativeName}</span>
