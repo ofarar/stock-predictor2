@@ -81,7 +81,7 @@ const AdminPage = () => {
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">General Settings</h2>
                 <div>
-                    <label className="block text-sm font-medium text-gray-300">Max Predictions Per Day</label>
+                    <label className="block text-sm font-medium text-gray-300">Max Predictions Per Day Per User</label>
                     <input
                         type="number"
                         value={settings.maxPredictionsPerDay}
