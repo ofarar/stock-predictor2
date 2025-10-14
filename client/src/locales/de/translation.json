@@ -751,5 +751,40 @@
         "neutralText": "Mäßig ehrgeizige Prognosen, die Risiko und potenzielle Belohnung ausbalancieren.",
         "offensiveTitle": "Offensiv",
         "offensiveText": "Mutige, risikoreiche Prognosen mit großen Kurszielen (z. B. >7% für Täglich, >35% für Jährlich)."
+    },
+    "badges": {
+        "market_maven": {
+            "name": "Markt-Meister",
+            "description": "Verliehen für hohe allgemeine Vorhersagegenauigkeit in allen Typen."
+        },
+        "hourly_hotshot": {
+            "name": "Stündlicher Experte",
+            "description": "Meisterschaft in kurzfristigen, stündlichen Vorhersagen."
+        },
+        "daily_oracle": {
+            "name": "Tages-Orakel",
+            "description": "Hervorragende Leistung bei der Vorhersage der täglichen Marktbewegungen."
+        },
+        "weekly_strategist": {
+            "name": "Wöchentlicher Stratege",
+            "description": "Nachgewiesene Fähigkeit bei wochenlangen Vorhersagen."
+        },
+        "monthly_maven": {
+            "name": "Monats-Experte",
+            "description": "Nachgewiesene Fähigkeit, Markttrends über einen Monat vorherzusagen."
+        },
+        "quarterly_visionary": {
+            "name": "Quartals-Visionär",
+            "description": "Weitblick bei langfristigen, quartalsweisen Vorhersagen."
+        },
+        "yearly_legend": {
+            "name": "Jahres-Legende",
+            "description": "Außergewöhnliche Fähigkeit bei der Vorhersage von Marktergebnissen über ein ganzes Jahr."
+        },
+        "tiers": {
+            "Gold": "Gold",
+            "Silver": "Silber",
+            "Bronze": "Bronze"
+        }
     }
 }

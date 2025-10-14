@@ -751,5 +751,40 @@
         "neutralText": "Predicciones moderadamente ambiciosas que equilibran el riesgo con la recompensa potencial.",
         "offensiveTitle": "Ofensivo",
         "offensiveText": "Predicciones audaces de alto riesgo con grandes precios objetivo (ej. >7% para Diario, >35% para Anual)."
+    },
+    "badges": {
+        "market_maven": {
+            "name": "Maestro del Mercado",
+            "description": "Otorgado por una alta precisión general en las predicciones de todo tipo."
+        },
+        "hourly_hotshot": {
+            "name": "Experto Horario",
+            "description": "Maestría en predicciones a corto plazo, por hora."
+        },
+        "daily_oracle": {
+            "name": "Oráculo Diario",
+            "description": "Sobresalió en la predicción de los movimientos diarios del mercado."
+        },
+        "weekly_strategist": {
+            "name": "Estratega Semanal",
+            "description": "Habilidad demostrada en predicciones de una semana de duración."
+        },
+        "monthly_maven": {
+            "name": "Experto Mensual",
+            "description": "Capacidad probada para pronosticar las tendencias del mercado durante un mes."
+        },
+        "quarterly_visionary": {
+            "name": "Visionario Trimestral",
+            "description": "Previsión en predicciones a largo plazo, trimestrales."
+        },
+        "yearly_legend": {
+            "name": "Leyenda Anual",
+            "description": "Habilidad excepcional para pronosticar los resultados del mercado a un año."
+        },
+        "tiers": {
+            "Gold": "Oro",
+            "Silver": "Plata",
+            "Bronze": "Bronce"
+        }
     }
 }

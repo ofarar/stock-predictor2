@@ -752,5 +752,40 @@
     "neutralText": "Moderately ambitious predictions that balance risk with potential reward.",
     "offensiveTitle": "Offensive",
     "offensiveText": "Bold, high-risk predictions with large price targets (e.g., >7% for Daily, >35% for Yearly)."
+  },
+  "badges": {
+    "market_maven": {
+      "name": "Market Maven",
+      "description": "Awarded for high overall prediction accuracy across all types."
+    },
+    "hourly_hotshot": {
+      "name": "Hourly Hotshot",
+      "description": "Mastery of short-term, hourly predictions."
+    },
+    "daily_oracle": {
+      "name": "Daily Oracle",
+      "description": "Excelled at predicting the market's daily movements."
+    },
+    "weekly_strategist": {
+      "name": "Weekly Strategist",
+      "description": "Demonstrated skill in week-long predictions."
+    },
+    "monthly_maven": {
+      "name": "Monthly Maven",
+      "description": "Proven ability to forecast market trends over a month."
+    },
+    "quarterly_visionary": {
+      "name": "Quarterly Visionary",
+      "description": "Foresight in long-term, quarterly predictions."
+    },
+    "yearly_legend": {
+      "name": "Yearly Legend",
+      "description": "Exceptional skill in forecasting year-long market outcomes."
+    },
+    "tiers": {
+      "Gold": "Gold",
+      "Silver": "Silver",
+      "Bronze": "Bronze"
+    }
   }
 }

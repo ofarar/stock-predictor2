@@ -31,33 +31,41 @@ const BadgeInfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
                 
-                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 modern-scrollbar">
                     {!badgeSettings ? (
                         <p className="text-gray-400">{t('badgeInfoModal.loadingText')}</p>
                     ) : (
-                        Object.values(badgeSettings).map(badge => (
-                            <div key={badge.name} className="bg-gray-700 p-4 rounded-lg">
-                                <h3 className="font-bold text-lg text-white">{t(`badges.${badge.name}.name`, badge.name)}</h3>
-                                <p className="text-sm text-gray-400 italic mb-3">
-                                    {t(`badges.${badge.name}.description`, badge.description)}
-                                </p>
-                                <div className="flex flex-wrap gap-4">
-                                    {badge.tiers && Object.entries(badge.tiers).map(([tier, criteria]) => (
-                                        <div key={tier} className="text-center text-xs p-2 bg-gray-800 rounded">
-                                            <p className="font-bold">{t(`badges.${badge.name}.tiers.${tier}`, tier)}</p>
-                                            <p className="text-gray-300">
-                                                {t('badgeInfoModal.scoreLabel', { score: criteria.score })}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
-                                {badge.minPredictions && (
-                                    <p className="text-xs text-gray-500 mt-2">
-                                        {t('badgeInfoModal.minPredictions', { count: badge.minPredictions })}
+                        // Loop over the keys to build dynamic translation paths
+                        Object.keys(badgeSettings).map(badgeKey => {
+                            const badge = badgeSettings[badgeKey];
+                            return (
+                                <div key={badgeKey} className="bg-gray-700 p-4 rounded-lg">
+                                    <h3 className="font-bold text-lg text-white">
+                                        {/* Use the key to find the name, with the DB value as a fallback */}
+                                        {t(`badges.${badgeKey}.name`, badge.name)}
+                                    </h3>
+                                    <p className="text-sm text-gray-400 italic mb-3">
+                                        {/* Use the key to find the description, with the DB value as a fallback */}
+                                        {t(`badges.${badgeKey}.description`, badge.description)}
                                     </p>
-                                )}
-                            </div>
-                        ))
+                                    <div className="flex flex-wrap gap-4">
+                                        {badge.tiers && Object.entries(badge.tiers).map(([tier, criteria]) => (
+                                            <div key={tier} className="text-center text-xs p-2 bg-gray-800 rounded">
+                                                <p className="font-bold">{t(`badges.tiers.${tier}`, tier)}</p>
+                                                <p className="text-gray-300">
+                                                    {t('badgeInfoModal.scoreLabel', { score: criteria.score })}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {badge.minPredictions && (
+                                        <p className="text-xs text-gray-500 mt-2">
+                                            {t('badgeInfoModal.minPredictions', { count: badge.minPredictions })}
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })
                     )}
                 </div>
                 

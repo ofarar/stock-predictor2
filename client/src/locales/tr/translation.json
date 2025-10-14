@@ -752,5 +752,40 @@
     "neutralText": "Risk ve potansiyel ödülü dengeleyen, orta düzeyde iddialı tahminler.",
     "offensiveTitle": "İddialı",
     "offensiveText": "Büyük fiyat hedefleriyle yapılan cesur, yüksek riskli tahminler (Örn: Günlük için >%7, Yıllık için >%35)."
+  },
+  "badges": {
+    "market_maven": {
+      "name": "Piyasa Bilgesi",
+      "description": "Tüm türlerdeki yüksek genel tahmin doğruluğu için verilir."
+    },
+    "hourly_hotshot": {
+      "name": "Saatlik Uzman",
+      "description": "Kısa vadeli, saatlik tahminlerde ustalık."
+    },
+    "daily_oracle": {
+      "name": "Günlük Kahin",
+      "description": "Piyasanın günlük hareketlerini tahmin etmede üstün başarı."
+    },
+    "weekly_strategist": {
+      "name": "Haftalık Stratejist",
+      "description": "Haftalık tahminlerde kanıtlanmış beceri."
+    },
+    "monthly_maven": {
+      "name": "Aylık Uzman",
+      "description": "Bir aylık piyasa trendlerini tahmin etme konusunda kanıtlanmış yetenek."
+    },
+    "quarterly_visionary": {
+      "name": "Çeyreklik Vizyoner",
+      "description": "Uzun vadeli, çeyreklik tahminlerde öngörü."
+    },
+    "yearly_legend": {
+      "name": "Yıllık Efsane",
+      "description": "Yıllık piyasa sonuçlarını tahmin etmede olağanüstü beceri."
+    },
+    "tiers": {
+      "Gold": "Altın",
+      "Silver": "Gümüş",
+      "Bronze": "Bronz"
+    }
   }
 }

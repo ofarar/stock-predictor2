@@ -751,5 +751,40 @@
         "neutralText": "在风险和潜在回报之间取得平衡的适度预测。",
         "offensiveTitle": "激进型",
         "offensiveText": "价格目标较大的大胆、高风险预测（例如，每日 >7%，每年 >35%）。"
+    },
+    "badges": {
+        "market_maven": {
+            "name": "市场大师",
+            "description": "因在所有类型的预测中获得较高的整体准确性而授予。"
+        },
+        "hourly_hotshot": {
+            "name": "小时神枪手",
+            "description": "精通短期的小时预测。"
+        },
+        "daily_oracle": {
+            "name": "每日神谕",
+            "description": "在预测市场每日走势方面表现出色。"
+        },
+        "weekly_strategist": {
+            "name": "每周策略师",
+            "description": "在为期一周的预测中展示出色的技能。"
+        },
+        "monthly_maven": {
+            "name": "月度专家",
+            "description": "已证明有能力预测一个月的市场趋势。"
+        },
+        "quarterly_visionary": {
+            "name": "季度远见者",
+            "description": "在长期的季度预测中具有远见卓识。"
+        },
+        "yearly_legend": {
+            "name": "年度传奇",
+            "description": "在预测长达一年的市场结果方面具有非凡的技能。"
+        },
+        "tiers": {
+            "Gold": "黄金",
+            "Silver": "白银",
+            "Bronze": "青铜"
+        }
     }
 }
