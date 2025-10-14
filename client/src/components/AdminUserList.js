@@ -5,20 +5,29 @@ import toast from 'react-hot-toast';
 import VerifiedTick from './VerifiedTick';
 
 const UserCard = ({ user, settings }) => (
-    <Link to={`/profile/${user._id}`} className="bg-gray-700 p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-gray-600">
-        <img
-            src={user.avatar}
-            alt="avatar"
-            className={`w-14 h-14 rounded-full border-4 flex-shrink-0 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
-        />
-        <div className="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
-            <div className="flex items-center gap-2 col-span-2 md:col-span-1">
-                <div className="flex items-center gap-1">
-                    <p className="font-bold text-white truncate">{user.username}</p>
-                    {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
-                </div>
-
+    <Link
+        to={`/profile/${user._id}`}
+        className="bg-gray-700 p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-gray-600"
+    >
+        {/* Left side: avatar + name under it */}
+        <div className="flex flex-col items-center w-20 flex-shrink-0">
+            <img
+                src={user.avatar}
+                alt="avatar"
+                className={`w-14 h-14 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+            />
+            <div className="flex items-center mt-2 max-w-full">
+                <p className="font-bold text-white text-center break-words line-clamp-2">
+                    {user.username}
+                </p>
+                {settings?.isVerificationEnabled && user.isVerified && (
+                    <VerifiedTick className="ml-1 flex-shrink-0" />
+                )}
             </div>
+        </div>
+
+        {/* Right side: stats */}
+        <div className="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
             <div className="text-center">
                 <p className="text-xs text-gray-400">Followers</p>
                 <p className="font-bold text-white">{user.followersCount}</p>
@@ -40,6 +49,8 @@ const UserCard = ({ user, settings }) => (
         </div>
     </Link>
 );
+
+
 
 const AdminUserList = ({ settings }) => {
     const [users, setUsers] = useState([]);
