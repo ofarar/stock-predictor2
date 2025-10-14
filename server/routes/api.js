@@ -1095,36 +1095,7 @@ router.get('/profile/:userId', async (req, res) => {
             return (rankData[0]?.higherRankedUsers || 0) + 1;
         };
 
-        // --- Calculate personal stats ---
-        const perfByType = assessedPredictions.reduce((acc, p) => {
-            if (!acc[p.predictionType]) acc[p.predictionType] = { total: 0, totalScore: 0 };
-            acc[p.predictionType].total++;
-            acc[p.predictionType].totalScore += p.score;
-            return acc;
-        }, {});
-        const formattedPerfByType = Object.entries(perfByType).map(([type, data]) => ({
-            type,
-            accuracy: data.totalScore / data.total,
-            count: data.total
-        })).sort((a, b) => b.accuracy - a.accuracy);
-
-        const perfByStock = assessedPredictions.reduce((acc, p) => {
-            if (!acc[p.stockTicker]) acc[p.stockTicker] = { total: 0, totalScore: 0 };
-            acc[p.stockTicker].total++;
-            acc[p.stockTicker].totalScore += p.score;
-            return acc;
-        }, {});
-        const formattedPerfByStock = Object.entries(perfByStock).map(([ticker, data]) => ({
-            ticker,
-            accuracy: data.totalScore / data.total,
-            count: data.total
-        })).sort((a, b) => b.accuracy - a.accuracy);
-
-        // 2. Now calculate aggressiveness
-        const aggressivenessData = { defensive: 0, neutral: 0, offensive: 0 };
-        let totalAbsoluteChange = 0;
-        let analyzedCount = 0;
-
+        // --- Calculate personal stats, NOW INCLUDING AGGRESSIVENESS ---
         const thresholds = {
             Hourly: { def: 1, neu: 3 },
             Daily: { def: 3, neu: 7 },
@@ -1133,6 +1104,70 @@ router.get('/profile/:userId', async (req, res) => {
             Quarterly: { def: 10, neu: 25 },
             Yearly: { def: 15, neu: 35 }
         };
+
+        const perfByType = assessedPredictions.reduce((acc, p) => {
+            if (!acc[p.predictionType]) {
+                acc[p.predictionType] = { totalScore: 0, count: 0, defensive: 0, neutral: 0, offensive: 0 };
+            }
+            acc[p.predictionType].totalScore += p.score;
+            acc[p.predictionType].count++;
+
+            if (p.priceAtCreation > 0) {
+                const absoluteChange = Math.abs((p.targetPrice - p.priceAtCreation) / p.priceAtCreation) * 100;
+                const typeThresholds = thresholds[p.predictionType] || { def: 5, neu: 15 };
+                if (absoluteChange <= typeThresholds.def) acc[p.predictionType].defensive++;
+                else if (absoluteChange <= typeThresholds.neu) acc[p.predictionType].neutral++;
+                else acc[p.predictionType].offensive++;
+            }
+            return acc;
+        }, {});
+
+        const formattedPerfByType = Object.entries(perfByType).map(([type, data]) => {
+            const total = data.defensive + data.neutral + data.offensive;
+            const weightedTotal = (data.neutral * 50) + (data.offensive * 100);
+            const aggressivenessScore = total > 0 ? weightedTotal / total : 0;
+            return {
+                type,
+                accuracy: data.totalScore / data.count,
+                count: data.count,
+                aggressivenessScore
+            };
+        }).sort((a, b) => b.accuracy - a.accuracy);
+
+        const perfByStock = assessedPredictions.reduce((acc, p) => {
+            if (!acc[p.stockTicker]) {
+                acc[p.stockTicker] = { totalScore: 0, count: 0, defensive: 0, neutral: 0, offensive: 0 };
+            }
+            acc[p.stockTicker].totalScore += p.score;
+            acc[p.stockTicker].count++;
+
+            if (p.priceAtCreation > 0) {
+                const absoluteChange = Math.abs((p.targetPrice - p.priceAtCreation) / p.priceAtCreation) * 100;
+                // For stocks, we can use a general "weekly" threshold as a good average
+                const typeThresholds = thresholds['Weekly'];
+                if (absoluteChange <= typeThresholds.def) acc[p.stockTicker].defensive++;
+                else if (absoluteChange <= typeThresholds.neu) acc[p.stockTicker].neutral++;
+                else acc[p.stockTicker].offensive++;
+            }
+            return acc;
+        }, {});
+
+        const formattedPerfByStock = Object.entries(perfByStock).map(([ticker, data]) => {
+            const total = data.defensive + data.neutral + data.offensive;
+            const weightedTotal = (data.neutral * 50) + (data.offensive * 100);
+            const aggressivenessScore = total > 0 ? weightedTotal / total : 0;
+            return {
+                ticker,
+                accuracy: data.totalScore / data.count,
+                count: data.count,
+                aggressivenessScore
+            };
+        }).sort((a, b) => b.accuracy - a.accuracy);
+
+        // 2. Now calculate aggressiveness
+        const aggressivenessData = { defensive: 0, neutral: 0, offensive: 0 };
+        let totalAbsoluteChange = 0;
+        let analyzedCount = 0;
 
         assessedPredictions.forEach(p => {
             if (p.priceAtCreation > 0) {
