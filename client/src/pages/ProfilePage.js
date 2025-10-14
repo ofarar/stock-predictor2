@@ -321,7 +321,7 @@ const ProfilePage = ({ settings }) => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <StatCard label={t('overall_rank_label')} value={performance.overallRank} isRank={true} />
                     <StatCard label={t('average_score_label')} value={performance.overallAccuracy.toFixed(1)} />
-                    <StatCard label={t('total_points_label')} value={user.score} />
+                    <StatCard label={t('total_points_label')} value={Math.round(user.score)} />
                     <StatCard label={t('total_predictions_label')} value={predictions.length} />
                     <AggressivenessProgressBar
                         data={performance.aggressiveness.distribution}
