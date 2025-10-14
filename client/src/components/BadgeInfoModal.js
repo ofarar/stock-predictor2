@@ -25,7 +25,8 @@ const BadgeInfoModal = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
             <div className="bg-gray-800 p-6 rounded-lg w-full max-w-lg" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold text-white">{t('badgeInfoModal.title')}</h2>
+                    {/* 1. Main title is text-white */}
+                    <h2 className="text-2xl font-bold text-white mb-4">{t('badgeInfoModal.title')}</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
@@ -35,17 +36,15 @@ const BadgeInfoModal = ({ isOpen, onClose }) => {
                     {!badgeSettings ? (
                         <p className="text-gray-400">{t('badgeInfoModal.loadingText')}</p>
                     ) : (
-                        // Loop over the keys to build dynamic translation paths
                         Object.keys(badgeSettings).map(badgeKey => {
                             const badge = badgeSettings[badgeKey];
                             return (
                                 <div key={badgeKey} className="bg-gray-700 p-4 rounded-lg">
-                                    <h3 className="font-bold text-lg text-white">
-                                        {/* Use the key to find the name, with the DB value as a fallback */}
+                                    {/* 2. Subtitle (badge name) is text-green-400 */}
+                                    <h3 className="font-bold text-lg text-green-400">
                                         {t(`badges.${badgeKey}.name`, badge.name)}
                                     </h3>
                                     <p className="text-sm text-gray-400 italic mb-3">
-                                        {/* Use the key to find the description, with the DB value as a fallback */}
                                         {t(`badges.${badgeKey}.description`, badge.description)}
                                     </p>
                                     <div className="flex flex-wrap gap-4">
