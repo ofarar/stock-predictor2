@@ -218,10 +218,14 @@ const WatchlistPage = ({ settings }) => {
                 <>
                     <div
                         ref={scrollContainerRef}
-                        className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+                        className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x scroll-pl-2"
                     >
                         {data.quotes.map((q) => (
-                            <div key={q.symbol} ref={(el) => (stockCardRefs.current[q.symbol] = el)}>
+                            <div
+                                key={q.symbol}
+                                ref={(el) => (stockCardRefs.current[q.symbol] = el)}
+                                className="snap-start"
+                            >
                                 <WatchlistStockCard
                                     quote={q}
                                     isSelected={selectedTicker === q.symbol}
@@ -231,6 +235,8 @@ const WatchlistPage = ({ settings }) => {
                             </div>
                         ))}
                     </div>
+
+
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                         <div className="lg:col-span-2 space-y-6">

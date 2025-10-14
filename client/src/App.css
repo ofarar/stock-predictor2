@@ -8,7 +8,8 @@
   transition to the entire application.
 */
 body {
-  font-family: 'Inter', sans-serif; /* A clean, modern sans-serif font */
+  font-family: 'Inter', sans-serif;
+  /* A clean, modern sans-serif font */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease-in-out;
@@ -18,4 +19,32 @@ body {
 .horizontal-fade {
   -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* 🌿 Modern Minimal Scrollbar */
+::-webkit-scrollbar {
+  height: 6px;
+  /* for horizontal scrollbars */
+  width: 6px;
+  /* for vertical scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.4);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(180, 180, 180, 0.7);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
 }
