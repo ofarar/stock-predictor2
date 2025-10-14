@@ -786,5 +786,8 @@
             "Silver": "Silber",
             "Bronze": "Bronze"
         }
+    },
+    "market_watch": {
+        "title": "Marktbeobachtung"
     }
 }

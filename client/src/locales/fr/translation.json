@@ -786,5 +786,8 @@
             "Silver": "Argent",
             "Bronze": "Bronze"
         }
+    },
+    "market_watch": {
+        "title": "Veille de Marché"
     }
 }

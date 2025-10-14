@@ -787,5 +787,8 @@
       "Silver": "Gümüş",
       "Bronze": "Bronz"
     }
+  },
+  "market_watch": {
+    "title": "Piyasalar"
   }
 }

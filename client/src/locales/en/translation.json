@@ -787,5 +787,8 @@
       "Silver": "Silver",
       "Bronze": "Bronze"
     }
+  },
+  "market_watch": {
+    "title": "Market Watch"
   }
 }

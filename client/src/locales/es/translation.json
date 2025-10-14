@@ -786,5 +786,8 @@
             "Silver": "Plata",
             "Bronze": "Bronce"
         }
+    },
+    "market_watch": {
+        "title": "Observatorio del Mercado"
     }
 }

@@ -4,7 +4,7 @@ import DailyLeaderboard from '../components/DailyLeaderboard';
 import LongTermLeaders from '../components/LongTermLeaders';
 import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
-import TopMovers from '../components/TopMovers';
+import MarketWatch from '../components/MarketWatch';
 import { useTranslation } from 'react-i18next';
 
 // FIX: The component now only uses the 'settings' passed in from App.js
@@ -62,7 +62,7 @@ const HomePage = ({ user, settings }) => {
 
                 {/* Sidebar Column: Focused on market context and all-time greats */}
                 <div className="lg:col-span-1 flex flex-col gap-8">
-                    <TopMovers />
+                    <MarketWatch />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} settings={settings} />
                 </div>
             </div>

@@ -786,5 +786,8 @@
             "Silver": "白银",
             "Bronze": "青铜"
         }
+    },
+    "market_watch": {
+        "title": "市场观察"
     }
 }

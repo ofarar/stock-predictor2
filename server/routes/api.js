@@ -15,7 +15,59 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
-// In server/routes/api.js
+// in server/routes/api.js
+
+router.get('/market/key-assets', async (req, res) => {
+    // 1. Define our two groups of assets
+    const fixedTickers = [
+        { ticker: 'GC=F', name: 'Gold' },
+        { ticker: 'BTC-USD', name: 'Bitcoin' },
+        { ticker: 'ETH-USD', name: 'Ethereum' },
+        { ticker: 'EURUSD=X', name: 'EUR/USD' },
+    ];
+    const magSevenTickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA'];
+    const allTickers = [...fixedTickers.map(t => t.ticker), ...magSevenTickers];
+
+    try {
+        // 2. Fetch all quotes in a single API call
+        const quotes = await yahooFinance.quote(allTickers);
+
+        // 3. Separate the Magnificent Seven quotes to find the top movers
+        const magSevenQuotes = quotes.filter(q => magSevenTickers.includes(q.symbol));
+
+        // 4. Find the top 2 movers based on the largest absolute percentage change (up or down)
+        const topTwoMovers = magSevenQuotes
+            .sort((a, b) => Math.abs(b.regularMarketChangePercent) - Math.abs(a.regularMarketChangePercent))
+            .slice(0, 2);
+
+        // 5. Combine the fixed list with the top 2 movers
+        const finalTickers = [
+            ...fixedTickers.map(t => t.ticker),
+            ...topTwoMovers.map(t => t.symbol)
+        ];
+
+        // 6. Format the final combined list for the frontend
+        const assets = finalTickers.map(ticker => {
+            const quote = quotes.find(q => q.symbol === ticker);
+            // Use the predefined friendly name for fixed assets, or the stock name for others
+            const name = fixedTickers.find(t => t.ticker === ticker)?.name || quote.longName || quote.symbol;
+
+            return {
+                ticker: quote.symbol,
+                name: name,
+                price: quote.regularMarketPrice,
+                currency: quote.currency,
+                percentChange: quote.regularMarketChangePercent,
+                isUp: (quote.regularMarketChange || 0) >= 0
+            };
+        });
+
+        res.json(assets);
+    } catch (err) {
+        console.error("Key assets fetch error:", err);
+        res.status(500).json({ message: "Failed to fetch market data." });
+    }
+});
 
 router.put('/predictions/:id/edit', async (req, res) => {
     // 1. Authentication
