@@ -7,6 +7,7 @@ import TimePenaltyBar from './TimePenaltyBar';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 import { getPredictionDetails, isMarketOpen, isPreMarketWindow } from '../utils/timeHelpers';
+import Tooltip from '../components/Tooltip';
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
     const { t, i18n } = useTranslation();

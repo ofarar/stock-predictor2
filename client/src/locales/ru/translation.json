@@ -583,7 +583,8 @@
     },
     "common": {
         "close": "Закрыть",
-        "score": "Счёт"
+        "score": "Счёт",
+        "dataDelayed": "Данные с задержкой до 15 минут"
     },
     "prediction": {
         "makePrediction": "Сделать прогноз",

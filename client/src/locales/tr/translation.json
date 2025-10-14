@@ -583,7 +583,8 @@
   },
   "common": {
     "close": "Kapat",
-    "score": "Puan"
+    "score": "Puan",
+    "dataDelayed": "Veriler 15 dakikaya kadar gecikmeli olabilir"
   },
   "prediction": {
     "makePrediction": "Tahmin Yap",

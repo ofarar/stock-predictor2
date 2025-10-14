@@ -583,7 +583,8 @@
     },
     "common": {
         "close": "Schließen",
-        "score": "Punktzahl"
+        "score": "Punktzahl",
+        "dataDelayed": "Daten bis zu 15 Minuten verzögert"
     },
     "prediction": {
         "makePrediction": "Prognose erstellen",

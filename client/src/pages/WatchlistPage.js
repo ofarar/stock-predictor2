@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import StockFilterSearch from '../components/StockFilterSearch';
 import VerifiedTick from '../components/VerifiedTick';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
+import Tooltip from '../components/Tooltip';
 
 const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
     const { t, i18n } = useTranslation();
@@ -20,9 +21,11 @@ const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
             >
                 <div className="flex justify-between items-baseline">
                     <p className="font-bold text-lg text-white">{quote.symbol}</p>
-                    <p className="font-bold text-lg text-white">
-                        {quote.regularMarketPrice?.toFixed(2)}
-                    </p>
+                    <Tooltip text={t('common.dataDelayed')}>
+                        <p className="font-bold text-lg text-white">
+                            {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
+                        </p>
+                    </Tooltip>
                 </div>
                 <div className="flex justify-between items-baseline mt-1">
                     <p className="text-xs w-2/3 truncate">{quote.longName}</p>

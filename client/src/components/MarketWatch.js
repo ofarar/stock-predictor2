@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage, formatCurrency } from '../utils/formatters';
+import Tooltip from './Tooltip';
 
 const MarketWatch = () => {
     const { t, i18n } = useTranslation();
@@ -32,9 +33,11 @@ const MarketWatch = () => {
                         <div>
                             {/* Link uses the ticker, but text shows the friendly name */}
                             <Link to={`/stock/${asset.ticker}`} className="font-bold text-white hover:underline">{asset.name}</Link>
-                            <p className="text-sm text-gray-400">
-                                {formatCurrency(asset.price, i18n.language, asset.currency)}
-                            </p>
+                            <Tooltip text={t('common.dataDelayed')}>
+                                <p className="text-sm text-gray-400">
+                                    {formatCurrency(asset.price, i18n.language, asset.currency)}
+                                </p>
+                            </Tooltip>
                         </div>
                         <span className={`font-semibold px-2 py-1 rounded-md text-sm ${asset.isUp ? 'bg-green-500 bg-opacity-20 text-green-400' : 'bg-red-500 bg-opacity-20 text-red-400'}`}>
                             {formatPercentage(asset.percentChange, i18n.language)}

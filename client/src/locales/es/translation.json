@@ -583,7 +583,8 @@
     },
     "common": {
         "close": "Cerrar",
-        "score": "Puntuación"
+        "score": "Puntuación",
+        "dataDelayed": "Datos con hasta 15 minutos de retraso"
     },
     "prediction": {
         "makePrediction": "Hacer una Predicción",

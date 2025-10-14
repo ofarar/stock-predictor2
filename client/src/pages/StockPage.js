@@ -6,6 +6,7 @@ import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { formatCurrency } from '../utils/formatters';
+import Tooltip from '../components/Tooltip';
 
 const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
     const { t, i18n } = useTranslation();
@@ -84,9 +85,11 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                 <div className="flex items-center gap-4">
                     <h1 className="text-3xl md:text-4xl font-bold text-white">{quote.longName || ticker} ({quote.symbol})</h1>
                     <div className="flex items-baseline gap-4">
-                        <p className="text-3xl md:text-4xl font-bold text-white">
-                            {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
-                        </p>
+                        <Tooltip text={t('common.dataDelayed')}>
+                            <p className="text-3xl md:text-4xl font-bold text-white">
+                                {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
+                            </p>
+                        </Tooltip>
                         <p className={`font-semibold ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2)} ({percentChange?.toFixed(2)}%)
                         </p>

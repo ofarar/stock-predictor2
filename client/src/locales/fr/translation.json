@@ -583,7 +583,8 @@
     },
     "common": {
         "close": "Fermer",
-        "score": "Score"
+        "score": "Score",
+        "dataDelayed": "Données retardées jusqu'à 15 minutes"
     },
     "prediction": {
         "makePrediction": "Faire une Prédiction",

@@ -583,7 +583,8 @@
   },
   "common": {
     "close": "Close",
-    "score": "Score"
+    "score": "Score",
+    "dataDelayed": "Data delayed up to 15 minutes"
   },
   "prediction": {
     "makePrediction": "Make a Prediction",
