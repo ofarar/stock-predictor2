@@ -8,6 +8,22 @@ import VerifiedTick from '../components/VerifiedTick';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 import Tooltip from '../components/Tooltip';
 
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableItem } from '../components/SortableItem';
+
 const WatchlistStockCard = ({ quote, isSelected, onRemove, onClick }) => {
     const { t, i18n } = useTranslation();
     const priceChange = quote?.regularMarketChangePercent || 0;
@@ -78,6 +94,33 @@ const WatchlistPage = ({ settings }) => {
     const stockCardRefs = useRef({});
 
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
+
+    // --- NEW: DND-KIT SENSOR SETUP ---
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            setData((currentData) => {
+                const oldIndex = currentData.quotes.findIndex(q => q.symbol === active.id);
+                const newIndex = currentData.quotes.findIndex(q => q.symbol === over.id);
+                const reorderedQuotes = arrayMove(currentData.quotes, oldIndex, newIndex);
+
+                // Update backend with the new order
+                const newTickerOrder = reorderedQuotes.map(q => q.symbol);
+                axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist/order`, { tickers: newTickerOrder }, { withCredentials: true })
+                    .catch(() => toast.error("Could not save order."));
+
+                return { ...currentData, quotes: reorderedQuotes };
+            });
+        }
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -216,25 +259,31 @@ const WatchlistPage = ({ settings }) => {
                 </div>
             ) : (
                 <>
-                    <div
-                        ref={scrollContainerRef}
-                        className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x scroll-pl-2"
-                    >
-                        {data.quotes.map((q) => (
-                            <div
-                                key={q.symbol}
-                                ref={(el) => (stockCardRefs.current[q.symbol] = el)}
-                                className="snap-start"
+                    {data.quotes.length > 0 && (
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                        >
+                            <SortableContext
+                                items={data.quotes.map(q => q.symbol)}
+                                strategy={horizontalListSortingStrategy}
                             >
-                                <WatchlistStockCard
-                                    quote={q}
-                                    isSelected={selectedTicker === q.symbol}
-                                    onClick={() => setSelectedTicker(q.symbol)}
-                                    onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                                <div className="flex gap-4 overflow-x-auto pb-4 modern-scrollbar">
+                                    {data.quotes.map(q => (
+                                        <SortableItem key={q.symbol} id={q.symbol}>
+                                            <WatchlistStockCard
+                                                quote={q}
+                                                isSelected={selectedTicker === q.symbol}
+                                                onClick={() => setSelectedTicker(q.symbol)}
+                                                onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')}
+                                            />
+                                        </SortableItem>
+                                    ))}
+                                </div>
+                            </SortableContext>
+                        </DndContext>
+                    )}
 
 
 

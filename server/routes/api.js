@@ -15,7 +15,29 @@ const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API
 const apiCache = new Map();
 
-// in server/routes/api.js
+// In server/routes/api.js
+
+// PUT: Update the order of a user's watchlist
+router.put('/watchlist/order', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+    const { tickers } = req.body;
+    if (!Array.isArray(tickers)) {
+        return res.status(400).json({ message: 'An array of tickers is required.' });
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            { $set: { watchlist: tickers } }, // Overwrite the old list with the new, ordered one
+            { new: true }
+        );
+        res.status(200).json({ watchlist: updatedUser.watchlist });
+    } catch (err) {
+        res.status(500).json({ message: 'Error saving new order.' });
+    }
+});
 
 router.get('/market/key-assets', async (req, res) => {
     // 1. Define our two groups of assets
