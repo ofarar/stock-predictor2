@@ -697,7 +697,15 @@
             "loadingFollow": "Подписка на пользователя...",
             "successFollow": "Пользователь успешно подписан!",
             "errorFollow": "Не удалось подписаться на пользователя."
-        }
+        },
+        "editButton": "Изменить порядок",
+        "doneButton": "Готово",
+        "addStockModal": {
+            "title": "Добавить в список наблюдения",
+            "searchLabel": "Поиск акции",
+            "addButton": "Добавить"
+        },
+        "duplicateError": "{{ticker}} уже в вашем списке наблюдения."
     },
     "watchlistStockCard": {
         "removeButtonTitle": "Удалить {{symbol}} из списка наблюдения"

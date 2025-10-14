@@ -697,7 +697,15 @@
             "loadingFollow": "Siguiendo al usuario...",
             "successFollow": "¡Usuario seguido!",
             "errorFollow": "No se pudo seguir al usuario."
-        }
+        },
+        "editButton": "Editar Orden",
+        "doneButton": "Hecho",
+        "addStockModal": {
+            "title": "Añadir a la lista de seguimiento",
+            "searchLabel": "Buscar una acción",
+            "addButton": "Añadir"
+        },
+        "duplicateError": "{{ticker}} ya está en tu lista de seguimiento."
     },
     "watchlistStockCard": {
         "removeButtonTitle": "Eliminar {{symbol}} de la lista de seguimiento"

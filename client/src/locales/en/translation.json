@@ -698,7 +698,15 @@
       "loadingFollow": "Following user...",
       "successFollow": "User followed!",
       "errorFollow": "Could not follow user."
-    }
+    },
+    "editButton": "Edit Order",
+    "doneButton": "Done",
+    "addStockModal": {
+      "title": "Add Stock to Watchlist",
+      "searchLabel": "Search for a stock",
+      "addButton": "Add"
+    },
+    "duplicateError": "{{ticker}} is already in your watchlist."
   },
   "watchlistStockCard": {
     "removeButtonTitle": "Remove {{symbol}} from watchlist"

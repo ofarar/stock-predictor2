@@ -697,7 +697,15 @@
             "loadingFollow": "正在关注用户...",
             "successFollow": "已成功关注用户！",
             "errorFollow": "无法关注用户。"
-        }
+        },
+        "editButton": "编辑顺序",
+        "doneButton": "完成",
+        "addStockModal": {
+            "title": "添加到关注列表",
+            "searchLabel": "搜索股票",
+            "addButton": "添加"
+        },
+        "duplicateError": "{{ticker}} 已在您的关注列表中。"
     },
     "watchlistStockCard": {
         "removeButtonTitle": "从自选股中移除 {{symbol}}"

@@ -697,7 +697,15 @@
             "loadingFollow": "Benutzer wird gefolgt...",
             "successFollow": "Benutzer erfolgreich gefolgt!",
             "errorFollow": "Konnte Benutzer nicht folgen."
-        }
+        },
+        "editButton": "Reihenfolge bearbeiten",
+        "doneButton": "Fertig",
+        "addStockModal": {
+            "title": "Aktie zur Watchlist hinzufügen",
+            "searchLabel": "Nach einer Aktie suchen",
+            "addButton": "Hinzufügen"
+        },
+        "duplicateError": "{{ticker}} ist bereits in Ihrer Watchlist."
     },
     "watchlistStockCard": {
         "removeButtonTitle": "{{symbol}} aus der Watchlist entfernen"

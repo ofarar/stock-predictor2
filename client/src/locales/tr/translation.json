@@ -698,7 +698,15 @@
       "loadingFollow": "Kullanıcı takip ediliyor...",
       "successFollow": "Kullanıcı takip edildi!",
       "errorFollow": "Kullanıcı takip edilemedi."
-    }
+    },
+    "editButton": "Sırayı Düzenle",
+    "doneButton": "Bitti",
+    "addStockModal": {
+      "title": "İzleme Listesine Hisse Ekle",
+      "searchLabel": "Bir hisse senedi arayın",
+      "addButton": "Ekle"
+    },
+    "duplicateError": "{{ticker}} zaten izleme listenizde."
   },
   "watchlistStockCard": {
     "removeButtonTitle": "{{symbol}} hissesini izleme listesinden kaldır"
