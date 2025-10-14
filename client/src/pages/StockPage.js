@@ -81,39 +81,47 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
 
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-3xl md:text-4xl font-bold text-white">{quote.longName || ticker} ({quote.symbol})</h1>
-                    <div className="flex items-baseline gap-4">
-                        <Tooltip text={t('common.dataDelayed')}>
-                            <p className="text-3xl md:text-4xl font-bold text-white">
-                                {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
-                            </p>
-                        </Tooltip>
-                        <p className={`font-semibold ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2)} ({percentChange?.toFixed(2)}%)
-                        </p>
-                    </div>
+            <div className="grid grid-cols-[1fr,auto] gap-x-6 gap-y-2 items-end">
+
+                {/* Cell 1: Stock Name and Ticker */}
+                <div className="text-left min-w-0"> {/* Add min-w-0 to help with truncation */}
+                    {/* 1. Truncate long names to prevent overflow */}
+                    <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight truncate">
+                        {quote.longName || ticker}
+                    </h1>
+                    <p className="text-lg text-gray-400">
+                        ({quote.symbol})
+                    </p>
                 </div>
+
+                {/* Cell 2: Price and Change, stacked vertically */}
+                <div className="flex flex-col items-end">
+                    <p className="text-3xl md:text-4xl font-bold text-white">
+                        {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
+                    </p>
+                    <p className={`font-semibold text-base ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2)} ({percentChange?.toFixed(2)}%)
+                    </p>
+                </div>
+
+                {/* Cell 3: Buttons, positioned under the stock name */}
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleWatchlistToggle}
-                        className={`p-2 rounded-full transition-colors disabled:opacity-50 ${isWatching ? 'bg-red-500/10 text-red-500' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}
+                        className={`p-2 rounded-full transition-colors disabled:opacity-50 ${isWatching ? 'bg-red-500/20 text-red-500' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}
                         title={isWatching ? t('remove_from_watchlist') : t('add_to_watchlist')}
                         disabled={!currentUser}
                     >
-                        {isWatching
-                            ? <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path></svg>
-                            : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                        }
+                        {/* 2. Make icons smaller */}
+                        <svg className="w-5 h-5" fill={isWatching ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </button>
-
                     <button
                         onClick={() => onPredictClick(quote)}
-                        className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
+                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
                         title={t('make_prediction')}
                     >
-                        +
+                        {/* 3. Center the plus icon using an SVG for perfect alignment */}
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
                     </button>
                 </div>
             </div>
