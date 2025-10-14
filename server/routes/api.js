@@ -716,6 +716,10 @@ router.put('/settings/admin', async (req, res) => {
         if (req.body.isAIWizardEnabled !== undefined) {
             updateData.isAIWizardEnabled = req.body.isAIWizardEnabled;
         }
+        // --- ADD THIS BLOCK ---
+        if (req.body.maxPredictionsPerDay !== undefined) {
+            updateData.maxPredictionsPerDay = parseInt(req.body.maxPredictionsPerDay) || 10;
+        }
         // --- END: ADDED FIX ---
 
         const updatedSettings = await Setting.findOneAndUpdate({},
@@ -808,8 +812,35 @@ router.get('/predictions/:ticker', async (req, res) => {
 router.post('/predict', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
-    const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
     try {
+        const settings = await Setting.findOne();
+        let user = await User.findById(req.user._id); // Fetch user initially
+
+        const today = new Date().setHours(0, 0, 0, 0);
+        const lastPredictionDay = user.lastPredictionDate ? new Date(user.lastPredictionDate).setHours(0, 0, 0, 0) : null;
+
+        let dailyCountUpdate;
+        if (lastPredictionDay === today) {
+            if (user.dailyPredictionCount >= settings.maxPredictionsPerDay) {
+                return res.status(429).json({
+                    message: `You have reached the daily prediction limit of ${settings.maxPredictionsPerDay}.`,
+                    code: 'PREDICTION_LIMIT_REACHED',
+                    limit: settings.maxPredictionsPerDay
+                });
+            }
+            dailyCountUpdate = { $inc: { dailyPredictionCount: 1 } };
+        } else {
+            dailyCountUpdate = { $set: { dailyPredictionCount: 1, lastPredictionDate: new Date() } };
+        }
+
+        // Atomically update the count and get the fresh user document for notifications
+        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate({
+            path: 'followers',
+            select: 'notificationSettings'
+        });
+
+        // --- The rest of your prediction creation logic ---
+        const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
         const quote = await yahooFinance.quote(stockTicker);
         const currentPrice = quote.regularMarketPrice;
 
@@ -828,25 +859,18 @@ router.post('/predict', async (req, res) => {
         });
         await prediction.save();
 
-        // --- START: NEW NOTIFICATION LOGIC ---
-        const user = await User.findById(req.user._id).populate({
-            path: 'followers',
-            select: 'notificationSettings' // Only get the settings for followers
-        });
-
+        // --- NOTIFICATION LOGIC ---
+        // The second `const user = ...` declaration has been removed.
+        // We can now use the 'user' object we fetched at the beginning.
         const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
         const absPercentageChange = Math.abs(percentageChange);
-
-        // Define significance thresholds
         const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
         const isSignificant = absPercentageChange > (thresholds[predictionType] || 999);
-
         const shortTermTypes = ['Hourly', 'Daily', 'Weekly'];
         const isShortTerm = shortTermTypes.includes(predictionType);
-
         const mainMessage = `${user.username} predicted ${stockTicker} will move by ${percentageChange.toFixed(1)}%`;
-
         const notifications = [];
+
         for (const follower of user.followers) {
             const settings = follower.notificationSettings;
             let shouldNotify = false;
@@ -871,7 +895,7 @@ router.post('/predict', async (req, res) => {
         }
 
         if (notifications.length > 0) await Notification.insertMany(notifications);
-        // --- END: NEW NOTIFICATION LOGIC ---
+        // --------------------------
 
         res.status(201).json(prediction);
     } catch (err) {

@@ -50,6 +50,8 @@ const UserSchema = new Schema({
         achievedAt: { type: Date, default: Date.now }
     }],
     lastCheckedGoldenFeed: { type: Date, default: Date.now },
+    dailyPredictionCount: { type: Number, default: 0 }, // <-- ADD THIS LINE
+    lastPredictionDate: { type: Date },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

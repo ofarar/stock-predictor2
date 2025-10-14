@@ -598,7 +598,9 @@
         "rationalePlaceholder": "Опишите причины вашего прогноза.",
         "placePrediction": "Сделать прогноз",
         "maxScore": "Макс. балл: {{score}}",
-        "confirmationMessage": "Ваш прогноз в {{price}} — это изменение на {{percent}}, что превышает обычный диапазон в {{limit}} %. Вы уверены?"
+        "confirmationMessage": "Ваш прогноз в {{price}} — это изменение на {{percent}}, что превышает обычный диапазон в {{limit}} %. Вы уверены?",
+        "limitReached": "Вы достигли дневного лимита прогнозов: {{limit}}.",
+        "submitFailed": "Не удалось отправить прогноз."
     },
     "scoreboard": {
         "title": "Таблицы лидеров",

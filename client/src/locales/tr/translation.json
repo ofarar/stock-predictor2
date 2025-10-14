@@ -598,7 +598,9 @@
     "rationalePlaceholder": "Bu fiyat hareketinin arkasındaki gerekçeniz nedir?",
     "placePrediction": "Tahmin Yap",
     "maxScore": "Maks Puan: {{score}}",
-    "confirmationMessage": "Yaptığınız {{price}} tutarındaki tahmin, tipik %{{limit}} aralığının üzerinde, {{percent}}'lik bir değişime denk geliyor. Emin misiniz?"
+    "confirmationMessage": "Yaptığınız {{price}} tutarındaki tahmin, tipik %{{limit}} aralığının üzerinde, {{percent}}'lik bir değişime denk geliyor. Emin misiniz?",
+    "limitReached": "Günlük {{limit}} tahmin limitine ulaştınız.",
+    "submitFailed": "Tahmin gönderilemedi."
   },
   "scoreboard": {
     "title": "Liderler Tablosu",

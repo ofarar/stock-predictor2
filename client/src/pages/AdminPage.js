@@ -11,6 +11,7 @@ const AdminPage = () => {
         isVerificationEnabled: false,
         verificationPrice: 0,
         isAIWizardEnabled: false, // Add initial state
+        maxPredictionsPerDay: 10,
         badgeSettings: {}
     });
     const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ const AdminPage = () => {
             isVerificationEnabled: settings.isVerificationEnabled,
             verificationPrice: parseFloat(settings.verificationPrice) || 0,
             isAIWizardEnabled: settings.isAIWizardEnabled,
+            maxPredictionsPerDay: parseInt(settings.maxPredictionsPerDay) || 20,
             badgeSettings: badgeSettings
         };
 
@@ -75,6 +77,19 @@ const AdminPage = () => {
             {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}
 
             <AdminUserList settings={settings} />
+
+            <div className="bg-gray-800 p-6 rounded-lg">
+                <h2 className="text-xl font-bold text-white mb-4">General Settings</h2>
+                <div>
+                    <label className="block text-sm font-medium text-gray-300">Max Predictions Per Day</label>
+                    <input
+                        type="number"
+                        value={settings.maxPredictionsPerDay}
+                        onChange={(e) => handleSettingsChange('maxPredictionsPerDay', e.target.value)}
+                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"
+                    />
+                </div>
+            </div>
 
             {/* --- NEW AI WIZARD SETTINGS SECTION --- */}
             <div className="bg-gray-800 p-6 rounded-lg">

@@ -598,7 +598,9 @@
         "rationalePlaceholder": "Quel est votre raisonnement derrière cette prédiction de prix ?",
         "placePrediction": "Placer la Prédiction",
         "maxScore": "Score Max : {{score}}",
-        "confirmationMessage": "Votre prédiction de {{price}} représente une variation de {{percent}}, ce qui est supérieur à la plage habituelle de {{limit}} %. Êtes-vous sûr(e) ?"
+        "confirmationMessage": "Votre prédiction de {{price}} représente une variation de {{percent}}, ce qui est supérieur à la plage habituelle de {{limit}} %. Êtes-vous sûr(e) ?",
+        "limitReached": "Vous avez atteint la limite de prédiction quotidienne de {{limit}}.",
+        "submitFailed": "Échec de la soumission de la prédiction."
     },
     "scoreboard": {
         "title": "Classements",

@@ -10,7 +10,7 @@ import { getPredictionDetails, isMarketOpen, isPreMarketWindow } from '../utils/
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
     const { t, i18n } = useTranslation();
-    
+
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [selectedStock, setSelectedStock] = useState(null);
@@ -87,7 +87,15 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 toast.success(`Prediction for ${selectedStock.symbol} submitted!`);
                 onClose();
             })
-            .catch(() => toast.error('Failed to submit prediction.'));
+            .catch((err) => {
+                // Check for our specific error code from the backend
+                if (err.response && err.response.data?.code === 'PREDICTION_LIMIT_REACHED') {
+                    toast.error(t('prediction.limitReached', { limit: err.response.data.limit }));
+                } else {
+                    // Show a generic error for any other problem
+                    toast.error(t('prediction.submitFailed'));
+                }
+            });
     };
 
     const handleSubmit = (e) => {
@@ -98,14 +106,14 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
         const percentChange = Math.abs(((parseFloat(target) - currentPrice) / currentPrice) * 100);
         const limit = thresholds[predictionType];
-        
+
         if (requestConfirmation && percentChange > limit) {
             const formattedPrice = formatCurrency(parseFloat(target), i18n.language, selectedStock.currency);
             const formattedPercent = formatPercentage(percentChange, i18n.language);
-            const message = t('prediction.confirmationMessage', { 
+            const message = t('prediction.confirmationMessage', {
                 price: formattedPrice,
                 percent: formattedPercent,
-                limit: limit 
+                limit: limit
             });
             requestConfirmation(message, executePrediction);
         } else {
@@ -144,8 +152,8 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                         <p className="text-gray-400">
                             {t('prediction.currentPrice')}:&nbsp;
                             <span className="font-semibold text-white">
-                                {selectedStock?.regularMarketPrice != null 
-                                    ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency) 
+                                {selectedStock?.regularMarketPrice != null
+                                    ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)
                                     : t('prediction.na')}
                             </span>
                         </p>
@@ -167,9 +175,9 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                                         ?
                                     </button>
                                 </label>
-                                <select 
-                                    value={predictionType} 
-                                    onChange={(e) => setPredictionType(e.target.value)} 
+                                <select
+                                    value={predictionType}
+                                    onChange={(e) => setPredictionType(e.target.value)}
                                     className="w-full bg-gray-900 text-white p-2 rounded-md"
                                 >
                                     {predictionTypes.map(type => (

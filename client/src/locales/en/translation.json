@@ -598,7 +598,9 @@
     "rationalePlaceholder": "What is your rationale for this prediction?",
     "placePrediction": "Place Prediction",
     "maxScore": "Max Score: {{score}}",
-    "confirmationMessage": "Your prediction of {{price}} is a {{percent}} change, which is more than the typical {{limit}}% range. Are you sure?"
+    "confirmationMessage": "Your prediction of {{price}} is a {{percent}} change, which is more than the typical {{limit}}% range. Are you sure?",
+    "limitReached": "You have reached the daily prediction limit of {{limit}}.",
+    "submitFailed": "Failed to submit prediction."
   },
   "scoreboard": {
     "title": "Leaderboards",

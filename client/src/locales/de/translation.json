@@ -598,7 +598,9 @@
         "rationalePlaceholder": "Erläutern Sie Ihre Gründe für diese Preisvorhersage.",
         "placePrediction": "Prognose abgeben",
         "maxScore": "Max. Punktzahl: {{score}}",
-        "confirmationMessage": "Ihre Vorhersage von {{price}} ist eine Änderung von {{percent}}, was über dem üblichen Bereich von {{limit}} % liegt. Sind Sie sicher?"
+        "confirmationMessage": "Ihre Vorhersage von {{price}} ist eine Änderung von {{percent}}, was über dem üblichen Bereich von {{limit}} % liegt. Sind Sie sicher?",
+        "limitReached": "Sie haben das tägliche Vorhersagelimit von {{limit}} erreicht.",
+        "submitFailed": "Fehler beim Senden der Prognose."
     },
     "scoreboard": {
         "title": "Bestenlisten",
