@@ -5,11 +5,13 @@ import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { useTranslation } from 'react-i18next';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { format } from 'date-fns'; // 1. Import the 'format' function
+import { formatNumericDate } from '../utils/formatters'; // 2. Keep your numeric date formatter
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const StockChart = ({ ticker }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
@@ -18,7 +20,8 @@ const StockChart = ({ ticker }) => {
                 const historicalData = res.data;
                 if (historicalData && historicalData.length > 0) {
                     setChartData({
-                        labels: historicalData.map(v => new Date(v.date).toLocaleDateString()),
+                        // 3. Create a clean 'yyyy-MM-dd' string for the label
+                        labels: historicalData.map(v => format(new Date(v.date), 'yyyy-MM-dd')),
                         datasets: [{
                             label: t('stockChart.priceLabel', { ticker }),
                             data: historicalData.map(v => v.close),
@@ -43,12 +46,27 @@ const StockChart = ({ ticker }) => {
             tooltip: {
                 mode: 'index',
                 intersect: false,
+                // Add this callbacks object
+                callbacks: {
+                    title: function (context) {
+                        const label = context[0].label;
+                        // Use the same formatter as the axis ticks
+                        return formatNumericDate(label, i18n.language);
+                    }
+                }
             },
         },
-        events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
         scales: {
             x: {
-                ticks: { color: '#9ca3af', maxTicksLimit: 8 },
+                ticks: {
+                    color: '#9ca3af',
+                    maxTicksLimit: 8,
+                    // 4. This callback now correctly receives the clean date string
+                    callback: function (value) {
+                        const label = this.getLabelForValue(value);
+                        return formatNumericDate(label, i18n.language);
+                    }
+                },
                 grid: { color: 'rgba(255, 255, 255, 0.1)' }
             },
             y: {
