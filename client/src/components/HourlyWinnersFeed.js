@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import VerifiedTick from './VerifiedTick';
 
 const isMarketOpen = () => {
     const now = new Date();
@@ -12,7 +13,7 @@ const isMarketOpen = () => {
     return isWeekday && isMarketHours && isBeforeClose;
 };
 
-const HourlyWinnersFeed = ({ winners = [] }) => {
+const HourlyWinnersFeed = ({ winners = [], settings }) => {
     const { t } = useTranslation();
     const [timeLeft, setTimeLeft] = useState('');
     const [marketIsOpen, setMarketIsOpen] = useState(isMarketOpen());
@@ -41,22 +42,26 @@ const HourlyWinnersFeed = ({ winners = [] }) => {
                     <h3 className="text-xl font-bold text-white">{t('hourlyWinnersFeed.title')}</h3>
                 </div>
                 <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-md">
-                    {marketIsOpen 
-                        ? t('hourlyWinnersFeed.nextResults', { timeLeft }) 
+                    {marketIsOpen
+                        ? t('hourlyWinnersFeed.nextResults', { timeLeft })
                         : t('hourlyWinnersFeed.marketClosed')}
                 </span>
             </div>
             <div className="space-y-3">
                 {winners.length > 0 ? winners.map((winner) => (
                     <div key={winner.predictionId} className="flex items-center bg-gray-700 p-3 rounded-lg">
-                        <img 
-                            src={winner.avatar || `https://avatar.iran.liara.run/public/boy?username=${winner.userId}`} 
-                            alt="avatar" 
+                        <img
+                            src={winner.avatar || `https://avatar.iran.liara.run/public/boy?username=${winner.userId}`}
+                            alt="avatar"
                             className={`w-10 h-10 rounded-full border-2 ${winner.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                         />
-                        <Link to={`/profile/${winner.userId}`} className="font-semibold text-white hover:underline ml-4 flex-grow">
-                            {winner.username}
-                        </Link>
+                        <div className="flex items-center gap-2 ml-4 flex-grow">
+                            <Link to={`/profile/${winner.userId}`} className="font-semibold text-white hover:underline">
+                                {winner.username}
+                            </Link>
+                            {/* Add the VerifiedTick here */}
+                            {settings?.isVerificationEnabled && winner.isVerified && <VerifiedTick />}
+                        </div>
                         <Link to={`/stock/${winner.ticker}`} className="text-sm text-gray-400 hover:underline mx-4">{winner.ticker}</Link>
                         <span className="font-bold text-green-400">
                             {t('hourlyWinnersFeed.pointsSuffix', { score: winner.score })}

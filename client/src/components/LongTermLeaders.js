@@ -3,8 +3,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import VerifiedTick from './VerifiedTick'; // Import the component
 
-const LongTermLeaders = ({ leaders = [] }) => {
+const LongTermLeaders = ({ leaders = [], settings }) => { // Accept settings prop
     const { t } = useTranslation();
 
     return (
@@ -28,7 +29,11 @@ const LongTermLeaders = ({ leaders = [] }) => {
                             alt="avatar"
                             className={`w-8 h-8 rounded-full border-2 ${leader.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                         />
-                        <span className="font-semibold text-white ml-3 flex-grow">{leader.username}</span>
+                        <div className="flex items-center gap-2 ml-3 flex-grow">
+                            <span className="font-semibold text-white">{leader.username}</span>
+                            {/* Add the VerifiedTick here */}
+                            {settings?.isVerificationEnabled && leader.isVerified && <VerifiedTick />}
+                        </div>
                         <span className="font-bold text-green-400">{leader.accuracy}% {t('longTermLeaders.accuracyLabel')}</span>
                     </Link>
                 )) : (

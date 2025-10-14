@@ -1328,6 +1328,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
             username: p.userId.username,
             avatar: p.userId.avatar, // Add avatar
             isGoldenMember: p.userId.isGoldenMember, // Add golden status
+            isVerified: p.userId.isVerified,
             ticker: p.stockTicker,
             score: p.score
         }));
