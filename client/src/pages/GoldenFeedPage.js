@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
 import VerifiedTick from '../components/VerifiedTick';
-import { formatDateTime } from '../utils/formatters';
+import { formatPercentage, formatCurrency, formatDateTime } from '../utils/formatters';
 
 const CentralPostCard = ({ post, settings }) => {
     const { t, i18n } = useTranslation();
@@ -36,7 +36,7 @@ const CentralPostCard = ({ post, settings }) => {
                             <span className="text-green-400 font-bold">${post.attachedPrediction.targetPrice.toFixed(2)}</span>
                             {percentChange !== null && (
                                 <span className={`text-xs font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                    ({percentChange >= 0 ? '+' : ''}{percentChange.toFixed(1)}%)
+                                    ({formatPercentage(percentChange, i18n.language)})
                                 </span>
                             )}
                         </div>

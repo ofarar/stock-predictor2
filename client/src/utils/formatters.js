@@ -44,19 +44,27 @@ export const formatScorePercentage = (value, locale) => {
  * @returns {string} The formatted percentage string.
  */
 export const formatPercentage = (value, locale) => {
-    if (typeof value !== 'number') return '';
+    if (typeof value !== 'number' || isNaN(value)) return '';
 
-    // Intl.NumberFormat expects a decimal (e.g., 0.255 for 25.5%)
     const decimalValue = value / 100;
 
     const formatter = new Intl.NumberFormat(locale, {
         style: 'percent',
-        signDisplay: 'always', // Automatically adds '+' for positive numbers
+        signDisplay: 'always', // Use the built-in sign display
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
     });
 
-    return formatter.format(decimalValue);
+    let formatted = formatter.format(decimalValue);
+
+    // --- Special Fix for Turkish Negative Percentages ---
+    if (locale === 'tr' && value < 0) {
+        // Changes "-%2,5" to "%-2,5"
+        formatted = formatted.replace("-%", "%-");
+    }
+    // ---------------------------------------------------
+
+    return formatted;
 };
 
 /**
