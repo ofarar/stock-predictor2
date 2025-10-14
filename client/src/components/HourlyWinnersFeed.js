@@ -55,14 +55,16 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
                             alt="avatar"
                             className={`w-10 h-10 rounded-full border-2 ${winner.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                         />
-                        <div className="flex items-center gap-2 ml-4 flex-grow">
+                        <div className="flex items-center gap-[2px] ml-4 flex-grow">
                             <Link to={`/profile/${winner.userId}`} className="font-semibold text-white hover:underline">
                                 {winner.username}
                             </Link>
-                            {/* Add the VerifiedTick here */}
-                            {settings?.isVerificationEnabled && winner.isVerified && <VerifiedTick />}
+                            {settings?.isVerificationEnabled && winner.isVerified && (
+                                <div className="translate-y-[1px]">
+                                    <VerifiedTick />
+                                </div>
+                            )}
                         </div>
-                        <Link to={`/stock/${winner.ticker}`} className="text-sm text-gray-400 hover:underline mx-4">{winner.ticker}</Link>
                         <span className="font-bold text-green-400">
                             {t('hourlyWinnersFeed.pointsSuffix', { score: winner.score })}
                         </span>

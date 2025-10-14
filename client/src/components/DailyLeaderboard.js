@@ -23,12 +23,15 @@ const DailyLeaderboard = ({ leaders = [], settings }) => {
                             alt="avatar"
                             className={`w-10 h-10 rounded-full border-2 ${leader.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                         />
-                        <div className="flex items-center gap-2 ml-4 flex-grow">
+                        <div className="flex items-center gap-[2px] ml-4 flex-grow">
                             <Link to={`/profile/${leader.userId}`} className="font-semibold text-white hover:underline">
                                 {leader.username}
                             </Link>
-                            {/* Add the VerifiedTick here */}
-                            {settings?.isVerificationEnabled && leader.isVerified && <VerifiedTick />}
+                            {settings?.isVerificationEnabled && leader.isVerified && (
+                                <div className="translate-y-[1px]">
+                                    <VerifiedTick />
+                                </div>
+                            )}
                         </div>
                         <span className="ml-auto font-bold text-green-400">
                             {leader.avgScore.toFixed(1)} {t('dailyLeaderboard.averageScoreSuffix')}

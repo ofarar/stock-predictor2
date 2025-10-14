@@ -13,8 +13,11 @@ const UserCard = ({ user, settings }) => (
         />
         <div className="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
             <div className="flex items-center gap-2 col-span-2 md:col-span-1">
-                <p className="font-bold text-white truncate">{user.username}</p>
-                {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                <div className="flex items-center gap-1">
+                    <p className="font-bold text-white truncate">{user.username}</p>
+                    {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                </div>
+
             </div>
             <div className="text-center">
                 <p className="text-xs text-gray-400">Followers</p>

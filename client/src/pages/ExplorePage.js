@@ -32,10 +32,21 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                     <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
 
                     <div className="ml-3 flex-grow">
-                        <div className="flex items-center gap-2">
-                            <Link to={`/profile/${prediction.userId._id}`} onClick={(e) => e.stopPropagation()} className="font-bold text-white hover:underline">{prediction.userId.username}</Link>
-                            {settings?.isVerificationEnabled && prediction.userId.isVerified && <VerifiedTick />}
+                        <div className="flex items-center">
+                            <Link
+                                to={`/profile/${prediction.userId._id}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="font-bold text-white hover:underline mr-[2px]"
+                            >
+                                {prediction.userId.username}
+                            </Link>
+                            {settings?.isVerificationEnabled && prediction.userId.isVerified && (
+                                <div className="inline-block translate-y-[1px]">
+                                    <VerifiedTick />
+                                </div>
+                            )}
                         </div>
+
                         <p className="text-xs text-gray-400">@{prediction.userId.username}</p>
                     </div>
                     <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ml-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>

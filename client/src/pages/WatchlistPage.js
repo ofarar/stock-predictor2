@@ -285,7 +285,7 @@ const WatchlistPage = ({ settings }) => {
                                                 key={p._id}
                                                 className="block bg-gray-800 p-4 rounded-lg hover:bg-gray-700"
                                             >
-                                                <div className="flex items-center gap-3 mb-3">
+                                                <div className="flex items-center mb-3">
                                                     <img
                                                         src={p.userId.avatar}
                                                         alt="avatar"
@@ -294,12 +294,18 @@ const WatchlistPage = ({ settings }) => {
                                                             : 'border-gray-600'
                                                             }`}
                                                     />
-                                                    <p className="font-semibold text-white text-sm">
-                                                        {p.userId.username}
-                                                    </p>
-                                                    {settings?.isVerificationEnabled &&
-                                                        p.userId.isVerified && <VerifiedTick />}
+                                                    <div className="flex items-center ml-2">
+                                                        <p className="font-semibold text-white text-sm mr-[2px]">
+                                                            {p.userId.username}
+                                                        </p>
+                                                        {settings?.isVerificationEnabled && p.userId.isVerified && (
+                                                            <div className="inline-block translate-y-[1px]">
+                                                                <VerifiedTick />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
+
                                                 <div className="text-center">
                                                     <p className="text-xl font-bold text-white">
                                                         {formatCurrency(p.targetPrice, i18n.language, p.currency)}
@@ -365,23 +371,25 @@ const WatchlistPage = ({ settings }) => {
                                                         }`}
                                                 />
                                                 <div className="ml-3 flex-grow">
-                                                    <div className="flex items-center gap-2">
+                                                    <div className="flex items-center">
                                                         <Link
                                                             to={`/profile/${user._id}`}
-                                                            className="font-semibold text-white hover:underline"
+                                                            className="font-semibold text-white hover:underline mr-[2px]"
                                                         >
                                                             {user.username}
                                                         </Link>
-                                                        {settings?.isVerificationEnabled &&
-                                                            user.isVerified && <VerifiedTick />}
+                                                        {settings?.isVerificationEnabled && user.isVerified && (
+                                                            <div className="inline-block translate-y-[1px]">
+                                                                <VerifiedTick />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <p className="text-xs text-gray-400">
                                                         {t('watchlistPage.avgScoreLabel')}
-                                                        <span className="font-bold text-green-400">
-                                                            {user.avgScore}
-                                                        </span>
+                                                        <span className="font-bold text-green-400 ml-1">{user.avgScore}</span>
                                                     </p>
                                                 </div>
+
                                                 {!isFollowing &&
                                                     currentUser &&
                                                     currentUser._id !== user._id && (

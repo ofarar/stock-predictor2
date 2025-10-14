@@ -242,18 +242,21 @@ const ProfilePage = ({ settings }) => {
                         )}
                     </div>
                     <div className="flex-grow text-center sm:text-left">
-                        <h1 className="text-4xl font-bold text-white">
-                            {user.username}
-                            {settings?.isVerificationEnabled && user.isVerified && (
-                                <div className="inline-block align-middle ml-2">
-                                    {isOwnProfile ? (
-                                        <VerifiedTick onClick={() => setIsStatusModalOpen(true)} />
-                                    ) : (
-                                        <VerifiedTick />
-                                    )}
-                                </div>
-                            )}
+                        <h1 className="text-4xl font-bold text-white text-center">
+                            <span className="inline-flex items-center justify-center">
+                                {user.username}
+                                {settings?.isVerificationEnabled && user.isVerified && (
+                                    <span className="ml-2 inline-flex items-center">
+                                        {isOwnProfile ? (
+                                            <VerifiedTick size={1.5} onClick={() => setIsStatusModalOpen(true)} />
+                                        ) : (
+                                            <VerifiedTick size={1.5} />
+                                        )}
+                                    </span>
+                                )}
+                            </span>
                         </h1>
+
                         <p className="text-gray-500 text-sm mt-1">{t('member_since_label', { date: new Date(user.createdAt).toLocaleDateString(i18n.language) })}</p>
                         <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
                             <p className="text-gray-400">{user.about || t('no_bio_label')}</p>

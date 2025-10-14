@@ -29,8 +29,16 @@ const AIWizardWaitlist = ({ settings }) => {
                                 <div className="flex items-center">
                                     <img src={entry.userId.avatar} alt="avatar" className="w-10 h-10 rounded-full" />
                                     <div className="flex items-center gap-2 ml-4">
-                                        <Link to={`/profile/${entry.userId._id}`} className="font-semibold text-white hover:underline">{entry.userId.username}</Link>
-                                        {settings?.isVerificationEnabled && entry.userId.isVerified && <VerifiedTick />}
+                                        <div className="flex items-center gap-1">
+                                            <Link
+                                                to={`/profile/${entry.userId._id}`}
+                                                className="font-semibold text-white hover:underline"
+                                            >
+                                                {entry.userId.username}
+                                            </Link>
+                                            {settings?.isVerificationEnabled && entry.userId.isVerified && <VerifiedTick />}
+                                        </div>
+
                                     </div>
                                 </div>
                                 <p className="text-sm text-gray-400">Joined: {new Date(entry.createdAt).toLocaleDateString()}</p>
@@ -45,7 +53,7 @@ const AIWizardWaitlist = ({ settings }) => {
             {/* "Load More" Button */}
             {visibleCount < waitlist.length && (
                 <div className="text-center mt-6">
-                    <button 
+                    <button
                         onClick={() => setVisibleCount(prev => prev + 10)}
                         className="bg-gray-700 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600"
                     >

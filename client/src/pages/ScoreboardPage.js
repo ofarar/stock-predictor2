@@ -80,12 +80,20 @@ const ScoreboardPage = ({ settings }) => {
                                     alt="avatar"
                                     className={`w-12 h-12 rounded-full border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                 />
-                                <div className="flex items-center gap-2 ml-4">
-                                    <Link to={`/profile/${user._id}`} className="font-semibold text-white text-lg hover:underline">
+                                <div className="flex items-center ml-4">
+                                    <Link
+                                        to={`/profile/${user._id}`}
+                                        className="font-semibold text-white text-lg hover:underline mr-[2px]"
+                                    >
                                         {user.username}
                                     </Link>
-                                    {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                                    {settings?.isVerificationEnabled && user.isVerified && (
+                                        <div className="inline-block translate-y-[1px]">
+                                            <VerifiedTick />
+                                        </div>
+                                    )}
                                 </div>
+
                             </div>
                             <div className="text-right">
                                 <span className="font-bold text-green-400 text-xl">{user.avgScore}</span>

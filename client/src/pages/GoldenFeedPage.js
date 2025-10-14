@@ -24,8 +24,13 @@ const CentralPostCard = ({ post, settings }) => {
             )}
             <div className="flex items-center mb-3">
                 <img src={post.userId.avatar} alt={t('author_avatar')} className={`w-8 h-8 rounded-full border-2 ${post.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
-                <span className="ml-3 mr-2 font-semibold text-white">{post.userId.username}</span>
-                {settings?.isVerificationEnabled && post.userId.isVerified && <VerifiedTick />}
+                <span className="ml-3 font-semibold text-white mr-[2px]">{post.userId.username}</span>
+                {settings?.isVerificationEnabled && post.userId.isVerified && (
+                    <div className="inline-block translate-y-[1px]">
+                        <VerifiedTick />
+                    </div>
+                )}
+
             </div>
             <p className="text-gray-300 whitespace-pre-wrap">{post.message}</p>
             {post.attachedPrediction?.stockTicker && (
