@@ -7,10 +7,11 @@ import toast from 'react-hot-toast';
 import ConfirmationModal from '../components/ConfirmationModal';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
+import { formatNumericDate } from '../utils/formatters';
 
 // UserCard component remains the same
 const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     return (
         <div className="bg-gray-800 p-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:bg-gray-700 flex flex-col items-center text-center">
             <Link to={`/profile/${user._id}`}>
@@ -33,7 +34,7 @@ const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => {
             </div>
             {showDate && user.subscribedAt && (
                 <div className="text-xs text-gray-500 mt-2">
-                    {t('followers_subscribed_on', { date: new Date(user.subscribedAt).toLocaleDateString() })}
+                    {t('followers_subscribed_on', { date: formatNumericDate(user.subscribedAt, i18n.language) })}
                 </div>
             )}
             {isSubscription && (
@@ -81,7 +82,7 @@ const FollowersPage = ({ settings }) => {
             .then(res => setCurrentUser(res.data));
         fetchFollowData();
     }, [fetchFollowData]);
-    
+
     // Unchanged functions (handleCancelClick, handleConfirmCancel)
     const handleCancelClick = (user) => { setUserToUnsubscribe(user); setIsModalOpen(true); };
     const handleConfirmCancel = () => { if (!userToUnsubscribe) return; axios.post(/*...unchanged...*/); };

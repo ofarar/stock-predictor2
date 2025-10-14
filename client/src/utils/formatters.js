@@ -1,6 +1,25 @@
 // src/utils/formatters.js
 
 /**
+ * Formats a date into a short, numeric, locale-specific string.
+ * @param {string | Date} dateInput - The date object or string to format.
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted date string (e.g., "10/9/2025").
+ */
+export const formatNumericDate = (dateInput, locale) => {
+    const date = new Date(dateInput);
+    if (isNaN(date)) return '';
+
+    const options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    };
+
+    return new Intl.DateTimeFormat(locale, options).format(date);
+};
+
+/**
  * Formats a score (0-100) into a locale-specific percentage string without a sign.
  * @param {number} value - The score value (e.g., 75 for 75%).
  * @param {string} locale - The language code (e.g., "en", "tr").
