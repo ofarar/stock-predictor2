@@ -102,15 +102,16 @@ const NotificationBell = ({ user }) => {
                     <div className="p-2 font-bold text-white border-b border-gray-700">{t('header.notifications.title')}</div>
                     <div className="max-h-96 overflow-y-auto">
                         {notifications.length > 0 ? notifications.map(n => {
-                            // Create a new object for interpolation to avoid mutating metadata
+                            // Create a fresh interpolation object for each notification
+                            // to prevent mutation issues across re-renders.
                             const interpolation = { ...n.metadata };
 
-                            if (interpolation.badgeName) {
-                                const badgeKey = interpolation.badgeName.toLowerCase().replace(/ /g, '_');
-                                interpolation.badgeName = t(`badges.${badgeKey}.name`, interpolation.badgeName);
+                            if (n.metadata?.badgeName) {
+                                const badgeKey = n.metadata.badgeName.toLowerCase().replace(/ /g, '_');
+                                interpolation.badgeName = t(`badges.${badgeKey}.name`, n.metadata.badgeName);
                             }
-                            if (interpolation.predictionType) {
-                                interpolation.predictionType = t(`predictionTypes.${interpolation.predictionType.toLowerCase()}`);
+                            if (n.metadata?.predictionType) {
+                                interpolation.predictionType = t(`predictionTypes.${n.metadata.predictionType.toLowerCase()}`);
                             }
 
                             return (
