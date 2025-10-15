@@ -18,8 +18,11 @@ const AIWizardWaitlist = ({ settings }) => {
     if (loading) return <div className="text-center text-gray-400 py-4">Loading waitlist...</div>;
 
     return (
-        <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-xl font-bold text-white mb-4">AI Portfolio Assist Waitlist ({waitlist.length})</h2>
+        <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <h2 className="text-xl font-bold text-white">AI Portfolio Assist Waitlist</h2>
+                <span className="text-gray-400 font-semibold">Total: {waitlist.length}</span>
+            </div>
             <div className="space-y-3">
                 {waitlist.length > 0 ? (
                     // Use .slice() to only show the visible portion of the list

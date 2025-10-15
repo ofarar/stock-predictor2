@@ -10,11 +10,11 @@ const UserCard = ({ user, settings }) => (
         className="bg-gray-700 p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-gray-600"
     >
         {/* Left side: avatar + name under it */}
-        <div className="flex flex-col items-center w-20 flex-shrink-0">
+        <div className="flex flex-col items-center w-20 sm:w-24 md:w-28 flex-shrink-0">
             <img
                 src={user.avatar}
                 alt="avatar"
-                className={`w-14 h-14 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                className={`w-14 h-14 md:w-16 md:h-16 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
             />
             <div className="flex items-center mt-2 max-w-full">
                 <p className="font-bold text-white text-center break-words line-clamp-2">
@@ -27,7 +27,7 @@ const UserCard = ({ user, settings }) => (
         </div>
 
         {/* Right side: stats */}
-        <div className="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+        <div className="flex-grow grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
             <div className="text-center">
                 <p className="text-xs text-gray-400">Followers</p>
                 <p className="font-bold text-white">{user.followersCount}</p>
@@ -79,9 +79,12 @@ const AdminUserList = ({ settings }) => {
     const filteredUsers = useMemo(() => users, [users]);
 
     return (
-        <div className="bg-gray-800 p-6 rounded-lg">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                <h2 className="text-xl font-bold text-white flex-shrink-0">User Management ({filteredUsers.length})</h2>
+        <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div className="flex-shrink-0">
+                    <h2 className="text-xl font-bold text-white">User Management</h2>
+                    <span className="text-gray-400 font-semibold">Total: {filteredUsers.length}</span>
+                </div>
 
                 {/* --- Filter & Sort Controls --- */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
