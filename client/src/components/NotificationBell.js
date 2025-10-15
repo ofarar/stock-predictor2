@@ -70,16 +70,19 @@ const NotificationBell = ({ user }) => {
     };
 
     const handleClearNotifications = () => {
-        const promise = axios.delete(`${process.env.REACT_APP_API_URL}/api/notifications/clear`, { withCredentials: true })
-            .then(() => {
-                setNotifications([]); // Clear the notifications from the local state
-                setIsNotificationsOpen(false); // Close the dropdown
-            });
+        const promise = axios.delete(`${process.env.REACT_APP_API_URL}/api/notifications/clear`, { withCredentials: true });
 
         toast.promise(promise, {
             loading: t('header.notifications.clearAll'),
             success: t('header.notifications.clearSuccess'),
             error: t('header.notifications.clearError'),
+        });
+
+        promise.then(() => {
+            setNotifications([]);
+            setIsOpen(false); // Close the dropdown on success
+        }).catch(() => {
+            // The toast handles showing the error, so no extra action is needed here.
         });
     };
 
