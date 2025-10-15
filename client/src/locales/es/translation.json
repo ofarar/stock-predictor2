@@ -22,7 +22,7 @@
     "profile_subscriptions": "Suscripciones",
     "profile_edit": "Editar perfil",
     "profile_get_verified": "Verificarse",
-    "profile_manage_gold": "Gestionar Oro",
+    "profile_manage_gold": "Gestionar Membresía Dorada",
     "profile_become_golden": "Hacerse Dorado",
     "profile_join_button": "Unirse (${{price}}/mes)",
     "profile_subscribed_badge": "Suscrito",
@@ -219,7 +219,7 @@
     "following_label": "Siguiendo",
     "subscribers_label": "Suscriptores",
     "subscriptions_label": "Suscripciones",
-    "manage_gold_label": "Gestionar Oro",
+    "manage_gold_label": "Gestionar Membresía Dorada",
     "become_golden_label": "Hacerse Dorado",
     "edit_profile_label": "Editar Perfil",
     "get_verified_label": "Verificarse",
@@ -404,17 +404,17 @@
         "noPosts": "{{username}} aún no ha publicado ningún contenido exclusivo."
     },
     "goldenMemberModal": {
-        "title": "Ajustes de Miembro Dorado",
+        "title": "Configuración de Miembro Dorado",
         "priceLabel": "Precio Mensual ($1 - $500)",
         "descriptionLabel": "Descripción",
-        "defaultDescription": "¡Obtén análisis exclusivos y apoya mis predicciones!",
-        "acceptingNewLabel": "Aceptando Nuevos Suscriptores",
-        "updateSuccess": "¡Ajustes de Miembro Dorado actualizados!",
-        "updateFail": "No se pudieron actualizar los ajustes.",
+        "defaultDescription": "¡Obtén información exclusiva y apoya mis predicciones!",
+        "acceptingNewLabel": "Aceptar Nuevos Suscriptores",
+        "updateSuccess": "¡Configuración de Miembro Dorado actualizada!",
+        "updateFail": "No se pudo actualizar la configuración.",
         "deactivateSuccess": "Estado de Miembro Dorado desactivado.",
         "deactivateFail": "No se pudieron actualizar los ajustes.",
         "updateButton": "Actualizar Ajustes",
-        "activateButton": "Activar Estado Dorado",
+        "activateButton": "Activar Membresía Dorada",
         "deactivateButton": "Desactivar"
     },
     "goldenPostForm": {
@@ -483,11 +483,12 @@
             "goldenPost": "Publicación Dorada",
             "newPrediction": "Nueva Predicción"
         },
-        "newPrediction": "{{username}} ha hecho una predicción {{predictionType}} sobre {{ticker}}.",
+        "newPrediction": "{{username}} hizo una predicción {{predictionType}} sobre {{stockTicker}}.",
         "newFollower": "{{username}} ha comenzado a seguirte.",
         "goldenPost": "{{username}} ha publicado un nuevo Post Dorado.",
         "badgeEarnedSelf": "¡Felicidades! Has ganado la insignia {{tier}} {{badgeName}}.",
-        "badgeEarnedFollower": "¡{{username}} ha ganado la insignia {{tier}} {{badgeName}}!"
+        "badgeEarnedFollower": "¡{{username}} ha ganado la insignia {{tier}} {{badgeName}}!",
+        "predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo {{score}} puntos!"
     },
     "hourlyWinnersFeed": {
         "title": "Ganadores de la Última Hora",

@@ -37,7 +37,7 @@
     "profile_subscriptions": "Souscriptions",
     "profile_edit": "Modifier le Profil",
     "profile_get_verified": "Obtenir la Vérification",
-    "profile_manage_gold": "Gérer le statut Or",
+    "profile_manage_gold": "Gérer l'adhésion Or",
     "profile_become_golden": "Devenir Or",
     "profile_join_button": "Rejoindre (${{price}}/mois)",
     "profile_subscribed_badge": "Abonné",
@@ -219,7 +219,7 @@
     "following_label": "Abonnements",
     "subscribers_label": "Souscripteurs",
     "subscriptions_label": "Souscriptions",
-    "manage_gold_label": "Gérer le statut Or",
+    "manage_gold_label": "Gérer l'adhésion Or",
     "become_golden_label": "Devenir Or",
     "edit_profile_label": "Modifier le Profil",
     "get_verified_label": "Obtenir la Vérification",
@@ -404,17 +404,17 @@
         "noPosts": "{{username}} n'a pas encore publié de contenu exclusif."
     },
     "goldenMemberModal": {
-        "title": "Paramètres de Membre Or",
-        "priceLabel": "Prix Mensuel (1 $ - 500 $)",
+        "title": "Paramètres de membre Or",
+        "priceLabel": "Prix mensuel (1 $ - 500 $)",
         "descriptionLabel": "Description",
         "defaultDescription": "Obtenez des informations exclusives et soutenez mes prédictions !",
-        "acceptingNewLabel": "Accepter les Nouveaux Abonnés",
-        "updateSuccess": "Paramètres de Membre Or mis à jour !",
+        "acceptingNewLabel": "Accepter les nouveaux abonnés",
+        "updateSuccess": "Paramètres de membre Or mis à jour !",
         "updateFail": "Échec de la mise à jour des paramètres.",
         "deactivateSuccess": "Statut de Membre Or désactivé.",
         "deactivateFail": "Échec de la mise à jour des paramètres.",
         "updateButton": "Mettre à jour les Paramètres",
-        "activateButton": "Activer le Statut Or",
+        "activateButton": "Activer l'adhésion Or",
         "deactivateButton": "Désactiver"
     },
     "goldenPostForm": {
@@ -483,11 +483,12 @@
             "goldenPost": "Publication Or",
             "newPrediction": "Nouvelle Prédiction"
         },
-        "newPrediction": "{{username}} a fait une prédiction {{predictionType}} sur {{ticker}}.",
+        "newPrediction": "{{username}} a fait une prédiction {{predictionType}} sur {{stockTicker}}.",
         "newFollower": "{{username}} a commencé à vous suivre.",
         "goldenPost": "{{username}} a publié un nouveau Post Doré.",
         "badgeEarnedSelf": "Félicitations ! Vous avez remporté le badge {{tier}} {{badgeName}}.",
-        "badgeEarnedFollower": "{{username}} a remporté le badge {{tier}} {{badgeName}} !"
+        "badgeEarnedFollower": "{{username}} a remporté le badge {{tier}} {{badgeName}} !",
+        "predictionAssessed": "Votre prédiction {{predictionType}} sur {{stockTicker}} a marqué {{score}} points !"
     },
     "hourlyWinnersFeed": {
         "title": "Gagnants de la Dernière Heure",
@@ -795,7 +796,7 @@
         },
         "quarterly_visionary": {
             "name": "Visionnaire Trimestriel",
-            "description": "Clairvoyance dans les prédictions trimestrielles à long terme."
+            "description": "Clairvoyance dans les prédictions trimestriales à long terme."
         },
         "yearly_legend": {
             "name": "Légende Annuelle",

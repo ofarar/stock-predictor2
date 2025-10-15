@@ -6,15 +6,22 @@ import Logo from './Logo';
 import GlobalSearch from './GlobalSearch';
 import VerifiedTick from './VerifiedTick';
 import NotificationBell from './NotificationBell'; // <-- Import the new component
+import LanguageSelector from './LanguageSelector';
 
 const Header = ({ user, onMakePredictionClick, settings }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
     const userDropdownRef = useRef(null);
 
     // All notification logic has been moved to the NotificationBell component
+
+    useEffect(() => {
+        if (user?.language && user.language !== i18n.language) {
+            i18n.changeLanguage(user.language);
+        }
+    }, [user, i18n]);
 
     useEffect(() => {
         setIsUserMenuOpen(false);
@@ -95,7 +102,8 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                         <div className="hidden sm:block"><GlobalSearch /></div>
 
                         {/* Desktop User Actions */}
-                        <div className="hidden 2xl:flex items-center space-x-2">
+                        <div className="hidden 2xl:flex items-center space-x-4">
+                            <LanguageSelector user={user} />
                             <button onClick={() => onMakePredictionClick(null)} className="flex justify-center items-center gap-2 bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-600 transition">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 {t('header.buttons.makePrediction')}
@@ -138,6 +146,9 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                         {user && <Link to={`/profile/${user._id}`} className="flex items-center gap-3 py-2 px-4 text-sm hover:bg-gray-700 rounded"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>{t('header.mobileMenu.myProfile')}</Link>}
                         {user && user.isAdmin && <Link to="/admin" className="flex items-center gap-3 py-2 px-4 text-sm text-yellow-400 hover:bg-gray-700 rounded"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>{t('header.mobileMenu.adminPanel')}</Link>}
                         <div className="border-t border-gray-700 my-2"></div>
+                        <div className="p-2">
+                            <LanguageSelector user={user} />
+                        </div>
                         <div className="mt-2">
                             {user ? <a href={`${process.env.REACT_APP_API_URL}/auth/logout`} className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">{t('header.mobileMenu.logout')}</a> : <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="block w-full text-center py-2 px-4 text-sm bg-blue-600 rounded text-center">{t('header.mobileMenu.login')}</a>}
                         </div>

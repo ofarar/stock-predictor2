@@ -37,7 +37,7 @@
   "profile_subscriptions": "Subscriptions",
   "profile_edit": "Edit Profile",
   "profile_get_verified": "Get Verified",
-  "profile_manage_gold": "Manage Gold",
+  "profile_manage_gold": "Manage Golden Membership",
   "profile_become_golden": "Become Golden",
   "profile_join_button": "Join (${{price}}/mo)",
   "profile_subscribed_badge": "Subscribed",
@@ -219,7 +219,7 @@
   "following_label": "Following",
   "subscribers_label": "Subscribers",
   "subscriptions_label": "Subscriptions",
-  "manage_gold_label": "Manage Gold",
+  "manage_gold_label": "Manage Golden Membership",
   "become_golden_label": "Become Golden",
   "edit_profile_label": "Edit Profile",
   "get_verified_label": "Get Verified",
@@ -414,7 +414,7 @@
     "deactivateSuccess": "Golden Member status deactivated.",
     "deactivateFail": "Failed to update settings.",
     "updateButton": "Update Settings",
-    "activateButton": "Activate Golden Status",
+    "activateButton": "Activate Golden Membership",
     "deactivateButton": "Deactivate"
   },
   "goldenPostForm": {
@@ -483,11 +483,12 @@
       "goldenPost": "Golden Post",
       "newPrediction": "New Prediction"
     },
-    "newPrediction": "{{username}} made a {{predictionType}} prediction on {{ticker}}.",
+    "newPrediction": "{{username}} made a {{predictionType}} prediction on {{stockTicker}}.",
     "newFollower": "{{username}} started following you.",
     "goldenPost": "{{username}} has published a new Golden Post.",
     "badgeEarnedSelf": "Congratulations! You've earned the {{tier}} {{badgeName}} badge.",
-    "badgeEarnedFollower": "{{username}} has earned the {{tier}} {{badgeName}} badge!"
+    "badgeEarnedFollower": "{{username}} has earned the {{tier}} {{badgeName}} badge!",
+    "predictionAssessed": "Your {{predictionType}} prediction on {{stockTicker}} scored {{score}} points!"
   },
   "hourlyWinnersFeed": {
     "title": "Last Hour's Winners",

@@ -14,6 +14,7 @@ const UserSchema = new Schema({
     isAdmin: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     score: { type: Number, default: 0, index: true },
+    language: { type: String, default: 'en' },
 
     // --- START: NEW FIELDS ---
     //watchlistTicker: { type: String, uppercase: true, default: null },

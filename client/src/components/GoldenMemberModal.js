@@ -17,7 +17,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
             setDescription(user.goldenMemberDescription || t('goldenMemberModal.defaultDescription'));
             setAcceptingNew(user.acceptingNewSubscribers !== false);
         }
-    }, [user]);
+    }, [user, t]);
 
     if (!isOpen) return null;
 

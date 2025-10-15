@@ -14,10 +14,11 @@ const getNotificationIcon = (type) => {
         case 'NewFollower':
             return <svg className="w-5 h-5 mr-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>;
         case 'BadgeEarned':
+        case 'FollowerBadgeEarned':
             return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>;
         case 'GoldenPost':
             return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>;
-
+        case 'PredictionAssessed':
         default: // NewPrediction
             return <svg className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>;
     }
@@ -106,6 +107,8 @@ const NotificationBell = ({ user }) => {
                             // to prevent mutation issues across re-renders.
                             const interpolation = { ...n.metadata };
 
+                            const messageKey = n.messageKey || 'notifications.default';
+
                             if (n.metadata?.badgeName) {
                                 const badgeKey = n.metadata.badgeName.toLowerCase().replace(/ /g, '_');
                                 interpolation.badgeName = t(`badges.${badgeKey}.name`, n.metadata.badgeName);
@@ -118,7 +121,7 @@ const NotificationBell = ({ user }) => {
                                 <Link to={n.link} key={n._id} onClick={() => setIsOpen(false)} className="flex items-start p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
                                     {getNotificationIcon(n.type)}
                                     <div className="flex-grow">
-                                        <span className={!n.read ? 'font-bold' : ''}>{t(n.messageKey, interpolation)}</span>
+                                        <span className={!n.read ? 'font-bold' : ''}>{t(messageKey, interpolation)}</span>
                                         {n.metadata?.percentage != null && (
                                             <span className={`ml-1 font-bold ${n.metadata.percentage >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 ({formatPercentage(n.metadata.percentage, i18n.language)})

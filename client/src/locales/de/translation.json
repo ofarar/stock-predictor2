@@ -37,7 +37,7 @@
     "profile_subscriptions": "Abonnements",
     "profile_edit": "Profil bearbeiten",
     "profile_get_verified": "Verifizieren lassen",
-    "profile_manage_gold": "Gold verwalten",
+    "profile_manage_gold": "Gold-Mitgliedschaft verwalten",
     "profile_become_golden": "Gold-Mitglied werden",
     "profile_join_button": "Beitreten (${{price}}/Monat)",
     "profile_subscribed_badge": "Abonniert",
@@ -219,7 +219,7 @@
     "following_label": "Folge ich",
     "subscribers_label": "Abonnenten",
     "subscriptions_label": "Abonnements",
-    "manage_gold_label": "Gold verwalten",
+    "manage_gold_label": "Gold-Mitgliedschaft verwalten",
     "become_golden_label": "Gold-Mitglied werden",
     "edit_profile_label": "Profil bearbeiten",
     "get_verified_label": "Verifizieren lassen",
@@ -409,12 +409,12 @@
         "descriptionLabel": "Beschreibung",
         "defaultDescription": "Erhalten Sie exklusive Einblicke und unterstützen Sie meine Prognosen!",
         "acceptingNewLabel": "Neue Abonnenten akzeptieren",
-        "updateSuccess": "Gold-Mitglied Einstellungen aktualisiert!",
+        "updateSuccess": "Gold-Mitglied-Einstellungen aktualisiert!",
         "updateFail": "Einstellungen konnten nicht aktualisiert werden.",
         "deactivateSuccess": "Gold-Mitglied Status deaktiviert.",
         "deactivateFail": "Einstellungen konnten nicht aktualisiert werden.",
         "updateButton": "Einstellungen aktualisieren",
-        "activateButton": "Gold-Status aktivieren",
+        "activateButton": "Gold-Mitgliedschaft aktivieren",
         "deactivateButton": "Deaktivieren"
     },
     "goldenPostForm": {
@@ -483,11 +483,12 @@
             "goldenPost": "Gold-Beitrag",
             "newPrediction": "Neue Prognose"
         },
-        "newPrediction": "{{username}} hat eine {{predictionType}}-Prognose für {{ticker}} gemacht.",
+        "newPrediction": "{{username}} hat eine {{predictionType}}-Prognose für {{stockTicker}} gemacht.",
         "newFollower": "{{username}} hat angefangen, dir zu folgen.",
         "goldenPost": "{{username}} hat einen neuen Goldenen Beitrag veröffentlicht.",
         "badgeEarnedSelf": "Glückwunsch! Du hast das {{tier}} {{badgeName}}-Abzeichen erhalten.",
-        "badgeEarnedFollower": "{{username}} hat das {{tier}} {{badgeName}}-Abzeichen erhalten!"
+        "badgeEarnedFollower": "{{username}} hat das {{tier}} {{badgeName}} Abzeichen verdient!",
+        "predictionAssessed": "Ihre {{predictionType}} Vorhersage für {{stockTicker}} hat {{score}} Punkte erzielt!"
     },
     "hourlyWinnersFeed": {
         "title": "Gewinner der letzten Stunde",

@@ -22,7 +22,7 @@
     "profile_subscriptions": "订阅",
     "profile_edit": "编辑个人资料",
     "profile_get_verified": "获取认证",
-    "profile_manage_gold": "管理黄金会员",
+    "profile_manage_gold": "管理黄金会员资格",
     "profile_become_golden": "成为黄金会员",
     "profile_join_button": "加入（${{price}}/月）",
     "profile_subscribed_badge": "已订阅",
@@ -405,16 +405,16 @@
     },
     "goldenMemberModal": {
         "title": "黄金会员设置",
-        "priceLabel": "月费 ($1 - $500)",
+        "priceLabel": "月费（$1 - $500）",
         "descriptionLabel": "描述",
         "defaultDescription": "获取独家见解并支持我的预测！",
         "acceptingNewLabel": "接受新订阅者",
         "updateSuccess": "黄金会员设置已更新！",
-        "updateFail": "无法更新设置。",
+        "updateFail": "更新设置失败。",
         "deactivateSuccess": "黄金会员状态已停用。",
-        "deactivateFail": "无法更新设置。",
+        "deactivateFail": "更新设置失败。",
         "updateButton": "更新设置",
-        "activateButton": "激活黄金状态",
+        "activateButton": "激活黄金会员",
         "deactivateButton": "停用"
     },
     "goldenPostForm": {
@@ -483,11 +483,12 @@
             "goldenPost": "黄金帖子",
             "newPrediction": "新预测"
         },
-        "newPrediction": "{{username}} 对 {{ticker}} 做出了一个 {{predictionType}} 预测。",
-        "newFollower": "{{username}} 开始关注您了。",
-        "goldenPost": "{{username}} 发布了一个新的黄金帖子。",
+        "newPrediction": "{{username}} 对 {{stockTicker}} 做出了 {{predictionType}} 预测。",
+        "newFollower": "{{username}} 开始关注您。",
+        "goldenPost": "{{username}} 发布了新的黄金帖子。",
         "badgeEarnedSelf": "恭喜！您已获得 {{tier}} {{badgeName}} 徽章。",
-        "badgeEarnedFollower": "{{username}} 已获得 {{tier}} {{badgeName}} 徽章！"
+        "badgeEarnedFollower": "{{username}} 获得了 {{tier}} {{badgeName}} 徽章！",
+        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{score}} 分！"
     },
     "hourlyWinnersFeed": {
         "title": "上一小时的获胜者",

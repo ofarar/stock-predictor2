@@ -1083,7 +1083,7 @@ router.post('/predict', async (req, res) => {
                     link: `/prediction/${prediction._id}`,
                     metadata: { // Send raw data for frontend formatting
                         username: user.username,
-                        ticker: stockTicker,
+                        stockTicker: stockTicker,
                         predictionType: predictionType,
                         percentage: percentageChange
                     }
@@ -1501,7 +1501,7 @@ router.post('/users/:userId/follow', async (req, res) => {
             recipient: followedUserId,
             sender: currentUserId,
             type: 'NewFollower',
-            messageKey: 'notifications.newFollower',
+            messageKey: 'notifications.newFollower', // Corrected from message
             link: `/profile/${currentUserId}`,
             metadata: {
                 username: req.user.username

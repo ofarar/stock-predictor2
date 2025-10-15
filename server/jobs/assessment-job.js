@@ -100,11 +100,15 @@ const runAssessmentJob = async () => {
             }
 
             // --- Create "Score Assessed" Notification ---
-            const message = `Your ${prediction.predictionType} prediction on ${prediction.stockTicker} scored ${score} points!`;
             await new Notification({
                 recipient: prediction.userId._id,
-                type: 'NewPrediction',
-                message: message,
+                type: 'PredictionAssessed',
+                messageKey: 'notifications.predictionAssessed',
+                metadata: {
+                    stockTicker: prediction.stockTicker,
+                    predictionType: prediction.predictionType,
+                    score: score
+                },
                 link: `/prediction/${prediction._id}`
             }).save();
             // ------------------------------------------

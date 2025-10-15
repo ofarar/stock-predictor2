@@ -414,7 +414,7 @@
     "deactivateSuccess": "Altın Üye durumu devre dışı bırakıldı.",
     "deactivateFail": "Ayarlar güncellenemedi.",
     "updateButton": "Ayarları Güncelle",
-    "activateButton": "Altın Durumunu Etkinleştir",
+    "activateButton": "Altın Üyeliği Etkinleştir",
     "deactivateButton": "Devre Dışı Bırak"
   },
   "goldenPostForm": {
@@ -483,11 +483,12 @@
       "goldenPost": "Altın Gönderi",
       "newPrediction": "Yeni Tahmin"
     },
-    "newPrediction": "{{username}}, {{ticker}} üzerinde bir {{predictionType}} tahmini yaptı.",
+    "newPrediction": "{{username}}, {{stockTicker}} üzerine bir {{predictionType}} tahmini yaptı.",
     "newFollower": "{{username}} sizi takip etmeye başladı.",
     "goldenPost": "{{username}} yeni bir Altın Gönderi yayınladı.",
     "badgeEarnedSelf": "Tebrikler! {{tier}} {{badgeName}} rozetini kazandınız.",
-    "badgeEarnedFollower": "{{username}}, {{tier}} {{badgeName}} rozetini kazandı!"
+    "badgeEarnedFollower": "{{username}}, {{tier}} {{badgeName}} rozetini kazandı!",
+    "predictionAssessed": "{{stockTicker}} üzerine yaptığınız {{predictionType}} tahmininiz {{score}} puan kazandı!"
   },
   "hourlyWinnersFeed": {
     "title": "Son Saatin Kazananları",

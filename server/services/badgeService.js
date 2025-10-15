@@ -96,18 +96,20 @@ const awardBadges = async (user) => {
             await new Notification({
                 recipient: user._id,
                 type: 'BadgeEarned',
-                messageKey: 'notifications.badgeEarnedSelf', // New key
+                messageKey: 'notifications.badgeEarnedSelf', // Corrected to messageKey
                 link: `/profile/${user._id}`,
                 metadata: {
                     tier: badge.tier,
-                    badgeName: badgeInfo.name // We'll need to translate this on the frontend
+                    badgeName: badgeInfo.name
                 }
             }).save();
+
+            // Notify followers
             const followerNotifs = user.followers.map(followerId => ({
                 recipient: followerId,
                 sender: user._id,
-                type: 'BadgeEarned',
-                messageKey: 'notifications.badgeEarnedFollower', // New key
+                type: 'FollowerBadgeEarned', // Distinct type for follower notifications
+                messageKey: 'notifications.badgeEarnedFollower', // Corrected to messageKey
                 link: `/profile/${user._id}`,
                 metadata: {
                     username: user.username,

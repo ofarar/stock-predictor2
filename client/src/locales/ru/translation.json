@@ -37,7 +37,7 @@
     "profile_subscriptions": "Платные подписки",
     "profile_edit": "Редактировать профиль",
     "profile_get_verified": "Получить верификацию",
-    "profile_manage_gold": "Управлять Золотом",
+    "profile_manage_gold": "Управлять золотым членством",
     "profile_become_golden": "Стать Золотым",
     "profile_join_button": "Присоединиться (${{price}}/мес.)",
     "profile_subscribed_badge": "Вы подписаны",
@@ -219,7 +219,7 @@
     "following_label": "Подписки",
     "subscribers_label": "Платные подписчики",
     "subscriptions_label": "Платные подписки",
-    "manage_gold_label": "Управлять Золотом",
+    "manage_gold_label": "Управлять золотым членством",
     "become_golden_label": "Стать Золотым",
     "edit_profile_label": "Редактировать профиль",
     "get_verified_label": "Получить верификацию",
@@ -404,17 +404,17 @@
         "noPosts": "{{username}} еще не публиковал эксклюзивный контент."
     },
     "goldenMemberModal": {
-        "title": "Настройки Золотого Участника",
-        "priceLabel": "Ежемесячная цена ($1 - $500)",
+        "title": "Настройки золотого членства",
+        "priceLabel": "Ежемесячная цена (1 - 500 долларов)",
         "descriptionLabel": "Описание",
-        "defaultDescription": "Получайте эксклюзивные аналитические материалы и поддержите мои прогнозы!",
+        "defaultDescription": "Получайте эксклюзивную информацию и поддерживайте мои прогнозы!",
         "acceptingNewLabel": "Принимать новых подписчиков",
-        "updateSuccess": "Настройки Золотого Участника обновлены!",
+        "updateSuccess": "Настройки золотого членства обновлены!",
         "updateFail": "Не удалось обновить настройки.",
         "deactivateSuccess": "Статус Золотого Участника деактивирован.",
         "deactivateFail": "Не удалось обновить настройки.",
         "updateButton": "Обновить настройки",
-        "activateButton": "Активировать Золотой статус",
+        "activateButton": "Активировать золотое членство",
         "deactivateButton": "Деактивировать"
     },
     "goldenPostForm": {
@@ -483,11 +483,12 @@
             "goldenPost": "Золотой пост",
             "newPrediction": "Новый прогноз"
         },
-        "newPrediction": "{{username}} сделал {{predictionType}} прогноз по {{ticker}}.",
+        "newPrediction": "{{username}} сделал(а) {{predictionType}} прогноз по {{stockTicker}}.",
         "newFollower": "{{username}} начал(а) следить за вами.",
         "goldenPost": "{{username}} опубликовал(а) новый Золотой Пост.",
         "badgeEarnedSelf": "Поздравляем! Вы заработали значок «{{badgeName}}» уровня {{tier}}.",
-        "badgeEarnedFollower": "{{username}} заработал(а) значок «{{badgeName}}» уровня {{tier}}!"
+        "badgeEarnedFollower": "{{username}} получил(а) значок {{tier}} {{badgeName}}.",
+        "predictionAssessed": "Ваш прогноз {{predictionType}} на {{stockTicker}} набрал {{score}} очков!"
     },
     "hourlyWinnersFeed": {
         "title": "Победители последнего часа",
