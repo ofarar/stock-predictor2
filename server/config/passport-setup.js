@@ -25,25 +25,22 @@ passport.use(
             const existingUser = await User.findOne({ googleId: profile.id });
 
             if (existingUser) {
-                done(null, existingUser);
+                return done(null, existingUser, { isNewUser: false });
             } else {
                 console.log("User not found. Creating a new user...");
                 const newUsername = profile.displayName;
                 
-                // FIX: Generate a default avatar URL using the username as a seed
                 const defaultAvatar = `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
 
                 const newUser = await new User({
                     googleId: profile.id,
                     username: newUsername,
                     email: userEmail,
-                    avatar: defaultAvatar // <-- Assign the default avatar here
+                    avatar: defaultAvatar
                 }).save();
 
-                sendWelcomeEmail(newUser.email, newUser.username);
-
                 console.log("New user created successfully:", newUser);
-                done(null, newUser);
+                return done(null, newUser, { isNewUser: true });
             }
         } catch (error) {
             console.error("!!! Error saving user to database !!!", error);

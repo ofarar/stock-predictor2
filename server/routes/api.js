@@ -8,7 +8,7 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
-const { sendContactFormEmail } = require('../services/email');
+const { sendContactFormEmail, sendWaitlistConfirmationEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
 
 const searchCache = new Map();
@@ -222,11 +222,15 @@ router.post('/ai-wizard/join-waitlist', async (req, res) => {
         return res.status(401).json({ message: 'You must be logged in to join.' });
     }
     try {
-        const existingEntry = await AIWizardWaitlist.findOne({ userId: req.user.id });
+        const existingEntry = await AIWizardWaitlist.findOne({ email: req.user.email });
         if (existingEntry) {
             return res.status(409).json({ message: 'You are already on the waitlist.' });
         }
-        await new AIWizardWaitlist({ userId: req.user.id }).save();
+        await new AIWizardWaitlist({ userId: req.user.id, email: req.user.email }).save();
+        
+        // Send confirmation email
+        sendWaitlistConfirmationEmail(req.user.email);
+
         res.status(201).json({ message: 'Successfully joined the waitlist!' });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
@@ -406,11 +410,10 @@ router.get('/admin/all-users', async (req, res) => {
     }
 });
 
-// Add this route anywhere in the file
+// POST: Handle contact form submission
 router.post('/contact', async (req, res) => {
     const { name, email, message } = req.body;
 
-    // Basic validation
     if (!name || !email || !message) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
@@ -419,8 +422,8 @@ router.post('/contact', async (req, res) => {
         await sendContactFormEmail(name, email, message);
         res.status(200).json({ message: 'Message sent successfully!' });
     } catch (error) {
-        console.error("Contact form submission error:", error);
-        res.status(500).json({ message: 'Failed to send message. Please try again later.' });
+        console.error('Contact form email error:', error);
+        res.status(500).json({ message: 'Failed to send message.' });
     }
 });
 

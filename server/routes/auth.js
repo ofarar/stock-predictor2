@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const passport = require('passport');
 
+const { sendWelcomeEmail } = require('../services/email');
+
 // Auth with Google
 router.get('/google', (req, res, next) => {
   const redirectPath = req.query.redirect || '/';
@@ -13,17 +15,29 @@ router.get('/google', (req, res, next) => {
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    const baseURL =
-      process.env.NODE_ENV === 'production'
-        ? 'https://predictostock.vercel.app'
-        : 'http://localhost:3000';
+  (req, res, next) => {
+    passport.authenticate('google', { failureRedirect: '/' }, (err, user, info) => {
+      if (err) { return next(err); }
+      if (!user) { return res.redirect('/'); }
 
-    // Get the redirect path from the state query parameter
-    const redirectPath = req.query.state || '/';
+      // Manually log the user in
+      req.logIn(user, (err) => {
+        if (err) { return next(err); }
 
-    res.redirect(baseURL + redirectPath);
+        // Check if this is a new user
+        if (info && info.isNewUser) {
+          sendWelcomeEmail(user.email, user.username);
+        }
+
+        const baseURL =
+          process.env.NODE_ENV === 'production'
+            ? 'https://predictostock.vercel.app'
+            : 'http://localhost:3000';
+
+        const redirectPath = req.query.state || '/';
+        return res.redirect(baseURL + redirectPath);
+      });
+    })(req, res, next);
   }
 );
 
