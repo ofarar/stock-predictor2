@@ -143,8 +143,8 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                     {isLoading && <p className="text-center text-gray-400 py-4">{t('prediction.searching')}</p>}
                     {searchResults.length > 0 && (
                         <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
-                            {searchResults.map((result) => (
-                                <li key={result.symbol} onClick={() => handleSelectStock(result.symbol)} className="px-4 py-2 text-white hover:bg-green-500 cursor-pointer">
+                            {searchResults.map((result, index) => (
+                                <li key={`${result.symbol}-${index}`} onClick={() => handleSelectStock(result.symbol)} className="px-4 py-2 text-white hover:bg-green-500 cursor-pointer">
                                     {result.symbol} - {result.shortname}
                                 </li>
                             ))}
@@ -155,16 +155,16 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 <div className="animate-fade-in">
                     <div className="text-center mb-4">
                         <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
-                        <p className="text-gray-400 flex items-center justify-center">
+                        <div className="text-gray-400 flex items-center justify-center">
                             {t('prediction.currentPrice')}:&nbsp;
-                            <Tooltip text={t('prediction.priceDelayInfo', 'Prices are delayed up to 15 minutes.')}>
-                                <span className="font-semibold text-white">
+                            <span className="font-semibold text-white">
+                                <Tooltip text={t('prediction.priceDelayInfo', 'Prices are delayed up to 15 minutes.')}>
                                     {selectedStock?.regularMarketPrice != null
                                         ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)
                                         : t('prediction.na')}
-                                </span>
-                            </Tooltip>
-                        </p>
+                                </Tooltip>
+                            </span>
+                        </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
