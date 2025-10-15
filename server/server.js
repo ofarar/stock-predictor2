@@ -18,13 +18,27 @@ const PORT = process.env.PORT || 5001;
 app.use(helmet());
 
 // Middleware
-app.use(cors({
-    origin: [
-        'http://localhost:3000',              // for local dev
-        'https://predictostock.vercel.app'    // for production frontend
-    ],
+const whitelist = [
+    'http://localhost:3000',
+    'https://predictostock.vercel.app'
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        // Check if the origin is in the whitelist or if it's a Vercel preview URL
+        if (whitelist.indexOf(origin) !== -1 || new URL(origin).hostname.endsWith('.vercel.app')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true // Allow cookies to be sent
-}));
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Heroku/Render use proxies. This is needed for session cookies in production.
