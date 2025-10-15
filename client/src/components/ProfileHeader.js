@@ -27,7 +27,7 @@ const ProfileHeader = ({ profileData, currentUser, isOwnProfile, isFollowing, is
             </div>
             <div className="flex-grow text-center sm:text-left">
                 <h1 className="text-4xl font-bold text-white text-center">
-                    <span className="inline-flex items-center justify-center">
+                    <span className="inline-block">
                         {user.username}
                         {settings?.isVerificationEnabled && user.isVerified && (
                             <span className="ml-2 inline-flex items-center">
