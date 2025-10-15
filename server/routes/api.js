@@ -10,6 +10,10 @@ const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
 const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
+const { JSDOM } = require('jsdom');
+const DOMPurify = require('dompurify');
+const window = new JSDOM('').window;
+const purify = DOMPurify(window);
 const rateLimit = require('express-rate-limit');
 
 // Rate limiter for the contact form
@@ -86,8 +90,16 @@ router.post('/contact', contactLimiter, async (req, res) => {
         return res.status(400).json({ message: 'All fields are required.' });
     }
 
+    // Length validation
+    if (message.length > 5000) {
+        return res.status(400).json({ message: 'Message is too long. Please limit it to 5000 characters.' });
+    }
+
     try {
-        await sendContactFormEmail(name, email, message);
+        // Sanitize the message to prevent XSS
+        const sanitizedMessage = purify.sanitize(message);
+
+        await sendContactFormEmail(name, email, sanitizedMessage);
         res.status(200).json({ message: 'Message sent successfully!' });
     } catch (error) {
         console.error('Contact form error:', error);
