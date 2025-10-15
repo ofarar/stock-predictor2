@@ -51,6 +51,7 @@ const ProfilePage = ({ settings }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [predictionToEdit, setPredictionToEdit] = useState(null);
     const [isAggressivenessInfoOpen, setIsAggressivenessInfoOpen] = useState(false);
+    const [filteredPerformance, setFilteredPerformance] = useState(null);
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -69,6 +70,7 @@ const ProfilePage = ({ settings }) => {
             const profile = profileRes.data;
             setProfileData(profile);
             setCurrentUser(currentUserRes.data);
+            setFilteredPerformance(profile.performance); // Initialize with overall performance
             const activePredictions = profile.predictions.filter(p => p.status === 'Active');
             if (activePredictions.length > 0) {
                 const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
@@ -89,6 +91,10 @@ const ProfilePage = ({ settings }) => {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    const handlePerformanceFilterChange = useCallback((newPerformance) => {
+        setFilteredPerformance(newPerformance);
+    }, []);
 
     const handleFollow = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/follow`, {}, { withCredentials: true }).then(() => fetchData());
@@ -166,7 +172,7 @@ const ProfilePage = ({ settings }) => {
                 
                 <ProfileStats
                     user={user}
-                    performance={performance}
+                    performance={filteredPerformance}
                     predictionCount={predictions.length}
                     onInfoClick={() => setIsAggressivenessInfoOpen(true)}
                 />
@@ -181,7 +187,10 @@ const ProfilePage = ({ settings }) => {
                         <div className="lg:col-span-2 space-y-8">
                             <WatchlistShowcase stocks={watchlistQuotes} />
                             <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} onInfoClick={() => setIsBadgeInfoOpen(true)} />
-                            <PerformanceTabs performance={performance} />
+                            <PerformanceTabs 
+                                performance={performance} 
+                                onFilterChange={handlePerformanceFilterChange} 
+                            />
                             <PerformanceChart chartData={profileData.chartData} />
                         </div>
                         <div className="lg:col-span-1 space-y-8 self-start">
