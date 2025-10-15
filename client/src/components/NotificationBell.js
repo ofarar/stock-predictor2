@@ -29,6 +29,7 @@ const NotificationBell = ({ user }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [setIsNotificationsOpen] = useState(false);
+    const isInitialMount = useRef(true);
 
     useEffect(() => {
         if (user) {
@@ -36,6 +37,23 @@ const NotificationBell = ({ user }) => {
                 .then(res => setNotifications(res.data));
         }
     }, [user]);
+
+    const unreadCount = notifications.filter(n => !n.read).length;
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+
+        if (!isOpen && unreadCount > 0) {
+            axios.post(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read`, {}, { withCredentials: true })
+                .then(() => {
+                    const readNotifications = notifications.map(n => ({ ...n, read: true }));
+                    setNotifications(readNotifications);
+                });
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -49,13 +67,6 @@ const NotificationBell = ({ user }) => {
 
     const handleBellClick = () => {
         setIsOpen(prev => !prev);
-        if (!isOpen && unreadCount > 0) {
-            axios.post(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read`, {}, { withCredentials: true })
-                .then(() => {
-                    const readNotifications = notifications.map(n => ({ ...n, read: true }));
-                    setNotifications(readNotifications);
-                });
-        }
     };
 
     const handleClearNotifications = () => {
@@ -72,7 +83,6 @@ const NotificationBell = ({ user }) => {
         });
     };
 
-    const unreadCount = notifications.filter(n => !n.read).length;
     const hasUnreadGoldenPost = notifications.some(n => n.type === 'GoldenPost' && !n.read);
 
     return (
@@ -98,10 +108,10 @@ const NotificationBell = ({ user }) => {
                                 metadata.predictionType = t(`predictionTypes.${metadata.predictionType.toLowerCase()}`);
                             }
                             return (
-                                <Link to={n.link} key={n._id} className="flex items-start p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
+                                <Link to={n.link} key={n._id} onClick={() => setIsOpen(false)} className="flex items-start p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
                                     {getNotificationIcon(n.type)}
-                                    <div className={!n.read ? 'font-bold' : ''}>
-                                        <span>{t(n.messageKey, metadata)}</span>
+                                    <div className="flex-grow">
+                                        <span className={!n.read ? 'font-bold' : ''}>{t(n.messageKey, metadata)}</span>
                                         {n.metadata?.percentage != null && (
                                             <span className={`ml-1 font-bold ${n.metadata.percentage >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 ({formatPercentage(n.metadata.percentage, i18n.language)})
