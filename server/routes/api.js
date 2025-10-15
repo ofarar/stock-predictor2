@@ -10,6 +10,16 @@ const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
 const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
+const rateLimit = require('express-rate-limit');
+
+// Rate limiter for the contact form
+const contactLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5, // Limit each IP to 5 requests per windowMs
+    message: 'Too many contact form submissions from this IP, please try again after an hour',
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 // Route to get pending profile data
 router.get('/pending-profile', (req, res) => {
@@ -64,6 +74,24 @@ router.post('/complete-registration', async (req, res) => {
     } catch (error) {
         console.error('Error completing registration:', error);
         res.status(500).json({ success: false, message: 'An internal error occurred.' });
+    }
+});
+
+// Apply the rate limiter to the contact route
+router.post('/contact', contactLimiter, async (req, res) => {
+    const { name, email, message } = req.body;
+
+    // Basic validation
+    if (!name || !email || !message) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try {
+        await sendContactFormEmail(name, email, message);
+        res.status(200).json({ message: 'Message sent successfully!' });
+    } catch (error) {
+        console.error('Contact form error:', error);
+        res.status(500).json({ message: 'Failed to send message.' });
     }
 });
 
