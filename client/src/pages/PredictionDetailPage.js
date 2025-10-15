@@ -212,10 +212,10 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                                     </button>
                                 )}
                             </p>
-                            <p className="text-3xl font-bold text-white">${prediction.targetPrice.toFixed(2)}</p>
+                            <p className="text-3xl font-bold text-white">{formatCurrency(prediction.targetPrice, i18n.language)}</p>
                             {percentFromCurrent !== null && (
                                 <p className={`text-sm font-bold ${percentFromCurrent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                    {percentFromCurrent >= 0 ? '+' : ''}{percentFromCurrent.toFixed(1)}%
+                                    ({formatPercentage(percentFromCurrent, i18n.language)})
                                 </p>
                             )}
                         </div>
