@@ -18,7 +18,7 @@ const CentralPostCard = ({ post, settings }) => {
     return (
         <div className="bg-gray-800 p-4 rounded-lg relative">
             {post.isNew && (
-                <span className="absolute top-3 right-3 text-xs bg-green-500 text-white font-bold px-2 py-1 rounded-full animate-pulse">
+                <span className="absolute top-3 right-3 text-xs bg-yellow-500 text-black font-bold px-2 py-1 rounded-full animate-pulse">
                     {t('golden_feed_new_label')}
                 </span>
             )}
@@ -112,19 +112,22 @@ const GoldenFeedPage = ({ settings }) => {
 
             <div className="max-w-4xl mx-auto animate-fade-in">
                 <div className="flex flex-wrap gap-4 justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold text-white">{t('golden_feed_header')}</h1>
-                    {currentUser?.isGoldenMember && (
-                        <button
-                            onClick={() => setIsPostModalOpen(true)}
-                            className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-400 flex items-center gap-2"
-                        >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path>
-                            </svg>
-                            {t('golden_feed_create_post')}
-                        </button>
-                    )}
+                    <h1 className="text-3xl font-bold text-yellow-400 flex items-center gap-3">
+                        {t('golden_feed_header')}
+                        {currentUser?.isGoldenMember && (
+                            <button
+                                onClick={() => setIsPostModalOpen(true)}
+                                className="bg-yellow-500/20 text-yellow-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-yellow-500/30"
+                                title={t('golden_feed_create_post')}
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                            </button>
+                        )}
+                    </h1>
                 </div>
+
 
                 <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
