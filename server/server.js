@@ -6,12 +6,16 @@ const cors = require('cors');
 const session = require('express-session');
 const MongoStore = require('connect-mongo'); // <-- Import MongoStore
 const passport = require('passport');
+const helmet = require('helmet');
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+// Use Helmet to set various security headers
+app.use(helmet());
 
 // Middleware
 app.use(cors({
