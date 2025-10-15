@@ -31,7 +31,9 @@ const BadgeShowcase = ({ badges = [], onBadgeClick, onInfoClick }) => {
                 {sortedBadges.map((badge, index) => {
                     if (!badgeDetails) return null;
                     const details = badgeDetails[badge.badgeId] || { name: t('badgeShowcase.unknownBadge') };
-                    return <Badge key={index} name={details.name} tier={badge.tier} onClick={() => onBadgeClick({ ...details, ...badge })} />;
+                    const translatedName = t(`badges.${badge.badgeId}.name`, details.name);
+                    const translatedDescription = t(`badges.${badge.badgeId}.description`, details.description);
+                    return <Badge key={index} name={translatedName} tier={badge.tier} onClick={() => onBadgeClick({ ...details, ...badge, name: translatedName, description: translatedDescription })} />;
                 })}
             </div>
         );

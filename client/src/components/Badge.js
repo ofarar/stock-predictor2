@@ -1,6 +1,7 @@
 // src/components/Badge.js
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const badgeStyles = {
     Bronze: { color: 'text-yellow-600', icon: '🥉' },
@@ -9,6 +10,7 @@ const badgeStyles = {
 };
 
 const Badge = ({ name, tier, onClick }) => {
+    const { t } = useTranslation();
     const style = badgeStyles[tier] || { color: 'text-gray-500', icon: '⚫' };
 
     return (
@@ -19,7 +21,7 @@ const Badge = ({ name, tier, onClick }) => {
         >
             <span className={`text-4xl`}>{style.icon}</span>
             <p className="font-bold text-white text-sm mt-1 truncate">{name}</p>
-            <p className={`text-xs font-semibold ${style.color}`}>{tier}</p>
+            <p className={`text-xs font-semibold ${style.color}`}>{t(`tiers.${tier}`, tier)}</p>
         </button>
     );
 };
