@@ -610,7 +610,9 @@
     "confirmationMessage": "Yaptığınız {{price}} tutarındaki tahmin, tipik %{{limit}} aralığının üzerinde, {{percent}}'lik bir değişime denk geliyor. Emin misiniz?",
     "limitReached": "Günlük {{limit}} tahmin limitine ulaştınız.",
     "submitFailed": "Tahmin gönderilemedi.",
-    "priceDelayInfo": "Fiyatlar 15 dakikaya kadar gecikmelidir."
+    "priceDelayInfo": "Fiyatlar 15 dakikaya kadar gecikmelidir.",
+    "submitting": "Gönderiliyor...",
+    "submitSuccess": "{{symbol}} için tahmin gönderildi!"
   },
   "scoreboard": {
     "title": "Liderler Tablosu",

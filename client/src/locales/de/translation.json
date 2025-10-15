@@ -610,7 +610,9 @@
         "confirmationMessage": "Ihre Vorhersage von {{price}} ist eine Änderung von {{percent}}, was über dem üblichen Bereich von {{limit}} % liegt. Sind Sie sicher?",
         "limitReached": "Sie haben das tägliche Vorhersagelimit von {{limit}} erreicht.",
         "submitFailed": "Fehler beim Senden der Prognose.",
-        "priceDelayInfo": "Preise sind bis zu 15 Minuten verzögert."
+        "priceDelayInfo": "Preise sind bis zu 15 Minuten verzögert.",
+        "submitting": "Wird gesendet...",
+        "submitSuccess": "Prognose für {{symbol}} übermittelt!"
     },
     "scoreboard": {
         "title": "Bestenlisten",

@@ -610,7 +610,9 @@
         "confirmationMessage": "Su predicción de {{price}} representa un cambio de {{percent}}, que es superior al rango típico de {{limit}} %. ¿Está seguro?",
         "limitReached": "Has alcanzado el límite diario de {{limit}} predicciones.",
         "submitFailed": "Error al enviar la predicción.",
-        "priceDelayInfo": "Los precios tienen un retraso de hasta 15 minutos."
+        "priceDelayInfo": "Los precios tienen un retraso de hasta 15 minutos.",
+        "submitting": "Enviando...",
+        "submitSuccess": "¡Predicción para {{symbol}} enviada!"
     },
     "scoreboard": {
         "title": "Tabla de Clasificación",

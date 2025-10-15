@@ -20,6 +20,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
     const [target, setTarget] = useState('');
     const [description, setDescription] = useState('');
     const [predictionType, setPredictionType] = useState('Weekly');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formState, setFormState] = useState({
         isOpen: true, message: 'Max Score: 100', deadline: null, barWidth: '100%'
     });
@@ -76,6 +77,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
     };
 
     const executePrediction = () => {
+        setIsSubmitting(true);
         const predictionData = {
             stockTicker: selectedStock.symbol,
             targetPrice: parseFloat(target),
@@ -85,7 +87,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         };
         axios.post(`${process.env.REACT_APP_API_URL}/api/predict`, predictionData, { withCredentials: true })
             .then(() => {
-                toast.success(`Prediction for ${selectedStock.symbol} submitted!`);
+                toast.success(t('prediction.submitSuccess', { symbol: selectedStock.symbol }));
                 onClose();
             })
             .catch((err) => {
@@ -96,6 +98,9 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                     // Show a generic error for any other problem
                     toast.error(t('prediction.submitFailed'));
                 }
+            })
+            .finally(() => {
+                setIsSubmitting(false);
             });
     };
 
@@ -205,8 +210,8 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                             <label className="block text-sm text-gray-300">{t('prediction.rationale')}</label>
                             <textarea placeholder={t('prediction.rationalePlaceholder')} value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm" rows="2" />
                         </div>
-                        <button type="submit" disabled={!formState.isOpen} className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
-                            {t('prediction.placePrediction')}
+                        <button type="submit" disabled={!formState.isOpen || isSubmitting} className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            {isSubmitting ? t('prediction.submitting', 'Submitting...') : t('prediction.placePrediction')}
                         </button>
                     </form>
                 </div>
