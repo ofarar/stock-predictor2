@@ -67,6 +67,8 @@ const GoldenFeedPage = ({ settings }) => {
     const [filters, setFilters] = useState({ authorId: 'All', stock: '', predictionType: 'All' });
     const [currentUser, setCurrentUser] = useState(null);
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     const markFeedAsRead = () => {
@@ -84,22 +86,39 @@ const GoldenFeedPage = ({ settings }) => {
             .then(res => setSubscriptions(res.data));
     }, []);
 
-    const fetchPosts = useCallback(() => {
+    const fetchPosts = useCallback((currentPage, isNewFilter) => {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_API_URL}/api/golden-feed`, { params: filters, withCredentials: true })
-            .then(res => setPosts(res.data))
+        axios.get(`${process.env.REACT_APP_API_URL}/api/golden-feed`, { params: { ...filters, page: currentPage }, withCredentials: true })
+            .then(res => {
+                const { posts: newPosts, totalPages: newTotalPages } = res.data;
+                setPosts(prev => isNewFilter ? newPosts : [...prev, ...newPosts]);
+                setTotalPages(newTotalPages);
+            })
             .catch(err => console.error(t('golden_feed_failed_fetch'), err))
             .finally(() => setLoading(false));
     }, [filters, t]);
 
     useEffect(() => {
-        fetchPosts();
+        setPage(1);
+        fetchPosts(1, true);
         const timer = setTimeout(markFeedAsRead, 2000);
         return () => clearTimeout(timer);
-    }, [fetchPosts]);
+    }, [filters.authorId, filters.stock, filters.predictionType]);
+
+    useEffect(() => {
+        if (page > 1) {
+            fetchPosts(page, false);
+        }
+    }, [page]);
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleLoadMore = () => {
+        if (page < totalPages) {
+            setPage(prev => prev + 1);
+        }
     };
 
     return (
@@ -107,7 +126,7 @@ const GoldenFeedPage = ({ settings }) => {
             <GoldenPostForm
                 isOpen={isPostModalOpen}
                 onClose={() => setIsPostModalOpen(false)}
-                onPostCreated={fetchPosts}
+                onPostCreated={() => fetchPosts(1, true)}
             />
 
             <div className="max-w-4xl mx-auto animate-fade-in">
@@ -157,19 +176,32 @@ const GoldenFeedPage = ({ settings }) => {
                     </div>
                 </div>
 
-                {loading ? (
+                {loading && page === 1 ? (
                     <p className="text-center text-gray-400 py-10">{t('golden_feed_loading')}</p>
                 ) : (
-                    <div className="space-y-4">
-                        {posts.length > 0 ? (
-                            posts.map(post => <CentralPostCard key={post._id} post={post} settings={settings} />)
-                        ) : (
-                            <div className="text-center bg-gray-800 rounded-lg py-20">
-                                <p className="text-lg font-semibold text-gray-400">{t('golden_feed_no_posts_title')}</p>
-                                <p className="text-gray-500">{t('golden_feed_no_posts_subtitle')}</p>
+                    <>
+                        <div className="space-y-4">
+                            {posts.length > 0 ? (
+                                posts.map(post => <CentralPostCard key={post._id} post={post} settings={settings} />)
+                            ) : (
+                                <div className="text-center bg-gray-800 rounded-lg py-20">
+                                    <p className="text-lg font-semibold text-gray-400">{t('golden_feed_no_posts_title')}</p>
+                                    <p className="text-gray-500">{t('golden_feed_no_posts_subtitle')}</p>
+                                </div>
+                            )}
+                        </div>
+                        {page < totalPages && (
+                            <div className="text-center mt-8">
+                                <button
+                                    onClick={handleLoadMore}
+                                    disabled={loading}
+                                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg disabled:bg-gray-500"
+                                >
+                                    {loading ? t('explore_loading') : t('explore_load_more')}
+                                </button>
                             </div>
                         )}
-                    </div>
+                    </>
                 )}
             </div>
         </>

@@ -829,5 +829,6 @@
             "generic": "Ocurrió un error.",
             "failed": "No se pudo completar el registro. Por favor, inténtalo de nuevo."
         }
-    }
+    },
+    "explore_load_more": "Load More"
 }

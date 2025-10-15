@@ -108,6 +108,8 @@ const ExplorePage = ({ requestLogin, settings }) => {
     const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date', verifiedOnly: false });
     const [descModal, setDescModal] = useState({ isOpen: false, description: '' });
     const [currentUser, setCurrentUser] = useState(null);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
@@ -116,12 +118,14 @@ const ExplorePage = ({ requestLogin, settings }) => {
             .then(res => setCurrentUser(res.data));
     }, []);
 
-    const fetchPredictions = useCallback(() => {
+    const fetchPredictions = useCallback((currentPage, isNewFilter) => {
         setLoading(true);
         const apiSortBy = filters.sortBy === 'potential' ? 'date' : filters.sortBy;
-        axios.get(`${process.env.REACT_APP_API_URL}/api/explore/feed`, { params: { status: activeTab, ...filters, sortBy: apiSortBy } })
+        axios.get(`${process.env.REACT_APP_API_URL}/api/explore/feed`, { params: { status: activeTab, ...filters, sortBy: apiSortBy, page: currentPage } })
             .then(res => {
-                let data = res.data;
+                const { predictions: newPredictions, totalPages: newTotalPages } = res.data;
+
+                let data = newPredictions;
                 if (filters.sortBy === 'potential' && activeTab === 'Active') {
                     data.sort((a, b) => {
                         const changeA = a.currentPrice > 0 ? Math.abs((a.targetPrice - a.currentPrice) / a.currentPrice) : 0;
@@ -129,16 +133,33 @@ const ExplorePage = ({ requestLogin, settings }) => {
                         return changeB - changeA;
                     });
                 }
-                setPredictions(data);
+                
+                setPredictions(prev => isNewFilter ? data : [...prev, ...data]);
+                setTotalPages(newTotalPages);
             })
             .catch(err => console.error("Failed to fetch predictions feed", err))
             .finally(() => setLoading(false));
     }, [activeTab, filters]);
 
-    useEffect(() => { fetchPredictions(); }, [fetchPredictions]);
+    useEffect(() => {
+        setPage(1);
+        fetchPredictions(1, true);
+    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly]);
+
+    useEffect(() => {
+        if (page > 1) {
+            fetchPredictions(page, false);
+        }
+    }, [page]);
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleLoadMore = () => {
+        if (page < totalPages) {
+            setPage(prev => prev + 1);
+        }
     };
 
     const handleVote = (predictionId, voteType) => {
@@ -218,10 +239,10 @@ const ExplorePage = ({ requestLogin, settings }) => {
                     </div>
                 </div>
                 <div className="flex border-b border-gray-700 mb-6">
-                    <button onClick={() => setActiveTab('Active')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Active' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_active')}</button>
-                    <button onClick={() => setActiveTab('Assessed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Assessed' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_assessed')}</button>
+                    <button onClick={() => { setActiveTab('Active'); setPage(1); }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Active' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_active')}</button>
+                    <button onClick={() => { setActiveTab('Assessed'); setPage(1); }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Assessed' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_assessed')}</button>
                 </div>
-                {loading ? (<p className="text-center text-gray-400 py-10">{t('explore_loading')}</p>) : (
+                {loading && page === 1 ? (<p className="text-center text-gray-400 py-10">{t('explore_loading')}</p>) : (
                     <>
                         {predictions.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -236,6 +257,18 @@ const ExplorePage = ({ requestLogin, settings }) => {
                                 />)}
                             </div>
                         ) : (<div className="text-center bg-gray-800 rounded-lg py-20"><p className="text-lg font-semibold text-gray-400">{t('explore_no_predictions')}</p></div>)}
+                        
+                        {page < totalPages && (
+                            <div className="text-center mt-8">
+                                <button
+                                    onClick={handleLoadMore}
+                                    disabled={loading}
+                                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg disabled:bg-gray-500"
+                                >
+                                    {loading ? t('explore_loading') : t('explore_load_more')}
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

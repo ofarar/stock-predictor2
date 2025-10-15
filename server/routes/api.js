@@ -524,6 +524,38 @@ router.post('/contact', async (req, res) => {
     }
 });
 
+// New route for paginated predictions for a specific stock
+router.get('/watchlist/:ticker/predictions', async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    const { ticker } = req.params;
+    const { page = 1, limit = 5 } = req.query; // Default to 5 predictions per page
+
+    try {
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
+
+        const query = { stockTicker: ticker.toUpperCase(), status: 'Active' };
+
+        const totalItems = await Prediction.countDocuments(query);
+        const totalPages = Math.ceil(totalItems / limitNum);
+
+        const predictions = await Prediction.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limitNum)
+            .populate('userId', 'username avatar isGoldenMember score isVerified')
+            .lean();
+
+        res.json({ predictions, totalPages, currentPage: pageNum });
+
+    } catch (err) {
+        console.error(`Error fetching paginated predictions for ${ticker}:`, err);
+        res.status(500).json({ message: 'Error fetching prediction data.' });
+    }
+});
+
 router.get('/watchlist', async (req, res) => {
     if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
 
@@ -537,14 +569,15 @@ router.get('/watchlist', async (req, res) => {
 
         const quotes = await yahooFinance.quote(tickers);
 
-        // Fetch predictions and recommended users for all watched stocks in parallel
+        // Fetch initial predictions (page 1) and recommended users for all watched stocks in parallel
         const dataPromises = tickers.map(async (ticker) => {
-            const [predictions, topPredictors, topVerified] = await Promise.all([
-                // 1. Get active predictions for this ticker
+            const [predictionData, topPredictors, topVerified] = await Promise.all([
+                // 1. Get FIRST PAGE of active predictions for this ticker
                 Prediction.find({ stockTicker: ticker, status: 'Active' })
                     .sort({ createdAt: -1 })
-                    .limit(10)
-                    .populate('userId', 'username avatar isGoldenMember score isVerified'),
+                    .limit(5) // Hardcoded limit for the initial fetch
+                    .populate('userId', 'username avatar isGoldenMember score isVerified')
+                    .lean(),
                 // 2. Get top 3 predictors overall for this ticker
                 Prediction.aggregate([
                     { $match: { status: 'Assessed', stockTicker: ticker } },
@@ -569,6 +602,10 @@ router.get('/watchlist', async (req, res) => {
                 ])
             ]);
 
+            // Get total count for pagination info
+            const totalPredictions = await Prediction.countDocuments({ stockTicker: ticker, status: 'Active' });
+            const totalPages = Math.ceil(totalPredictions / 5);
+
             // 4. Combine top predictors and the top verified user, removing duplicates
             let recommended = [...topPredictors];
             if (topVerified.length > 0) {
@@ -578,7 +615,15 @@ router.get('/watchlist', async (req, res) => {
                 }
             }
 
-            return { ticker, predictions, recommendedUsers: recommended };
+            return {
+                ticker,
+                predictions: {
+                    items: predictionData,
+                    totalPages,
+                    currentPage: 1
+                },
+                recommendedUsers: recommended
+            };
         });
 
         const results = await Promise.all(dataPromises);
@@ -656,11 +701,15 @@ router.get('/my-subscriptions', async (req, res) => {
 
 // GET: The filterable, centralized Golden Feed
 router.get('/golden-feed', async (req, res) => {
-    if (!req.user) return res.status(401).json([]);
+    if (!req.user) return res.status(401).json({ posts: [], totalPages: 0, currentPage: 1 });
     try {
-        const { authorId, stock, predictionType } = req.query;
+        const { authorId, stock, predictionType, page = 1, limit = 20 } = req.query;
         const currentUser = await User.findById(req.user._id);
-        const lastCheck = currentUser.lastCheckedGoldenFeed;
+        const lastCheck = currentUser.lastCheckedGoldenFeed || new Date(0);
+
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
 
         let authorIds = [currentUser._id, ...currentUser.goldenSubscriptions.map(sub => sub.user)];
         const query = { isGoldenPost: true };
@@ -678,19 +727,23 @@ router.get('/golden-feed', async (req, res) => {
             query['attachedPrediction.predictionType'] = predictionType;
         }
 
+        const totalItems = await Post.countDocuments(query);
+        const totalPages = Math.ceil(totalItems / limitNum);
+
         const feedPosts = await Post.find(query)
             .sort({ createdAt: -1 })
-            .limit(100)
+            .skip(skip)
+            .limit(limitNum)
             .populate('userId', 'username avatar isGoldenMember isVerified')
-            .lean(); // Use .lean() to make the objects mutable
+            .lean();
 
-        // Add the 'isNew' flag to each post
         feedPosts.forEach(post => {
             post.isNew = new Date(post.createdAt) > new Date(lastCheck);
         });
 
-        res.json(feedPosts);
+        res.json({ posts: feedPosts, totalPages, currentPage: pageNum });
     } catch (err) {
+        console.error("Error fetching golden feed:", err);
         res.status(500).json({ message: 'Error fetching golden feed.' });
     }
 });
@@ -703,29 +756,6 @@ router.post('/golden-feed/mark-as-read', async (req, res) => {
         res.status(200).send('Timestamp updated.');
     } catch (err) {
         res.status(500).json({ message: 'Error updating timestamp.' });
-    }
-});
-
-router.get('/golden-feed', async (req, res) => {
-    if (!req.user) return res.status(401).json([]);
-
-    try {
-        // Find the current user and their subscriptions
-        const currentUser = await User.findById(req.user._id);
-        const subscribedToIds = currentUser.goldenSubscriptions;
-
-        // Find all golden posts where the author is in the user's subscription list
-        const feedPosts = await Post.find({
-            userId: { $in: subscribedToIds },
-            isGoldenPost: true
-        })
-            .sort({ createdAt: -1 })
-            .limit(100)
-            .populate('userId', 'username avatar isGoldenMember'); // Populate author info
-
-        res.json(feedPosts);
-    } catch (err) {
-        res.status(500).json({ message: 'Error fetching golden feed.' });
     }
 });
 
@@ -930,10 +960,13 @@ router.put('/settings/admin', async (req, res) => {
 
 router.get('/scoreboard', async (req, res) => {
     try {
-        const { predictionType = 'Overall', stock = '' } = req.query;
+        const { predictionType = 'Overall', stock = '', page = 1, limit = 20 } = req.query;
+
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
 
         const predictionMatch = { status: 'Assessed' };
-
         if (predictionType !== 'Overall') {
             predictionMatch.predictionType = predictionType;
         }
@@ -941,7 +974,7 @@ router.get('/scoreboard', async (req, res) => {
             predictionMatch.stockTicker = stock.toUpperCase();
         }
 
-        const topUsers = await Prediction.aggregate([
+        const basePipeline = [
             { $match: predictionMatch },
             {
                 $group: {
@@ -950,11 +983,21 @@ router.get('/scoreboard', async (req, res) => {
                     predictionCount: { $sum: 1 }
                 }
             },
-            // --- THIS IS THE KEY LINE ---
-            // It ensures only users with predictions for the filter are included.
-            { $match: { predictionCount: { $gt: 0 } } },
+            { $match: { predictionCount: { $gt: 0 } } }
+        ];
+
+        // Pipeline to get total count
+        const countPipeline = [...basePipeline, { $count: 'total' }];
+        const totalResult = await Prediction.aggregate(countPipeline);
+        const totalItems = totalResult.length > 0 ? totalResult[0].total : 0;
+        const totalPages = Math.ceil(totalItems / limitNum);
+
+        // Pipeline to get the actual data
+        const dataPipeline = [
+            ...basePipeline,
             { $sort: { avgScore: -1 } },
-            { $limit: 20 },
+            { $skip: skip },
+            { $limit: limitNum },
             {
                 $lookup: {
                     from: 'users',
@@ -975,9 +1018,11 @@ router.get('/scoreboard', async (req, res) => {
                     predictionCount: 1
                 }
             }
-        ]);
+        ];
 
-        res.json(topUsers);
+        const topUsers = await Prediction.aggregate(dataPipeline);
+
+        res.json({ users: topUsers, totalPages, currentPage: pageNum });
     } catch (err) {
         console.error("Scoreboard error:", err);
         res.status(500).json({ message: err.message });
@@ -1901,22 +1946,22 @@ router.post('/users/:userId/cancel-golden', async (req, res) => {
 
 
 router.get('/explore/feed', async (req, res) => {
-    const { status = 'Active', stock, predictionType, sortBy = 'date', verifiedOnly } = req.query;
+    const { status = 'Active', stock, predictionType, sortBy = 'date', verifiedOnly, page = 1, limit = 20 } = req.query;
 
     if (!['Active', 'Assessed'].includes(status)) {
         return res.status(400).json({ message: 'Invalid status filter' });
     }
 
     try {
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
+
         const matchQuery = { status };
         if (stock) matchQuery.stockTicker = stock.toUpperCase();
         if (predictionType && predictionType !== 'All') matchQuery.predictionType = predictionType;
 
-        let predictions;
-        const limit = 50;
-
         let pipeline = [];
-        // If filtering by verified, we need to join with users first
         if (verifiedOnly === 'true') {
             pipeline.push(
                 { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
@@ -1927,6 +1972,13 @@ router.get('/explore/feed', async (req, res) => {
 
         pipeline.push({ $match: matchQuery });
 
+        // Pipeline to get the total count for pagination
+        const countPipeline = [...pipeline, { $count: 'total' }];
+        const totalResult = await Prediction.aggregate(countPipeline);
+        const totalItems = totalResult.length > 0 ? totalResult[0].total : 0;
+        const totalPages = Math.ceil(totalItems / limitNum);
+
+        // Main data pipeline
         if (sortBy === 'performance' || sortBy === 'votes') {
             let sortStage = {};
             if (sortBy === 'performance') {
@@ -1934,7 +1986,6 @@ router.get('/explore/feed', async (req, res) => {
             } else { // sortBy === 'votes'
                 sortStage = { voteScore: -1, createdAt: -1 };
             }
-            // If we didn't already do a lookup for the verified filter, do it now
             if (verifiedOnly !== 'true') {
                 pipeline.push(
                     { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
@@ -1944,7 +1995,8 @@ router.get('/explore/feed', async (req, res) => {
             pipeline.push(
                 { $addFields: { voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] } } },
                 { $sort: sortStage },
-                { $limit: limit },
+                { $skip: skip },
+                { $limit: limitNum },
                 {
                     $project: {
                         _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1,
@@ -1956,43 +2008,37 @@ router.get('/explore/feed', async (req, res) => {
                     }
                 }
             );
-            predictions = await Prediction.aggregate(pipeline);
+            const predictions = await Prediction.aggregate(pipeline);
+            return res.json({ predictions, totalPages, currentPage: pageNum });
         } else {
             // Standard find for date-based sorting
-            const initialPredictions = await Prediction.aggregate(pipeline);
+            const initialPredictions = await Prediction.aggregate(pipeline.concat([{ $project: { _id: 1 } }]));
             const initialPredictionIds = initialPredictions.map(p => p._id);
 
-            predictions = await Prediction.find({ _id: { $in: initialPredictionIds } })
+            const predictions = await Prediction.find({ _id: { $in: initialPredictionIds } })
                 .sort({ createdAt: -1 })
-                .limit(limit)
+                .skip(skip)
+                .limit(limitNum)
                 .populate('userId', 'username avatar isGoldenMember score isVerified')
                 .lean();
-        }
 
-        // --- START: MODIFIED RESILIENT BLOCK ---
-        // Add current price to active predictions if possible, but don't fail if the API times out.
-        if (status === 'Active' && predictions.length > 0) {
-            const tickers = [...new Set(predictions.map(p => p.stockTicker))];
-
-            try {
-                if (tickers.length > 0) {
-                    const quotes = await yahooFinance.quote(tickers);
-                    const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
-                    predictions.forEach(p => {
-                        p.currentPrice = priceMap.get(p.stockTicker) || 0;
-                    });
+            if (status === 'Active' && predictions.length > 0) {
+                const tickers = [...new Set(predictions.map(p => p.stockTicker))];
+                try {
+                    if (tickers.length > 0) {
+                        const quotes = await yahooFinance.quote(tickers);
+                        const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
+                        predictions.forEach(p => {
+                            p.currentPrice = priceMap.get(p.stockTicker) || 0;
+                        });
+                    }
+                } catch (quoteError) {
+                    console.error("Non-critical error: Failed to fetch live quotes for explore feed.", quoteError.message);
+                    predictions.forEach(p => { p.currentPrice = 0; });
                 }
-            } catch (quoteError) {
-                // If fetching quotes fails, log it but don't fail the whole request.
-                console.error("Non-critical error: Failed to fetch live quotes for explore feed.", quoteError.message);
-                // The predictions will just be missing 'currentPrice', and will default to 0.
-                predictions.forEach(p => { p.currentPrice = 0; });
             }
+            return res.json({ predictions, totalPages, currentPage: pageNum });
         }
-        // --- END: MODIFIED RESILIENT BLOCK ---
-
-        res.json(predictions); // Always send the main prediction data from the database
-
     } catch (err) {
         console.error(`CRITICAL Error fetching explore feed:`, err);
         res.status(500).json({ message: 'Server error fetching prediction data.' });

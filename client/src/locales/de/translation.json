@@ -824,10 +824,11 @@
         "completeButton": "Registrierung abschließen",
         "savingButton": "Speichern...",
         "error": {
-          "empty": "Benutzername darf nicht leer sein.",
-          "taken": "Dieser Benutzername ist bereits vergeben. Bitte wählen Sie einen anderen.",
-          "generic": "Ein Fehler ist aufgetreten.",
-          "failed": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut."
+            "empty": "Benutzername darf nicht leer sein.",
+            "taken": "Dieser Benutzername ist bereits vergeben. Bitte wählen Sie einen anderen.",
+            "generic": "Ein Fehler ist aufgetreten.",
+            "failed": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut."
         }
-      }
+    },
+    "explore_load_more": "Mehr laden"
 }

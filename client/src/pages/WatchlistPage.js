@@ -16,11 +16,11 @@ const WatchlistPage = ({ settings }) => {
     const { t, i18n } = useTranslation();
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [selectedTicker, setSelectedTicker] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [predictionTypeFilter, setPredictionTypeFilter] = useState('All');
     const [sortBy, setSortBy] = useState('date');
-    const [visibleCount, setVisibleCount] = useState(6);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -48,6 +48,33 @@ const WatchlistPage = ({ settings }) => {
     useEffect(() => {
         fetchAllData();
     }, []);
+
+    const handleLoadMorePredictions = (ticker) => {
+        const currentPredictionData = data.predictions[ticker];
+        if (!currentPredictionData || loadingMore || currentPredictionData.currentPage >= currentPredictionData.totalPages) {
+            return;
+        }
+
+        setLoadingMore(true);
+        const nextPage = currentPredictionData.currentPage + 1;
+        axios.get(`${process.env.REACT_APP_API_URL}/api/watchlist/${ticker}/predictions?page=${nextPage}`, { withCredentials: true })
+            .then(res => {
+                const { predictions: newPredictions, totalPages, currentPage } = res.data;
+                setData(prev => ({
+                    ...prev,
+                    predictions: {
+                        ...prev.predictions,
+                        [ticker]: {
+                            items: [...currentPredictionData.items, ...newPredictions],
+                            totalPages,
+                            currentPage
+                        }
+                    }
+                }));
+            })
+            .catch(() => toast.error(t('watchlistPage.toast.errorLoadMorePredictions')))
+            .finally(() => setLoadingMore(false));
+    };
 
     const handleWatchlistUpdate = (ticker, action) => {
         if (!ticker) return Promise.reject();
@@ -103,11 +130,11 @@ const WatchlistPage = ({ settings }) => {
         });
     };
 
-    const selectedPredictions = data.predictions[selectedTicker] || [];
+    const selectedPredictionData = data.predictions[selectedTicker] || { items: [], totalPages: 0, currentPage: 0 };
     const currentPrice = data?.quotes?.find((q) => q.symbol === selectedTicker)?.regularMarketPrice || 0;
 
     const filteredAndSortedPredictions = useMemo(() => {
-        let processed = [...selectedPredictions];
+        let processed = [...(selectedPredictionData.items || [])];
 
         if (predictionTypeFilter !== 'All') {
             processed = processed.filter((p) => p.predictionType === predictionTypeFilter);
@@ -130,7 +157,7 @@ const WatchlistPage = ({ settings }) => {
         }
 
         return processed;
-    }, [selectedPredictions, predictionTypeFilter, sortBy, currentPrice]);
+    }, [selectedPredictionData.items, predictionTypeFilter, sortBy, currentPrice]);
 
     return (
         <>
@@ -222,7 +249,7 @@ const WatchlistPage = ({ settings }) => {
 
                                     {filteredAndSortedPredictions.length > 0 ? (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {filteredAndSortedPredictions.slice(0, visibleCount).map((p) => {
+                                            {filteredAndSortedPredictions.map((p) => {
                                                 const percentageChange =
                                                     currentPrice > 0
                                                         ? ((p.targetPrice - currentPrice) / currentPrice) * 100
@@ -280,14 +307,15 @@ const WatchlistPage = ({ settings }) => {
                                         </p>
                                     )}
 
-                                    {visibleCount < filteredAndSortedPredictions.length && (
+                                    {selectedPredictionData.currentPage < selectedPredictionData.totalPages && (
                                         <div className="relative text-center">
                                             <hr className="absolute top-1/2 w-full border-t border-gray-700" />
                                             <button
-                                                onClick={() => setVisibleCount((prev) => prev + 6)}
-                                                className="relative bg-gray-800 px-4 py-2 text-sm font-bold text-gray-300 rounded-full border border-gray-700 hover:bg-gray-700 hover:text-white"
+                                                onClick={() => handleLoadMorePredictions(selectedTicker)}
+                                                disabled={loadingMore}
+                                                className="relative bg-gray-800 px-4 py-2 text-sm font-bold text-gray-300 rounded-full border border-gray-700 hover:bg-gray-700 hover:text-white disabled:bg-gray-600"
                                             >
-                                                {t('watchlistPage.loadMore')}
+                                                {loadingMore ? t('watchlistPage.loading') : t('watchlistPage.loadMore')}
                                             </button>
                                         </div>
                                     )}

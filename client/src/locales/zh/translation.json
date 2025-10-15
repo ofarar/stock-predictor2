@@ -829,5 +829,6 @@
             "generic": "发生错误。",
             "failed": "无法完成注册。请再试一次。"
         }
-    }
+    },
+    "explore_load_more": "加载更多"
 }

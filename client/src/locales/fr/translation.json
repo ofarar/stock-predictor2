@@ -824,10 +824,11 @@
         "completeButton": "Finaliser l'inscription",
         "savingButton": "Enregistrement...",
         "error": {
-          "empty": "Le nom d'utilisateur ne peut pas être vide.",
-          "taken": "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.",
-          "generic": "Une erreur est survenue.",
-          "failed": "Échec de la finalisation de l'inscription. Veuillez réessayer."
+            "empty": "Le nom d'utilisateur ne peut pas être vide.",
+            "taken": "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.",
+            "generic": "Une erreur est survenue.",
+            "failed": "Échec de la finalisation de l'inscription. Veuillez réessayer."
         }
-      }
+    },
+    "explore_load_more": "Charger plus"
 }

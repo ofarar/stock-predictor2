@@ -830,5 +830,6 @@
       "generic": "Bir hata oluştu.",
       "failed": "Kayıt tamamlanamadı. Lütfen tekrar deneyin."
     }
-  }
+  },
+  "explore_load_more": "Daha Fazla Yükle"
 }

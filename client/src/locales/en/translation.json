@@ -830,5 +830,6 @@
       "generic": "An error occurred.",
       "failed": "Failed to complete registration. Please try again."
     }
-  }
+  },
+  "explore_load_more": "Load More"
 }
