@@ -96,7 +96,7 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                         <div className="hidden sm:block"><GlobalSearch /></div>
 
                         {/* Desktop User Actions */}
-                        <div className="hidden md:flex items-center space-x-4">
+                        <div className="hidden md:flex items-center space-x-2">
                             <button onClick={() => onMakePredictionClick(null)} className="flex justify-center items-center gap-2 bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-600 transition">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 {t('header.buttons.makePrediction')}
@@ -112,12 +112,13 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                         </div>
 
                         {/* Mobile User Actions */}
-                        <div className="md:hidden flex items-center gap-2">
-
-                            <button onClick={() => onMakePredictionClick(null)} className="text-2xl bg-green-500 text-white rounded-full w-[1.5em] h-[1.5em] flex items-center justify-center hover:bg-green-600" title={t('header.buttons.makePrediction')}>
-                                <svg className="w-[0.7em] h-[0.7em]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <div className="md:hidden flex items-center">
+                            <button onClick={() => onMakePredictionClick(null)} className="text-2xl bg-green-500 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-green-600" title={t('header.buttons.makePrediction')}>
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             </button>
-                            {user && <NotificationBell user={user} />}
+                            <div className="ml-2">
+                                {user && <NotificationBell user={user} />}
+                            </div>
                             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
                                 {isMobileMenuOpen ? (<svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>) : (<svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>)}
                             </button>
