@@ -1,17 +1,11 @@
+// src/components/HourlyWinnersFeed.js
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
-
-const isMarketOpen = () => {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const day = now.getUTCDay();
-    const isWeekday = day >= 1 && day <= 5;
-    const isMarketHours = utcHour > 13 || (utcHour === 13 && now.getUTCMinutes() >= 30);
-    const isBeforeClose = utcHour < 20;
-    return isWeekday && isMarketHours && isBeforeClose;
-};
+import { formatTimeLeft } from '../utils/formatters';
+import { isMarketOpen } from '../utils/timeHelpers';
 
 const HourlyWinnersFeed = ({ winners = [], settings }) => {
     const { t } = useTranslation();
@@ -24,13 +18,16 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
             setMarketIsOpen(currentlyOpen);
 
             if (currentlyOpen) {
-                const minutes = 59 - new Date().getMinutes();
-                const seconds = 59 - new Date().getSeconds();
-                setTimeLeft(`${minutes}m ${seconds}s`);
+                const now = new Date();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+                const msPastHour = (minutes * 60 + seconds) * 1000 + now.getMilliseconds();
+                const msToNextHour = 3600000 - msPastHour;
+                setTimeLeft(formatTimeLeft(msToNextHour, t));
             }
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [t]);
 
     return (
         <div className="bg-gray-800 p-6 rounded-xl shadow-2xl">
@@ -41,7 +38,7 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
                     </svg>
                     <h3 className="text-xl font-bold text-white">{t('hourlyWinnersFeed.title')}</h3>
                 </div>
-                <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-md">
+                <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-md whitespace-nowrap">
                     {marketIsOpen
                         ? t('hourlyWinnersFeed.nextResults', { timeLeft })
                         : t('hourlyWinnersFeed.marketClosed')}

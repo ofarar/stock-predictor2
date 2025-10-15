@@ -809,5 +809,11 @@
     },
     "market_watch": {
         "title": "Обзор Рынка"
+    },
+    "time": {
+        "days": "д",
+        "hours": "ч",
+        "minutes": "м",
+        "seconds": "с"
     }
 }

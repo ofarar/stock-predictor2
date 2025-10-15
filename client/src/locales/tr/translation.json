@@ -810,5 +810,11 @@
   },
   "market_watch": {
     "title": "Piyasalar"
+  },
+  "time": {
+    "days": "g",
+    "hours": "sa",
+    "minutes": "dk",
+    "seconds": "sn"
   }
 }

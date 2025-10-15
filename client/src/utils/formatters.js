@@ -19,6 +19,24 @@ export const formatNumericDate = (dateInput, locale) => {
     return new Intl.DateTimeFormat(locale, options).format(date);
 };
 
+export const formatTimeLeft = (milliseconds, t) => {
+    if (milliseconds < 0) return `0${t('time.minutes', 'm')} 0${t('time.seconds', 's')}`;
+
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    let parts = [];
+    if (days > 0) parts.push(`${days}${t('time.days', 'd')}`);
+    if (hours > 0) parts.push(`${hours}${t('time.hours', 'h')}`);
+    if (minutes > 0 || (days === 0 && hours === 0)) parts.push(`${minutes}${t('time.minutes', 'm')}`);
+    if (seconds >= 0) parts.push(`${seconds}${t('time.seconds', 's')}`);
+
+    return parts.join(' ');
+};
+
 /**
  * Formats a score (0-100) into a locale-specific percentage string without a sign.
  * @param {number} value - The score value (e.g., 75 for 75%).

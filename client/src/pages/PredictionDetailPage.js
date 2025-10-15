@@ -10,17 +10,7 @@ import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
 import EditPredictionModal from '../components/EditPredictionModal';
 import PredictionHistoryModal from '../components/PredictionHistoryModal';
-import { formatPercentage, formatCurrency } from '../utils/formatters';
-
-const formatTimeLeft = (deadline, t) => {
-    const total = Date.parse(deadline) - Date.parse(new Date());
-    if (total < 0) return t("Awaiting Assessment");
-    const seconds = Math.floor((total / 1000) % 60);
-    const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(total / (1000 * 60 * 60 * 24));
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-};
+import { formatPercentage, formatCurrency, formatTimeLeft } from '../utils/formatters';
 
 const calculateLiveScore = (predictedPrice, actualPrice) => {
     if (!actualPrice || actualPrice <= 0) return '...';
@@ -86,7 +76,14 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
 
     useEffect(() => {
         if (prediction?.status === 'Active') {
-            const timer = setInterval(() => setTimeLeft(formatTimeLeft(prediction.deadline, t)), 1000);
+            const timer = setInterval(() => {
+                const total = Date.parse(prediction.deadline) - Date.now();
+                if (total < 0) {
+                    setTimeLeft(t("Awaiting Assessment"));
+                } else {
+                    setTimeLeft(formatTimeLeft(total, t));
+                }
+            }, 1000);
             return () => clearInterval(timer);
         }
     }, [prediction, t]);
@@ -101,6 +98,14 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
             const pred = predictionRes.data;
             setPrediction(pred);
             if (pred.status === 'Active') {
+                const initialTime = Date.parse(pred.deadline) - Date.now();
+                if (initialTime < 0) {
+                    setTimeLeft(t("Awaiting Assessment"));
+                } else {
+                    setTimeLeft(formatTimeLeft(initialTime, t));
+                }
+                // --- FIX ENDS HERE ---
+
                 return axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${pred.stockTicker}`);
             }
         }).then(quoteRes => {
@@ -111,12 +116,6 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
             .finally(() => setLoading(false));
     }, [predictionId, t]);
 
-    useEffect(() => {
-        if (prediction?.status === 'Active') {
-            const timer = setInterval(() => setTimeLeft(formatTimeLeft(prediction.deadline, t)), 1000);
-            return () => clearInterval(timer);
-        }
-    }, [prediction, t]);
 
     const handleVote = (voteType) => {
         if (!currentUser) return requestLogin();
