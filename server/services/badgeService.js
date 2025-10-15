@@ -45,7 +45,7 @@ const awardBadges = async (user) => {
             count: statsByType[type].count,
         };
     }
-    
+
     console.log(`\n--- Checking badges for user: ${user.username} ---`);
 
     const existingBadges = new Map(user.badges.map(b => [b.badgeId, b.tier]));
@@ -62,7 +62,7 @@ const awardBadges = async (user) => {
         } else if (fullStats.byType[badgeType]) {
             statsToCheck = fullStats.byType[badgeType];
         }
-        
+
         if (statsToCheck && statsToCheck.count >= (definition.minPredictions || 0)) {
             let earnedTier = null;
             if (statsToCheck.avgScore >= (definition.tiers.Gold?.score || 101)) earnedTier = 'Gold';
@@ -70,7 +70,7 @@ const awardBadges = async (user) => {
             else if (statsToCheck.avgScore >= (definition.tiers.Bronze?.score || 101)) earnedTier = 'Bronze';
 
             console.log(` -> Checking for '${badgeId}': ${earnedTier ? `Earned ${earnedTier} tier.` : 'Criteria not met.'}`);
-            
+
             if (earnedTier) {
                 const existingTier = existingBadges.get(badgeId);
                 if (!existingTier || (earnedTier === 'Gold' && existingTier !== 'Gold') || (earnedTier === 'Silver' && existingTier === 'Bronze')) {
@@ -84,7 +84,7 @@ const awardBadges = async (user) => {
     }
 
     if (earnedBadges.length > 0) {
-        await user.save(); 
+        await user.save();
 
         for (const badge of earnedBadges) {
             const badgeInfo = badgeDefinitions[badge.badgeId];
@@ -92,10 +92,28 @@ const awardBadges = async (user) => {
 
             const message = `Congratulations! You've earned the ${badge.tier} ${badgeInfo.name} badge.`;
             const followerMessage = `${user.username} has earned the ${badge.tier} ${badgeInfo.name} badge!`;
-            
-            await new Notification({ recipient: user._id, type: 'BadgeEarned', message, link: `/profile/${user._id}` }).save();
+
+            await new Notification({
+                recipient: user._id,
+                type: 'BadgeEarned',
+                messageKey: 'notifications.badgeEarnedSelf', // New key
+                link: `/profile/${user._id}`,
+                metadata: {
+                    tier: badge.tier,
+                    badgeName: badgeInfo.name // We'll need to translate this on the frontend
+                }
+            }).save();
             const followerNotifs = user.followers.map(followerId => ({
-                recipient: followerId, sender: user._id, type: 'BadgeEarned', message: followerMessage, link: `/profile/${user._id}`
+                recipient: followerId,
+                sender: user._id,
+                type: 'BadgeEarned',
+                messageKey: 'notifications.badgeEarnedFollower', // New key
+                link: `/profile/${user._id}`,
+                metadata: {
+                    username: user.username,
+                    tier: badge.tier,
+                    badgeName: badgeInfo.name
+                }
             }));
             if (followerNotifs.length > 0) {
                 await Notification.insertMany(followerNotifs);

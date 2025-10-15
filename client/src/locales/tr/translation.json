@@ -453,7 +453,10 @@
     },
     "notifications": {
       "title": "Bildirimler",
-      "noNew": "Yeni bildirim yok."
+      "noNew": "Yeni bildirim yok.",
+      "clearAll": "Tümünü Temizle",
+      "clearSuccess": "Bildirimler temizlendi!",
+      "clearError": "Bildirimler temizlenemedi."
     },
     "mobileMenu": {
       "myProfile": "Profilim",
@@ -479,7 +482,12 @@
       "badgeEarned": "Kazanılan Rozet",
       "goldenPost": "Altın Gönderi",
       "newPrediction": "Yeni Tahmin"
-    }
+    },
+    "newPrediction": "{{username}}, {{ticker}} üzerinde bir {{predictionType}} tahmini yaptı.",
+    "newFollower": "{{username}} sizi takip etmeye başladı.",
+    "goldenPost": "{{username}} yeni bir Altın Gönderi yayınladı.",
+    "badgeEarnedSelf": "Tebrikler! {{tier}} {{badgeName}} rozetini kazandınız.",
+    "badgeEarnedFollower": "{{username}}, {{tier}} {{badgeName}} rozetini kazandı!"
   },
   "hourlyWinnersFeed": {
     "title": "Son Saatin Kazananları",

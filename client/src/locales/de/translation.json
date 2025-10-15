@@ -453,7 +453,10 @@
         },
         "notifications": {
             "title": "Benachrichtigungen",
-            "noNew": "Keine neuen Benachrichtigungen."
+            "noNew": "Keine neuen Benachrichtigungen.",
+            "clearAll": "Alle löschen",
+            "clearSuccess": "Benachrichtigungen gelöscht!",
+            "clearError": "Fehler beim Löschen."
         },
         "mobileMenu": {
             "myProfile": "Mein Profil",
@@ -479,7 +482,12 @@
             "badgeEarned": "Abzeichen verdient",
             "goldenPost": "Gold-Beitrag",
             "newPrediction": "Neue Prognose"
-        }
+        },
+        "newPrediction": "{{username}} hat eine {{predictionType}}-Prognose für {{ticker}} gemacht.",
+        "newFollower": "{{username}} hat angefangen, dir zu folgen.",
+        "goldenPost": "{{username}} hat einen neuen Goldenen Beitrag veröffentlicht.",
+        "badgeEarnedSelf": "Glückwunsch! Du hast das {{tier}} {{badgeName}}-Abzeichen erhalten.",
+        "badgeEarnedFollower": "{{username}} hat das {{tier}} {{badgeName}}-Abzeichen erhalten!"
     },
     "hourlyWinnersFeed": {
         "title": "Gewinner der letzten Stunde",

@@ -17,6 +17,21 @@ const apiCache = new Map();
 
 // In server/routes/api.js
 
+// DELETE: Clear all notifications for the current user
+router.delete('/notifications/clear', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+
+    try {
+        await Notification.deleteMany({ recipient: req.user._id });
+        res.status(200).json({ message: 'All notifications cleared.' });
+    } catch (err) {
+        console.error("Error clearing notifications:", err);
+        res.status(500).json({ message: 'Failed to clear notifications.' });
+    }
+});
+
 // PUT: Update the order of a user's watchlist
 router.put('/watchlist/order', async (req, res) => {
     if (!req.user) {
@@ -289,9 +304,11 @@ router.post('/posts/golden', async (req, res) => {
                 recipient: sub.user._id,
                 sender: user._id,
                 type: 'GoldenPost',
-                message: notificationMessage,
-                // --- FIX: Updated link to point to the main Golden Feed page ---
-                link: '/golden-feed'
+                messageKey: 'notifications.goldenPost', // Use a key
+                link: '/golden-feed',
+                metadata: {
+                    username: user.username
+                }
             }));
             await Notification.insertMany(notifications);
         }
@@ -962,8 +979,14 @@ router.post('/predict', async (req, res) => {
                     recipient: follower._id,
                     sender: user._id,
                     type: 'NewPrediction',
-                    message: mainMessage,
-                    link: `/prediction/${prediction._id}`
+                    messageKey: 'notifications.newPrediction', // Use a translation key
+                    link: `/prediction/${prediction._id}`,
+                    metadata: { // Send raw data for frontend formatting
+                        username: user.username,
+                        ticker: stockTicker,
+                        predictionType: predictionType,
+                        percentage: percentageChange
+                    }
                 });
             }
         }
@@ -1378,8 +1401,11 @@ router.post('/users/:userId/follow', async (req, res) => {
             recipient: followedUserId,
             sender: currentUserId,
             type: 'NewFollower',
-            message: `${req.user.username} started following you.`,
-            link: `/profile/${currentUserId}`
+            messageKey: 'notifications.newFollower',
+            link: `/profile/${currentUserId}`,
+            metadata: {
+                username: req.user.username
+            }
         }).save();
         // ---------------------------------------------------------
 

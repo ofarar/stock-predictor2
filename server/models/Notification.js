@@ -8,10 +8,10 @@ const NotificationSchema = new Schema({
     recipient: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     sender: { type: Schema.Types.ObjectId, ref: 'User' },
     type: { type: String, enum: ['NewPrediction', 'NewFollower', 'BadgeEarned', 'GoldenPost'], required: true },
-    message: { type: String, required: true },
+    messageKey: { type: String, required: true },
+    metadata: { type: Object },
     read: { type: Boolean, default: false },
     link: { type: String },
-    metadata: { type: Object },
     createdAt: { type: Date, default: Date.now }
 });
 

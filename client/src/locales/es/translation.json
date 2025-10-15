@@ -453,7 +453,10 @@
         },
         "notifications": {
             "title": "Notificaciones",
-            "noNew": "No hay notificaciones nuevas."
+            "noNew": "No hay notificaciones nuevas.",
+            "clearAll": "Limpiar todo",
+            "clearSuccess": "¡Notificaciones limpiadas!",
+            "clearError": "Error al limpiar."
         },
         "mobileMenu": {
             "myProfile": "Mi Perfil",
@@ -479,7 +482,12 @@
             "badgeEarned": "Insignia Ganada",
             "goldenPost": "Publicación Dorada",
             "newPrediction": "Nueva Predicción"
-        }
+        },
+        "newPrediction": "{{username}} ha hecho una predicción {{predictionType}} sobre {{ticker}}.",
+        "newFollower": "{{username}} ha comenzado a seguirte.",
+        "goldenPost": "{{username}} ha publicado un nuevo Post Dorado.",
+        "badgeEarnedSelf": "¡Felicidades! Has ganado la insignia {{tier}} {{badgeName}}.",
+        "badgeEarnedFollower": "¡{{username}} ha ganado la insignia {{tier}} {{badgeName}}!"
     },
     "hourlyWinnersFeed": {
         "title": "Ganadores de la Última Hora",

@@ -453,7 +453,10 @@
         },
         "notifications": {
             "title": "Уведомления",
-            "noNew": "Нет новых уведомлений."
+            "noNew": "Нет новых уведомлений.",
+            "clearAll": "Очистить все",
+            "clearSuccess": "Уведомления очищены!",
+            "clearError": "Не удалось очистить."
         },
         "mobileMenu": {
             "myProfile": "Мой профиль",
@@ -479,7 +482,12 @@
             "badgeEarned": "Значок получен",
             "goldenPost": "Золотой пост",
             "newPrediction": "Новый прогноз"
-        }
+        },
+        "newPrediction": "{{username}} сделал {{predictionType}} прогноз по {{ticker}}.",
+        "newFollower": "{{username}} начал(а) следить за вами.",
+        "goldenPost": "{{username}} опубликовал(а) новый Золотой Пост.",
+        "badgeEarnedSelf": "Поздравляем! Вы заработали значок «{{badgeName}}» уровня {{tier}}.",
+        "badgeEarnedFollower": "{{username}} заработал(а) значок «{{badgeName}}» уровня {{tier}}!"
     },
     "hourlyWinnersFeed": {
         "title": "Победители последнего часа",

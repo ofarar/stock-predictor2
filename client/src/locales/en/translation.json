@@ -453,7 +453,10 @@
     },
     "notifications": {
       "title": "Notifications",
-      "noNew": "No new notifications."
+      "noNew": "No new notifications.",
+      "clearAll": "Clear All",
+      "clearSuccess": "Notifications cleared!",
+      "clearError": "Failed to clear notifications."
     },
     "mobileMenu": {
       "myProfile": "My Profile",
@@ -479,7 +482,12 @@
       "badgeEarned": "Badge Earned",
       "goldenPost": "Golden Post",
       "newPrediction": "New Prediction"
-    }
+    },
+    "newPrediction": "{{username}} made a {{predictionType}} prediction on {{ticker}}.",
+    "newFollower": "{{username}} started following you.",
+    "goldenPost": "{{username}} has published a new Golden Post.",
+    "badgeEarnedSelf": "Congratulations! You've earned the {{tier}} {{badgeName}} badge.",
+    "badgeEarnedFollower": "{{username}} has earned the {{tier}} {{badgeName}} badge!"
   },
   "hourlyWinnersFeed": {
     "title": "Last Hour's Winners",

@@ -453,7 +453,10 @@
         },
         "notifications": {
             "title": "通知",
-            "noNew": "没有新通知。"
+            "noNew": "没有新通知。",
+            "clearAll": "全部清除",
+            "clearSuccess": "通知已清除！",
+            "clearError": "无法清除通知。"
         },
         "mobileMenu": {
             "myProfile": "我的个人资料",
@@ -479,7 +482,12 @@
             "badgeEarned": "获得徽章",
             "goldenPost": "黄金帖子",
             "newPrediction": "新预测"
-        }
+        },
+        "newPrediction": "{{username}} 对 {{ticker}} 做出了一个 {{predictionType}} 预测。",
+        "newFollower": "{{username}} 开始关注您了。",
+        "goldenPost": "{{username}} 发布了一个新的黄金帖子。",
+        "badgeEarnedSelf": "恭喜！您已获得 {{tier}} {{badgeName}} 徽章。",
+        "badgeEarnedFollower": "{{username}} 已获得 {{tier}} {{badgeName}} 徽章！"
     },
     "hourlyWinnersFeed": {
         "title": "上一小时的获胜者",
