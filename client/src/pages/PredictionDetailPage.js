@@ -252,11 +252,18 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                         <img src={prediction.userId.avatar} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                         <div className="ml-3">
                             <p className="text-sm text-gray-400">{t("Predicted by")}</p>
-                            <div className="flex items-center gap-2">
-                                <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline">
-                                    {prediction.userId.username}
+                            <div className="flex items-center">
+                                <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline break-words">
+                                    {prediction.userId.username.split(' ').slice(0, -1).join(' ')}
+                                    <span style={{ whiteSpace: 'nowrap' }}>
+                                        {' '}{prediction.userId.username.split(' ').slice(-1).join(' ')}
+                                        {settings?.isVerificationEnabled && prediction.userId.isVerified && (
+                                            <span className="ml-1 inline-block align-middle">
+                                                <VerifiedTick />
+                                            </span>
+                                        )}
+                                    </span>
                                 </Link>
-                                {settings?.isVerificationEnabled && prediction.userId.isVerified && <VerifiedTick />}
                             </div>
                         </div>
                         <p className="ml-auto text-sm text-gray-500 text-right">{t("Made on")} {new Date(prediction.createdAt).toLocaleDateString()}</p>
