@@ -102,19 +102,22 @@ const NotificationBell = ({ user }) => {
                     <div className="p-2 font-bold text-white border-b border-gray-700">{t('header.notifications.title')}</div>
                     <div className="max-h-96 overflow-y-auto">
                         {notifications.length > 0 ? notifications.map(n => {
-                            const metadata = { ...n.metadata };
-                            if (metadata.badgeName) {
-                                const badgeKey = metadata.badgeName.toLowerCase().replace(/ /g, '_');
-                                metadata.badgeName = t(`badges.${badgeKey}.name`, metadata.badgeName);
+                            // Create a new object for interpolation to avoid mutating metadata
+                            const interpolation = { ...n.metadata };
+
+                            if (interpolation.badgeName) {
+                                const badgeKey = interpolation.badgeName.toLowerCase().replace(/ /g, '_');
+                                interpolation.badgeName = t(`badges.${badgeKey}.name`, interpolation.badgeName);
                             }
-                            if (metadata.predictionType) {
-                                metadata.predictionType = t(`predictionTypes.${metadata.predictionType.toLowerCase()}`);
+                            if (interpolation.predictionType) {
+                                interpolation.predictionType = t(`predictionTypes.${interpolation.predictionType.toLowerCase()}`);
                             }
+
                             return (
                                 <Link to={n.link} key={n._id} onClick={() => setIsOpen(false)} className="flex items-start p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">
                                     {getNotificationIcon(n.type)}
                                     <div className="flex-grow">
-                                        <span className={!n.read ? 'font-bold' : ''}>{t(n.messageKey, metadata)}</span>
+                                        <span className={!n.read ? 'font-bold' : ''}>{t(n.messageKey, interpolation)}</span>
                                         {n.metadata?.percentage != null && (
                                             <span className={`ml-1 font-bold ${n.metadata.percentage >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 ({formatPercentage(n.metadata.percentage, i18n.language)})
