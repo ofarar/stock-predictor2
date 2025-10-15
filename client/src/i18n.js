@@ -29,9 +29,8 @@ i18n
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['navigator', 'localStorage'],
       caches: ['localStorage'],
-      checkWhitelist: true,
     },
   });
 
