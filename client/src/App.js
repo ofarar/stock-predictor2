@@ -91,7 +91,7 @@ function App() {
         <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} />
         <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
         <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
-        <main className="flex-grow container mx-auto px-4 sm:px-6 pt-2 sm:pt-2 md:pt-0 pb-2 sm:pb-4">
+        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
           <PageSpecificContent />
           <Routes>
             {/* --- Pass 'settings' prop down to all relevant pages --- */}

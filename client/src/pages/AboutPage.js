@@ -35,7 +35,7 @@ const AboutPage = () => {
     ];
 
     return (
-        <div className="max-w-4xl mx-auto text-gray-300 animate-fade-in">
+        <div className="max-w-5xl mx-auto text-gray-300 animate-fade-in">
             <h1 className="text-4xl font-bold text-white text-center mb-8">{t('about_title')}</h1>
 
             <div className="bg-gray-800 p-8 rounded-lg space-y-10">

@@ -29,7 +29,7 @@ const ContactPage = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto animate-fade-in text-gray-300">
+        <div className="max-w-5xl mx-auto animate-fade-in text-gray-300">
             <h1 className="text-4xl font-bold text-white text-center mb-8">{t('contact_title')}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="space-y-4">

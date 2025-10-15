@@ -40,7 +40,7 @@ const ScoreboardPage = ({ settings }) => {
     }, [fetchScoreboard]);
 
     return (
-        <div className="w-full max-w-4xl mx-auto animate-fade-in px-4">
+        <div className="w-full max-w-5xl mx-auto animate-fade-in px-2 sm:px-4">
             <h1 className="text-3xl font-bold text-white mb-6 text-center">{t('title_top_performers')}</h1>
 
             <div className="bg-gray-800 p-4 rounded-lg mb-8 space-y-4">
