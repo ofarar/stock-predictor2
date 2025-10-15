@@ -27,10 +27,13 @@ const WatchlistCard = ({ quote, isSelected, isEditMode, onRemove, onClick }) => 
                     </p>
                 </div>
             </button>
-            {/* Show remove button only when selected AND in edit mode */}
-            {isSelected && isEditMode && (
+            {/* Show remove button only when in edit mode */}
+            {isEditMode && (
                 <button
-                    onClick={onRemove}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onRemove();
+                    }}
                     className="absolute top-1 right-1 p-1 bg-red-600 bg-opacity-75 rounded-full text-white hover:bg-red-500"
                     title={t('watchlistStockCard.removeButtonTitle', { symbol: quote.symbol })}
                 >
