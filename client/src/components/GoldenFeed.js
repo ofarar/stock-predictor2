@@ -27,7 +27,7 @@ const PostCard = ({ post, locale }) => {
     return (
         <div className="bg-gray-700 p-4 rounded-lg relative">
             {post.isNew && (
-                <span className="absolute top-2 right-2 text-xs bg-green-500 text-white font-bold px-2 py-1 rounded-full animate-pulse">
+                <span className="absolute top-2 right-2 text-xs bg-green-500 bg-yellow-500 font-bold px-2 py-1 rounded-full animate-pulse">
                     {t('goldenFeed.newTag')}
                 </span>
             )}
