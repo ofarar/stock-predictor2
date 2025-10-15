@@ -609,7 +609,8 @@
         "maxScore": "Puntuación Máx.: {{score}}",
         "confirmationMessage": "Su predicción de {{price}} representa un cambio de {{percent}}, que es superior al rango típico de {{limit}} %. ¿Está seguro?",
         "limitReached": "Has alcanzado el límite diario de {{limit}} predicciones.",
-        "submitFailed": "Error al enviar la predicción."
+        "submitFailed": "Error al enviar la predicción.",
+        "priceDelayInfo": "Los precios tienen un retraso de hasta 15 minutos."
     },
     "scoreboard": {
         "title": "Tabla de Clasificación",

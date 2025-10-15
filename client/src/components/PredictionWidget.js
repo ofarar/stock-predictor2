@@ -150,13 +150,15 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 <div className="animate-fade-in">
                     <div className="text-center mb-4">
                         <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
-                        <p className="text-gray-400">
+                        <p className="text-gray-400 flex items-center justify-center">
                             {t('prediction.currentPrice')}:&nbsp;
-                            <span className="font-semibold text-white">
-                                {selectedStock?.regularMarketPrice != null
-                                    ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)
-                                    : t('prediction.na')}
-                            </span>
+                            <Tooltip text={t('prediction.priceDelayInfo', 'Prices are delayed up to 15 minutes.')}>
+                                <span className="font-semibold text-white">
+                                    {selectedStock?.regularMarketPrice != null
+                                        ? formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)
+                                        : t('prediction.na')}
+                                </span>
+                            </Tooltip>
                         </p>
                     </div>
 

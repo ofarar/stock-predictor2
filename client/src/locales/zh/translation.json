@@ -609,7 +609,8 @@
         "maxScore": "最高分: {{score}}",
         "confirmationMessage": "您对 {{price}} 的预测是 {{percent}} 的变动，超过了通常的 {{limit}}% 范围。您确定吗？",
         "limitReached": "您已达到每日 {{limit}} 次的预测上限。",
-        "submitFailed": "提交预测失败。"
+        "submitFailed": "提交预测失败。",
+        "priceDelayInfo": "价格最多延迟15分钟。"
     },
     "scoreboard": {
         "title": "排行榜",

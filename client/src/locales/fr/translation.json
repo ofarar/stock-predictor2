@@ -609,7 +609,8 @@
         "maxScore": "Score Max : {{score}}",
         "confirmationMessage": "Votre prédiction de {{price}} représente une variation de {{percent}}, ce qui est supérieur à la plage habituelle de {{limit}} %. Êtes-vous sûr(e) ?",
         "limitReached": "Vous avez atteint la limite de prédiction quotidienne de {{limit}}.",
-        "submitFailed": "Échec de la soumission de la prédiction."
+        "submitFailed": "Échec de la soumission de la prédiction.",
+        "predictionDelayInfo": "Les prix sont retardés jusqu'à 15 minutes."
     },
     "scoreboard": {
         "title": "Classements",

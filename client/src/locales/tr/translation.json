@@ -609,7 +609,8 @@
     "maxScore": "Maks Puan: {{score}}",
     "confirmationMessage": "Yaptığınız {{price}} tutarındaki tahmin, tipik %{{limit}} aralığının üzerinde, {{percent}}'lik bir değişime denk geliyor. Emin misiniz?",
     "limitReached": "Günlük {{limit}} tahmin limitine ulaştınız.",
-    "submitFailed": "Tahmin gönderilemedi."
+    "submitFailed": "Tahmin gönderilemedi.",
+    "priceDelayInfo": "Fiyatlar 15 dakikaya kadar gecikmelidir."
   },
   "scoreboard": {
     "title": "Liderler Tablosu",

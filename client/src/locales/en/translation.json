@@ -609,7 +609,8 @@
     "maxScore": "Max Score: {{score}}",
     "confirmationMessage": "Your prediction of {{price}} is a {{percent}} change, which is more than the typical {{limit}}% range. Are you sure?",
     "limitReached": "You have reached the daily prediction limit of {{limit}}.",
-    "submitFailed": "Failed to submit prediction."
+    "submitFailed": "Failed to submit prediction.",
+    "priceDelayInfo": "Prices are delayed up to 15 minutes."
   },
   "scoreboard": {
     "title": "Leaderboards",
