@@ -18,21 +18,31 @@ router.get(
   (req, res, next) => {
     passport.authenticate('google', { failureRedirect: '/' }, (err, user, info) => {
       if (err) { return next(err); }
-      if (!user) { return res.redirect('/'); }
 
-      // Manually log the user in
+      const baseURL =
+        process.env.NODE_ENV === 'production'
+          ? 'https://predictostock.vercel.app'
+          : 'http://localhost:3000';
+
+      // Handle case where username is taken
+      if (info && info.action === 'CHOOSE_USERNAME') {
+        req.session.pendingProfile = info.profile; // Store profile in session
+        return res.redirect(`${baseURL}/complete-profile`);
+      }
+
+      if (!user) {
+        // A generic failure case
+        return res.redirect('/');
+      }
+
+      // Manually log the user in for a successful login/signup
       req.logIn(user, (err) => {
         if (err) { return next(err); }
 
-        // Check if this is a new user
+        // Send welcome email for brand new users
         if (info && info.isNewUser) {
           sendWelcomeEmail(user.email, user.username);
         }
-
-        const baseURL =
-          process.env.NODE_ENV === 'production'
-            ? 'https://predictostock.vercel.app'
-            : 'http://localhost:3000';
 
         const redirectPath = req.query.state || '/';
         return res.redirect(baseURL + redirectPath);

@@ -815,6 +815,19 @@
     "days": "g",
     "hours": "sa",
     "minutes": "dk",
-    "seconds": "sn"
+    "seconds": "s"
+  },
+  "completeProfile": {
+    "title": "Kullanıcı Adınızı Seçin",
+    "subtitle": "<1>{{username}}</1> kullanıcı adı zaten alınmış. Lütfen kaydı tamamlamak için farklı bir tane seçin.",
+    "usernameLabel": "Kullanıcı Adı",
+    "completeButton": "Kaydı Tamamla",
+    "savingButton": "Kaydediliyor...",
+    "error": {
+      "empty": "Kullanıcı adı boş olamaz.",
+      "taken": "Bu kullanıcı adı zaten alınmış. Lütfen başka bir tane seçin.",
+      "generic": "Bir hata oluştu.",
+      "failed": "Kayıt tamamlanamadı. Lütfen tekrar deneyin."
+    }
   }
 }

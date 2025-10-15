@@ -815,5 +815,18 @@
         "hours": "Std",
         "minutes": "Min",
         "seconds": "Sek"
-    }
+    },
+    "completeProfile": {
+        "title": "Wählen Sie Ihren Benutzernamen",
+        "subtitle": "Der Benutzername <1>{{username}}</1> ist bereits vergeben. Bitte wählen Sie einen anderen, um Ihre Registrierung abzuschließen.",
+        "usernameLabel": "Benutzername",
+        "completeButton": "Registrierung abschließen",
+        "savingButton": "Speichern...",
+        "error": {
+          "empty": "Benutzername darf nicht leer sein.",
+          "taken": "Dieser Benutzername ist bereits vergeben. Bitte wählen Sie einen anderen.",
+          "generic": "Ein Fehler ist aufgetreten.",
+          "failed": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut."
+        }
+      }
 }

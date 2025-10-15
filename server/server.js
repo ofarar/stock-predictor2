@@ -4,8 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // <-- Import MongoStore
 const passport = require('passport');
-const cookieParser = require('cookie-parser');
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
@@ -23,8 +23,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-app.use(cookieParser());
-
 // Heroku/Render use proxies. This is needed for session cookies in production.
 app.set('trust proxy', 1);
 
@@ -34,6 +32,7 @@ app.use(
         secret: process.env.COOKIE_KEY,
         resave: false,
         saveUninitialized: false,
+        store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }), // <-- Use MongoStore
         cookie: {
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
             secure: process.env.NODE_ENV === "production", // Cookie only works in HTTPS
@@ -47,12 +46,11 @@ app.use(passport.session());
 
 // Log session info for debugging
 app.use((req, res, next) => {
+    console.log(`--- NEW REQUEST: ${req.method} ${req.originalUrl} ---`);
     console.log('Session ID:', req.sessionID);
     console.log('Session object:', req.session);
-    console.log('Cookies:', req.cookies); // will show signed cookie if exists
     next();
 });
-
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)

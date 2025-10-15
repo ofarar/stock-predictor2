@@ -8,8 +8,65 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
-const { sendContactFormEmail, sendWaitlistConfirmationEmail } = require('../services/email');
+const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
+
+// Route to get pending profile data
+router.get('/pending-profile', (req, res) => {
+    console.log('GET /api/pending-profile hit. Session:', req.session); // <-- ADDED LOG
+    if (req.session.pendingProfile) {
+        console.log('Pending profile found:', req.session.pendingProfile); // <-- ADDED LOG
+        res.json(req.session.pendingProfile);
+    } else {
+        console.log('No pending profile found in session.'); // <-- ADDED LOG
+        res.status(404).json({ message: 'No pending profile found.' });
+    }
+});
+
+// Route to complete registration
+router.post('/complete-registration', async (req, res) => {
+    if (!req.session.pendingProfile) {
+        return res.status(400).json({ success: false, message: 'No pending registration found.' });
+    }
+
+    const { username } = req.body;
+    const { googleId, email, avatar } = req.session.pendingProfile;
+
+    try {
+        // Check if the chosen username is also taken
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(409).json({ success: false, message: 'This username is already taken. Please choose another.' });
+        }
+
+        // Create the new user
+        const newUser = await new User({
+            googleId,
+            username,
+            email,
+            avatar
+        }).save();
+
+        // Clear the pending profile from the session
+        delete req.session.pendingProfile;
+
+        // Log the new user in
+        req.logIn(newUser, (err) => {
+            if (err) {
+                console.error('Error logging in after registration:', err);
+                return res.status(500).json({ success: false, message: 'Login failed after registration.' });
+            }
+            // Send welcome email
+            sendWelcomeEmail(newUser.email, newUser.username);
+            return res.json({ success: true });
+        });
+
+    } catch (error) {
+        console.error('Error completing registration:', error);
+        res.status(500).json({ success: false, message: 'An internal error occurred.' });
+    }
+});
+
 
 const searchCache = new Map();
 // A simple in-memory cache to avoid spamming the Yahoo Finance API

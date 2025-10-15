@@ -25,25 +25,42 @@ passport.use(
             const existingUser = await User.findOne({ googleId: profile.id });
 
             if (existingUser) {
+                // User already exists, proceed as normal.
                 return done(null, existingUser, { isNewUser: false });
             } else {
-                console.log("User not found. Creating a new user...");
+                // This is a new user. Check if their proposed username is available.
                 const newUsername = profile.displayName;
-                
-                const defaultAvatar = `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
+                const existingUsername = await User.findOne({ username: newUsername });
 
-                const newUser = await new User({
-                    googleId: profile.id,
-                    username: newUsername,
-                    email: userEmail,
-                    avatar: defaultAvatar
-                }).save();
+                if (existingUsername) {
+                    // Username is taken. Signal to the frontend to ask for a new one.
+                    // We pass 'false' for the user because they haven't been created yet.
+                    // The profile info is passed in the 'info' object to be used by the frontend.
+                    return done(null, false, { 
+                        action: 'CHOOSE_USERNAME', 
+                        profile: {
+                            googleId: profile.id,
+                            email: userEmail,
+                            suggestedUsername: newUsername,
+                            avatar: `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`
+                        }
+                    });
+                } else {
+                    // Username is available. Create the new user.
+                    const defaultAvatar = `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
+                    const newUser = await new User({
+                        googleId: profile.id,
+                        username: newUsername,
+                        email: userEmail,
+                        avatar: defaultAvatar
+                    }).save();
 
-                console.log("New user created successfully:", newUser);
-                return done(null, newUser, { isNewUser: true });
+                    console.log("New user created successfully:", newUser);
+                    return done(null, newUser, { isNewUser: true });
+                }
             }
         } catch (error) {
-            console.error("!!! Error saving user to database !!!", error);
+            console.error("!!! Error in Google Auth Strategy !!!", error);
             done(error, null);
         }
     })

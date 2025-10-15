@@ -815,5 +815,18 @@
         "hours": "h",
         "minutes": "m",
         "seconds": "s"
-    }
+    },
+    "completeProfile": {
+        "title": "Choisissez votre nom d'utilisateur",
+        "subtitle": "Le nom d'utilisateur <1>{{username}}</1> est déjà pris. Veuillez en choisir un autre pour finaliser votre inscription.",
+        "usernameLabel": "Nom d'utilisateur",
+        "completeButton": "Finaliser l'inscription",
+        "savingButton": "Enregistrement...",
+        "error": {
+          "empty": "Le nom d'utilisateur ne peut pas être vide.",
+          "taken": "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.",
+          "generic": "Une erreur est survenue.",
+          "failed": "Échec de la finalisation de l'inscription. Veuillez réessayer."
+        }
+      }
 }

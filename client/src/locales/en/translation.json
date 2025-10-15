@@ -816,5 +816,18 @@
     "hours": "h",
     "minutes": "m",
     "seconds": "s"
+  },
+  "completeProfile": {
+    "title": "Choose Your Username",
+    "subtitle": "The username <1>{{username}}</1> is already taken. Please choose a different one to complete your registration.",
+    "usernameLabel": "Username",
+    "completeButton": "Complete Registration",
+    "savingButton": "Saving...",
+    "error": {
+      "empty": "Username cannot be empty.",
+      "taken": "This username is already taken. Please choose another.",
+      "generic": "An error occurred.",
+      "failed": "Failed to complete registration. Please try again."
+    }
   }
 }

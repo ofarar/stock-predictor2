@@ -31,6 +31,7 @@ import NotificationSettingsPage from './pages/NotificationSettingsPage';
 import ContactPage from './pages/ContactPage';
 import AIWizardPage from './pages/AIWizardPage';
 import FeatureRoute from './components/FeatureRoute';
+import CompleteProfilePage from './pages/CompleteProfilePage';
 
 
 // A small helper component to handle the conditional rendering
@@ -95,6 +96,7 @@ function App() {
           <Routes>
             {/* --- Pass 'settings' prop down to all relevant pages --- */}
             <Route path="/" element={<HomePage user={user} settings={settings} />} />
+            <Route path="/complete-profile" element={<CompleteProfilePage />} />
             <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
             <Route path="/scoreboard" element={<ScoreboardPage settings={settings} />} />
             <Route path="/profile/:userId" element={<ProfilePage settings={settings} />} />

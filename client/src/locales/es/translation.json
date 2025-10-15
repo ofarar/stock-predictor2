@@ -815,5 +815,18 @@
         "hours": "h",
         "minutes": "m",
         "seconds": "s"
+    },
+    "completeProfile": {
+        "title": "Elige tu nombre de usuario",
+        "subtitle": "El nombre de usuario <1>{{username}}</1> ya está en uso. Por favor, elige uno diferente para completar tu registro.",
+        "usernameLabel": "Nombre de usuario",
+        "completeButton": "Completar registro",
+        "savingButton": "Guardando...",
+        "error": {
+            "empty": "El nombre de usuario no puede estar vacío.",
+            "taken": "Este nombre de usuario ya está en uso. Por favor, elige otro.",
+            "generic": "Ocurrió un error.",
+            "failed": "No se pudo completar el registro. Por favor, inténtalo de nuevo."
+        }
     }
 }

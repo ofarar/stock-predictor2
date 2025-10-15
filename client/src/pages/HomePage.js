@@ -6,6 +6,8 @@ import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
 import MarketWatch from '../components/MarketWatch';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import PredictionModal from '../components/PredictionModal';
 
 // FIX: The component now only uses the 'settings' passed in from App.js
 const HomePage = ({ user, settings }) => {
@@ -15,8 +17,16 @@ const HomePage = ({ user, settings }) => {
         longTermLeaders: [],
         hourlyWinners: []
     });
-    // FIX: The duplicate local 'settings' state has been removed.
     const [loading, setLoading] = useState(true);
+    const [isPredictionModalOpen, setPredictionModalOpen] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        if (params.get('action') === 'predict') {
+            setPredictionModalOpen(true);
+        }
+    }, [location]);
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -66,6 +76,13 @@ const HomePage = ({ user, settings }) => {
                     <LongTermLeaders leaders={widgetData.longTermLeaders} settings={settings} />
                 </div>
             </div>
+            {isPredictionModalOpen && (
+                <PredictionModal
+                    isOpen={isPredictionModalOpen}
+                    onClose={() => setPredictionModalOpen(false)}
+                    user={user}
+                />
+            )}
         </div>
     );
 };

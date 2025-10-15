@@ -815,5 +815,18 @@
         "hours": "小时",
         "minutes": "分钟",
         "seconds": "秒"
+    },
+    "completeProfile": {
+        "title": "选择您的用户名",
+        "subtitle": "用户名 <1>{{username}}</1> 已被占用。请选择一个不同的用户名以完成注册。",
+        "usernameLabel": "用户名",
+        "completeButton": "完成注册",
+        "savingButton": "正在保存...",
+        "error": {
+            "empty": "用户名不能为空。",
+            "taken": "该用户名已被占用。请选择另一个。",
+            "generic": "发生错误。",
+            "failed": "无法完成注册。请再试一次。"
+        }
     }
 }

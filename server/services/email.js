@@ -18,15 +18,22 @@ const ADMIN_EMAIL = process.env.GMAIL_USER; // Admin email will be the same as t
  */
 exports.sendWelcomeEmail = (email, username) => {
     const emailBody = `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <h1 style="color: #4CAF50;">Welcome to StockPredictor, ${username}!</h1>
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+            <h1 style="color: #4CAF50; text-align: center;">Welcome to StockPredictor, ${username}!</h1>
             <p>We're thrilled to have you on board!</p>
             <p>StockPredictor is more than a game—it's a platform to sharpen your financial acumen. Here, your market insights and analytical skills take center stage.</p>
-            <p>Put your strategies to the test, build a transparent track record, and see how your analysis stacks up against the market.</p>
-            <a href="https://predictostock.vercel.app" style="background-color: #4CAF50; color: white; padding: 12px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 8px; font-weight: bold; margin-top: 10px;">
-                Make Your First Prediction
-            </a>
-            <p style="margin-top: 20px; font-size: 0.9em; color: #777;">
+            <p>Ready to jump in? You can start by making your first prediction or see what the community is predicting right now.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="https://predictostock.vercel.app/?action=predict" style="background-color: #4CAF50; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 8px; font-weight: bold; margin: 10px 5px;">
+                    Make Your First Prediction
+                </a>
+                <a href="https://predictostock.vercel.app/explore" style="background-color: #007BFF; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 8px; font-weight: bold; margin: 10px 5px;">
+                    See What Others Predict
+                </a>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 0.9em; color: #777; text-align: center;">
                 Good luck!
                 <br/>
                 - The StockPredictor Team
