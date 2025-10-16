@@ -831,5 +831,33 @@
       "failed": "Kayıt tamamlanamadı. Lütfen tekrar deneyin."
     }
   },
-  "explore_load_more": "Daha Fazla Yükle"
+  "explore_load_more": "Daha Fazla Yükle",
+  "find_member_wizard": {
+    "trigger_title": "Mükemmel Altın Mentorunuzu Bulun",
+    "trigger_description": "Yatırım tarzınız hakkında birkaç hızlı soruyu yanıtlayın, size en uygun Altın Üyeleri önerelim.",
+    "trigger_button": "Sihirbazı Başlat",
+    "wizard_title": "Öneri Sihirbazı",
+    "step1_title": "Adım 1: İlgilendiğiniz Hisseler",
+    "step1_description": "Takip etmekle en çok ilgilendiğiniz hisseleri bize bildirin. Bu, önemsediğiniz konulara odaklanan uzmanları bulmamıza yardımcı olur.",
+    "stock_search_placeholder": "Hisse senedi arayın (ör. AAPL, TSLA)...",
+    "step2_title": "Adım 2: Risk Toleransınız",
+    "step2_description": "Ne kadar risk almaktan çekinmezsiniz? Bu, tarzınızı paylaşan tahmincilerle sizi eşleştirmemize yardımcı olur.",
+    "step3_title": "Adım 3: Yatırım Ufkunuz",
+    "step3_description": "Hızlı alım satımlar mı yoksa uzun vadeli yatırımlar mı arıyorsunuz?",
+    "horizon_short": "Kısa vadeli",
+    "horizon_long": "Uzun vadeli",
+    "horizon_all": "Tüm Ufuklar",
+    "step4_title": "Size Özel En İyi Öneriler",
+    "step4_description": "Cevaplarınıza dayanarak, en değerli bulacağınızı düşündüğümüz Altın Üyeler burada.",
+    "find_button": "Önerileri Bul",
+    "loading_recommendations": "Altın Üyeler analiz ediliyor...",
+    "error_recommendations": "Öneriler alınamadı. Lütfen daha sonra tekrar deneyin.",
+    "no_recommendations": "Belirli kriterlerinize uyan üye bulunamadı. Aramanızı genişletmeyi deneyin.",
+    "match_rate": "Eşleşme",
+    "skip_step": "Atla"
+  },
+  "common_cancel": "İptal",
+  "common_next": "İleri",
+  "common_back": "Geri",
+  "common_close": "Kapat"
 }

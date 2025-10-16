@@ -831,5 +831,33 @@
       "failed": "Failed to complete registration. Please try again."
     }
   },
-  "explore_load_more": "Load More"
+  "explore_load_more": "Load More",
+  "find_member_wizard": {
+    "trigger_title": "Find Your Perfect Golden Mentor",
+    "trigger_description": "Answer a few quick questions about your investment style, and we'll recommend Golden Members who are the best fit for you.",
+    "trigger_button": "Start the Wizard",
+    "wizard_title": "Recommendation Wizard",
+    "step1_title": "Step 1: Stocks of Interest",
+    "step1_description": "Tell us which stocks you are most interested in following. This helps us find experts who focus on what you care about.",
+    "stock_search_placeholder": "Search for stocks (e.g., AAPL, TSLA)...",
+    "step2_title": "Step 2: Your Risk Tolerance",
+    "step2_description": "How much risk are you comfortable with? This helps us match you with predictors who share your style.",
+    "step3_title": "Step 3: Your Investment Horizon",
+    "step3_description": "Are you looking for quick trades or long-term investments?",
+    "horizon_short": "Short-term",
+    "horizon_long": "Long-term",
+    "horizon_all": "All Horizons",
+    "step4_title": "Your Top Recommendations",
+    "step4_description": "Based on your answers, here are the Golden Members we think you'll find most valuable.",
+    "find_button": "Find Recommendations",
+    "loading_recommendations": "Analyzing Golden Members...",
+    "error_recommendations": "Could not fetch recommendations. Please try again later.",
+    "no_recommendations": "No members found matching your specific criteria. Try broadening your search.",
+    "match_rate": "Match",
+    "skip_step": "Skip"
+  },
+  "common_cancel": "Cancel",
+  "common_next": "Next",
+  "common_back": "Back",
+  "common_close": "Close"
 }

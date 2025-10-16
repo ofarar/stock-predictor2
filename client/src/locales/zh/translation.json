@@ -830,5 +830,33 @@
             "failed": "无法完成注册。请再试一次。"
         }
     },
-    "explore_load_more": "加载更多"
+    "explore_load_more": "加载更多",
+    "find_member_wizard": {
+        "trigger_title": "寻找您的完美黄金导师",
+        "trigger_description": "回答几个关于您投资风格的快速问题，我们将为您推荐最适合您的黄金会员。",
+        "trigger_button": "开始向导",
+        "wizard_title": "推荐向导",
+        "step1_title": "第1步：感兴趣的股票",
+        "step1_description": "告诉我们您最感兴趣关注哪些股票。这有助于我们找到专注于您所关心领域的专家。",
+        "stock_search_placeholder": "搜索股票（例如 AAPL, TSLA）...",
+        "step2_title": "第2步：您的风险承受能力",
+        "step2_description": "您能接受多大的风险？这有助于我们将您与风格相似的预测者匹配。",
+        "step3_title": "第3步：您的投资期限",
+        "step3_description": "您是在寻找短期交易还是长期投资？",
+        "horizon_short": "短期",
+        "horizon_long": "长期",
+        "horizon_all": "所有期限",
+        "step4_title": "您的最佳推荐",
+        "step4_description": "根据您的回答，我们认为以下黄金会员对您最有价值。",
+        "find_button": "查找推荐",
+        "loading_recommendations": "正在分析黄金会员...",
+        "error_recommendations": "无法获取推荐。请稍后再试。",
+        "no_recommendations": "未找到符合您特定条件的会员。请尝试扩大搜索范围。",
+        "match_rate": "匹配度",
+        "skip_step": "跳过"
+    },
+    "common_cancel": "取消",
+    "common_next": "下一步",
+    "common_back": "返回",
+    "common_close": "关闭"
 }

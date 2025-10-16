@@ -27,7 +27,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "yahoo-finance2": "^2.13.3"
+    "yahoo-finance2": "2.3.10"
   },
   "devDependencies": {
     "nodemon": "^3.1.2"

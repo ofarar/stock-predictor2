@@ -830,5 +830,33 @@
             "failed": "No se pudo completar el registro. Por favor, inténtalo de nuevo."
         }
     },
-    "explore_load_more": "Load More"
+    "explore_load_more": "Load More",
+    "find_member_wizard": {
+        "trigger_title": "Encuentre su Mentor Dorado perfecto",
+        "trigger_description": "Responda algunas preguntas rápidas sobre su estilo de inversión y le recomendaremos los Miembros Dorados que mejor se adapten a usted.",
+        "trigger_button": "Iniciar el Asistente",
+        "wizard_title": "Asistente de Recomendación",
+        "step1_title": "Paso 1: Acciones de Interés",
+        "step1_description": "Díganos qué acciones le interesa más seguir. Esto nos ayuda a encontrar expertos que se centran en lo que a usted le importa.",
+        "stock_search_placeholder": "Buscar acciones (ej. AAPL, TSLA)...",
+        "step2_title": "Paso 2: Su Tolerancia al Riesgo",
+        "step2_description": "¿Cuánto riesgo está dispuesto a asumir? Esto nos ayuda a encontrar pronosticadores que compartan su estilo.",
+        "step3_title": "Paso 3: Su Horizonte de Inversión",
+        "step3_description": "¿Busca operaciones rápidas o inversiones a largo plazo?",
+        "horizon_short": "Corto plazo",
+        "horizon_long": "Largo plazo",
+        "horizon_all": "Todos los Horizontes",
+        "step4_title": "Sus Mejores Recomendaciones",
+        "step4_description": "Según sus respuestas, aquí están los Miembros Dorados que creemos que encontrará más valiosos.",
+        "find_button": "Buscar Recomendaciones",
+        "loading_recommendations": "Analizando Miembros Dorados...",
+        "error_recommendations": "No se pudieron obtener las recomendaciones. Por favor, inténtelo de nuevo más tarde.",
+        "no_recommendations": "No se encontraron miembros que coincidan con sus criterios específicos. Intente ampliar su búsqueda.",
+        "match_rate": "Coincidencia",
+        "skip_step": "Omitir"
+    },
+    "common_cancel": "Cancelar",
+    "common_next": "Siguiente",
+    "common_back": "Atrás",
+    "common_close": "Cerrar"
 }

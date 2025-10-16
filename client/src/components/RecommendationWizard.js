@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import toast from 'react-hot-toast'; // Make sure toast is imported
 import AsyncSelect from 'react-select/async';
 import { FaCheckCircle, FaChartLine, FaShieldAlt, FaRocket, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import UserCard from './UserCard'; // Assuming UserCard is in the same directory or can be imported
@@ -101,8 +102,14 @@ const Step3Horizon = ({ horizon, setHorizon }) => {
     );
 };
 
-const Step4Results = ({ recommendations, loading, error }) => {
+const Step4Results = ({ recommendations, loading, error, onJoin, settings }) => { // Add onJoin and settings
     const { t } = useTranslation();
+    const getMatchColor = (percentage) => {
+        if (percentage >= 80) return 'bg-yellow-500 text-gray-900'; // Bright yellow for high match
+        if (percentage >= 60) return 'bg-yellow-700 text-yellow-100'; // Darker yellow for medium match
+        return 'bg-yellow-900 text-yellow-300'; // Muted yellow for low match
+    };
+
     if (loading) return <div className="text-center p-8">{t('find_member_wizard.loading_recommendations')}</div>;
     if (error) return <div className="text-center p-8 text-red-400">{t('find_member_wizard.error_recommendations')}</div>;
     if (recommendations.length === 0) return <div className="text-center p-8">{t('find_member_wizard.no_recommendations')}</div>;
@@ -114,8 +121,9 @@ const Step4Results = ({ recommendations, loading, error }) => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1">
                 {recommendations.map(user => (
                     <div key={user._id} className="relative">
-                        <UserCard user={user} />
-                        <div className="absolute top-2 right-2 bg-yellow-500 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">
+                        {/* Pass onJoin and settings to UserCard */}
+                        <UserCard user={user} onJoin={onJoin} settings={settings} />
+                        <div className={`absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded-full ${getMatchColor(user.matchPercentage)}`}>
                             {user.matchPercentage}% {t('find_member_wizard.match_rate')}
                         </div>
                     </div>
@@ -125,7 +133,7 @@ const Step4Results = ({ recommendations, loading, error }) => {
     );
 };
 
-const RecommendationWizard = ({ isOpen, onClose }) => {
+const RecommendationWizard = ({ isOpen, onClose, settings }) => { // Add settings prop
     const { t } = useTranslation();
     const [step, setStep] = useState(1);
     const [selectedStocks, setSelectedStocks] = useState([]);
@@ -163,12 +171,39 @@ const RecommendationWizard = ({ isOpen, onClose }) => {
                 riskTolerance: risk,
                 investmentHorizon: horizon,
             };
-            const response = await axios.post('/api/golden-members/recommend', payload, { withCredentials: true });
-            setRecommendations(response.data);
+            const apiUrl = `${process.env.REACT_APP_API_URL}/api/golden-members/recommend`;
+            console.log("Attempting to POST to:", apiUrl);
+
+            const response = await axios.post(apiUrl, payload, { withCredentials: true });
+
+            // Mark users who are already subscribed
+            const mySubscriptions = settings?.goldenSubscriptions?.map(sub => sub.user) || [];
+            const recsWithSubStatus = response.data.map(rec => ({
+                ...rec,
+                isSubscribed: mySubscriptions.includes(rec._id)
+            }));
+            setRecommendations(recsWithSubStatus);
+
         } catch (err) {
+            console.error("Failed to fetch recommendations:", err);
             setError(true);
         } finally {
             setLoading(false);
+        }
+    };
+
+    // --- ADDED: Handle Join Logic ---
+    const handleJoin = async (userToJoin) => {
+        try {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userToJoin._id}/join-golden`, {}, { withCredentials: true });
+            toast.success(`Subscribed to ${userToJoin.username}!`);
+            // Update the state to show the button as "Joined"
+            setRecommendations(prevRecs => prevRecs.map(rec =>
+                rec._id === userToJoin._id ? { ...rec, isSubscribed: true } : rec
+            ));
+        } catch (err) {
+            toast.error('Failed to subscribe. Please try again.');
+            console.error("Subscription error:", err);
         }
     };
 
@@ -179,7 +214,7 @@ const RecommendationWizard = ({ isOpen, onClose }) => {
             case 1: return <Step1Stocks selectedStocks={selectedStocks} setSelectedStocks={setSelectedStocks} />;
             case 2: return <Step2Risk risk={risk} setRisk={setRisk} />;
             case 3: return <Step3Horizon horizon={horizon} setHorizon={setHorizon} />;
-            case 4: return <Step4Results recommendations={recommendations} loading={loading} error={error} />;
+            case 4: return <Step4Results recommendations={recommendations} loading={loading} error={error} onJoin={handleJoin} settings={settings} />;
             default: return null;
         }
     };

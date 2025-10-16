@@ -44,6 +44,7 @@ async function getActualStockPrice(ticker, deadline) {
             period1: deadline,
             period2: new Date(deadline.getTime() + 24 * 60 * 60 * 1000), // A one-day range
         };
+        
         const result = await yahooFinance.historical(ticker, queryOptions);
 
         if (result && result.length > 0) {

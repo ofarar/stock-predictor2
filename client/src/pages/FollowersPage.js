@@ -8,46 +8,9 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
 import { formatNumericDate } from '../utils/formatters';
-
-// UserCard component remains the same
-const UserCard = ({ user, onCancel, isSubscription, showDate, settings }) => {
-    const { t, i18n } = useTranslation();
-    return (
-        <div className="bg-gray-800 p-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:bg-gray-700 flex flex-col items-center text-center">
-            <Link to={`/profile/${user._id}`}>
-                <img
-                    src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
-                    alt={t('followers_avatar_alt')}
-                    className={`w-20 h-20 rounded-full border-4 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
-                />
-            </Link>
-            <div className="mt-3 text-lg font-bold text-white">
-                <Link to={`/profile/${user._id}`} className="hover:underline">{user.username}</Link>
-                {settings?.isVerificationEnabled && user.isVerified && (
-                    <div className="inline-block align-middle ml-1">
-                        <VerifiedTick />
-                    </div>
-                )}
-            </div>
-            <div className="text-sm text-gray-400 mt-1">
-                {t('followers_avg_score')}: <span className="font-bold text-green-400">{user.avgScore || 0}</span>
-            </div>
-            {showDate && user.subscribedAt && (
-                <div className="text-xs text-gray-500 mt-2">
-                    {t('followers_subscribed_on', { date: formatNumericDate(user.subscribedAt, i18n.language) })}
-                </div>
-            )}
-            {isSubscription && (
-                <button
-                    onClick={() => onCancel(user)}
-                    className="w-full mt-auto pt-3 text-red-500 text-xs font-bold hover:underline"
-                >
-                    {t('followers_cancel_subscription')}
-                </button>
-            )}
-        </div>
-    );
-};
+import FindMemberWizardTrigger from '../components/FindMemberWizardTrigger';
+import RecommendationWizard from '../components/RecommendationWizard';
+import UserCard from '../components/UserCard'; // Import the new UserCard component
 
 
 const FollowersPage = ({ settings }) => {
@@ -60,6 +23,7 @@ const FollowersPage = ({ settings }) => {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userToUnsubscribe, setUserToUnsubscribe] = useState(null);
+    const [isWizardOpen, setIsWizardOpen] = useState(false);
 
     // MODIFIED: Default to the 'Followers' key. This now works perfectly with the Link state.
     const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'Followers');
@@ -104,6 +68,7 @@ const FollowersPage = ({ settings }) => {
     return (
         <>
             <ConfirmationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onConfirm={handleConfirmCancel} title={t("followers_confirm_cancel_title")} message={t("followers_confirm_cancel_message", { username: userToUnsubscribe?.username })} />
+            <RecommendationWizard isOpen={isWizardOpen} onClose={() => setIsWizardOpen(false)} />
             <div className="max-w-5xl mx-auto animate-fade-in px-4">
                 <div className="flex justify-center border-b border-gray-700 mb-8 flex-wrap">
                     {tabs.map(tab => {
@@ -128,6 +93,9 @@ const FollowersPage = ({ settings }) => {
                         );
                     })}
                 </div>
+                {activeTab === 'Subscriptions' && (
+                    <FindMemberWizardTrigger onClick={() => setIsWizardOpen(true)} />
+                )}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {currentTabData.length > 0 ? currentTabData.map(item => (
                         <UserCard

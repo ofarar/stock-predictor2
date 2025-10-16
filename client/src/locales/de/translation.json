@@ -830,5 +830,33 @@
             "failed": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut."
         }
     },
-    "explore_load_more": "Mehr laden"
+    "explore_load_more": "Mehr laden",
+    "find_member_wizard": {
+        "trigger_title": "Finden Sie Ihren perfekten Goldenen Mentor",
+        "trigger_description": "Beantworten Sie ein paar schnelle Fragen zu Ihrem Anlagestil, und wir empfehlen Ihnen Goldene Mitglieder, die am besten zu Ihnen passen.",
+        "trigger_button": "Assistenten starten",
+        "wizard_title": "Empfehlungsassistent",
+        "step1_title": "Schritt 1: Interessante Aktien",
+        "step1_description": "Sagen Sie uns, welche Aktien Sie am meisten interessieren. Das hilft uns, Experten zu finden, die sich auf das konzentrieren, was Ihnen wichtig ist.",
+        "stock_search_placeholder": "Nach Aktien suchen (z.B. AAPL, TSLA)...",
+        "step2_title": "Schritt 2: Ihre Risikotoleranz",
+        "step2_description": "Wie viel Risiko sind Sie bereit einzugehen? Dies hilft uns, Sie mit Tippgebern zusammenzubringen, die Ihren Stil teilen.",
+        "step3_title": "Schritt 3: Ihr Anlagehorizont",
+        "step3_description": "Suchen Sie nach schnellen Trades oder langfristigen Investitionen?",
+        "horizon_short": "Kurzfristig",
+        "horizon_long": "Langfristig",
+        "horizon_all": "Alle Horizonte",
+        "step4_title": "Ihre Top-Empfehlungen",
+        "step4_description": "Basierend auf Ihren Antworten sind hier die Goldenen Mitglieder, von denen wir glauben, dass Sie sie am wertvollsten finden werden.",
+        "find_button": "Empfehlungen finden",
+        "loading_recommendations": "Goldene Mitglieder werden analysiert...",
+        "error_recommendations": "Empfehlungen konnten nicht abgerufen werden. Bitte versuchen Sie es später erneut.",
+        "no_recommendations": "Keine Mitglieder gefunden, die Ihren spezifischen Kriterien entsprechen. Versuchen Sie, Ihre Suche zu erweitern.",
+        "match_rate": "Übereinstimmung",
+        "skip_step": "Überspringen"
+    },
+    "common_cancel": "Abbrechen",
+    "common_next": "Weiter",
+    "common_back": "Zurück",
+    "common_close": "Schließen"
 }
