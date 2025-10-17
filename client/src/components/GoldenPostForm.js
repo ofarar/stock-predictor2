@@ -5,9 +5,10 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import StockFilterSearch from './StockFilterSearch';
 import { useTranslation } from 'react-i18next';
+import { formatPercentage } from '../utils/formatters'; // Import formatter
 
 const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation(); // Add i18n
     const [message, setMessage] = useState('');
     const [isAttachingPrediction, setIsAttachingPrediction] = useState(false);
     const [prediction, setPrediction] = useState({
@@ -38,10 +39,22 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
         if (stockTicker) {
             axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${stockTicker}`)
                 .then(res => {
-                    setSelectedStockQuote(res.data);
-                    setPrediction(p => ({ ...p, targetPrice: res.data.regularMarketPrice.toFixed(2) }));
+                    // Check if the response is valid and has a price
+                    if (res.data && res.data.regularMarketPrice != null) {
+                        setSelectedStockQuote(res.data);
+                        // Only pre-fill target if price exists
+                        setPrediction(p => ({ ...p, targetPrice: res.data.regularMarketPrice.toFixed(2) }));
+                    } else {
+                        // API failed or no price, store minimal data
+                        setSelectedStockQuote({ symbol: stockTicker, regularMarketPrice: null });
+                        setPrediction(p => ({ ...p, targetPrice: '' })); // Clear target price
+                    }
                 })
-                .catch(() => toast.error(t('goldenPostForm.fetchPriceError', { ticker: stockTicker })));
+                .catch(() => {
+                    toast.error(t('goldenPostForm.fetchPriceError', { ticker: stockTicker }));
+                    setSelectedStockQuote(null);
+                    setPrediction(p => ({ ...p, targetPrice: '' }));
+                });
         } else {
             setSelectedStockQuote(null);
             setPrediction(p => ({ ...p, targetPrice: '' }));
@@ -70,12 +83,17 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
         }
     };
 
-    let percentageChange = 0;
-    if (selectedStockQuote && prediction.targetPrice) {
-        const initialPrice = selectedStockQuote.regularMarketPrice;
+    // Resilient Percentage Calculation
+    let percentageChange = null;
+    const currentPrice = selectedStockQuote?.regularMarketPrice;
+    if (typeof currentPrice === 'number' && currentPrice > 0 && prediction.targetPrice) {
         const targetPrice = parseFloat(prediction.targetPrice);
-        if (initialPrice > 0) percentageChange = ((targetPrice - initialPrice) / initialPrice) * 100;
+        if (!isNaN(targetPrice)) {
+            percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
+        }
     }
+
+    const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={onClose}>
@@ -91,7 +109,7 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
                     />
 
                     <div className="flex items-center my-4">
-                        <input type="checkbox" id="attachPrediction" checked={isAttachingPrediction} onChange={() => setIsAttachingPrediction(!isAttachingPrediction)} className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded"/>
+                        <input type="checkbox" id="attachPrediction" checked={isAttachingPrediction} onChange={() => setIsAttachingPrediction(!isAttachingPrediction)} className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded" />
                         <label htmlFor="attachPrediction" className="ml-2 text-sm font-medium text-gray-300">{t('goldenPostForm.attachPredictionLabel')}</label>
                     </div>
 
@@ -105,22 +123,33 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
                                 <label className="text-xs font-bold text-gray-400">{t('goldenPostForm.targetPriceLabel')}</label>
                                 <div className="flex items-center gap-2">
                                     <input type="number" step="0.01" name="targetPrice" value={prediction.targetPrice} onChange={handlePredictionChange} className="w-full bg-gray-900 p-2 rounded-md" />
+                                    {/* Conditionally render percentage or placeholder */}
                                     {selectedStockQuote && (
-                                        <span className={`font-bold text-sm flex-shrink-0 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                            ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
-                                        </span>
+                                        typeof percentageChange === 'number' ? (
+                                            <span className={`font-bold text-sm flex-shrink-0 ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                                ({formatPercentage(percentageChange, i18n.language)})
+                                            </span>
+                                        ) : (
+                                            <span className="font-bold text-sm text-gray-500">...</span>
+                                        )
                                     )}
                                 </div>
                             </div>
                             <div className="sm:col-span-3">
                                 <label className="text-xs font-bold text-gray-400">{t('goldenPostForm.typeLabel')}</label>
-                                <select name="predictionType" value={prediction.predictionType} onChange={handlePredictionChange} className="w-full bg-gray-900 p-2 rounded-md">
-                                    <option>{t('goldenPostForm.hourly')}</option>
-                                    <option>{t('goldenPostForm.daily')}</option>
-                                    <option>{t('goldenPostForm.weekly')}</option>
-                                    <option>{t('goldenPostForm.monthly')}</option>
-                                    <option>{t('goldenPostForm.quarterly')}</option>
-                                    <option>{t('goldenPostForm.yearly')}</option>
+                                <select
+                                    name="predictionType"
+                                    value={prediction.predictionType} // This should match the English key
+                                    onChange={handlePredictionChange}
+                                    className="w-full bg-gray-900 p-2 rounded-md"
+                                >
+                                    {/* Map over the English keys */}
+                                    {predictionTypes.map(type => (
+                                        <option key={type} value={type}>
+                                            {/* Display the translated text */}
+                                            {t(`predictionTypes.${type.toLowerCase()}`)}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>

@@ -500,7 +500,6 @@ router.get('/market/key-assets', async (req, res) => {
 });
 
 router.put('/predictions/:id/edit', async (req, res) => {
-    // 1. Authentication
     if (!req.user) {
         return res.status(401).json({ message: 'Not authenticated.' });
     }
@@ -513,45 +512,40 @@ router.put('/predictions/:id/edit', async (req, res) => {
     try {
         const prediction = await Prediction.findById(req.params.id);
 
-        if (!prediction) {
-            return res.status(404).json({ message: 'Prediction not found.' });
-        }
+        if (!prediction) return res.status(404).json({ message: 'Prediction not found.' });
+        if (prediction.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Not authorized.' });
+        if (prediction.status !== 'Active') return res.status(400).json({ message: 'Only active predictions can be edited.' });
 
-        // 2. Authorization
-        if (prediction.userId.toString() !== req.user.id) {
-            return res.status(403).json({ message: 'You are not authorized to edit this prediction.' });
+        // --- Resilient Price Fetch for History ---
+        let priceAtTimeOfUpdate = null; // Default to null
+        try {
+            // Attempt to fetch the current price
+            const quote = await yahooFinance.quote(prediction.stockTicker);
+            priceAtTimeOfUpdate = quote.regularMarketPrice;
+        } catch (yahooError) {
+            // Log the non-critical error but continue
+            console.warn(`Edit Prediction: Could not fetch price for ${prediction.stockTicker} during edit. Error: ${yahooError.message}`);
+            // priceAtTimeOfUpdate remains null
         }
+        // --- End of Resilient Logic ---
 
-        // 3. Validation
-        if (prediction.status !== 'Active') {
-            return res.status(400).json({ message: 'Only active predictions can be edited.' });
-        }
-        // 4. Logic: Get current price for the history log
-        const quote = await yahooFinance.quote(prediction.stockTicker);
-        const priceAtTimeOfUpdate = quote.regularMarketPrice;
-
-        // 5. Create the history entry
         const historyEntry = {
             previousTargetPrice: prediction.targetPrice,
             newTargetPrice: parseFloat(newTargetPrice),
-            reason: reason || '', // Default to empty string if no reason
-            priceAtTimeOfUpdate: priceAtTimeOfUpdate
+            reason: reason || '',
+            priceAtTimeOfUpdate: priceAtTimeOfUpdate // Will be null if API failed
         };
 
-        // 6. Update the prediction
         prediction.history.push(historyEntry);
         prediction.targetPrice = parseFloat(newTargetPrice);
-
-        // Also update the description with the new reason if provided
-        if (reason) {
-            prediction.description = reason;
-        }
+        if (reason) prediction.description = reason; // Update main description too
 
         await prediction.save();
         res.json(prediction);
 
     } catch (err) {
-        console.error("Error editing prediction:", err);
+        // This catch is now only for critical database errors
+        console.error("Critical error editing prediction:", err);
         res.status(500).json({ message: 'Server error while editing prediction.' });
     }
 });
@@ -661,7 +655,6 @@ router.post('/profile/cancel-verification', async (req, res) => {
 });
 
 router.post('/posts/golden', async (req, res) => {
-    // 1. Security check (unchanged)
     if (!req.user || !req.user.isGoldenMember) {
         return res.status(403).json({ message: 'Only Golden Members can create posts.' });
     }
@@ -678,21 +671,33 @@ router.post('/posts/golden', async (req, res) => {
             isGoldenPost: true,
         };
 
-
-
-        // 2. Prediction attachment logic (unchanged)
+        // --- Resilient Prediction Attachment Logic ---
         if (attachedPrediction && attachedPrediction.stockTicker) {
-            const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
+            let priceAtCreation = null;
+            let currency = 'USD'; // Default currency
+
+            try {
+                // Attempt to fetch the quote
+                const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
+                priceAtCreation = quote.regularMarketPrice;
+                currency = quote.currency;
+            } catch (yahooError) {
+                // Log the non-critical error but continue
+                console.warn(`Golden Post: Could not fetch price for ${attachedPrediction.stockTicker} at creation. Error: ${yahooError.message}`);
+                // priceAtCreation remains null
+            }
+
             newPostData.attachedPrediction = {
                 ...attachedPrediction,
-                priceAtCreation: quote.regularMarketPrice,
-                currency: quote.currency,
+                priceAtCreation: priceAtCreation, // Will be null if API failed
+                currency: currency,
             };
         }
+        // --- End of Resilient Logic ---
 
         const post = await new Post(newPostData).save();
 
-        // 3. Send notifications to SUBSCRIBERS ONLY (this logic is correct)
+        // --- Notification Logic (remains the same) ---
         const user = await User.findById(req.user._id).populate('goldenSubscribers.user');
         const validSubscribers = user.goldenSubscribers.filter(sub => sub.user);
 
@@ -714,7 +719,8 @@ router.post('/posts/golden', async (req, res) => {
         res.status(201).json(post);
 
     } catch (error) {
-        console.error("Error creating golden post:", error);
+        // This catch is now only for critical database errors
+        console.error("Critical error creating golden post:", error);
         res.status(500).json({ message: 'Server error while creating post.' });
     }
 });
