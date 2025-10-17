@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import VerifiedTick from './VerifiedTick';
+import LoadMoreButton from './LoadMoreButton';
 
 const UserCard = ({ user, settings }) => (
     <Link
@@ -121,14 +122,10 @@ const AdminUserList = ({ settings }) => {
 
                     {/* Load More Button */}
                     {visibleCount < filteredUsers.length && (
-                        <div className="text-center mt-6">
-                            <button
-                                onClick={() => setVisibleCount(prev => prev + 10)}
-                                className="bg-gray-700 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600"
-                            >
-                                Load More
-                            </button>
-                        </div>
+                        <LoadMoreButton
+                            onClick={() => setVisibleCount(prev => prev + 10)}
+                            hasMore={visibleCount < filteredUsers.length} // or < entries.length for AIWizardWaitlist
+                        />
                     )}
                 </>
             )}

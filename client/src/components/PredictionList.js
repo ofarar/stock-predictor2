@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MiniPredictionCard from './MiniPredictionCard';
+import LoadMoreButton from './LoadMoreButton';
 
 const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditClick, emptyTextKey }) => {
     const { t } = useTranslation();
@@ -23,11 +24,10 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                     ))}
                 </div>
             ) : <p className="text-gray-500 text-center py-4">{t(emptyTextKey)}</p>}
-            {predictions.length > visibleCount && (
-                <button onClick={() => setVisibleCount(prev => prev + 6)} className="w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600">
-                    {t('load_more_label')}
-                </button>
-            )}
+            <LoadMoreButton
+                onClick={() => setVisibleCount(prev => prev + 6)}
+                hasMore={predictions.length > visibleCount}
+            />
         </div>
     );
 };

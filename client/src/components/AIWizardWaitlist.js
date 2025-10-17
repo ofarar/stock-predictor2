@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import VerifiedTick from './VerifiedTick';
+import LoadMoreButton from './LoadMoreButton';
 
 const AIWizardWaitlist = ({ settings }) => {
     const [waitlist, setWaitlist] = useState([]);
@@ -55,14 +56,10 @@ const AIWizardWaitlist = ({ settings }) => {
 
             {/* "Load More" Button */}
             {visibleCount < waitlist.length && (
-                <div className="text-center mt-6">
-                    <button
-                        onClick={() => setVisibleCount(prev => prev + 10)}
-                        className="bg-gray-700 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600"
-                    >
-                        Load More
-                    </button>
-                </div>
+                <LoadMoreButton
+                    onClick={() => setVisibleCount(prev => prev + 10)}
+                    hasMore={visibleCount < waitlist.length} // or < entries.length for AIWizardWaitlist
+                />
             )}
         </div>
     );

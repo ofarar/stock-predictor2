@@ -6,6 +6,7 @@ import StockFilterSearch from '../components/StockFilterSearch';
 import UserScoreSkeleton from '../components/UserScoreSkeleton';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
+import LoadMoreButton from '../components/LoadMoreButton';
 
 const ScoreboardPage = ({ settings }) => {
     const { t } = useTranslation();
@@ -129,15 +130,11 @@ const ScoreboardPage = ({ settings }) => {
                         )}
                     </div>
                     {page < totalPages && (
-                        <div className="text-center mt-8">
-                            <button
-                                onClick={handleLoadMore}
-                                disabled={loading}
-                                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg disabled:bg-gray-500"
-                            >
-                                {loading ? t('explore_loading') : t('explore_load_more')}
-                            </button>
-                        </div>
+                        <LoadMoreButton
+                            onClick={handleLoadMore}
+                            isLoading={loading}
+                            hasMore={page < totalPages}
+                        />
                     )}
                 </>
             )}

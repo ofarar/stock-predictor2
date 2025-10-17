@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
+import LoadMoreButton from '../components/LoadMoreButton';
 
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
     const { t, i18n } = useTranslation();
@@ -133,7 +134,7 @@ const ExplorePage = ({ requestLogin, settings }) => {
                         return changeB - changeA;
                     });
                 }
-                
+
                 setPredictions(prev => isNewFilter ? data : [...prev, ...data]);
                 setTotalPages(newTotalPages);
             })
@@ -257,17 +258,13 @@ const ExplorePage = ({ requestLogin, settings }) => {
                                 />)}
                             </div>
                         ) : (<div className="text-center bg-gray-800 rounded-lg py-20"><p className="text-lg font-semibold text-gray-400">{t('explore_no_predictions')}</p></div>)}
-                        
+
                         {page < totalPages && (
-                            <div className="text-center mt-8">
-                                <button
-                                    onClick={handleLoadMore}
-                                    disabled={loading}
-                                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg disabled:bg-gray-500"
-                                >
-                                    {loading ? t('explore_loading') : t('explore_load_more')}
-                                </button>
-                            </div>
+                            <LoadMoreButton
+                                onClick={handleLoadMore}
+                                isLoading={loading}
+                                hasMore={page < totalPages}
+                            />
                         )}
                     </>
                 )}
