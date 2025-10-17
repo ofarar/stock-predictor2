@@ -520,6 +520,8 @@
         "whatYouGet": "Was Sie erhalten:",
         "noDescription": "Keine Beschreibung vorhanden.",
         "joinButton": "Jetzt beitreten",
+        "joinButtonWithPrice": "Beitreten für ${{price}}/Monat",
+        "cancelAnytime": "Jederzeit kündbar.",
         "toast": {
             "success": "Sie haben {{username}} jetzt abonniert!",
             "error": "Beitritt fehlgeschlagen. Bitte versuchen Sie es erneut."

@@ -520,6 +520,8 @@
         "whatYouGet": "Lo que obtienes:",
         "noDescription": "No se proporcionó descripción.",
         "joinButton": "Unirse Ahora",
+        "joinButtonWithPrice": "Unirse por ${{price}}/mes",
+        "cancelAnytime": "Puedes cancelar en cualquier momento.",
         "toast": {
             "success": "¡Ahora estás suscrito a {{username}}!",
             "error": "No se pudo unir. Por favor, inténtalo de nuevo."

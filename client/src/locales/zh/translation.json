@@ -520,6 +520,8 @@
         "whatYouGet": "您将获得：",
         "noDescription": "未提供描述。",
         "joinButton": "立即加入",
+        "joinButtonWithPrice": "加入 (${{price}}/月)",
+        "cancelAnytime": "您可以随时取消。",
         "toast": {
             "success": "您现在已订阅 {{username}}！",
             "error": "加入失败。请重试。"

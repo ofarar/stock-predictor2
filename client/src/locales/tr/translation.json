@@ -520,6 +520,8 @@
     "whatYouGet": "Elde Edecekleriniz:",
     "noDescription": "Açıklama sağlanmadı.",
     "joinButton": "Şimdi Katıl",
+    "joinButtonWithPrice": "Ayda ${{price}} karşılığında katıl",
+    "cancelAnytime": "İstediğiniz zaman iptal edebilirsiniz.",
     "toast": {
       "success": "Artık {{username}}'e abonesiniz!",
       "error": "Katılma başarısız. Lütfen tekrar deneyin."

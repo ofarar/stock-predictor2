@@ -520,6 +520,8 @@
         "whatYouGet": "Ce que vous obtenez :",
         "noDescription": "Aucune description fournie.",
         "joinButton": "Rejoindre Maintenant",
+        "joinButtonWithPrice": "Rejoindre pour ${{price}}/mois",
+        "cancelAnytime": "Vous pouvez annuler à tout moment.",
         "toast": {
             "success": "Vous êtes maintenant abonné à {{username}} !",
             "error": "L'abonnement a échoué. Veuillez réessayer."

@@ -520,6 +520,8 @@
     "whatYouGet": "What you get:",
     "noDescription": "No description provided.",
     "joinButton": "Join Now",
+    "joinButtonWithPrice": "Join for ${{price}}/mo",
+    "cancelAnytime": "You can cancel anytime.",
     "toast": {
       "success": "You are now subscribed to {{username}}!",
       "error": "Failed to join. Please try again."
