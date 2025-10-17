@@ -155,6 +155,7 @@
     "followers_tab_subscribers": "Платные подписчики",
     "followers_tab_subscriptions": "Платные подписки",
     "followers_loading": "Загрузка...",
+    "followers_confirm_cancel_title": "Отменить подписку",
     "followers_confirm_cancel_message": "Вы уверены, что хотите отменить подписку на {{username}}?",
     "followers_no_users": "В этом списке нет пользователей для отображения.",
     "golden_feed_new_label": "НОВОЕ",

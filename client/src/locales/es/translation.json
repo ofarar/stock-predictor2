@@ -155,6 +155,7 @@
     "followers_tab_subscribers": "Suscriptores",
     "followers_tab_subscriptions": "Suscripciones",
     "followers_loading": "Cargando...",
+    "followers_confirm_cancel_title": "Cancelar suscripción",
     "followers_confirm_cancel_message": "¿Seguro que quieres cancelar tu suscripción a {{username}}?",
     "followers_no_users": "No hay usuarios para mostrar en esta lista.",
     "golden_feed_new_label": "NUEVO",

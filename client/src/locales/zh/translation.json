@@ -155,6 +155,7 @@
     "followers_tab_subscribers": "订阅者",
     "followers_tab_subscriptions": "订阅",
     "followers_loading": "加载中...",
+    "followers_confirm_cancel_title": "取消订阅",
     "followers_confirm_cancel_message": "您确定要取消对 {{username}} 的订阅吗？",
     "followers_no_users": "此列表中没有要显示的用户。",
     "golden_feed_new_label": "新",
