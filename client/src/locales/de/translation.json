@@ -866,5 +866,11 @@
     "common_cancel": "Abbrechen",
     "common_next": "Weiter",
     "common_back": "Zurück",
-    "common_close": "Schließen"
+    "common_close": "Schließen",
+    "stockPage": {
+        "chart": {
+            "unavailableTitle": "Chartdaten nicht verfügbar",
+            "unavailableDescription": "Die historischen Kursdaten konnten im Moment nicht geladen werden. Bitte versuchen Sie es später erneut."
+        }
+    }
 }

@@ -867,5 +867,11 @@
   "common_cancel": "Cancel",
   "common_next": "Next",
   "common_back": "Back",
-  "common_close": "Close"
+  "common_close": "Close",
+  "stockPage": {
+    "chart": {
+      "unavailableTitle": "Chart Data Unavailable",
+      "unavailableDescription": "We couldn't load the historical price data at this time. Please try again later."
+    }
+  }
 }

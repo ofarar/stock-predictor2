@@ -866,5 +866,11 @@
     "common_cancel": "Отмена",
     "common_next": "Далее",
     "common_back": "Назад",
-    "common_close": "Закрыть"
+    "common_close": "Закрыть",
+    "stockPage": {
+        "chart": {
+            "unavailableTitle": "Данные графика недоступны",
+            "unavailableDescription": "В данный момент не удалось загрузить исторические данные о ценах. Пожалуйста, повторите попытку позже."
+        }
+    }
 }

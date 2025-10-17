@@ -866,5 +866,11 @@
     "common_cancel": "取消",
     "common_next": "下一步",
     "common_back": "返回",
-    "common_close": "关闭"
+    "common_close": "关闭",
+    "stockPage": {
+        "chart": {
+            "unavailableTitle": "图表数据不可用",
+            "unavailableDescription": "我们暂时无法加载历史价格数据。请稍后再试。"
+        }
+    }
 }

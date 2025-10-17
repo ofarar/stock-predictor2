@@ -890,5 +890,11 @@
     "common_cancel": "Annuler",
     "common_next": "Suivant",
     "common_back": "Retour",
-    "common_close": "Fermer"
+    "common_close": "Fermer",
+    "stockPage": {
+        "chart": {
+            "unavailableTitle": "Données du graphique non disponibles",
+            "unavailableDescription": "Nous n'avons pas pu charger les données de prix historiques pour le moment. Veuillez réessayer plus tard."
+        }
+    }
 }

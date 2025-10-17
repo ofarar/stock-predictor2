@@ -62,7 +62,7 @@ export const formatScorePercentage = (value, locale) => {
  * @returns {string} The formatted percentage string.
  */
 export const formatPercentage = (value, locale) => {
-    if (typeof value !== 'number' || isNaN(value)) return '';
+    if (typeof value !== 'number' || isNaN(value)) return '...';
 
     const decimalValue = value / 100;
 
@@ -92,7 +92,8 @@ export const formatPercentage = (value, locale) => {
  * @returns {string} The formatted currency string.
  */
 export const formatCurrency = (value, locale, currency = 'USD') => {
-    if (typeof value !== 'number') return '';
+    // If value is not a valid number, return placeholder
+    if (typeof value !== 'number' || isNaN(value)) return '...';
 
     const formatter = new Intl.NumberFormat(locale, {
         style: 'currency',

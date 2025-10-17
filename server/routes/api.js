@@ -1953,28 +1953,31 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
 });
 
 // GET: Data for a specific stock page - FULLY OVERHAULED
+// GET: Data for a specific stock page - FULLY OVERHAULED & RESILIENT
 router.get('/stock/:ticker', async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
     const { type: predictionTypeFilter = 'Overall' } = req.query;
 
     try {
+        // Isolate the external API call and handle its failure gracefully
+        let quote = null;
+        try {
+            quote = await yahooFinance.quote(ticker);
+        } catch (err) {
+            console.error(`StockPage: Non-critical error fetching quote for ${ticker}. Error: ${err.message}`);
+            // quote remains null, but the function will not crash.
+        }
 
-        // Fetch quote data and active predictions in parallel
-        const [quote, activePredictions] = await Promise.all([
-            yahooFinance.quote(ticker),
-            Prediction.find({ stockTicker: ticker, status: 'Active' })
-                .populate('userId', 'username avatar isGoldenMember isVerified')
-                .sort({ createdAt: -1 })
-        ]);
+        // --- Database Queries (run in parallel) ---
 
-        // Build the match criteria for the aggregation
+        // Build the match criteria for the top predictors aggregation
         const predictionMatch = { status: 'Assessed', stockTicker: ticker };
         if (predictionTypeFilter !== 'Overall') {
             predictionMatch.predictionType = predictionTypeFilter;
         }
 
-        // Use aggregation to find the top predictors for this specific stock
-        const topPredictors = await Prediction.aggregate([
+        // Define the aggregation pipeline for finding top predictors
+        const topPredictorsPipeline = [
             { $match: predictionMatch },
             { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
             { $sort: { avgScore: -1 } },
@@ -1991,16 +1994,25 @@ router.get('/stock/:ticker', async (req, res) => {
                     avgScore: { $round: ['$avgScore', 1] }
                 }
             }
+        ];
+
+        // Fetch active predictions and top predictors from the database in parallel
+        const [activePredictions, topPredictors] = await Promise.all([
+            Prediction.find({ stockTicker: ticker, status: 'Active' })
+                .populate('userId', 'username avatar isGoldenMember isVerified')
+                .sort({ createdAt: -1 }),
+            Prediction.aggregate(topPredictorsPipeline)
         ]);
 
+        // Send a successful response, even if the quote is null
         res.json({ quote, topPredictors, activePredictions });
 
-    } catch (err) {
-        console.error(`Error fetching data for stock ${ticker}:`, err);
+    } catch (dbError) {
+        // This catch block will now only trigger for critical database errors
+        console.error(`CRITICAL Error fetching database data for stock ${ticker}:`, dbError);
         res.status(500).json({ message: "Failed to fetch stock data" });
     }
 });
-
 // In server/routes/api.js
 
 // GET: The details for a single prediction

@@ -867,5 +867,11 @@
   "common_cancel": "İptal",
   "common_next": "İleri",
   "common_back": "Geri",
-  "common_close": "Kapat"
+  "common_close": "Kapat",
+  "stockPage": {
+    "chart": {
+      "unavailableTitle": "Grafik Verileri Mevcut Değil",
+      "unavailableDescription": "Geçmiş fiyat verilerini şu anda yükleyemedik. Lütfen daha sonra tekrar deneyin."
+    }
+  }
 }

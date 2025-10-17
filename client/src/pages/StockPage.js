@@ -71,40 +71,30 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
 
     if (loading) return <div className="text-center text-white mt-10">{t('loading_stock_data')}</div>;
     if (error) return <div className="text-center text-red-400 mt-10">{error}</div>;
-    if (!stockData.quote) return null;
 
     const { quote, topPredictors, activePredictions } = stockData;
-    const priceChange = quote.regularMarketChange || 0;
-    const percentChange = quote.regularMarketChangePercent || 0;
+    const priceChange = quote?.regularMarketChange;
+    const percentChange = quote?.regularMarketChangePercent;
     const isWatching = currentUser?.watchlist?.includes(ticker);
-    const currentPrice = quote.regularMarketPrice || 0;
+    const currentPrice = quote?.regularMarketPrice;
 
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
             <div className="grid grid-cols-[1fr,auto] gap-x-6 gap-y-2 items-end">
-
-                {/* Cell 1: Stock Name and Ticker */}
-                <div className="text-left min-w-0"> {/* Add min-w-0 to help with truncation */}
-                    {/* 1. Truncate long names to prevent overflow */}
+                <div className="text-left min-w-0">
                     <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight truncate">
-                        {quote.longName || ticker}
+                        {quote?.longName || ticker}
                     </h1>
-                    <p className="text-lg text-gray-400">
-                        ({quote.symbol})
-                    </p>
+                    <p className="text-lg text-gray-400">({ticker})</p>
                 </div>
-
-                {/* Cell 2: Price and Change, stacked vertically */}
                 <div className="flex flex-col items-end">
                     <p className="text-3xl md:text-4xl font-bold text-white">
-                        {formatCurrency(quote.regularMarketPrice, i18n.language, quote.currency)}
+                        {formatCurrency(quote?.regularMarketPrice, i18n.language, quote?.currency)}
                     </p>
                     <p className={`font-semibold text-base ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2)} ({percentChange?.toFixed(2)}%)
+                        {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2) ?? '...'} ({percentChange?.toFixed(2) ?? '...'}%)
                     </p>
                 </div>
-
-                {/* Cell 3: Buttons, positioned under the stock name */}
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleWatchlistToggle}
@@ -112,15 +102,14 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                         title={isWatching ? t('remove_from_watchlist') : t('add_to_watchlist')}
                         disabled={!currentUser}
                     >
-                        {/* 2. Make icons smaller */}
                         <svg className="w-5 h-5" fill={isWatching ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </button>
                     <button
                         onClick={() => onPredictClick(quote)}
-                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
+                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg disabled:bg-gray-600 disabled:cursor-not-allowed"
                         title={t('make_prediction')}
+                        disabled={!quote} // Disable button if quote data is missing
                     >
-                        {/* 3. Center the plus icon using an SVG for perfect alignment */}
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
                     </button>
                 </div>
@@ -166,7 +155,16 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                         </div>
                     </div>
                     <div className="lg:col-span-1">
-                        <StockChart ticker={ticker} />
+                        {/* Conditionally render the chart or the message */}
+                        {quote ? (
+                            <StockChart ticker={ticker} />
+                        ) : (
+                            <div className="bg-gray-800 p-4 sm:p-6 rounded-lg h-96 flex flex-col items-center justify-center text-center">
+                                <svg className="w-12 h-12 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <h4 className="font-bold text-white">{t('stockPage.chart.unavailableTitle')}</h4>
+                                <p className="text-sm text-gray-400">{t('stockPage.chart.unavailableDescription')}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
