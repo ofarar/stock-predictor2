@@ -382,7 +382,9 @@
     },
     "famousStocks": {
         "title": "Популярные прогнозы",
-        "predictionsText": "Сегодня {{count}} прогнозов",
+        "title_historical": "Популярное (за 7 дней)",
+        "predictionsText": "{{count}} прогноз(ов) сегодня",
+        "predictionsText_historical": "{{count}} прогноз(ов) (7д)",
         "noData": "В данный момент нет популярных акций."
     },
     "footer": {
@@ -822,7 +824,8 @@
         }
     },
     "market_watch": {
-        "title": "Обзор Рынка"
+        "title": "Обзор рынка",
+        "unavailable": "Рыночные данные в реальном времени временно недоступны."
     },
     "time": {
         "days": "д",

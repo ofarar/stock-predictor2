@@ -381,8 +381,10 @@
         "title": "Justification du Prédicteur"
     },
     "famousStocks": {
-        "title": "Prédictions Tendances",
+        "title": "Prédictions tendance",
+        "title_historical": "Tendances (7 derniers jours)",
         "predictionsText": "{{count}} prédictions aujourd'hui",
+        "predictionsText_historical": "{{count}} prédictions (7j)",
         "noData": "Aucune action tendance pour le moment."
     },
     "footer": {
@@ -822,7 +824,8 @@
         }
     },
     "market_watch": {
-        "title": "Veille de Marché"
+        "title": "Observation du marché",
+        "unavailable": "Les données du marché en direct sont temporairement indisponibles."
     },
     "time": {
         "days": "j",

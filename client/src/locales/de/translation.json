@@ -381,9 +381,11 @@
         "title": "Begründung des Prognostikers"
     },
     "famousStocks": {
-        "title": "Angesagte Prognosen",
+        "title": "Trend-Prognosen",
+        "title_historical": "Trends (Letzte 7 Tage)",
         "predictionsText": "{{count}} Prognosen heute",
-        "noData": "Im Moment gibt es keine angesagten Aktien."
+        "predictionsText_historical": "{{count}} Prognosen (7T)",
+        "noData": "Momentan keine Trendaktien."
     },
     "footer": {
         "about": "Über uns",
@@ -822,7 +824,8 @@
         }
     },
     "market_watch": {
-        "title": "Marktbeobachtung"
+        "title": "Marktbeobachtung",
+        "unavailable": "Live-Marktdaten sind vorübergehend nicht verfügbar."
     },
     "time": {
         "days": "T",

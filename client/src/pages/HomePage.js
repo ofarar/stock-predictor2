@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+
+// Import all necessary components
 import DailyLeaderboard from '../components/DailyLeaderboard';
 import LongTermLeaders from '../components/LongTermLeaders';
 import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
 import MarketWatch from '../components/MarketWatch';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import FamousStocks from '../components/FamousStocks'; // <-- Import FamousStocks
 import PredictionModal from '../components/PredictionModal';
 
-// FIX: The component now only uses the 'settings' passed in from App.js
 const HomePage = ({ user, settings }) => {
     const { t } = useTranslation();
     const [widgetData, setWidgetData] = useState({
         dailyLeaders: [],
         longTermLeaders: [],
-        hourlyWinners: []
+        hourlyWinners: [],
+        famousStocks: [], // <-- Add state for famous stocks
+        isFamousHistorical: false, // <-- Add state for historical flag
     });
     const [loading, setLoading] = useState(true);
     const [isPredictionModalOpen, setPredictionModalOpen] = useState(false);
@@ -31,20 +35,26 @@ const HomePage = ({ user, settings }) => {
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-                // FIX: The redundant API call for '/api/settings' has been removed.
-                const [hourlyRes, dailyRes, longTermRes] = await Promise.all([
+                // Add the new API call to the Promise.all array
+                const [hourlyRes, dailyRes, longTermRes, famousRes] = await Promise.all([
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`), // <-- New API call
                 ]);
 
+                // Update the state with all the fetched data
                 setWidgetData({
                     hourlyWinners: hourlyRes.data,
                     dailyLeaders: dailyRes.data,
                     longTermLeaders: longTermRes.data,
+                    famousStocks: famousRes.data.stocks, // <-- Store stocks
+                    isFamousHistorical: famousRes.data.isHistorical, // <-- Store flag
                 });
             } catch (error) {
                 console.error("Failed to load dashboard data", error);
+                // On failure, set sensible defaults to prevent crashes
+                setWidgetData({ dailyLeaders: [], longTermLeaders: [], hourlyWinners: [], famousStocks: [] });
             } finally {
                 setLoading(false);
             }
@@ -58,24 +68,27 @@ const HomePage = ({ user, settings }) => {
 
     return (
         <div className="space-y-8">
-            {/* This now correctly uses the 'settings' prop */}
             {!user && settings?.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-
-                {/* Main Column: Focused on recent results and top performers */}
+                {/* Main Column */}
                 <div className="md:col-span-2 flex flex-col gap-8">
-                    {/* The 'settings' prop is correctly passed down to the widgets */}
                     <HourlyWinnersFeed winners={widgetData.hourlyWinners} settings={settings} />
                     <DailyLeaderboard leaders={widgetData.dailyLeaders} settings={settings} />
                 </div>
 
-                {/* Sidebar Column: Focused on market context and all-time greats */}
+                {/* Sidebar Column */}
                 <div className="md:col-span-1 flex flex-col gap-8">
                     <MarketWatch />
+                    {/* Render FamousStocks with the fetched data */}
+                    <FamousStocks 
+                        stocks={widgetData.famousStocks} 
+                        isHistorical={widgetData.isFamousHistorical} 
+                    />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} settings={settings} />
                 </div>
             </div>
+
             {isPredictionModalOpen && (
                 <PredictionModal
                     isOpen={isPredictionModalOpen}

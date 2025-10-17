@@ -1997,19 +1997,44 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
 
 // GET Famous (Trending) Stocks
 router.get('/widgets/famous-stocks', async (req, res) => {
-    // This finds which stocks have the most predictions today.
     try {
         const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const stocks = await Prediction.aggregate([
-            { $match: { createdAt: { $gte: startOfDay } } },
+        startOfDay.setUTCHours(0, 0, 0, 0); // Use UTC for consistency
+
+        let stocks = await Prediction.aggregate([
+            { $match: { createdAt: { $gte: startOfDay } } }, // Find predictions made today
             { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
             { $sort: { predictions: -1 } },
             { $limit: 4 },
             { $project: { ticker: '$_id', predictions: 1, _id: 0 } }
         ]);
-        res.json(stocks);
-    } catch (err) { res.status(500).json({ message: 'Error fetching famous stocks' }); }
+
+        let isHistorical = false;
+
+        // If no stocks were predicted today, try the last 7 days
+        if (stocks.length === 0) {
+            isHistorical = true;
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7); // Use UTC
+            sevenDaysAgo.setUTCHours(0, 0, 0, 0);
+
+            stocks = await Prediction.aggregate([
+                { $match: { createdAt: { $gte: sevenDaysAgo } } }, // Find predictions in the last 7 days
+                { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
+                { $sort: { predictions: -1 } },
+                { $limit: 4 },
+                { $project: { ticker: '$_id', predictions: 1, _id: 0 } }
+            ]);
+        }
+
+        // Send the stocks and a flag indicating if it's historical data
+        res.json({ stocks, isHistorical });
+
+    } catch (err) {
+        console.error("Error fetching famous stocks:", err);
+        // Send empty on error to prevent frontend crash
+        res.json({ stocks: [], isHistorical: false });
+    }
 });
 
 // GET Community Feed (most recent predictions) - UPDATED

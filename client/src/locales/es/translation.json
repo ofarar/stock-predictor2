@@ -381,9 +381,11 @@
         "title": "Justificación del Predictor"
     },
     "famousStocks": {
-        "title": "Predicciones en Tendencia",
+        "title": "Predicciones populares",
+        "title_historical": "Populares (Últimos 7 días)",
         "predictionsText": "{{count}} predicciones hoy",
-        "noData": "No hay acciones en tendencia en este momento."
+        "predictionsText_historical": "{{count}} predicciones (7d)",
+        "noData": "No hay acciones populares en este momento."
     },
     "footer": {
         "about": "Acerca de",
@@ -822,7 +824,8 @@
         }
     },
     "market_watch": {
-        "title": "Observatorio del Mercado"
+        "title": "Vigilancia del mercado",
+        "unavailable": "Los datos del mercado en vivo no están disponibles temporalmente."
     },
     "time": {
         "days": "d",

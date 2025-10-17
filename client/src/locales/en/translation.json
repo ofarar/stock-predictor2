@@ -382,7 +382,9 @@
   },
   "famousStocks": {
     "title": "Trending Predictions",
+    "title_historical": "Trending (Last 7 Days)",
     "predictionsText": "{{count}} predictions today",
+    "predictionsText_historical": "{{count}} predictions (7d)",
     "noData": "No trending stocks right now."
   },
   "footer": {
@@ -823,7 +825,8 @@
     }
   },
   "market_watch": {
-    "title": "Market Watch"
+    "title": "Market Watch",
+    "unavailable": "Live market data is temporarily unavailable."
   },
   "time": {
     "days": "d",

@@ -381,9 +381,11 @@
     "title": "Tahmin Gerekçesi"
   },
   "famousStocks": {
-    "title": "Popüler Tahminler",
-    "predictionsText": "bugün {{count}} tahmin",
-    "noData": "Şu anda popüler hisse senedi yok."
+    "title": "Trend Tahminler",
+    "title_historical": "Trendler (Son 7 Gün)",
+    "predictionsText": "Bugün {{count}} tahmin",
+    "predictionsText_historical": "{{count}} tahmin (7g)",
+    "noData": "Şu anda trend olan hisse senedi yok."
   },
   "footer": {
     "about": "Hakkında",
@@ -823,7 +825,8 @@
     }
   },
   "market_watch": {
-    "title": "Piyasalar"
+    "title": "Piyasa Takibi",
+    "unavailable": "Canlı piyasa verileri geçici olarak kullanılamıyor."
   },
   "time": {
     "days": "g",

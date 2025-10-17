@@ -382,7 +382,9 @@
     },
     "famousStocks": {
         "title": "热门预测",
-        "predictionsText": "今日 {{count}} 条预测",
+        "title_historical": "热门趋势 (过去7天)",
+        "predictionsText": "今天有 {{count}} 条预测",
+        "predictionsText_historical": "{{count}} 条预测 (7天)",
         "noData": "目前没有热门股票。"
     },
     "footer": {
@@ -822,7 +824,8 @@
         }
     },
     "market_watch": {
-        "title": "市场观察"
+        "title": "市场观察",
+        "unavailable": "实时市场数据暂时不可用。"
     },
     "time": {
         "days": "天",
