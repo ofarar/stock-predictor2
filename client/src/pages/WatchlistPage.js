@@ -108,18 +108,25 @@ const WatchlistPage = ({ settings }) => {
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
+
+        // Ensure we have a valid drag-and-drop event
         if (active.id !== over.id) {
-            const oldIndex = data.quotes.findIndex(q => q.symbol === active.id);
-            const newIndex = data.quotes.findIndex(q => q.symbol === over.id);
-            const reorderedQuotes = arrayMove(data.quotes, oldIndex, newIndex);
+            // Use the user's watchlist as the source of truth
+            const oldIndex = currentUser.watchlist.indexOf(active.id);
+            const newIndex = currentUser.watchlist.indexOf(over.id);
 
-            setData(prev => ({ ...prev, quotes: reorderedQuotes }));
+            // Use the arrayMove utility to create the newly ordered array of tickers
+            const newTickerOrder = arrayMove(currentUser.watchlist, oldIndex, newIndex);
 
-            const newTickerOrder = reorderedQuotes.map(q => q.symbol);
+            // 1. Update the frontend state immediately for a snappy user experience
+            setCurrentUser(prev => ({ ...prev, watchlist: newTickerOrder }));
+
+            // 2. Send the new order to the backend to persist the change
             axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist/order`, { tickers: newTickerOrder }, { withCredentials: true })
                 .catch(() => {
+                    // If the backend fails, revert the change and show an error
                     toast.error("Could not save order.");
-                    fetchAllData();
+                    fetchAllData(); // Re-fetch to get the original, correct order
                 });
         }
     };
@@ -202,7 +209,7 @@ const WatchlistPage = ({ settings }) => {
                     <button onClick={() => setIsAddModalOpen(true)} className="bg-gray-700 text-gray-400 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-600">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                     </button>
-                    {data?.quotes?.length > 0 && (
+                    {currentUser?.watchlist?.length > 0 && (
                         <button onClick={() => setIsEditMode(prev => !prev)} className="bg-gray-700 text-gray-400 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-600">
                             {isEditMode ? <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>}
                         </button>
