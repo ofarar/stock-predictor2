@@ -29,7 +29,7 @@ import VerificationModal from '../components/VerificationModal';
 import VerifiedStatusModal from '../components/VerifiedStatusModal';
 import ConfirmationModal from '../components/ConfirmationModal';
 
-const ProfilePage = ({ settings }) => {
+const ProfilePage = ({ settings, requestLogin }) => {
     const { t } = useTranslation();
     const { userId } = useParams();
     const [profileData, setProfileData] = useState(null);
@@ -203,6 +203,7 @@ const ProfilePage = ({ settings }) => {
                     setIsVerificationModalOpen={setIsVerificationModalOpen}
                     setIsStatusModalOpen={setIsStatusModalOpen}
                     settings={settings}
+                    requestLogin={requestLogin}
                 />
 
                 <ProfileStats

@@ -99,7 +99,7 @@ function App() {
             <Route path="/complete-profile" element={<CompleteProfilePage />} />
             <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
             <Route path="/scoreboard" element={<ScoreboardPage settings={settings} />} />
-            <Route path="/profile/:userId" element={<ProfilePage settings={settings} />} />
+            <Route path="/profile/:userId" element={<ProfilePage settings={settings} requestLogin={requestLogin} />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage settings={settings} />} />
             <Route path="/profile/edit" element={<EditProfilePage onProfileUpdate={fetchUser} />} />
             <Route path="/stock/:ticker" element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
 
-const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, settings, isAnimating }, ref) => {
+const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, settings, isAnimating, requestLogin }, ref) => {
     const { t, i18n } = useTranslation();
     const { user, followersCount, followingCount, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
@@ -68,7 +68,7 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                 </div>
             </div>
             <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
-                {currentUser && !isOwnProfile && (
+                {!isOwnProfile && (
                     <div className="flex gap-3">
                         {isSubscribed ? (
                             <div className="font-bold py-2 px-5 rounded-md bg-gray-700 text-yellow-400 border border-yellow-500 flex items-center gap-2">
@@ -77,7 +77,14 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                             </div>
                         ) : user.isGoldenMember ? (
                             user.acceptingNewSubscribers ? (
-                                <button onClick={() => setIsJoinModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!currentUser) requestLogin(); // <-- Add guest check
+                                        else setIsJoinModalOpen(true);
+                                    }}
+                                    className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400"
+                                >
                                     {t('join_label', { price: user.goldenMemberPrice })}
                                 </button>
                             ) : (
@@ -87,7 +94,27 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                             )
                         ) : null}
 
-                        {isFollowing ? (<button onClick={handleUnfollow} className="bg-gray-700 text-white font-bold py-2 px-5 rounded-md hover:bg-red-600">{t('following_btn')}</button>) : (<button onClick={handleFollow} className="bg-blue-600 text-white font-bold py-2 px-5 rounded-md hover:bg-blue-700">{t('follow_btn')}</button>)}
+                        {isFollowing ? (
+                            <button
+                                onClick={() => {
+                                    if (!currentUser) requestLogin(); // <-- Add guest check
+                                    else handleUnfollow();
+                                }}
+                                className="bg-gray-700 text-white font-bold py-2 px-5 rounded-md hover:bg-red-600"
+                            >
+                                {t('following_btn')}
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    if (!currentUser) requestLogin(); // <-- Add guest check
+                                    else handleFollow();
+                                }}
+                                className="bg-blue-600 text-white font-bold py-2 px-5 rounded-md hover:bg-blue-700"
+                            >
+                                {t('follow_btn')}
+                            </button>
+                        )}
                     </div>
                 )}
                 {isOwnProfile && (
