@@ -28,6 +28,47 @@ const FollowersPage = ({ settings }) => {
     // MODIFIED: Default to the 'Followers' key. This now works perfectly with the Link state.
     const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'Followers');
 
+    const handleFollow = (userIdToFollow) => {
+        // Prevent following oneself (although unlikely on this page)
+        if (currentUser?._id === userIdToFollow) return;
+
+        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToFollow}/follow`, {}, { withCredentials: true })
+            .then(() => {
+                // Optimistically update the current user's following list
+                setCurrentUser((prevUser) => ({
+                    ...prevUser,
+                    following: [...(prevUser?.following || []), userIdToFollow]
+                }));
+                // Optionally refetch all data if needed, or just update state
+                // fetchFollowData(); 
+            });
+
+        toast.promise(promise, {
+            loading: t('watchlistPage.toast.loadingFollow'), // Reusing existing translation
+            success: t('watchlistPage.toast.successFollow'), // Reusing existing translation
+            error: t('watchlistPage.toast.errorFollow')    // Reusing existing translation
+        });
+    };
+
+    const handleUnfollow = (userIdToUnfollow) => {
+        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToUnfollow}/unfollow`, {}, { withCredentials: true })
+            .then(() => {
+                // Optimistically update the current user's following list
+                setCurrentUser((prevUser) => ({
+                    ...prevUser,
+                    following: (prevUser?.following || []).filter(id => id !== userIdToUnfollow)
+                }));
+                // Optionally refetch all data
+                // fetchFollowData();
+            });
+
+        toast.promise(promise, {
+            loading: 'Unfollowing...', // Add translations if needed
+            success: 'User unfollowed!', // Add translations if needed
+            error: 'Could not unfollow user.' // Add translations if needed
+        });
+    };
+
     const fetchFollowData = useCallback(async () => {
         try {
             setLoading(true);
@@ -118,10 +159,23 @@ const FollowersPage = ({ settings }) => {
                             key={item._id}
                             user={item}
                             settings={settings}
-                            // MODIFIED: Logic now correctly uses non-translated keys.
+                            // No changes to subscription/date logic
                             isSubscription={activeTab === 'Subscriptions'}
                             showDate={activeTab === 'Subscriptions' || activeTab === 'Subscribers'}
                             onCancel={handleCancelClick}
+
+                            // --- NEW CONDITIONAL BUTTON LOGIC ---
+
+                            // Pass onFollow only if it's the Followers tab AND the user is NOT already being followed
+                            onFollow={activeTab === 'Followers' && !currentUser?.following?.includes(item._id) ? handleFollow : null}
+
+                            // Pass onUnfollow only if it's the Following tab
+                            onUnfollow={activeTab === 'Following' ? handleUnfollow : null}
+
+                            // isFollowing is only relevant for the Followers tab (to decide if the follow button should show)
+                            isFollowing={currentUser?.following?.includes(item._id)}
+
+                            currentUserId={currentUser?._id}
                         />
                     )) : <p className="col-span-full text-gray-500 text-center py-8">{t("followers_no_users")}</p>}
                 </div>
