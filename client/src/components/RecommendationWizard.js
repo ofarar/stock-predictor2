@@ -14,15 +14,16 @@ const Step1Stocks = ({ selectedStocks, setSelectedStocks }) => {
         if (!inputValue) {
             return callback([]);
         }
-        axios.get(`/api/search/stocks?query=${inputValue}`)
+        const apiUrl = process.env.REACT_APP_API_URL;
+        axios.get(`${apiUrl}/api/search/${inputValue}`) // <-- CORRECT URL
             .then(res => {
-                const options = res.data.map(stock => ({
+                const options = (res.data.quotes || []).map(stock => ({ // Use res.data.quotes
                     value: stock.symbol,
-                    label: `${stock.symbol} - ${stock.name}`
+                    label: `${stock.symbol} - ${stock.shortname || stock.longname}` // Adjust based on API response
                 }));
                 callback(options);
             })
-            .catch(() => callback([]));
+            .catch(() => callback([])); // Handle errors gracefully
     };
 
     const customStyles = {
@@ -229,9 +230,6 @@ const RecommendationWizard = ({ isOpen, onClose, settings }) => { // Add setting
 
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [userToJoin, setUserToJoin] = useState(null);
-
-    // 3. Replace the existing handleJoin function with this new one
-    console.log("Wizard - isJoinModalOpen:", isJoinModalOpen);
 
     // Modify the handleJoin function
     const handleJoin = (user) => {
