@@ -16,6 +16,7 @@ const DOMPurify = require('dompurify');
 const window = new JSDOM('').window;
 const purify = DOMPurify(window);
 const rateLimit = require('express-rate-limit');
+const PredictionLog = require('../models/PredictionLog');
 
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({
@@ -56,7 +57,47 @@ router.post('/admin/health-check', async (req, res) => {
         checkService('Yahoo Finance (Current Price)', () => yahooFinance.quote('AAPL')),
         checkService('Yahoo Finance (Historical Data)', () => yahooFinance.historical('AAPL', { period1: '2024-01-01', period2: '2024-01-02' })),
         checkService('Avatar API (DiceBear)', () => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test')),
-        checkService('Email Service (Nodemailer)', () => transporter.verify())
+        checkService('Email Service (Nodemailer)', () => transporter.verify()),
+        checkService('Cron Job (Scoring)', async () => {
+            const lastLog = await PredictionLog.findOne().sort({ assessedAt: -1 });
+            if (!lastLog) {
+                throw new Error('No assessment logs found. The job may have never run.');
+            }
+            const timeSinceLastRun = Date.now() - new Date(lastLog.assessedAt).getTime();
+            // The job runs every 5 minutes, so we check if it has run in the last 10.
+            if (timeSinceLastRun > 10 * 60 * 1000) {
+                throw new Error(`Job has not run in over 10 minutes. Last run: ${lastLog.assessedAt.toISOString()}`);
+            }
+            return 'OK';
+        }),
+        checkService('API Performance (Profile Endpoint)', async () => {
+            const anyUser = await User.findOne().select('_id');
+            if (!anyUser) {
+                // If there are no users, the check can't run, but this isn't a failure.
+                return 'OK (No users to test)';
+            }
+            // This makes an HTTP request from your server back to itself to test the full stack.
+            const port = process.env.PORT || 5001;
+            return axios.get(`http://localhost:${port}/api/profile/${anyUser._id}`);
+        }),
+        checkService('Server Configuration (.env)', () => {
+            return new Promise((resolve, reject) => {
+                const requiredVars = [
+                    'MONGO_URI',
+                    'COOKIE_KEY',
+                    'GOOGLE_CLIENT_ID',
+                    'GOOGLE_CLIENT_SECRET',
+                    'GMAIL_USER',
+                    'GMAIL_PASS'
+                ];
+                const missingVars = requiredVars.filter(v => !process.env[v]);
+                if (missingVars.length > 0) {
+                    reject(new Error(`Missing required environment variables: ${missingVars.join(', ')}`));
+                } else {
+                    resolve('OK');
+                }
+            });
+        })
     ]);
 
     // 3. Send the consolidated report to the frontend.
