@@ -47,7 +47,7 @@ const AdminHealthCheck = () => {
     return (
         <div className="bg-gray-800 p-6 rounded-lg">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-white">System Health & Resilience Check</h2>
+                <h2 className="text-xl font-bold text-white">System Health Check</h2>
                 <button
                     onClick={runChecks}
                     disabled={isLoading}
