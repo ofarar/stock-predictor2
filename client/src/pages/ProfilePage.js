@@ -83,13 +83,25 @@ const ProfilePage = ({ settings }) => {
             setFilteredPerformance(profile.performance); // Initialize with overall performance
             const activePredictions = profile.predictions.filter(p => p.status === 'Active');
             if (activePredictions.length > 0) {
-                const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
-                const quotesRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/quotes`, { tickers }, { withCredentials: true });
-                const quotesMap = quotesRes.data.reduce((acc, quote) => {
-                    acc[quote.symbol] = quote.regularMarketPrice;
-                    return acc;
-                }, {});
-                setActivePredictionQuotes(quotesMap);
+                try {
+                    const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
+                    const quotesRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/quotes`, { tickers }, { withCredentials: true });
+
+                    // Check if quotesRes.data exists and is an array before reducing
+                    if (quotesRes.data && Array.isArray(quotesRes.data)) {
+                        const quotesMap = quotesRes.data.reduce((acc, quote) => {
+                            if (quote) { // Ensure quote is not null
+                                acc[quote.symbol] = quote.regularMarketPrice;
+                            }
+                            return acc;
+                        }, {});
+                        setActivePredictionQuotes(quotesMap);
+                    }
+                } catch (quoteError) {
+                    console.warn("Could not fetch live prices for active predictions. Page will still load.", quoteError);
+                    // On failure, we simply don't set the active prediction quotes,
+                    // and the component will show "..." placeholders.
+                }
             }
         } catch (error) {
             toast.error("Could not load profile.");

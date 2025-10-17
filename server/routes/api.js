@@ -646,26 +646,28 @@ router.post('/posts/golden', async (req, res) => {
     }
 });
 
+// server/routes/api.js
 router.post('/quotes', async (req, res) => {
     const { tickers } = req.body;
-
     if (!tickers || !Array.isArray(tickers) || tickers.length === 0) {
         return res.status(400).json({ message: 'An array of tickers is required.' });
     }
 
+    // Use individual fetches to prevent one failure from crashing the whole request
+    const quotePromises = tickers.map(async (ticker) => {
+        try {
+            return await yahooFinance.quote(ticker);
+        } catch (err) {
+            console.error(`Multi-quote: Failed to fetch quote for ${ticker}. Error: ${err.message}`);
+            return null; // Return null for any ticker that fails
+        }
+    });
 
+    // Wait for all promises to settle and filter out any that failed
+    const quotes = (await Promise.all(quotePromises)).filter(q => q !== null);
 
-    try {
-        // Fetch all quotes in parallel
-        const quotePromises = tickers.map(ticker => yahooFinance.quote(ticker));
-        const quotes = await Promise.all(quotePromises);
-
-        // Return an array of quotes (in same order as tickers)
-        res.json(quotes);
-    } catch (error) {
-        console.error("Yahoo Finance multi-quote error:", error);
-        res.status(500).json({ message: 'Error fetching stock quotes.' });
-    }
+    // Always send a successful response
+    res.json(quotes);
 });
 
 
@@ -826,7 +828,7 @@ router.get('/watchlist', async (req, res) => {
                     { $limit: 3 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice'} }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice' } }
                 ]),
                 // 3. Get the single top verified predictor for this ticker
                 Prediction.aggregate([
