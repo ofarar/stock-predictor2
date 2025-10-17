@@ -115,6 +115,30 @@ router.post('/admin/health-check', async (req, res) => {
                     resolve('OK');
                 }
             });
+        }),
+        checkService('Database Integrity (Orphans)', async () => {
+            // Check for orphaned predictions
+            const orphanedPredictions = await Prediction.find({
+                userId: { $nin: await User.find().select('_id') }
+            });
+            if (orphanedPredictions.length > 0) {
+                throw new Error(`${orphanedPredictions.length} orphaned prediction(s) found.`);
+            }
+            return 'OK';
+        }),
+
+        checkService('Admin Settings (Badge JSON)', async () => {
+            const settings = await Setting.findOne();
+            if (!settings || !settings.badgeSettings) {
+                throw new Error('Badge settings object not found in the database.');
+            }
+            // The check is simply whether this object exists and is parsable.
+            // Since it's stored as an object, a direct check is enough.
+            // If it were a string, we would use JSON.parse() here.
+            if (typeof settings.badgeSettings !== 'object') {
+                throw new Error('Badge settings are not a valid object.');
+            }
+            return 'OK';
         })
     ]);
 
