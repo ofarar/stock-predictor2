@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const yahooFinance = require('yahoo-finance2').default;
 const axios = require('axios'); // <-- Added for making API calls
 const User = require('../models/User');
@@ -8,7 +9,7 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
-const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail } = require('../services/email');
+const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail, transporter } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
 const { JSDOM } = require('jsdom');
 const DOMPurify = require('dompurify');
@@ -23,6 +24,43 @@ const contactLimiter = rateLimit({
     message: 'Too many contact form submissions from this IP, please try again after an hour',
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+router.post('/admin/health-check', async (req, res) => {
+    // 1. Security: Ensure the user is an admin.
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    const checkService = async (serviceName, promiseFn) => {
+        const startTime = Date.now();
+        try {
+            await promiseFn();
+            const latency = Date.now() - startTime;
+            return { service: serviceName, status: 'success', latency: `${latency}ms`, details: 'OK' };
+        } catch (error) {
+            const latency = Date.now() - startTime;
+            return { service: serviceName, status: 'failed', latency: `${latency}ms`, details: error.message };
+        }
+    };
+
+    // 2. Run all checks in parallel.
+    const results = await Promise.all([
+        checkService('MongoDB Connection', () => {
+            return new Promise((resolve, reject) => {
+                const state = mongoose.connection.readyState;
+                if (state === 1) resolve(); // 1 means 'connected'
+                else reject(new Error(`DB state is not connected (state: ${state})`));
+            });
+        }),
+        checkService('Yahoo Finance (Current Price)', () => yahooFinance.quote('AAPL')),
+        checkService('Yahoo Finance (Historical Data)', () => yahooFinance.historical('AAPL', { period1: '2024-01-01', period2: '2024-01-02' })),
+        checkService('Avatar API (DiceBear)', () => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test')),
+        checkService('Email Service (Nodemailer)', () => transporter.verify())
+    ]);
+
+    // 3. Send the consolidated report to the frontend.
+    res.json(results);
 });
 
 // NEW: Recommendation Wizard Endpoint

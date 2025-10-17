@@ -96,3 +96,5 @@ exports.sendWaitlistConfirmationEmail = (email) => {
         html: emailBody
     }).catch(err => console.error("Waitlist confirmation email sending error:", err));
 };
+
+exports.transporter = transporter;

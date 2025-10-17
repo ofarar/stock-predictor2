@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import AdminPanel from '../components/AdminPanel';
 import AdminUserList from '../components/AdminUserList';
 import AIWizardWaitlist from '../components/AIWizardWaitlist';
+import AdminHealthCheck from '../components/AdminHealthCheck';
 
 const AdminPage = () => {
     const [settings, setSettings] = useState({
@@ -72,6 +73,8 @@ const AdminPage = () => {
                     Save All Settings
                 </button>
             </div>
+
+            <AdminHealthCheck />
 
             {/* --- NEW: The waitlist component is now here, conditionally rendered --- */}
             {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}

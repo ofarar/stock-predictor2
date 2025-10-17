@@ -34,11 +34,14 @@ const WatchlistPage = ({ settings }) => {
             axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }),
             axios.get(`${process.env.REACT_APP_API_URL}/api/watchlist`, { withCredentials: true })
         ]).then(([userRes, watchlistRes]) => {
-            setCurrentUser(userRes.data);
+            const user = userRes.data;
+            setCurrentUser(user);
             setData(watchlistRes.data);
-            if (watchlistRes.data.quotes.length > 0 && !selectedTicker) {
-                setSelectedTicker(watchlistRes.data.quotes[0].symbol);
-            } else if (watchlistRes.data.quotes.length === 0) {
+
+            // This is more robust. It uses the user's saved list.
+            if (user && user.watchlist.length > 0 && !selectedTicker) {
+                setSelectedTicker(user.watchlist[0]);
+            } else if (!user || user.watchlist.length === 0) {
                 setSelectedTicker(null);
             }
         }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
@@ -85,7 +88,12 @@ const WatchlistPage = ({ settings }) => {
 
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(() => {
+                // After the API call, refetch ALL data.
                 fetchAllData();
+                // AND set the newly added stock as the selected one.
+                if (action === 'add') {
+                    setSelectedTicker(ticker);
+                }
             });
 
         toast.promise(promise, {
@@ -182,7 +190,8 @@ const WatchlistPage = ({ settings }) => {
                 </div>
 
                 {loading ? <div className="text-center text-gray-400 py-10">{t('watchlistPage.loading')}</div> : (
-                    data?.quotes?.length === 0 ? (
+                    // THIS IS THE CORRECT CHECK
+                    currentUser?.watchlist?.length === 0 ? (
                         <div className="text-center bg-gray-800 rounded-lg py-20">
                             <p className="text-lg font-semibold text-gray-400">{t('watchlistPage.emptyWatchlist.title')}</p>
                             <p className="text-gray-500 mt-2">{t('watchlistPage.emptyWatchlist.description')}</p>
@@ -266,7 +275,7 @@ const WatchlistPage = ({ settings }) => {
                                                 const percentageChange =
                                                     currentPrice > 0
                                                         ? ((p.targetPrice - currentPrice) / currentPrice) * 100
-                                                        : 0;
+                                                        : null;
                                                 return (
                                                     <Link
                                                         to={`/prediction/${p._id}`}

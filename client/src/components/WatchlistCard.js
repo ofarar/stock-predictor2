@@ -5,7 +5,7 @@ import { formatPercentage, formatCurrency } from '../utils/formatters';
 
 const WatchlistCard = ({ quote, isSelected, isEditMode, onRemove, onClick }) => {
     const { t, i18n } = useTranslation();
-    const priceChange = quote?.regularMarketChangePercent || 0;
+    const priceChange = quote?.regularMarketChangePercent;
 
     return (
         <div className="relative flex-shrink-0 w-56">
