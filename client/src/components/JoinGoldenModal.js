@@ -39,16 +39,16 @@ const JoinGoldenModal = ({ isOpen, onClose, goldenMember, onUpdate }) => {
                     <div className="text-center animate-fade-in">
                         <div className="text-5xl mb-4">✅</div>
                         <h2 className="text-2xl font-bold text-white mb-2">
-                            Subscription Successful!
+                            {t('joinGoldenModal.successTitle')}
                         </h2>
                         <p className="text-gray-400 mb-6">
-                            You now have access to {goldenMember.username}'s exclusive feed.
+                            {t('joinGoldenModal.successDescription', { username: goldenMember.username })}
                         </p>
                         <button
                             onClick={handleCloseOnSuccess}
                             className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600"
                         >
-                            Awesome!
+                            {t('joinGoldenModal.successButton')}
                         </button>
                     </div>
                 ) : (
@@ -101,7 +101,7 @@ const JoinGoldenModal = ({ isOpen, onClose, goldenMember, onUpdate }) => {
                                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944A12.02 12.02 0 0012 22a12.02 12.02 0 009-1.056A11.955 11.955 0 0121 12c0-2.828-1.035-5.405-2.772-7.394"
                                 />
                             </svg>
-                            <span>You can cancel anytime.</span>
+                            <span>{t('joinGoldenModal.cancelAnytime')}</span>
                         </div>
                     </>
                 )}
