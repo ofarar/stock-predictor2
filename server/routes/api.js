@@ -28,122 +28,103 @@ const contactLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-router.post('/admin/health-check', async (req, res) => {
-    // 1. Security: Ensure the user is an admin.
+router.post('/admin/health-check/:service', async (req, res) => {
+    // 1. Security check remains the same.
     if (!req.user || !req.user.isAdmin) {
         return res.status(403).json({ message: 'Forbidden: Admins only.' });
     }
 
-    const checkService = async (serviceName, promiseFn) => {
+    const { service } = req.params;
+
+    const checkService = async (promiseFn, successDetails) => {
         const startTime = Date.now();
         try {
-            await promiseFn();
+            await promiseFn(); // Await the promise but don't store the massive result
             const latency = Date.now() - startTime;
-            return { service: serviceName, status: 'success', latency: `${latency}ms`, details: 'OK' };
+            // Use the custom success message or the default 'OK'
+            return res.json({ service, status: 'success', latency: `${latency}ms`, details: successDetails || 'OK' });
         } catch (error) {
             const latency = Date.now() - startTime;
-            return { service: serviceName, status: 'failed', latency: `${latency}ms`, details: error.message };
+            return res.json({ service, status: 'failed', latency: `${latency}ms`, details: error.message });
         }
     };
 
-    // 2. Run all checks in parallel.
-    const results = await Promise.all([
-        checkService('MongoDB Connection', () => {
-            return new Promise((resolve, reject) => {
+    // 2. Use a switch statement to run only the requested check.
+    switch (service) {
+        case 'mongodb':
+            return checkService(() => new Promise((resolve, reject) => {
                 const state = mongoose.connection.readyState;
-                if (state === 1) resolve(); // 1 means 'connected'
+                if (state === 1) resolve();
                 else reject(new Error(`DB state is not connected (state: ${state})`));
+            }));
+        case 'yahoo-current':
+            return checkService(() => yahooFinance.quote('AAPL'));
+        case 'yahoo-historical':
+            return checkService(() => yahooFinance.historical('AAPL', { period1: '2024-01-01' }));
+        case 'avatar':
+            return checkService(() => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test'));
+        case 'email':
+            return checkService(() => transporter.verify());
+        case 'cron':
+            return checkService(async () => {
+                const jobLog = await JobLog.findOne({ jobId: 'assessment-job' });
+                if (!jobLog) throw new Error('Scheduler has likely never run.');
+                if (Date.now() - new Date(jobLog.lastAttemptedRun).getTime() > 10 * 60 * 1000) {
+                    throw new Error('Scheduler is down. Last heartbeat was over 10 minutes ago.');
+                }
+                const lastSuccessLog = await PredictionLog.findOne().sort({ assessedAt: -1 });
+                if (!lastSuccessLog) return 'OK (Scheduler running, no work yet)';
+                const hoursSinceSuccess = ((Date.now() - new Date(lastSuccessLog.assessedAt).getTime()) / 3600000).toFixed(1);
+                return `OK (Last scored item ${hoursSinceSuccess} hours ago)`;
             });
-        }),
-        checkService('Yahoo Finance (Current Price)', () => yahooFinance.quote('AAPL')),
-        checkService('Yahoo Finance (Historical Data)', () => yahooFinance.historical('AAPL', { period1: '2024-01-01', period2: '2024-01-02' })),
-        checkService('Avatar API (DiceBear)', () => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test')),
-        checkService('Email Service (Nodemailer)', () => transporter.verify()),
-        checkService('Cron Job (Scoring)', async () => {
-            const jobLog = await JobLog.findOne({ jobId: 'assessment-job' });
+        case 'db-integrity':
+            return checkService(async () => {
+                const allUserIds = await User.find().select('_id');
+                const orphanedPredictions = await Prediction.countDocuments({ userId: { $nin: allUserIds } });
+                if (orphanedPredictions > 0) {
+                    throw new Error(`${orphanedPredictions} orphaned prediction(s) found. Data needs cleanup.`);
+                }
+                return 'OK (No orphaned data found)';
+            });
 
-            // Check 1: Did the job's heartbeat run recently?
-            if (!jobLog) {
-                throw new Error('Scheduler has likely never run. Check server status.');
-            }
-            const timeSinceHeartbeat = Date.now() - new Date(jobLog.lastAttemptedRun).getTime();
-            if (timeSinceHeartbeat > 10 * 60 * 1000) { // 10 minutes
-                throw new Error(`Scheduler is down. Last heartbeat was over 10 minutes ago.`);
-            }
+        case 'badge-json':
+            return checkService(async () => {
+                const settings = await Setting.findOne();
+                if (!settings || !settings.badgeSettings) {
+                    throw new Error('Badge settings object not found in the database.');
+                }
+                if (typeof settings.badgeSettings !== 'object' || Array.isArray(settings.badgeSettings)) {
+                    throw new Error('Badge settings are not a valid JSON object.');
+                }
+                return 'OK (Badge rules are a valid object)';
+            });
 
-            // Check 2: When was the last time it successfully scored something?
-            const lastSuccessLog = await PredictionLog.findOne().sort({ assessedAt: -1 });
-            if (!lastSuccessLog) {
-                // This is not an error, it just means no predictions have been scored yet.
-                return 'OK (Scheduler is running, no predictions scored yet).';
-            }
+        case 'api-performance':
+            return checkService(async () => {
+                const anyUser = await User.findOne().select('_id');
+                if (!anyUser) {
+                    return 'OK (Skipped: No users in DB to test)';
+                }
+                const port = process.env.PORT || 5001;
+                // This makes an internal HTTP request to test the full stack for the profile endpoint
+                await axios.get(`http://localhost:${port}/api/profile/${anyUser._id}`);
+                return 'OK'; // We only care if it resolves without error
+            });
 
-            const timeSinceSuccess = Date.now() - new Date(lastSuccessLog.assessedAt).getTime();
-            const hoursSinceSuccess = (timeSinceSuccess / (1000 * 60 * 60)).toFixed(1);
-
-            // If it's been a long time since a success, it's a warning, not a critical failure.
-            if (timeSinceSuccess > 6 * 60 * 60 * 1000) { // 6 hours
-                throw new Error(`Warning: Scheduler is running, but no predictions have been scored in ${hoursSinceSuccess} hours. This may be normal if there are no predictions to assess.`);
-            }
-
-            return `OK (Last scored prediction ${hoursSinceSuccess} hours ago)`;
-        }),
-        checkService('API Performance (Profile Endpoint)', async () => {
-            const anyUser = await User.findOne().select('_id');
-            if (!anyUser) {
-                // If there are no users, the check can't run, but this isn't a failure.
-                return 'OK (No users to test)';
-            }
-            // This makes an HTTP request from your server back to itself to test the full stack.
-            const port = process.env.PORT || 5001;
-            return axios.get(`http://localhost:${port}/api/profile/${anyUser._id}`);
-        }),
-        checkService('Server Configuration (.env)', () => {
-            return new Promise((resolve, reject) => {
-                const requiredVars = [
-                    'MONGO_URI',
-                    'COOKIE_KEY',
-                    'GOOGLE_CLIENT_ID',
-                    'GOOGLE_CLIENT_SECRET',
-                    'GMAIL_USER',
-                    'GMAIL_PASS'
-                ];
+        case 'config-env':
+            return checkService(() => new Promise((resolve, reject) => {
+                const requiredVars = ['MONGO_URI', 'COOKIE_KEY', 'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GMAIL_USER', 'GMAIL_PASS'];
                 const missingVars = requiredVars.filter(v => !process.env[v]);
                 if (missingVars.length > 0) {
                     reject(new Error(`Missing required environment variables: ${missingVars.join(', ')}`));
                 } else {
-                    resolve('OK');
+                    resolve('OK (All required variables are present)');
                 }
-            });
-        }),
-        checkService('Database Integrity (Orphans)', async () => {
-            // Check for orphaned predictions
-            const orphanedPredictions = await Prediction.find({
-                userId: { $nin: await User.find().select('_id') }
-            });
-            if (orphanedPredictions.length > 0) {
-                throw new Error(`${orphanedPredictions.length} orphaned prediction(s) found.`);
-            }
-            return 'OK';
-        }),
+            }));
 
-        checkService('Admin Settings (Badge JSON)', async () => {
-            const settings = await Setting.findOne();
-            if (!settings || !settings.badgeSettings) {
-                throw new Error('Badge settings object not found in the database.');
-            }
-            // The check is simply whether this object exists and is parsable.
-            // Since it's stored as an object, a direct check is enough.
-            // If it were a string, we would use JSON.parse() here.
-            if (typeof settings.badgeSettings !== 'object') {
-                throw new Error('Badge settings are not a valid object.');
-            }
-            return 'OK';
-        })
-    ]);
-
-    // 3. Send the consolidated report to the frontend.
-    res.json(results);
+        default:
+            return res.status(404).json({ message: 'Unknown service check.' });
+    }
 });
 
 // NEW: Recommendation Wizard Endpoint
