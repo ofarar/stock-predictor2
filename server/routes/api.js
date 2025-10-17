@@ -17,6 +17,7 @@ const window = new JSDOM('').window;
 const purify = DOMPurify(window);
 const rateLimit = require('express-rate-limit');
 const PredictionLog = require('../models/PredictionLog');
+const JobLog = require('../models/JobLog');
 
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({
@@ -59,16 +60,33 @@ router.post('/admin/health-check', async (req, res) => {
         checkService('Avatar API (DiceBear)', () => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test')),
         checkService('Email Service (Nodemailer)', () => transporter.verify()),
         checkService('Cron Job (Scoring)', async () => {
-            const lastLog = await PredictionLog.findOne().sort({ assessedAt: -1 });
-            if (!lastLog) {
-                throw new Error('No assessment logs found. The job may have never run.');
+            const jobLog = await JobLog.findOne({ jobId: 'assessment-job' });
+
+            // Check 1: Did the job's heartbeat run recently?
+            if (!jobLog) {
+                throw new Error('Scheduler has likely never run. Check server status.');
             }
-            const timeSinceLastRun = Date.now() - new Date(lastLog.assessedAt).getTime();
-            // The job runs every 5 minutes, so we check if it has run in the last 10.
-            if (timeSinceLastRun > 10 * 60 * 1000) {
-                throw new Error(`Job has not run in over 10 minutes. Last run: ${lastLog.assessedAt.toISOString()}`);
+            const timeSinceHeartbeat = Date.now() - new Date(jobLog.lastAttemptedRun).getTime();
+            if (timeSinceHeartbeat > 10 * 60 * 1000) { // 10 minutes
+                throw new Error(`Scheduler is down. Last heartbeat was over 10 minutes ago.`);
             }
-            return 'OK';
+
+            // Check 2: When was the last time it successfully scored something?
+            const lastSuccessLog = await PredictionLog.findOne().sort({ assessedAt: -1 });
+            if (!lastSuccessLog) {
+                // This is not an error, it just means no predictions have been scored yet.
+                return 'OK (Scheduler is running, no predictions scored yet).';
+            }
+
+            const timeSinceSuccess = Date.now() - new Date(lastSuccessLog.assessedAt).getTime();
+            const hoursSinceSuccess = (timeSinceSuccess / (1000 * 60 * 60)).toFixed(1);
+
+            // If it's been a long time since a success, it's a warning, not a critical failure.
+            if (timeSinceSuccess > 6 * 60 * 60 * 1000) { // 6 hours
+                throw new Error(`Warning: Scheduler is running, but no predictions have been scored in ${hoursSinceSuccess} hours. This may be normal if there are no predictions to assess.`);
+            }
+
+            return `OK (Last scored prediction ${hoursSinceSuccess} hours ago)`;
         }),
         checkService('API Performance (Profile Endpoint)', async () => {
             const anyUser = await User.findOne().select('_id');

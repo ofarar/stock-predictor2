@@ -1,6 +1,7 @@
 const Prediction = require('../models/Prediction');
 const User = require('../models/User');
 const PredictionLog = require('../models/PredictionLog');
+const JobLog = require('../models/JobLog');
 const Notification = require('../models/Notification');
 const yahooFinance = require('yahoo-finance2').default;
 const { awardBadges } = require('../services/badgeService'); // FIX: Import the awardBadges function
@@ -25,10 +26,10 @@ function calculateProximityScore(predictedPrice, actualPrice) {
     }
 
     const score = MAX_SCORE * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
-    
+
     // --- THIS IS THE CORRECT LINE ---
     // It ensures the score is saved with one decimal place (e.g., 91.8)
-    return parseFloat(score.toFixed(1)); 
+    return parseFloat(score.toFixed(1));
 }
 
 /**
@@ -44,7 +45,7 @@ async function getActualStockPrice(ticker, deadline) {
             period1: deadline,
             period2: new Date(deadline.getTime() + 24 * 60 * 60 * 1000), // A one-day range
         };
-        
+
         const result = await yahooFinance.historical(ticker, queryOptions);
 
         if (result && result.length > 0) {
@@ -59,6 +60,17 @@ async function getActualStockPrice(ticker, deadline) {
 }
 
 const runAssessmentJob = async () => {
+    // This is the "heartbeat". It runs every time the job is triggered.
+    try {
+        await JobLog.findOneAndUpdate(
+            { jobId: 'assessment-job' },
+            { lastAttemptedRun: new Date() },
+            { upsert: true }
+        );
+    } catch (err) {
+        console.error("CRITICAL: Could not update cron job heartbeat.", err);
+        // We don't stop the job, but this is a serious warning.
+    }
     console.log('Starting assessment job...');
 
     const predictionsToAssess = await Prediction.find({
@@ -97,7 +109,7 @@ const runAssessmentJob = async () => {
                 await user.save();
             } else {
                 console.warn(`Could not find user with ID ${prediction.userId._id} to update score.`);
-                continue; 
+                continue;
             }
 
             // --- Create "Score Assessed" Notification ---
