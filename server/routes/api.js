@@ -820,19 +820,19 @@ router.get('/watchlist', async (req, res) => {
                     .lean(),
                 // 2. Get top 3 predictors overall for this ticker
                 Prediction.aggregate([
-                    { $match: { status: 'Assessed', stockTicker: ticker } },
+                    { $match: { status: 'Assessed', stockTicker: ticker, userId: { $ne: req.user._id } } },
                     { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
                     { $sort: { avgScore: -1 } },
                     { $limit: 3 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] } } }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice'} }
                 ]),
                 // 3. Get the single top verified predictor for this ticker
                 Prediction.aggregate([
                     { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $match: { status: 'Assessed', stockTicker: ticker, 'user.isVerified': true } },
+                    { $match: { status: 'Assessed', stockTicker: ticker, 'user.isVerified': true, userId: { $ne: req.user._id } } },
                     { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
                     { $sort: { avgScore: -1 } },
                     { $limit: 1 },
@@ -1256,7 +1256,9 @@ router.get('/scoreboard', async (req, res) => {
                     isGoldenMember: '$userDetails.isGoldenMember',
                     isVerified: '$userDetails.isVerified',
                     avgScore: { $round: ['$avgScore', 1] },
-                    predictionCount: 1
+                    predictionCount: 1,
+                    acceptingNewSubscribers: '$user.acceptingNewSubscribers',
+                    goldenMemberPrice: '$user.goldenMemberPrice'
                 }
             }
         ];

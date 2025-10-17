@@ -7,10 +7,10 @@ import VerifiedTick from '../components/VerifiedTick';
 import AddStockModal from '../components/AddStockModal';
 import WatchlistCard from '../components/WatchlistCard';
 import { formatCurrency, formatDate, formatPercentage } from '../utils/formatters';
-
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from '../components/SortableItem';
+import JoinGoldenModal from '../components/JoinGoldenModal';
 
 const WatchlistPage = ({ settings }) => {
     const { t, i18n } = useTranslation();
@@ -23,6 +23,8 @@ const WatchlistPage = ({ settings }) => {
     const [sortBy, setSortBy] = useState('date');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+    const [userToJoin, setUserToJoin] = useState(null);
 
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
 
@@ -138,6 +140,18 @@ const WatchlistPage = ({ settings }) => {
         });
     };
 
+    const handleJoinClick = (user) => {
+        setUserToJoin(user);
+        setIsJoinModalOpen(true);
+    };
+
+    const handleJoinSuccess = () => {
+        toast.success(`Successfully subscribed to ${userToJoin.username}!`);
+        setIsJoinModalOpen(false);
+        setUserToJoin(null);
+        fetchAllData(); // Refetch all data to update the UI
+    };
+
     const selectedPredictionData = data.predictions[selectedTicker] || { items: [], totalPages: 0, currentPage: 0 };
     const currentPrice = data?.quotes?.find((q) => q.symbol === selectedTicker)?.regularMarketPrice || 0;
 
@@ -176,6 +190,12 @@ const WatchlistPage = ({ settings }) => {
                     onAdd={handleWatchlistUpdate}
                 />
             )}
+            <JoinGoldenModal
+                isOpen={isJoinModalOpen}
+                onClose={() => setIsJoinModalOpen(false)}
+                goldenMember={userToJoin}
+                onUpdate={handleJoinSuccess}
+            />
             <div className="animate-fade-in space-y-8">
                 <div className="flex items-center gap-4">
                     <h1 className="text-3xl font-bold text-white">{t('watchlistPage.title')}</h1>
@@ -350,50 +370,92 @@ const WatchlistPage = ({ settings }) => {
                                     {data.recommendedUsers[selectedTicker]?.length > 0 ? (
                                         <div className="bg-gray-800 p-4 rounded-lg space-y-3">
                                             {data.recommendedUsers[selectedTicker].map((user) => {
+                                                // --- All button logic is now handled cleanly at the top ---
+
+                                                // 1. Determine if the current user is already following or subscribed
                                                 const isFollowing = currentUser?.following.includes(user._id);
+                                                const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);
+
+                                                // 2. Determine if the "Follow" button should be shown
+                                                const shouldShowFollowButton = !isFollowing && currentUser && currentUser._id !== user._id;
+
+                                                // 3. Determine if the "Join" button should be shown
+                                                // It should only appear if the member is golden, accepting subs, and is not the current user.
+                                                const shouldShowJoinButton = user.isGoldenMember && user.acceptingNewSubscribers && currentUser?._id !== user._id;
+
                                                 return (
-                                                    <div
-                                                        key={user._id}
-                                                        className="flex items-center bg-gray-700 p-3 rounded-lg"
-                                                    >
-                                                        <img
-                                                            src={user.avatar}
-                                                            alt="avatar"
-                                                            className={`w-10 h-10 rounded-full border-2 ${user.isGoldenMember
-                                                                ? 'border-yellow-400'
-                                                                : 'border-gray-600'
-                                                                }`}
-                                                        />
-                                                        <div className="ml-3 flex-grow">
-                                                            <div className="flex items-center">
-                                                                <Link
-                                                                    to={`/profile/${user._id}`}
-                                                                    className="font-semibold text-white hover:underline mr-[2px]"
-                                                                >
-                                                                    {user.username}
-                                                                </Link>
-                                                                {settings?.isVerificationEnabled && user.isVerified && (
-                                                                    <div className="inline-block translate-y-[1px]">
-                                                                        <VerifiedTick />
-                                                                    </div>
-                                                                )}
+                                                    <div key={user._id} className="bg-gray-700 p-3 rounded-lg flex items-center justify-between">
+                                                        {/* Main container for user info on the left */}
+                                                        <div className="flex items-center flex-grow min-w-0">
+                                                            <img
+                                                                src={user.avatar}
+                                                                alt="avatar"
+                                                                className={`w-10 h-10 rounded-full border-2 flex-shrink-0 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                                                            />
+                                                            <div className="ml-3 min-w-0">
+                                                                <div className="flex items-center">
+                                                                    <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline truncate mr-[2px]">
+                                                                        {user.username}
+                                                                    </Link>
+                                                                    {settings?.isVerificationEnabled && user.isVerified && (
+                                                                        <div className="inline-block translate-y-[1px] flex-shrink-0"><VerifiedTick /></div>
+                                                                    )}
+                                                                </div>
+                                                                <p className="text-xs text-gray-400">
+                                                                    {t('watchlistPage.avgScoreLabel')}
+                                                                    <span className="font-bold text-green-400 ml-1">{user.avgScore}</span>
+                                                                </p>
                                                             </div>
-                                                            <p className="text-xs text-gray-400">
-                                                                {t('watchlistPage.avgScoreLabel')}
-                                                                <span className="font-bold text-green-400 ml-1">{user.avgScore}</span>
-                                                            </p>
                                                         </div>
 
-                                                        {!isFollowing &&
-                                                            currentUser &&
-                                                            currentUser._id !== user._id && (
+                                                        {/* NEW: Container for buttons on the right */}
+                                                        <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
+                                                            {/* --- Corrected Follow/Following Button Logic --- */}
+                                                            {currentUser && currentUser._id !== user._id && (
+                                                                isFollowing ? (
+                                                                    <button
+                                                                        disabled
+                                                                        className="bg-gray-600 text-gray-400 text-xs font-bold py-1 px-3 rounded-full cursor-not-allowed"
+                                                                    >
+                                                                        {t('profile_following_button')}
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        onClick={() => handleFollow(user._id)}
+                                                                        className="bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-blue-700"
+                                                                    >
+                                                                        {t('profile_follow_button')}
+                                                                    </button>
+                                                                )
+                                                            )}
+
+                                                            {/* --- Corrected Join Button Logic --- */}
+                                                            {user.isGoldenMember && !isSubscribed && currentUser?._id !== user._id && (
+                                                                user.acceptingNewSubscribers ? (
+                                                                    <button
+                                                                        onClick={() => handleJoinClick(user)}
+                                                                        className="bg-yellow-500 text-black text-xs font-bold py-1 px-3 rounded-full hover:bg-yellow-400"
+                                                                    >
+                                                                        {t('profile_join_button', { price: user.goldenMemberPrice })}
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        disabled
+                                                                        className="bg-gray-600 text-gray-400 text-xs font-bold py-1 px-3 rounded-full cursor-not-allowed"
+                                                                    >
+                                                                        {t('profile_subscriptions_paused')}
+                                                                    </button>
+                                                                )
+                                                            )}
+                                                            {isSubscribed && currentUser?._id !== user._id && user.isGoldenMember && (
                                                                 <button
-                                                                    onClick={() => handleFollow(user._id)}
-                                                                    className="bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-blue-700 ml-2"
+                                                                    disabled
+                                                                    className="bg-gray-600 text-gray-400 text-xs font-bold py-1 px-3 rounded-full cursor-not-allowed"
                                                                 >
-                                                                    {t('watchlistPage.followingButton')}
+                                                                    {t('profile_subscribed_badge')}
                                                                 </button>
                                                             )}
+                                                        </div>
                                                     </div>
                                                 );
                                             })}
