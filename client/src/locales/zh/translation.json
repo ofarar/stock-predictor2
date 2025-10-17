@@ -525,7 +525,10 @@
         "toast": {
             "success": "您现在已订阅 {{username}}！",
             "error": "加入失败。请重试。"
-        }
+        },
+        "successTitle": "订阅成功！",
+        "successDescription": "您现在可以访问 {{username}} 的专属动态。",
+        "successButton": "太棒了！"
     },
     "loginPromptModal": {
         "title": "加入社区",

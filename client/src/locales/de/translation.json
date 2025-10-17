@@ -525,7 +525,10 @@
         "toast": {
             "success": "Sie haben {{username}} jetzt abonniert!",
             "error": "Beitritt fehlgeschlagen. Bitte versuchen Sie es erneut."
-        }
+        },
+        "successTitle": "Abonnement erfolgreich!",
+        "successDescription": "Du hast jetzt Zugriff auf den exklusiven Feed von {{username}}.",
+        "successButton": "Fantastisch!"
     },
     "loginPromptModal": {
         "title": "Tritt der Community bei",

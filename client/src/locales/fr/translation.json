@@ -525,7 +525,10 @@
         "toast": {
             "success": "Vous êtes maintenant abonné à {{username}} !",
             "error": "L'abonnement a échoué. Veuillez réessayer."
-        }
+        },
+        "successTitle": "Abonnement réussi !",
+        "successDescription": "Vous avez maintenant accès au flux exclusif de {{username}}.",
+        "successButton": "Génial !"
     },
     "loginPromptModal": {
         "title": "Rejoignez la Communauté",

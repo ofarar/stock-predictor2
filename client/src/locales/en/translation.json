@@ -525,7 +525,10 @@
     "toast": {
       "success": "You are now subscribed to {{username}}!",
       "error": "Failed to join. Please try again."
-    }
+    },
+    "successTitle": "Subscription Successful!",
+    "successDescription": "You now have access to {{username}}'s exclusive feed.",
+    "successButton": "Awesome!"
   },
   "loginPromptModal": {
     "title": "Join the Community",

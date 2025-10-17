@@ -525,7 +525,10 @@
     "toast": {
       "success": "Artık {{username}}'e abonesiniz!",
       "error": "Katılma başarısız. Lütfen tekrar deneyin."
-    }
+    },
+    "successTitle": "Abonelik Başarılı!",
+    "successDescription": "Artık {{username}}'in özel akışına erişebilirsiniz.",
+    "successButton": "Harika!"
   },
   "loginPromptModal": {
     "title": "Topluluğa Katıl",

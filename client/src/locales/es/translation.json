@@ -525,7 +525,10 @@
         "toast": {
             "success": "¡Ahora estás suscrito a {{username}}!",
             "error": "No se pudo unir. Por favor, inténtalo de nuevo."
-        }
+        },
+        "successTitle": "¡Suscripción exitosa!",
+        "successDescription": "Ahora tienes acceso al feed exclusivo de {{username}}.",
+        "successButton": "¡Genial!"
     },
     "loginPromptModal": {
         "title": "Únete a la Comunidad",
