@@ -550,6 +550,7 @@
       "daily": "Günlük",
       "weekly": "Haftalık",
       "monthly": "Aylık",
+      "quarterly": "Üç Aylık",
       "yearly": "Yıllık"
     },
     "noData": "Bu filtre için performans verisi yok.",

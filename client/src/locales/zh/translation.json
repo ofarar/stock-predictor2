@@ -550,6 +550,7 @@
             "daily": "每日",
             "weekly": "每周",
             "monthly": "每月",
+            "quarterly": "季度",
             "yearly": "每年"
         },
         "noData": "此筛选条件下没有表现数据。",

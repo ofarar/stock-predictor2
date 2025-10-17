@@ -550,6 +550,7 @@
       "daily": "Daily",
       "weekly": "Weekly",
       "monthly": "Monthly",
+      "quarterly": "Quarterly",
       "yearly": "Yearly"
     },
     "noData": "No performance data for this filter.",

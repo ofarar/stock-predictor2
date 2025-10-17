@@ -550,6 +550,7 @@
             "daily": "Diario",
             "weekly": "Semanal",
             "monthly": "Mensual",
+            "quarterly": "Trimestral",
             "yearly": "Anual"
         },
         "noData": "No hay datos de rendimiento para este filtro.",

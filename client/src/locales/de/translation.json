@@ -550,6 +550,7 @@
             "daily": "Täglich",
             "weekly": "Wöchentlich",
             "monthly": "Monatlich",
+            "quarterly": "Vierteljährlich",
             "yearly": "Jährlich"
         },
         "noData": "Keine Leistungsdaten für diesen Filter.",

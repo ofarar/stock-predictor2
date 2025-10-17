@@ -10,7 +10,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const PerformanceChart = ({ chartData = [] }) => {
     const { t, i18n } = useTranslation();
     const [filter, setFilter] = useState('Overall');
-    const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
+    const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     const filteredAndFormattedData = useMemo(() => {
         let dataPoints = chartData;
