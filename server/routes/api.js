@@ -28,6 +28,79 @@ const contactLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
+// NEW: Paginated endpoint for Top Predictors on a Stock Page
+router.get('/stock/:ticker/top-predictors', async (req, res) => {
+    const { ticker } = req.params;
+    const { predictionType = 'Overall', page = 1, limit = 5 } = req.query; // Smaller limit for this view
+
+    try {
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
+
+        const matchQuery = { status: 'Assessed', stockTicker: ticker.toUpperCase() };
+        if (predictionType !== 'Overall') {
+            matchQuery.predictionType = predictionType;
+        }
+
+        const countPipeline = [{ $match: matchQuery }, { $group: { _id: '$userId' } }, { $count: 'total' }];
+        const totalResult = await Prediction.aggregate(countPipeline);
+        const totalItems = totalResult.length > 0 ? totalResult[0].total : 0;
+        const totalPages = Math.ceil(totalItems / limitNum);
+
+        const predictors = await Prediction.aggregate([
+            { $match: matchQuery },
+            { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
+            { $sort: { avgScore: -1 } },
+            { $skip: skip },
+            { $limit: limitNum },
+            { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'userDetails' } },
+            { $unwind: '$userDetails' },
+            {
+                $project: {
+                    _id: '$userDetails._id',
+                    username: '$userDetails.username',
+                    avatar: '$userDetails.avatar',
+                    isGoldenMember: '$userDetails.isGoldenMember',
+                    isVerified: '$userDetails.isVerified',
+                    avgScore: { $round: ['$avgScore', 1] }
+                }
+            }
+        ]);
+
+        res.json({ items: predictors, totalPages, currentPage: pageNum });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch top predictors" });
+    }
+});
+
+// NEW: Paginated endpoint for Active Predictions on a Stock Page
+router.get('/stock/:ticker/active-predictions', async (req, res) => {
+    const { ticker } = req.params;
+    const { page = 1, limit = 5 } = req.query; // Smaller limit
+
+    try {
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
+
+        const query = { stockTicker: ticker.toUpperCase(), status: 'Active' };
+
+        const totalItems = await Prediction.countDocuments(query);
+        const totalPages = Math.ceil(totalItems / limitNum);
+
+        const predictions = await Prediction.find(query)
+            .sort({ createdAt: -1 })
+            .populate('userId', 'username avatar isGoldenMember isVerified')
+            .skip(skip)
+            .limit(limitNum);
+
+        res.json({ items: predictions, totalPages, currentPage: pageNum });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch active predictions" });
+    }
+});
+
 router.post('/admin/health-check/:service', async (req, res) => {
     // 1. Security check remains the same.
     if (!req.user || !req.user.isAdmin) {
@@ -2063,68 +2136,21 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
     }
 });
 
-// GET: Data for a specific stock page - FULLY OVERHAULED
-// GET: Data for a specific stock page - FULLY OVERHAULED & RESILIENT
 router.get('/stock/:ticker', async (req, res) => {
     const ticker = req.params.ticker.toUpperCase();
-    const { type: predictionTypeFilter = 'Overall' } = req.query;
-
     try {
-        // Isolate the external API call and handle its failure gracefully
         let quote = null;
         try {
             quote = await yahooFinance.quote(ticker);
-        } catch (err) {
-            console.error(`StockPage: Non-critical error fetching quote for ${ticker}. Error: ${err.message}`);
-            // quote remains null, but the function will not crash.
+        } catch (yahooError) {
+            console.error(`StockPage: Non-critical error fetching quote for ${ticker}. Error: ${yahooError.message}`);
         }
-
-        // --- Database Queries (run in parallel) ---
-
-        // Build the match criteria for the top predictors aggregation
-        const predictionMatch = { status: 'Assessed', stockTicker: ticker };
-        if (predictionTypeFilter !== 'Overall') {
-            predictionMatch.predictionType = predictionTypeFilter;
-        }
-
-        // Define the aggregation pipeline for finding top predictors
-        const topPredictorsPipeline = [
-            { $match: predictionMatch },
-            { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
-            { $sort: { avgScore: -1 } },
-            { $limit: 10 },
-            { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'userDetails' } },
-            { $unwind: '$userDetails' },
-            {
-                $project: {
-                    _id: '$userDetails._id',
-                    username: '$userDetails.username',
-                    avatar: '$userDetails.avatar',
-                    isGoldenMember: '$userDetails.isGoldenMember',
-                    isVerified: '$userDetails.isVerified',
-                    avgScore: { $round: ['$avgScore', 1] }
-                }
-            }
-        ];
-
-        // Fetch active predictions and top predictors from the database in parallel
-        const [activePredictions, topPredictors] = await Promise.all([
-            Prediction.find({ stockTicker: ticker, status: 'Active' })
-                .populate('userId', 'username avatar isGoldenMember isVerified')
-                .sort({ createdAt: -1 }),
-            Prediction.aggregate(topPredictorsPipeline)
-        ]);
-
-        // Send a successful response, even if the quote is null
-        res.json({ quote, topPredictors, activePredictions });
-
+        res.json({ quote }); // Only send the quote
     } catch (dbError) {
-        // This catch block will now only trigger for critical database errors
-        console.error(`CRITICAL Error fetching database data for stock ${ticker}:`, dbError);
+        console.error(`Error fetching data for stock ${ticker}:`, dbError);
         res.status(500).json({ message: "Failed to fetch stock data" });
     }
 });
-// In server/routes/api.js
 
 // GET: The details for a single prediction
 router.get('/prediction/:id', async (req, res) => {

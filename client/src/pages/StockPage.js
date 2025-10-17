@@ -6,73 +6,119 @@ import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { formatCurrency } from '../utils/formatters';
-import Tooltip from '../components/Tooltip';
+import LoadMoreButton from '../components/LoadMoreButton'; // Import the button
 
-const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
+const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
     const { ticker } = useParams();
-    const [stockData, setStockData] = useState({
-        quote: null,
-        topPredictors: [],
-        activePredictions: []
-    });
+    
+    // State for main page data (quote and user)
+    const [quote, setQuote] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [filter, setFilter] = useState('Overall');
     const [currentUser, setCurrentUser] = useState(null);
+
+    // Paginated state for Top Predictors
+    const [topPredictors, setTopPredictors] = useState({ items: [], page: 1, totalPages: 0 });
+    const [loadingPredictors, setLoadingPredictors] = useState(false);
+    const [filter, setFilter] = useState('Overall');
+    
+    // Paginated state for Active Predictions
+    const [activePredictions, setActivePredictions] = useState({ items: [], page: 1, totalPages: 0 });
+    const [loadingActive, setLoadingActive] = useState(false);
 
     const predictionTypes = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    const fetchStockData = useCallback(async () => {
+    // --- DATA FETCHING LOGIC ---
+
+    const fetchPageData = useCallback(async () => {
+        setLoading(true);
         try {
-            setLoading(true);
-            setError('');
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}?type=${filter}`);
-            setStockData(response.data);
+            const [quoteRes, userRes] = await Promise.all([
+                axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}`),
+                axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
+            ]);
+            setQuote(quoteRes.data.quote);
+            setCurrentUser(userRes.data);
         } catch (err) {
-            console.error("Failed to fetch stock data", err);
             setError(t('could_not_load_stock_data', { ticker }));
-            toast.error(t('error_loading_stock_data', { ticker }));
         } finally {
             setLoading(false);
         }
-    }, [ticker, filter, t]);
+    }, [ticker, t]);
+
+    const fetchTopPredictors = useCallback(async (pageNum = 1) => {
+        setLoadingPredictors(true);
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}/top-predictors`, {
+                params: { predictionType: filter, page: pageNum }
+            });
+            setTopPredictors(prev => ({
+                items: pageNum === 1 ? res.data.items : [...prev.items, ...res.data.items],
+                page: res.data.currentPage,
+                totalPages: res.data.totalPages
+            }));
+        } catch (err) { toast.error("Failed to load top predictors."); } 
+        finally { setLoadingPredictors(false); }
+    }, [ticker, filter]);
+    
+    const fetchActivePredictions = useCallback(async (pageNum = 1) => {
+        setLoadingActive(true);
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}/active-predictions`, {
+                params: { page: pageNum }
+            });
+            setActivePredictions(prev => ({
+                items: pageNum === 1 ? res.data.items : [...prev.items, ...res.data.items],
+                page: res.data.currentPage,
+                totalPages: res.data.totalPages
+            }));
+        } catch (err) { toast.error("Failed to load active predictions."); } 
+        finally { setLoadingActive(false); }
+    }, [ticker]);
+
+    // --- EFFECT HOOKS TO TRIGGER FETCHING ---
 
     useEffect(() => {
-        fetchStockData();
-        if (setPageDataRefresher) {
-            setPageDataRefresher(() => fetchStockData);
-        }
-        axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
-            .then(res => setCurrentUser(res.data));
+        fetchPageData();
+        fetchActivePredictions(1);
+    }, [fetchPageData, fetchActivePredictions]);
 
-        return () => {
-            if (setPageDataRefresher) {
-                setPageDataRefresher(null);
-            }
-        };
-    }, [fetchStockData, setPageDataRefresher]);
+    useEffect(() => {
+        fetchTopPredictors(1);
+    }, [fetchTopPredictors]);
+
+    // --- HANDLERS FOR USER ACTIONS ---
+
+    const handleLoadMorePredictors = () => {
+        if (!loadingPredictors && topPredictors.page < topPredictors.totalPages) {
+            fetchTopPredictors(topPredictors.page + 1);
+        }
+    };
+    
+    const handleLoadMoreActive = () => {
+        if (!loadingActive && activePredictions.page < activePredictions.totalPages) {
+            fetchActivePredictions(activePredictions.page + 1);
+        }
+    };
 
     const handleWatchlistToggle = () => {
         const isWatching = currentUser?.watchlist?.includes(ticker);
         const action = isWatching ? 'remove' : 'add';
-
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(res => {
                 setCurrentUser(prev => ({ ...prev, watchlist: res.data.watchlist }));
             });
-
         toast.promise(promise, {
-            loading: t('loading_stock_data'),
-            success: isWatching ? t('remove_from_watchlist') + ` ${ticker}` : t('add_to_watchlist') + ` ${ticker}`,
-            error: t('error_loading_stock_data'),
+            loading: isWatching ? 'Removing...' : 'Adding...',
+            success: isWatching ? `Removed ${ticker}` : `Added ${ticker}`,
+            error: 'Failed to update watchlist.',
         });
     };
-
+    
     if (loading) return <div className="text-center text-white mt-10">{t('loading_stock_data')}</div>;
     if (error) return <div className="text-center text-red-400 mt-10">{error}</div>;
-
-    const { quote, topPredictors, activePredictions } = stockData;
+    
     const priceChange = quote?.regularMarketChange;
     const percentChange = quote?.regularMarketChangePercent;
     const isWatching = currentUser?.watchlist?.includes(ticker);
@@ -108,7 +154,7 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                         onClick={() => onPredictClick(quote)}
                         className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg disabled:bg-gray-600 disabled:cursor-not-allowed"
                         title={t('make_prediction')}
-                        disabled={!quote} // Disable button if quote data is missing
+                        disabled={!quote}
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
                     </button>
@@ -119,7 +165,6 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 bg-gray-800 p-4 sm:p-6 rounded-lg">
                         <h3 className="text-xl font-bold text-white mb-4">{t('top_predictors_for', { ticker })}</h3>
-
                         <div className="flex flex-wrap border-b border-gray-700 mb-4">
                             {predictionTypes.map(type => (
                                 <button key={type} onClick={() => setFilter(type)} className={`px-4 py-2 font-bold text-sm transition-colors ${filter === type ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
@@ -128,7 +173,9 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                             ))}
                         </div>
                         <div className="space-y-3">
-                            {topPredictors && topPredictors.length > 0 ? topPredictors.map((user, index) => (
+                            {loadingPredictors && topPredictors.page === 1 ? (
+                                <p className="text-gray-500 text-center py-8">Loading...</p>
+                            ) : topPredictors.items.length > 0 ? topPredictors.items.map((user, index) => (
                                 <div key={user._id} className="bg-gray-700 rounded-lg p-3 flex items-center justify-between">
                                     <div className="flex items-center">
                                         <span className="text-xl font-bold w-8 sm:w-10 text-center text-gray-400">{index + 1}</span>
@@ -153,12 +200,14 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                                 <p className="text-gray-500 text-center py-8">{t('no_top_predictors')}</p>
                             )}
                         </div>
+                        <LoadMoreButton
+                            onClick={handleLoadMorePredictors}
+                            isLoading={loadingPredictors}
+                            hasMore={topPredictors.page < topPredictors.totalPages}
+                        />
                     </div>
                     <div className="lg:col-span-1">
-                        {/* Conditionally render the chart or the message */}
-                        {quote ? (
-                            <StockChart ticker={ticker} />
-                        ) : (
+                        {quote ? <StockChart ticker={ticker} /> : (
                             <div className="bg-gray-800 p-4 sm:p-6 rounded-lg h-96 flex flex-col items-center justify-center text-center">
                                 <svg className="w-12 h-12 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <h4 className="font-bold text-white">{t('stockPage.chart.unavailableTitle')}</h4>
@@ -171,11 +220,14 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                 <div className="bg-gray-800 p-6 rounded-lg">
                     <h3 className="text-xl font-bold text-white mb-4">{t('active_predictions_on', { ticker })}</h3>
                     <div className="space-y-3">
-                        {activePredictions && activePredictions.length > 0 ? activePredictions.map(p => {
-                            let percentageChange = 0;
-                            if (currentPrice > 0) {
-                                percentageChange = ((p.targetPrice - currentPrice) / currentPrice) * 100;
-                            }
+                        {loadingActive && activePredictions.page === 1 ? (
+                             <p className="text-gray-500 text-center py-8">Loading...</p>
+                        ) : activePredictions.items.length > 0 ? activePredictions.items.map(p => {
+                            const percentageChange =
+                                (currentPrice > 0 && p.targetPrice)
+                                    ? ((p.targetPrice - currentPrice) / currentPrice) * 100
+                                    : null;
+
                             return (
                                 <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
                                     <img src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
@@ -189,9 +241,12 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                                         </p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-sm font-bold text-white">{t('target', { targetPrice: p.targetPrice.toFixed(2) })}</p>
+                                        <p className="text-sm font-bold text-white">{t('target', { targetPrice: p.targetPrice?.toFixed(2) ?? '...' })}</p>
                                         <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                            ({percentageChange >= 0 ? '+' : ''}{percentageChange.toFixed(1)}%)
+                                            {typeof percentageChange === 'number'
+                                                ? `(${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%)`
+                                                : '(...)'
+                                            }
                                         </p>
                                     </div>
                                 </Link>
@@ -200,6 +255,11 @@ const StockPage = ({ onPredictClick, setPageDataRefresher, settings }) => {
                             <p className="text-gray-500 text-center py-4">{t('no_active_predictions')}</p>
                         )}
                     </div>
+                    <LoadMoreButton
+                        onClick={handleLoadMoreActive}
+                        isLoading={loadingActive}
+                        hasMore={activePredictions.page < activePredictions.totalPages}
+                    />
                 </div>
             </div>
         </div>
