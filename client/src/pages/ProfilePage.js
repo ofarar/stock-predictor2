@@ -102,7 +102,7 @@ const ProfilePage = ({ settings }) => {
     const handleUnfollow = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userId}/unfollow`, {}, { withCredentials: true }).then(() => fetchData());
     };
-    
+
     const handleEditClick = (prediction) => {
         setPredictionToEdit(prediction);
         setIsEditModalOpen(true);
@@ -163,13 +163,16 @@ const ProfilePage = ({ settings }) => {
                     isSubscribed={isSubscribed}
                     handleFollow={handleFollow}
                     handleUnfollow={handleUnfollow}
-                    setIsJoinModalOpen={setIsJoinModalOpen}
+                    setIsJoinModalOpen={() => {
+                        console.log("ProfileHeader button clicked, setting modal to open!");
+                        setIsJoinModalOpen(true);
+                    }}
                     setIsGoldenModalOpen={setIsGoldenModalOpen}
                     setIsVerificationModalOpen={setIsVerificationModalOpen}
                     setIsStatusModalOpen={setIsStatusModalOpen}
                     settings={settings}
                 />
-                
+
                 <ProfileStats
                     user={user}
                     performance={filteredPerformance}
@@ -187,9 +190,9 @@ const ProfilePage = ({ settings }) => {
                         <div className="lg:col-span-2 space-y-8">
                             <WatchlistShowcase stocks={watchlistQuotes} />
                             <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} onInfoClick={() => setIsBadgeInfoOpen(true)} />
-                            <PerformanceTabs 
-                                performance={performance} 
-                                onFilterChange={handlePerformanceFilterChange} 
+                            <PerformanceTabs
+                                performance={performance}
+                                onFilterChange={handlePerformanceFilterChange}
                             />
                             <PerformanceChart chartData={profileData.chartData} />
                         </div>

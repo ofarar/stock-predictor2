@@ -854,7 +854,8 @@
     "error_recommendations": "Öneriler alınamadı. Lütfen daha sonra tekrar deneyin.",
     "no_recommendations": "Belirli kriterlerinize uyan üye bulunamadı. Aramanızı genişletmeyi deneyin.",
     "match_rate": "Eşleşme",
-    "skip_step": "Atla"
+    "skip_step": "Atla",
+    "error_recommendations_generic": "Öneriler oluşturulurken bir hata oluştu."
   },
   "common_cancel": "İptal",
   "common_next": "İleri",

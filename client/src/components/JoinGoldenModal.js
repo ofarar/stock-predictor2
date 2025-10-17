@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const JoinGoldenModal = ({ isOpen, onClose, goldenMember, onUpdate }) => {
     const { t } = useTranslation();
 
-    if (!isOpen) return null;
+    if (!isOpen || !goldenMember) return null;
 
     const handleJoin = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/users/${goldenMember._id}/join-golden`, {}, { withCredentials: true })

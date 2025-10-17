@@ -27,11 +27,22 @@ const contactLimiter = rateLimit({
 
 // NEW: Recommendation Wizard Endpoint
 router.post('/golden-members/recommend', async (req, res) => {
+    if (!req.user) { // Add a guard clause for safety
+        return res.status(401).json({ message: 'Authentication required.' });
+    }
     try {
         const { stocks, riskTolerance, investmentHorizon } = req.body;
 
+        // Fetch the full user object to get subscription data
+        const currentUser = await User.findById(req.user.id);
+        const currentUserSubscriptions = currentUser.goldenSubscriptions.map(sub => sub.user);
+
         // 1. Find all potential Golden Members
         const goldenMembers = await User.find({
+            _id: {
+                $ne: req.user._id, // Exclude the current user
+                $nin: currentUserSubscriptions // Exclude users they already subscribe to
+            },
             isGoldenMember: true,
             acceptingNewSubscribers: true
         }).lean();
@@ -120,12 +131,14 @@ router.post('/golden-members/recommend', async (req, res) => {
 
     } catch (error) {
         console.error('Recommendation error:', error);
+        // Replace the dummy data with a proper server error response.
+        res.status(500).json({ message: "find_member_wizard.error_recommendations_generic" });
         // On any crash, also send dummy data so the frontend doesn't break.
-        res.json([
-            { _id: 'dummy1', username: 'StockSavvy', avatar: 'https://i.pravatar.cc/150?u=dummy1', isVerified: true, score: 85, matchPercentage: 95 },
-            { _id: 'dummy2', username: 'MarketMaestro', avatar: 'https://i.pravatar.cc/150?u=dummy2', isVerified: false, score: 72, matchPercentage: 88 },
-            { _id: 'dummy3', username: 'ProfitProphet', avatar: 'https://i.pravatar.cc/150?u=dummy3', isVerified: true, score: 91, matchPercentage: 82 },
-        ]);
+        // res.json([
+        //     { _id: 'dummy1', username: 'StockSavvy', avatar: 'https://i.pravatar.cc/150?u=dummy1', isVerified: true, score: 85, matchPercentage: 95 },
+        //     { _id: 'dummy2', username: 'MarketMaestro', avatar: 'https://i.pravatar.cc/150?u=dummy2', isVerified: false, score: 72, matchPercentage: 88 },
+        //     { _id: 'dummy3', username: 'ProfitProphet', avatar: 'https://i.pravatar.cc/150?u=dummy3', isVerified: true, score: 91, matchPercentage: 82 },
+        // ]);
     }
 });
 

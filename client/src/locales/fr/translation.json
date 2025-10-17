@@ -877,7 +877,8 @@
         "error_recommendations": "Impossible de récupérer les recommandations. Veuillez réessayer plus tard.",
         "no_recommendations": "Aucun membre ne correspond à vos critères spécifiques. Essayez d'élargir votre recherche.",
         "match_rate": "Compatibilité",
-        "skip_step": "Passer"
+        "skip_step": "Passer",
+        "error_recommendations_generic": "Une erreur est survenue lors de la génération des recommandations."
     },
     "common_cancel": "Annuler",
     "common_next": "Suivant",

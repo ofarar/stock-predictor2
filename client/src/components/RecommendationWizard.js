@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import toast from 'react-hot-toast'; // Make sure toast is imported
 import AsyncSelect from 'react-select/async';
-import { FaCheckCircle, FaChartLine, FaShieldAlt, FaRocket, FaClock, FaCalendarAlt } from 'react-icons/fa';
+import { FaCheckCircle, FaChartLine, FaShieldAlt, FaRocket, FaClock, FaCalendarAlt, FaSpinner } from 'react-icons/fa';
 import UserCard from './UserCard'; // Assuming UserCard is in the same directory or can be imported
+import JoinGoldenModal from './JoinGoldenModal';
 
 const Step1Stocks = ({ selectedStocks, setSelectedStocks }) => {
     const { t } = useTranslation();
@@ -102,6 +103,32 @@ const Step3Horizon = ({ horizon, setHorizon }) => {
     );
 };
 
+const GoldenProgressBar = () => {
+    const { t } = useTranslation();
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        // This simulates the progress bar filling up over 2.5 seconds
+        const timer = setTimeout(() => setProgress(100), 100);
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <div className="text-center p-8">
+            <div className="flex justify-center items-center mb-4">
+                <FaSpinner className="animate-spin text-yellow-400 text-2xl mr-3" />
+                <p className="text-lg font-semibold text-gray-300">{t('find_member_wizard.loading_recommendations')}</p>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-2.5">
+                <div
+                    className="bg-gradient-to-r from-yellow-600 to-yellow-400 h-2.5 rounded-full transition-all duration-[5000ms] ease-out"
+                    style={{ width: `${progress}%` }}
+                ></div>
+            </div>
+        </div>
+    );
+};
+
 const Step4Results = ({ recommendations, loading, error, onJoin, settings }) => { // Add onJoin and settings
     const { t } = useTranslation();
     const getMatchColor = (percentage) => {
@@ -110,7 +137,7 @@ const Step4Results = ({ recommendations, loading, error, onJoin, settings }) => 
         return 'bg-yellow-900 text-yellow-300'; // Muted yellow for low match
     };
 
-    if (loading) return <div className="text-center p-8">{t('find_member_wizard.loading_recommendations')}</div>;
+    if (loading) return <GoldenProgressBar />;
     if (error) return <div className="text-center p-8 text-red-400">{t('find_member_wizard.error_recommendations')}</div>;
     if (recommendations.length === 0) return <div className="text-center p-8">{t('find_member_wizard.no_recommendations')}</div>;
 
@@ -165,46 +192,62 @@ const RecommendationWizard = ({ isOpen, onClose, settings }) => { // Add setting
         setStep(4);
         setLoading(true);
         setError(null);
-        try {
-            const payload = {
-                stocks: selectedStocks.map(s => s.value),
-                riskTolerance: risk,
-                investmentHorizon: horizon,
-            };
-            const apiUrl = `${process.env.REACT_APP_API_URL}/api/golden-members/recommend`;
-            console.log("Attempting to POST to:", apiUrl);
+        setRecommendations([]); // Clear previous results
 
-            const response = await axios.post(apiUrl, payload, { withCredentials: true });
+        const payload = {
+            stocks: selectedStocks.map(s => s.value),
+            riskTolerance: risk,
+            investmentHorizon: horizon,
+        };
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/golden-members/recommend`;
 
-            // Mark users who are already subscribed
-            const mySubscriptions = settings?.goldenSubscriptions?.map(sub => sub.user) || [];
-            const recsWithSubStatus = response.data.map(rec => ({
-                ...rec,
-                isSubscribed: mySubscriptions.includes(rec._id)
-            }));
-            setRecommendations(recsWithSubStatus);
+        // Promise for a minimum display time that matches the animation
+        const minDisplayTimePromise = new Promise(resolve => setTimeout(resolve, 3500));
 
-        } catch (err) {
-            console.error("Failed to fetch recommendations:", err);
-            setError(true);
-        } finally {
-            setLoading(false);
-        }
+        // Promise for the actual API call
+        const apiCallPromise = axios.post(apiUrl, payload, { withCredentials: true })
+            .then(response => {
+                const mySubscriptions = settings?.goldenSubscriptions?.map(sub => sub.user) || [];
+                const recsWithSubStatus = response.data.map(rec => ({
+                    ...rec,
+                    isSubscribed: mySubscriptions.includes(rec._id)
+                }));
+                // Set the results, but don't turn off loading yet
+                setRecommendations(recsWithSubStatus);
+            })
+            .catch(err => {
+                console.error("Failed to fetch recommendations:", err);
+                setError(true);
+            });
+
+        // Wait for BOTH the minimum time AND the API call to complete
+        await Promise.all([minDisplayTimePromise, apiCallPromise]);
+
+        // Now it's safe to hide the progress bar
+        setLoading(false);
     };
 
-    // --- ADDED: Handle Join Logic ---
-    const handleJoin = async (userToJoin) => {
-        try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userToJoin._id}/join-golden`, {}, { withCredentials: true });
-            toast.success(`Subscribed to ${userToJoin.username}!`);
-            // Update the state to show the button as "Joined"
-            setRecommendations(prevRecs => prevRecs.map(rec =>
-                rec._id === userToJoin._id ? { ...rec, isSubscribed: true } : rec
-            ));
-        } catch (err) {
-            toast.error('Failed to subscribe. Please try again.');
-            console.error("Subscription error:", err);
-        }
+    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+    const [userToJoin, setUserToJoin] = useState(null);
+
+    // 3. Replace the existing handleJoin function with this new one
+    console.log("Wizard - isJoinModalOpen:", isJoinModalOpen);
+
+    // Modify the handleJoin function
+    const handleJoin = (user) => {
+        console.log("Wizard Join button clicked for user:", user.username);
+        setUserToJoin(user);
+        setIsJoinModalOpen(true);
+    };
+
+    // 4. Add this new function to handle success
+    const handleJoinSuccess = () => {
+        toast.success(`Successfully subscribed to ${userToJoin.username}!`);
+        setRecommendations(prevRecs => prevRecs.map(rec =>
+            rec._id === userToJoin._id ? { ...rec, isSubscribed: true } : rec
+        ));
+        setIsJoinModalOpen(false);
+        setUserToJoin(null);
     };
 
     if (!isOpen) return null;
@@ -220,38 +263,46 @@ const RecommendationWizard = ({ isOpen, onClose, settings }) => { // Add setting
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 animate-fade-in-fast">
-            <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl m-4 text-white">
-                <div className="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
-                    <h2 className="text-2xl font-bold text-yellow-400">{t('find_member_wizard.wizard_title')}</h2>
-                    <button onClick={handleClose} className="text-gray-400 hover:text-white text-2xl">&times;</button>
-                </div>
-                {renderStep()}
-                <div className="flex justify-between mt-6 pt-4 border-t border-gray-700">
-                    <div>
-                        {step > 1 && step < 4 && (
-                            <button onClick={handleBack} className="text-gray-400 font-bold py-2 px-4 rounded mr-2 hover:bg-gray-700">{t('common_back')}</button>
-                        )}
+        <>
+            <JoinGoldenModal
+                isOpen={isJoinModalOpen}
+                onClose={() => setIsJoinModalOpen(false)}
+                goldenMember={userToJoin}
+                onUpdate={handleJoinSuccess}
+            />
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 animate-fade-in-fast">
+                <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl m-4 text-white">
+                    <div className="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                        <h2 className="text-2xl font-bold text-yellow-400">{t('find_member_wizard.wizard_title')}</h2>
+                        <button onClick={handleClose} className="text-gray-400 hover:text-white text-2xl">&times;</button>
                     </div>
-                    <div>
-                        {step === 1 && (
-                            <button onClick={handleNext} className="text-gray-400 font-bold py-2 px-4 rounded mr-2 hover:bg-gray-700">{t('find_member_wizard.skip_step')}</button>
-                        )}
-                        {step < 3 && (
-                            <button onClick={handleNext} className="bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded hover:bg-yellow-400">{t('common_next')}</button>
-                        )}
-                        {step === 3 && (
-                            <button onClick={handleFindRecommendations} className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 flex items-center">
-                                <FaCheckCircle className="mr-2" /> {t('find_member_wizard.find_button')}
-                            </button>
-                        )}
-                        {step === 4 && (
-                            <button onClick={handleClose} className="bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded hover:bg-yellow-400">{t('common_close')}</button>
-                        )}
+                    {renderStep()}
+                    <div className="flex justify-between mt-6 pt-4 border-t border-gray-700">
+                        <div>
+                            {step > 1 && step < 4 && (
+                                <button onClick={handleBack} className="text-gray-400 font-bold py-2 px-4 rounded mr-2 hover:bg-gray-700">{t('common_back')}</button>
+                            )}
+                        </div>
+                        <div>
+                            {step === 1 && (
+                                <button onClick={handleNext} className="text-gray-400 font-bold py-2 px-4 rounded mr-2 hover:bg-gray-700">{t('find_member_wizard.skip_step')}</button>
+                            )}
+                            {step < 3 && (
+                                <button onClick={handleNext} className="bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded hover:bg-yellow-400">{t('common_next')}</button>
+                            )}
+                            {step === 3 && (
+                                <button onClick={handleFindRecommendations} className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 flex items-center">
+                                    <FaCheckCircle className="mr-2" /> {t('find_member_wizard.find_button')}
+                                </button>
+                            )}
+                            {step === 4 && (
+                                <button onClick={handleClose} className="bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded hover:bg-yellow-400">{t('common_close')}</button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

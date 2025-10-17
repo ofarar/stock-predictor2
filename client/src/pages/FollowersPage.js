@@ -49,7 +49,25 @@ const FollowersPage = ({ settings }) => {
 
     // Unchanged functions (handleCancelClick, handleConfirmCancel)
     const handleCancelClick = (user) => { setUserToUnsubscribe(user); setIsModalOpen(true); };
-    const handleConfirmCancel = () => { if (!userToUnsubscribe) return; axios.post(/*...unchanged...*/); };
+    const handleConfirmCancel = () => {
+        if (!userToUnsubscribe) return;
+
+        const promise = axios.post(
+            `${process.env.REACT_APP_API_URL}/api/users/${userToUnsubscribe._id}/cancel-golden`,
+            {},
+            { withCredentials: true }
+        );
+
+        toast.promise(promise, {
+            loading: t('followers_canceling_subscription', 'Canceling...'), // You may need to add this key to your translation file
+            success: () => {
+                setIsModalOpen(false);
+                fetchFollowData(); // Refreshes the list of subscriptions
+                return t('followers_subscription_canceled', { username: userToUnsubscribe.username });
+            },
+            error: t('followers_failed_to_cancel')
+        });
+    };
 
     const isOwnProfile = currentUser?._id === userId;
 
@@ -93,9 +111,7 @@ const FollowersPage = ({ settings }) => {
                         );
                     })}
                 </div>
-                {activeTab === 'Subscriptions' && (
-                    <FindMemberWizardTrigger onClick={() => setIsWizardOpen(true)} />
-                )}
+
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {currentTabData.length > 0 ? currentTabData.map(item => (
                         <UserCard
@@ -109,6 +125,9 @@ const FollowersPage = ({ settings }) => {
                         />
                     )) : <p className="col-span-full text-gray-500 text-center py-8">{t("followers_no_users")}</p>}
                 </div>
+                {activeTab === 'Subscriptions' && (
+                    <FindMemberWizardTrigger onClick={() => setIsWizardOpen(true)} />
+                )}
             </div>
         </>
     );

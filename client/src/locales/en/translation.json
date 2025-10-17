@@ -854,7 +854,8 @@
     "error_recommendations": "Could not fetch recommendations. Please try again later.",
     "no_recommendations": "No members found matching your specific criteria. Try broadening your search.",
     "match_rate": "Match",
-    "skip_step": "Skip"
+    "skip_step": "Skip",
+    "error_recommendations_generic": "An error occurred while generating recommendations."
   },
   "common_cancel": "Cancel",
   "common_next": "Next",

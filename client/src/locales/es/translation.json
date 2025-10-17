@@ -853,7 +853,8 @@
         "error_recommendations": "No se pudieron obtener las recomendaciones. Por favor, inténtelo de nuevo más tarde.",
         "no_recommendations": "No se encontraron miembros que coincidan con sus criterios específicos. Intente ampliar su búsqueda.",
         "match_rate": "Coincidencia",
-        "skip_step": "Omitir"
+        "skip_step": "Omitir",
+        "error_recommendations_generic": "Ocurrió un error al generar las recomendaciones."
     },
     "common_cancel": "Cancelar",
     "common_next": "Siguiente",
