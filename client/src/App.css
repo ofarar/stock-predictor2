@@ -48,3 +48,22 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
 }
+
+@keyframes blink-success {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+.animate-blink-success {
+  animation: blink-success 0.8s 3 ease-in-out;
+  /* Blinks 3 times */
+}

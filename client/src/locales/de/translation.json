@@ -666,7 +666,8 @@
             "verifiedFilter": "Ihre Prognosen werden im Filter „Nur verifizierte“ auf der Entdeckungsseite hervorgehoben.",
             "verifiedExpert": "Werden Sie als verifizierter Experte auf relevanten Beobachtungslistenseiten empfohlen."
         },
-        "button": "Für {{price}} verifizieren lassen"
+        "button": "Für {{price}} verifizieren lassen",
+        "successDescriptionGeneric": "Dein verifiziertes Abzeichen ist jetzt aktiv."
     },
     "verifiedStatusModal": {
         "title": "Sie sind ein verifizierter Prognostiker!",

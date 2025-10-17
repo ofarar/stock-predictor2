@@ -1,5 +1,5 @@
 // src/pages/ProfilePage.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -52,6 +52,16 @@ const ProfilePage = ({ settings }) => {
     const [predictionToEdit, setPredictionToEdit] = useState(null);
     const [isAggressivenessInfoOpen, setIsAggressivenessInfoOpen] = useState(false);
     const [filteredPerformance, setFilteredPerformance] = useState(null);
+    const [isVerifiedJustNow, setIsVerifiedJustNow] = useState(false);
+
+    useEffect(() => {
+        if (isVerifiedJustNow) {
+            const timer = setTimeout(() => {
+                setIsVerifiedJustNow(false); // Reset the animation state
+            }, 2400); // 2.4 seconds, matching the animation duration (0.8s * 3)
+            return () => clearTimeout(timer);
+        }
+    }, [isVerifiedJustNow]);
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -145,7 +155,16 @@ const ProfilePage = ({ settings }) => {
             {/* All modals are rendered here */}
             <VerifiedStatusModal isOpen={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} onCancel={() => { setIsStatusModalOpen(false); setIsCancelConfirmOpen(true); }} />
             <ConfirmationModal isOpen={isCancelConfirmOpen} onClose={() => setIsCancelConfirmOpen(false)} onConfirm={confirmCancelVerification} title={t('cancel_verification_title')} message={t('cancel_verification_msg')} />
-            <VerificationModal isOpen={isVerificationModalOpen} onClose={() => setIsVerificationModalOpen(false)} onConfirm={handleGetVerified} price={settings?.verificationPrice.toFixed(2) || '4.99'} />
+            <VerificationModal
+                isOpen={isVerificationModalOpen}
+                onClose={() => setIsVerificationModalOpen(false)}
+                // This function now also triggers the animation state
+                onUpdate={() => {
+                    fetchData();
+                    setIsVerifiedJustNow(true);
+                }}
+                price={settings?.verificationPrice.toFixed(2) || '4.99'}
+            />
             <BadgeDetailModal badge={selectedBadge} onClose={() => setSelectedBadge(null)} />
             <BadgeInfoModal isOpen={isBadgeInfoOpen} onClose={() => setIsBadgeInfoOpen(false)} />
             <GoldenMemberModal isOpen={isGoldenModalOpen} onClose={() => setIsGoldenModalOpen(false)} user={user} onUpdate={fetchData} />
@@ -163,6 +182,7 @@ const ProfilePage = ({ settings }) => {
                     isSubscribed={isSubscribed}
                     handleFollow={handleFollow}
                     handleUnfollow={handleUnfollow}
+                    isAnimating={isVerifiedJustNow}
                     setIsJoinModalOpen={() => {
                         console.log("ProfileHeader button clicked, setting modal to open!");
                         setIsJoinModalOpen(true);

@@ -666,7 +666,8 @@
             "verifiedFilter": "Sus predicciones se destacan en el filtro \"Solo Verificados\" en la página Explorar.",
             "verifiedExpert": "Sea recomendado como Experto Verificado en las páginas de Lista de Seguimiento relevantes."
         },
-        "button": "Verificar por {{price}}"
+        "button": "Verificar por {{price}}",
+        "successDescriptionGeneric": "Tu insignia de verificación ya está activa."
     },
     "verifiedStatusModal": {
         "title": "¡Eres un Predictor Verificado!",

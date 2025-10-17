@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
 
-const ProfileHeader = ({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, settings }) => {
+const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, settings, isAnimating }, ref) => {
     const { t, i18n } = useTranslation();
     const { user, followersCount, followingCount, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
@@ -29,15 +29,17 @@ const ProfileHeader = ({ profileData, currentUser, isOwnProfile, isFollowing, is
                 <h1 className="text-4xl font-bold text-white text-center">
                     <span className="inline-block">
                         {user.username}
-                        {settings?.isVerificationEnabled && user.isVerified && (
-                            <span className="ml-2 inline-flex items-center">
-                                {isOwnProfile ? (
-                                    <VerifiedTick size={1.5} onClick={() => setIsStatusModalOpen(true)} />
-                                ) : (
-                                    <VerifiedTick size={1.5} />
-                                )}
-                            </span>
-                        )}
+                        <span ref={ref} className={`ml-2 inline-flex items-center ${isAnimating ? 'animate-blink-success' : ''}`}>
+                            {settings?.isVerificationEnabled && user.isVerified && (
+                                <span className="inline-block translate-y-[1px]">
+                                    {isOwnProfile ? (
+                                        <VerifiedTick size={1.5} onClick={() => setIsStatusModalOpen(true)} />
+                                    ) : (
+                                        <VerifiedTick size={1.5} />
+                                    )}
+                                </span>
+                            )}
+                        </span>
                     </span>
                 </h1>
                 <p className="text-gray-500 text-sm mt-1">{t('member_since_label', { date: new Date(user.createdAt).toLocaleDateString(i18n.language) })}</p>
@@ -99,6 +101,6 @@ const ProfileHeader = ({ profileData, currentUser, isOwnProfile, isFollowing, is
             </div>
         </div>
     );
-};
+});
 
 export default ProfileHeader;

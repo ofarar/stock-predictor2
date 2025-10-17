@@ -666,7 +666,8 @@
       "verifiedFilter": "Tahminleriniz Keşfet sayfasındaki \"Sadece Doğrulanmışlar\" filtresinde öne çıksın.",
       "verifiedExpert": "İlgili İzleme Listesi sayfalarında Doğrulanmış Uzman olarak önerilin."
     },
-    "button": "{{price}} karşılığında Doğrulan"
+    "button": "{{price}} karşılığında Doğrulan",
+    "successDescriptionGeneric": "Doğrulanmış rozetiniz şimdi aktif."
   },
   "verifiedStatusModal": {
     "title": "Doğrulanmış bir Tahmincisiniz!",

@@ -666,7 +666,8 @@
             "verifiedFilter": "您的预测将在“发现”页面的“仅限认证”过滤器中突出显示。",
             "verifiedExpert": "在相关的观察列表页面上被推荐为认证专家。"
         },
-        "button": "支付 {{price}} 获取认证"
+        "button": "支付 {{price}} 获取认证",
+        "successDescriptionGeneric": "您的已验证徽章现已激活。"
     },
     "verifiedStatusModal": {
         "title": "您是已认证的预测者！",

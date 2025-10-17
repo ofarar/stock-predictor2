@@ -666,7 +666,8 @@
             "verifiedFilter": "Vos prédictions sont mises en avant dans le filtre \"Vérifiés Uniquement\" de la page Explorer.",
             "verifiedExpert": "Soyez recommandé comme Expert Vérifié sur les pages de Liste de Suivi pertinentes."
         },
-        "button": "Faire vérifier pour {{price}}"
+        "button": "Faire vérifier pour {{price}}",
+        "successDescriptionGeneric": "Votre badge de vérification est maintenant actif."
     },
     "verifiedStatusModal": {
         "title": "Vous êtes un Prédicteur Vérifié !",

@@ -666,7 +666,8 @@
       "verifiedFilter": "Your predictions get featured in the \"Verified Only\" filter on the Explore page.",
       "verifiedExpert": "Get recommended as a Verified Expert on relevant Watchlist pages."
     },
-    "button": "Get Verified for {{price}}"
+    "button": "Get Verified for {{price}}",
+    "successDescriptionGeneric": "Your verified badge is now active."
   },
   "verifiedStatusModal": {
     "title": "You are a Verified Predictor!",
