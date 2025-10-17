@@ -190,19 +190,32 @@ const WatchlistPage = ({ settings }) => {
                     ) : (
                         <>
                             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                                <SortableContext items={data.quotes.map(q => q.symbol)} strategy={horizontalListSortingStrategy}>
+                                <SortableContext
+                                    items={currentUser?.watchlist || []}
+                                    strategy={horizontalListSortingStrategy}
+                                >
                                     <div className={`flex ${isEditMode ? 'gap-2' : 'gap-4'} overflow-x-auto pb-4 modern-scrollbar`}>
-                                        {data.quotes.map(q => (
-                                            <SortableItem key={q.symbol} id={q.symbol} isEditMode={isEditMode}>
-                                                <WatchlistCard
-                                                    quote={q}
-                                                    isSelected={selectedTicker === q.symbol}
-                                                    isEditMode={isEditMode}
-                                                    onClick={() => !isEditMode && setSelectedTicker(q.symbol)}
-                                                    onRemove={() => handleWatchlistUpdate(q.symbol, 'remove')}
-                                                />
-                                            </SortableItem>
-                                        ))}
+                                        {/* Map over the user's saved list, NOT the API response */}
+                                        {currentUser?.watchlist.map(ticker => {
+                                            // Find the quote data for this ticker, if it exists
+                                            const quote = data.quotes.find(q => q.symbol === ticker);
+
+                                            // If the quote doesn't exist, create a placeholder.
+                                            // Otherwise, use the real quote.
+                                            const quoteData = quote || { symbol: ticker };
+
+                                            return (
+                                                <SortableItem key={ticker} id={ticker} isEditMode={isEditMode}>
+                                                    <WatchlistCard
+                                                        quote={quoteData}
+                                                        isSelected={selectedTicker === ticker}
+                                                        isEditMode={isEditMode}
+                                                        onClick={() => !isEditMode && setSelectedTicker(ticker)}
+                                                        onRemove={() => handleWatchlistUpdate(ticker, 'remove')}
+                                                    />
+                                                </SortableItem>
+                                            );
+                                        })}
                                     </div>
                                 </SortableContext>
                             </DndContext>

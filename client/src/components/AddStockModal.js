@@ -10,10 +10,9 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
     const handleAdd = async () => {
         if (selectedStock) {
             try {
-                await onAdd(selectedStock, 'add'); // Wait for the promise to resolve
-                onClose(); // Then close the modal
+                await onAdd(selectedStock, 'add');
+                onClose();
             } catch (error) {
-                // Error is handled by the toast in the parent, so we just log it here
                 console.error("Could not add stock:", error);
             }
         }
@@ -31,6 +30,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
 
                 <div className="space-y-4">
                     <label className="block text-xs font-bold text-gray-400 mb-1">{t('watchlistPage.addStockModal.searchLabel')}</label>
+                    {/* The onStockSelect prop now updates our local state */}
                     <StockFilterSearch onStockSelect={setSelectedStock} />
                 </div>
 
@@ -38,8 +38,9 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
                     <button onClick={onClose} className="bg-gray-600 font-bold py-2 px-4 rounded-md">{t('common.close')}</button>
                     <button
                         onClick={handleAdd}
+                        // The button is enabled as long as there's a stock symbol selected
                         disabled={!selectedStock}
-                        className="bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-green-500"
+                        className="bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-500"
                     >
                         {t('watchlistPage.addStockModal.addButton')}
                     </button>

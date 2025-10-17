@@ -697,8 +697,15 @@ router.get('/watchlist', async (req, res) => {
             return res.json({ quotes: [], predictions: {}, recommendedUsers: {} });
         }
 
-
-        const quotes = await yahooFinance.quote(tickers);
+        let quotes = []; // Initialize quotes as an empty array
+        try {
+            // Attempt to fetch the quotes from the external API
+            quotes = await yahooFinance.quote(tickers);
+        } catch (yahooError) {
+            // If the API fails, log the error but don't crash the request
+            console.error("Watchlist: Non-critical error fetching quotes from Yahoo Finance. Sending empty quotes array.", yahooError.message);
+            // quotes remains an empty array, which is the desired fallback
+        }
 
         // Fetch initial predictions (page 1) and recommended users for all watched stocks in parallel
         const dataPromises = tickers.map(async (ticker) => {
@@ -768,8 +775,8 @@ router.get('/watchlist', async (req, res) => {
 
         res.json({ quotes, predictions: predictionsByTicker, recommendedUsers: recommendedUsersByTicker });
 
-    } catch (err) {
-        console.error("Watchlist fetch error:", err);
+    } catch (dbError) {
+        console.error("Watchlist: Critical database error:", dbError);
         res.status(500).json({ message: 'Error fetching watchlist data.' });
     }
 });
@@ -1299,16 +1306,21 @@ router.get('/search/:keyword', async (req, res) => {
 
     console.log(`Fetching search for "${keyword}" from Yahoo Finance.`);
     try {
-
         const searchResults = await yahooFinance.search(keyword);
-
         const cacheEntry = { data: searchResults, timestamp: Date.now() };
         searchCache.set(keyword, cacheEntry);
-
         res.json(searchResults);
     } catch (error) {
-        console.error("Yahoo Finance search error:", error);
-        res.status(500).json({ message: 'Error fetching data from Yahoo Finance' });
+        console.error(`Search API: Non-critical error for "${keyword}". Error: ${error.message}`);
+        // If API fails, create a fallback result so the user can still add the ticker
+        const fallbackData = {
+            quotes: [{
+                symbol: keyword.toUpperCase(),
+                shortname: `Add "${keyword.toUpperCase()}" manually`,
+                isFallback: true // Add a flag to identify this result
+            }]
+        };
+        res.json(fallbackData);
     }
 });
 
