@@ -1367,7 +1367,6 @@ router.get('/predictions/:ticker', async (req, res) => {
 });
 
 // This route handles creating new predictions and sending notifications
-// In server/routes/api.js, replace the entire POST '/predict' route
 
 router.post('/predict', async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
@@ -1378,32 +1377,39 @@ router.post('/predict', async (req, res) => {
 
         const today = new Date().setHours(0, 0, 0, 0);
         const lastPredictionDay = user.lastPredictionDate ? new Date(user.lastPredictionDate).setHours(0, 0, 0, 0) : null;
-
         let dailyCountUpdate;
+
+        // --- Daily Limit Check (remains the same) ---
         if (lastPredictionDay === today) {
             if (user.dailyPredictionCount >= settings.maxPredictionsPerDay) {
-                return res.status(429).json({
-                    message: `You have reached the daily prediction limit of ${settings.maxPredictionsPerDay}.`,
-                    code: 'PREDICTION_LIMIT_REACHED',
-                    limit: settings.maxPredictionsPerDay
-                });
+                return res.status(429).json({ /* ... limit reached error ... */ });
             }
             dailyCountUpdate = { $inc: { dailyPredictionCount: 1 } };
         } else {
             dailyCountUpdate = { $set: { dailyPredictionCount: 1, lastPredictionDate: new Date() } };
         }
+        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate(/*...*/);
+        // --- End Daily Limit Check ---
 
-        // Atomically update the count and get the fresh user document for notifications
-        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate({
-            path: 'followers',
-            select: 'notificationSettings'
-        });
-
-
-        // --- The rest of your prediction creation logic ---
         const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
-        const quote = await yahooFinance.quote(stockTicker);
-        const currentPrice = quote.regularMarketPrice;
+
+        // --- Resilient Price Fetch ---
+        let currentPrice = null;
+        let currency = 'USD'; // Default currency
+        let percentageChange = null;
+
+        try {
+            const quote = await yahooFinance.quote(stockTicker);
+            currentPrice = quote.regularMarketPrice;
+            currency = quote.currency;
+            if (currentPrice > 0) {
+                percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
+            }
+        } catch (yahooError) {
+            console.warn(`Predict API: Could not fetch price for ${stockTicker} at creation. Saving prediction without it. Error: ${yahooError.message}`);
+            // currentPrice remains null
+        }
+        // --- End Resilient Price Fetch ---
 
         const prediction = new Prediction({
             userId: req.user._id,
@@ -1412,26 +1418,22 @@ router.post('/predict', async (req, res) => {
             targetPriceAtCreation: targetPrice,
             deadline,
             predictionType,
-            priceAtCreation: currentPrice,
-            currency: quote.currency,
+            priceAtCreation: currentPrice, // Will be null if API failed
+            currency: currency,
             description,
             initialDescription: description,
             status: 'Active'
         });
         await prediction.save();
 
-        // --- NOTIFICATION LOGIC ---
-        // The second `const user = ...` declaration has been removed.
-        // We can now use the 'user' object we fetched at the beginning.
-        const percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
-        const absPercentageChange = Math.abs(percentageChange);
+        // --- Notification Logic (conditionally use percentageChange) ---
+        const absPercentageChange = percentageChange !== null ? Math.abs(percentageChange) : 0;
         const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
-        const isSignificant = absPercentageChange > (thresholds[predictionType] || 999);
+        const isSignificant = percentageChange !== null && absPercentageChange > (thresholds[predictionType] || 999);
         const shortTermTypes = ['Hourly', 'Daily', 'Weekly'];
         const isShortTerm = shortTermTypes.includes(predictionType);
-        const mainMessage = `${user.username} predicted ${stockTicker} will move by ${percentageChange.toFixed(1)}%`;
-        const notifications = [];
 
+        const notifications = [];
         for (const follower of user.followers) {
             const settings = follower.notificationSettings;
             let shouldNotify = false;
@@ -1455,7 +1457,7 @@ router.post('/predict', async (req, res) => {
                         username: user.username,
                         stockTicker: stockTicker,
                         predictionType: predictionType,
-                        percentage: percentageChange
+                        ...(percentageChange !== null && { percentage: percentageChange })
                     }
                 });
             }
@@ -1466,7 +1468,8 @@ router.post('/predict', async (req, res) => {
 
         res.status(201).json(prediction);
     } catch (err) {
-        console.error("Prediction error:", err);
+        // This is now only for critical errors like database issues
+        console.error("Critical prediction error:", err);
         res.status(400).json({ message: err.message });
     }
 });

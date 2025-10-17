@@ -11,7 +11,7 @@ import LoadMoreButton from '../components/LoadMoreButton'; // Import the button
 const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
     const { ticker } = useParams();
-    
+
     // State for main page data (quote and user)
     const [quote, setQuote] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ const StockPage = ({ onPredictClick, settings }) => {
     const [topPredictors, setTopPredictors] = useState({ items: [], page: 1, totalPages: 0 });
     const [loadingPredictors, setLoadingPredictors] = useState(false);
     const [filter, setFilter] = useState('Overall');
-    
+
     // Paginated state for Active Predictions
     const [activePredictions, setActivePredictions] = useState({ items: [], page: 1, totalPages: 0 });
     const [loadingActive, setLoadingActive] = useState(false);
@@ -58,10 +58,10 @@ const StockPage = ({ onPredictClick, settings }) => {
                 page: res.data.currentPage,
                 totalPages: res.data.totalPages
             }));
-        } catch (err) { toast.error("Failed to load top predictors."); } 
+        } catch (err) { toast.error("Failed to load top predictors."); }
         finally { setLoadingPredictors(false); }
     }, [ticker, filter]);
-    
+
     const fetchActivePredictions = useCallback(async (pageNum = 1) => {
         setLoadingActive(true);
         try {
@@ -73,7 +73,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                 page: res.data.currentPage,
                 totalPages: res.data.totalPages
             }));
-        } catch (err) { toast.error("Failed to load active predictions."); } 
+        } catch (err) { toast.error("Failed to load active predictions."); }
         finally { setLoadingActive(false); }
     }, [ticker]);
 
@@ -95,7 +95,7 @@ const StockPage = ({ onPredictClick, settings }) => {
             fetchTopPredictors(topPredictors.page + 1);
         }
     };
-    
+
     const handleLoadMoreActive = () => {
         if (!loadingActive && activePredictions.page < activePredictions.totalPages) {
             fetchActivePredictions(activePredictions.page + 1);
@@ -115,10 +115,10 @@ const StockPage = ({ onPredictClick, settings }) => {
             error: 'Failed to update watchlist.',
         });
     };
-    
+
     if (loading) return <div className="text-center text-white mt-10">{t('loading_stock_data')}</div>;
     if (error) return <div className="text-center text-red-400 mt-10">{error}</div>;
-    
+
     const priceChange = quote?.regularMarketChange;
     const percentChange = quote?.regularMarketChangePercent;
     const isWatching = currentUser?.watchlist?.includes(ticker);
@@ -151,10 +151,16 @@ const StockPage = ({ onPredictClick, settings }) => {
                         <svg className="w-5 h-5" fill={isWatching ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </button>
                     <button
-                        onClick={() => onPredictClick(quote)}
-                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        onClick={() => {
+                            // Always pass an object with the ticker
+                            // If quote exists, pass the whole quote object
+                            // Otherwise, pass a minimal object with just the symbol
+                            const stockInfoToSend = quote ? quote : { symbol: ticker };
+                            onPredictClick(stockInfoToSend);
+                        }}
+                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg" // Removed disabled styles
                         title={t('make_prediction')}
-                        disabled={!quote}
+                    // disabled prop removed
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
                     </button>
@@ -221,7 +227,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                     <h3 className="text-xl font-bold text-white mb-4">{t('active_predictions_on', { ticker })}</h3>
                     <div className="space-y-3">
                         {loadingActive && activePredictions.page === 1 ? (
-                             <p className="text-gray-500 text-center py-8">Loading...</p>
+                            <p className="text-gray-500 text-center py-8">Loading...</p>
                         ) : activePredictions.items.length > 0 ? activePredictions.items.map(p => {
                             const percentageChange =
                                 (currentPrice > 0 && p.targetPrice)
