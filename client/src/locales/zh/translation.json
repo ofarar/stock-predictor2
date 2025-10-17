@@ -619,7 +619,12 @@
         "submitFailed": "提交预测失败。",
         "priceDelayInfo": "价格最多延迟15分钟。",
         "submitting": "提交中...",
-        "submitSuccess": "{{symbol}}的预测已提交！"
+        "submitSuccess": "{{symbol}}的预测已提交！",
+        "priceUnavailable": {
+            "title": "实时价格数据不可用",
+            "description": "我们目前无法获取此资产的实时价格。这可能在市场剧烈波动或API短暂中断时发生。",
+            "button": "尝试其他股票"
+        }
     },
     "scoreboard": {
         "title": "排行榜",

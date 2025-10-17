@@ -619,7 +619,12 @@
         "submitFailed": "Fehler beim Senden der Prognose.",
         "priceDelayInfo": "Preise sind bis zu 15 Minuten verzögert.",
         "submitting": "Wird gesendet...",
-        "submitSuccess": "Prognose für {{symbol}} übermittelt!"
+        "submitSuccess": "Prognose für {{symbol}} übermittelt!",
+        "priceUnavailable": {
+            "title": "Live-Kursdaten nicht verfügbar",
+            "description": "Wir konnten den Live-Preis für diesen Vermögenswert im Moment nicht abrufen. Dies kann bei hoher Marktvolatilität oder kurzen API-Ausfällen vorkommen.",
+            "button": "Andere Aktie versuchen"
+        }
     },
     "scoreboard": {
         "title": "Bestenlisten",

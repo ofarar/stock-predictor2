@@ -619,7 +619,12 @@
     "submitFailed": "Failed to submit prediction.",
     "priceDelayInfo": "Prices are delayed up to 15 minutes.",
     "submitting": "Submitting...",
-    "submitSuccess": "Prediction for {{symbol}} submitted!"
+    "submitSuccess": "Prediction for {{symbol}} submitted!",
+    "priceUnavailable": {
+      "title": "Live Price Data Unavailable",
+      "description": "We couldn't retrieve the live price for this asset right now. This can happen during high market volatility or brief API outages.",
+      "button": "Try a Different Stock"
+    }
   },
   "scoreboard": {
     "title": "Leaderboards",

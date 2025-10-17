@@ -619,7 +619,12 @@
         "submitFailed": "Error al enviar la predicción.",
         "priceDelayInfo": "Los precios tienen un retraso de hasta 15 minutos.",
         "submitting": "Enviando...",
-        "submitSuccess": "¡Predicción para {{symbol}} enviada!"
+        "submitSuccess": "¡Predicción para {{symbol}} enviada!",
+        "priceUnavailable": {
+            "title": "Datos de precios en vivo no disponibles",
+            "description": "No pudimos recuperar el precio en vivo para este activo en este momento. Esto puede ocurrir durante alta volatilidad del mercado o breves interrupciones de la API.",
+            "button": "Probar con otra acción"
+        }
     },
     "scoreboard": {
         "title": "Tabla de Clasificación",

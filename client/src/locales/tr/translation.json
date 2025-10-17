@@ -619,7 +619,12 @@
     "submitFailed": "Tahmin gönderilemedi.",
     "priceDelayInfo": "Fiyatlar 15 dakikaya kadar gecikmelidir.",
     "submitting": "Gönderiliyor...",
-    "submitSuccess": "{{symbol}} için tahmin gönderildi!"
+    "submitSuccess": "{{symbol}} için tahmin gönderildi!",
+    "priceUnavailable": {
+      "title": "Canlı Fiyat Verileri Mevcut Değil",
+      "description": "Bu varlık için anlık fiyatı şu anda alamadık. Bu durum, piyasanın yoğun olduğu zamanlarda veya kısa süreli API kesintilerinde yaşanabilir.",
+      "button": "Farklı Bir Hisse Dene"
+    }
   },
   "scoreboard": {
     "title": "Liderler Tablosu",

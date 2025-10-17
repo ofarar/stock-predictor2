@@ -619,7 +619,12 @@
         "submitFailed": "Échec de la soumission de la prédiction.",
         "predictionDelayInfo": "Les prix sont retardés jusqu'à 15 minutes.",
         "submitting": "Envoi en cours...",
-        "submitSuccess": "Prédiction pour {{symbol}} soumise !"
+        "submitSuccess": "Prédiction pour {{symbol}} soumise !",
+        "priceUnavailable": {
+            "title": "Données de prix en direct non disponibles",
+            "description": "Nous n'avons pas pu récupérer le prix en direct de cet actif pour le moment. Cela peut se produire en cas de forte volatilité du marché ou de brèves pannes de l'API.",
+            "button": "Essayer une autre action"
+        }
     },
     "scoreboard": {
         "title": "Classements",

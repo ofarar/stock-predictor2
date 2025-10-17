@@ -1312,24 +1312,17 @@ router.get('/search/:keyword', async (req, res) => {
     }
 });
 
+// server/routes/api.js
 router.get('/quote/:symbol', async (req, res) => {
     const symbol = req.params.symbol;
     try {
-
         const quote = await yahooFinance.quote(symbol);
-
-        // --- START: NEW LOGIC TO FIND A RELIABLE PRICE ---
-        // Create a new 'displayPrice' field by checking multiple price fields in order of preference.
-        // This ensures we almost always have a price to show on the frontend.
         const displayPrice = quote.regularMarketPrice || quote.marketPrice || quote.regularMarketPreviousClose || null;
-
-        // Return the original quote object with our new reliable price field added to it.
         res.json({ ...quote, displayPrice });
-        // --- END: NEW LOGIC ---
-
     } catch (error) {
-        console.error("Yahoo Finance quote error:", error);
-        res.status(500).json({ message: 'Error fetching data from Yahoo Finance' });
+        console.error(`Quote API: Non-critical error for ${symbol}. Error: ${error.message}`);
+        // Instead of a 500 error, send a successful response with null data.
+        res.json(null);
     }
 });
 
