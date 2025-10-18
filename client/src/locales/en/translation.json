@@ -883,5 +883,10 @@
       "unavailableTitle": "Chart Data Unavailable",
       "unavailableDescription": "We couldn't load the historical price data at this time. Please try again later."
     }
+  },
+  "followers": {
+    "unfollowing": "Unfollowing...",
+    "unfollowSuccess": "User unfollowed!",
+    "unfollowError": "Could not unfollow user."
   }
 }

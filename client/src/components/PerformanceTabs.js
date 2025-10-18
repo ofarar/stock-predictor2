@@ -20,8 +20,7 @@ const StatCard = ({ label, avgScore, rank, isStock, aggressivenessScore, isSelec
 
     return (
         <div 
-            className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 cursor-pointer ${isSelected ? 'ring-2 ring-green-400 scale-[1.03]' : 'hover:scale-[1.02]'}`}
-            onClick={onClick}
+            className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 ${isSelected ? 'ring-2 ring-green-400 scale-[1.03]' : 'hover:scale-[1.02]'}`}
         >
             <div className="flex items-center flex-grow">
                 {/* Circular Progress Bar for Accuracy */}

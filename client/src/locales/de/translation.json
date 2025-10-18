@@ -882,5 +882,10 @@
             "unavailableTitle": "Chartdaten nicht verfügbar",
             "unavailableDescription": "Die historischen Kursdaten konnten im Moment nicht geladen werden. Bitte versuchen Sie es später erneut."
         }
+    },
+    "followers": {
+        "unfollowing": "Entfolgen...",
+        "unfollowSuccess": "Benutzer entfolgt!",
+        "unfollowError": "Konnte Benutzer nicht entfolgen."
     }
 }

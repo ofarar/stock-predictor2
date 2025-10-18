@@ -906,5 +906,10 @@
             "unavailableTitle": "Données du graphique non disponibles",
             "unavailableDescription": "Nous n'avons pas pu charger les données de prix historiques pour le moment. Veuillez réessayer plus tard."
         }
+    },
+    "followers": {
+        "unfollowing": "Ne plus suivre...",
+        "unfollowSuccess": "Utilisateur non suivi !",
+        "unfollowError": "Impossible de ne plus suivre l'utilisateur."
     }
 }

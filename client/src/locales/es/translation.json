@@ -882,5 +882,10 @@
             "unavailableTitle": "Datos del gráfico no disponibles",
             "unavailableDescription": "No pudimos cargar los datos históricos de precios en este momento. Por favor, inténtelo de nuevo más tarde."
         }
+    },
+    "followers": {
+        "unfollowing": "Dejando de seguir...",
+        "unfollowSuccess": "¡Has dejado de seguir al usuario!",
+        "unfollowError": "No se pudo dejar de seguir al usuario."
     }
 }

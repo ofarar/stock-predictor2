@@ -882,5 +882,10 @@
             "unavailableTitle": "图表数据不可用",
             "unavailableDescription": "我们暂时无法加载历史价格数据。请稍后再试。"
         }
+    },
+    "followers": {
+        "unfollowing": "正在取消关注...",
+        "unfollowSuccess": "已取消关注用户！",
+        "unfollowError": "无法取消关注用户。"
     }
 }

@@ -29,43 +29,96 @@ const FollowersPage = ({ settings }) => {
     const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'Followers');
 
     const handleFollow = (userIdToFollow) => {
-        // Prevent following oneself (although unlikely on this page)
+        // Prevent following oneself
         if (currentUser?._id === userIdToFollow) return;
 
-        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToFollow}/follow`, {}, { withCredentials: true })
-            .then(() => {
-                // Optimistically update the current user's following list
-                setCurrentUser((prevUser) => ({
-                    ...prevUser,
-                    following: [...(prevUser?.following || []), userIdToFollow]
-                }));
-                // Optionally refetch all data if needed, or just update state
-                // fetchFollowData(); 
-            });
+        // Keep copies of the current state in case we need to revert
+        const originalUserData = JSON.parse(JSON.stringify(userData)); // Deep copy
+        const originalCurrentUser = JSON.parse(JSON.stringify(currentUser)); // Deep copy
+
+        // --- Optimistic UI Update ---
+        // 1. Update the currentUser state (this controls the button display on *all* tabs)
+        //    Adding the ID to currentUser.following ensures the 'Unfollow' button appears.
+        setCurrentUser((prevUser) => ({
+            ...prevUser,
+            // Ensure 'following' exists before spreading, add the new ID
+            following: [...(prevUser?.following || []), userIdToFollow]
+        }));
+
+        // 2. Optionally, update the main list data if you want the user card
+        //    to immediately appear in the 'Following' tab upon switching.
+        //    This requires finding the user details from the 'followers' list first.
+        const userToAddToFollowingList = originalUserData.followers.find(user => user._id === userIdToFollow);
+        if (userToAddToFollowingList) {
+            setUserData(prev => ({
+                ...prev,
+                // Add the followed user's data to the 'following' list state
+                following: [...prev.following, userToAddToFollowingList]
+            }));
+        }
+        // --- End Optimistic Update ---
+
+
+        // API Call
+        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToFollow}/follow`, {}, { withCredentials: true });
 
         toast.promise(promise, {
             loading: t('watchlistPage.toast.loadingFollow'), // Reusing existing translation
-            success: t('watchlistPage.toast.successFollow'), // Reusing existing translation
-            error: t('watchlistPage.toast.errorFollow')    // Reusing existing translation
+            success: (res) => {
+                // Success! The optimistic update was correct.
+                // Optional background refresh:
+                // fetchFollowData();
+                return t('watchlistPage.toast.successFollow'); // Reusing existing translation
+            },
+            error: (err) => {
+                // API call failed. Revert the optimistic UI updates.
+                setUserData(originalUserData);
+                setCurrentUser(originalCurrentUser);
+                return t('watchlistPage.toast.errorFollow'); // Reusing existing translation
+            }
         });
     };
 
     const handleUnfollow = (userIdToUnfollow) => {
-        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToUnfollow}/unfollow`, {}, { withCredentials: true })
-            .then(() => {
-                // Optimistically update the current user's following list
-                setCurrentUser((prevUser) => ({
-                    ...prevUser,
-                    following: (prevUser?.following || []).filter(id => id !== userIdToUnfollow)
-                }));
-                // Optionally refetch all data
-                // fetchFollowData();
-            });
+        // Keep copies of the current state in case we need to revert
+        const originalUserData = JSON.parse(JSON.stringify(userData)); // Deep copy needed
+        const originalCurrentUser = JSON.parse(JSON.stringify(currentUser)); // Deep copy
+
+        // --- Optimistic UI Update ---
+        // 1. Update the main list data (removes card from 'Following' tab)
+        setUserData(prev => ({
+            ...prev,
+            following: prev.following.filter(user => user._id !== userIdToUnfollow)
+        }));
+
+        // 2. Update the currentUser state (this controls the button display on *all* tabs)
+        //    Removing the ID from currentUser.following ensures the 'Follow' button appears
+        //    if this user is also shown on the 'Followers' tab.
+        setCurrentUser((prevUser) => ({
+            ...prevUser,
+            following: (prevUser?.following || []).filter(id => id !== userIdToUnfollow)
+        }));
+        // --- End Optimistic Update ---
+
+        // API Call
+        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/users/${userIdToUnfollow}/unfollow`, {}, { withCredentials: true });
 
         toast.promise(promise, {
-            loading: 'Unfollowing...', // Add translations if needed
-            success: 'User unfollowed!', // Add translations if needed
-            error: 'Could not unfollow user.' // Add translations if needed
+            loading: t('followers.unfollowing'),
+            success: (res) => {
+                // Success! The optimistic update was correct.
+                // We might still refetch *silently* in the background
+                // to ensure counts or other data are perfectly synced,
+                // but the UI already looks right.
+                // fetchFollowData(); // Optional background refresh
+                return t('followers.unfollowSuccess');
+            },
+            error: (err) => {
+                // API call failed. Revert the optimistic UI updates.
+                setUserData(originalUserData);
+                setCurrentUser(originalCurrentUser);
+                return t('followers.unfollowError');
+            }
         });
     };
 

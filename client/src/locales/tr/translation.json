@@ -883,5 +883,10 @@
       "unavailableTitle": "Grafik Verileri Mevcut Değil",
       "unavailableDescription": "Geçmiş fiyat verilerini şu anda yükleyemedik. Lütfen daha sonra tekrar deneyin."
     }
+  },
+  "followers": {
+    "unfollowing": "Takip bırakılıyor...",
+    "unfollowSuccess": "Kullanıcı takipten çıkarıldı!",
+    "unfollowError": "Kullanıcı takipten çıkarılamadı."
   }
 }
