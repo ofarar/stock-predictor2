@@ -112,12 +112,13 @@ router.post('/admin/health-check/:service', async (req, res) => {
     const checkService = async (promiseFn, successDetails) => {
         const startTime = Date.now();
         try {
-            await promiseFn(); // Await the promise but don't store the massive result
+            await promiseFn();
             const latency = Date.now() - startTime;
-            // Use the custom success message or the default 'OK'
             return res.json({ service, status: 'success', latency: `${latency}ms`, details: successDetails || 'OK' });
-        } catch (error) {
+        } catch (error) { // Keep this generic catch for other services
             const latency = Date.now() - startTime;
+            // Log the error for the specific service being checked
+            console.error(`Health Check Error [${service}]:`, error); // <-- Add detailed logging
             return res.json({ service, status: 'failed', latency: `${latency}ms`, details: error.message });
         }
     };
