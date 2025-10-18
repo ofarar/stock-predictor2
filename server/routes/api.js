@@ -1556,6 +1556,44 @@ router.get('/my-predictions', async (req, res) => {
     }
 });
 
+// NEW: Paginated endpoint for Profile Predictions (Active or Assessed)
+router.get('/profile/:userId/predictions/:status', async (req, res) => {
+    const { userId, status } = req.params;
+    const { page = 1, limit = 6 } = req.query; // Default limit matches frontend
+
+    // Validate status
+    if (status !== 'Active' && status !== 'Assessed') {
+        return res.status(400).json({ message: 'Invalid prediction status requested.' });
+    }
+
+    try {
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
+
+        const query = { userId: userId, status: status };
+
+        // Fetch total count and paginated items in parallel
+        const [totalItems, items] = await Promise.all([
+            Prediction.countDocuments(query),
+            Prediction.find(query)
+                .sort({ createdAt: -1 }) // Sort by most recent
+                .skip(skip)
+                .limit(limitNum)
+            // Note: No need to populate userId here as the frontend already has user info
+            // .populate('userId', 'username avatar isGoldenMember isVerified')
+        ]);
+
+        const totalPages = Math.ceil(totalItems / limitNum);
+
+        res.json({ items, totalPages, currentPage: pageNum });
+
+    } catch (err) {
+        console.error(`Error fetching ${status} predictions for user ${userId}:`, err);
+        res.status(500).json({ message: `Failed to fetch ${status} predictions` });
+    }
+});
+
 
 router.get('/profile/:userId', async (req, res) => {
     try {
@@ -1565,28 +1603,19 @@ router.get('/profile/:userId', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        let watchlistQuotes = [];
-        if (user.watchlist && user.watchlist.length > 0) {
-            try {
+        // --- Fetch Watchlist Tickers (No Live Quotes Here) ---
+        // We only need the tickers for the showcase, live quotes are removed for performance
+        const watchlistTickers = user.watchlist || [];
 
-                watchlistQuotes = await financeAPI.getQuote(user.watchlist);
-            } catch (quoteError) {
-                console.error("Failed to fetch some watchlist quotes for profile:", quoteError.message);
-            }
-        }
+        // --- Fetch Assessed Predictions ONLY for Performance Calculation ---
+        // Note: We don't send these predictions back, just use them for stats
+        const assessedPredictions = await Prediction.find({ userId: req.params.userId, status: 'Assessed' });
 
-        await user.populate(['goldenSubscriptions.user', 'goldenSubscribers.user']);
-
-        const predictions = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
-        const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
-
+        // --- Performance Calculation Logic (Keep As Is) ---
         const overallRank = (await User.countDocuments({ score: { $gt: user.score } })) + 1;
         const totalScore = assessedPredictions.reduce((sum, p) => sum + p.score, 0);
         let overallAccuracy = assessedPredictions.length > 0 ? Math.round((totalScore / assessedPredictions.length) * 10) / 10 : 0;
 
-        // --- Start of Corrected Logic ---
-
-        // 1. Initialize the performance object early
         const performance = {
             overallRank: overallRank,
             overallAccuracy,
@@ -1734,14 +1763,17 @@ router.get('/profile/:userId', async (req, res) => {
             id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
         }));
 
+        // --- Build Final Response (Without Full Predictions Array) ---
         const jsonResponse = {
             user,
-            watchlistQuotes,
-            predictions,
-            performance, // This now contains all performance data
+            // Instead of watchlistQuotes, send only the tickers
+            // watchlistTickers: watchlistTickers, // Frontend already uses user.watchlist
+            performance,
             chartData,
             followersCount: user.followers.length,
             followingCount: user.following.length,
+            // Only include predictionCount if calculated differently, otherwise remove
+            // predictionCount: assessedPredictions.length + activePredictionCount (need separate query for active)
         };
 
         if (isOwnProfile) {
