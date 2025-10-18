@@ -94,7 +94,6 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                     });
                     setTarget('');
                     // Show the warning toast
-                    toast.error(t('prediction.fetchPriceManual', { ticker: symbol }));
                 }
             })
             .catch(() => {
