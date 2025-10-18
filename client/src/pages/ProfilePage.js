@@ -70,28 +70,40 @@ const ProfilePage = ({ settings, requestLogin }) => {
         }
     }, [searchParams]);
 
+    // src/pages/ProfilePage.js
+
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
+            // This API call no longer includes the full predictions list
             const [profileRes, currentUserRes] = await Promise.all([
                 axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${userId}`, { withCredentials: true }),
                 axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             ]);
-            const profile = profileRes.data;
+
+            const profile = profileRes.data; // Does NOT contain profile.predictions anymore
             setProfileData(profile);
             setCurrentUser(currentUserRes.data);
-            setFilteredPerformance(profile.performance); // Initialize with overall performance
-            const activePredictions = profile.predictions.filter(p => p.status === 'Active');
-            if (activePredictions.length > 0) {
+            setFilteredPerformance(profile.performance);
+
+            // Fetch active prediction quotes separately (keep this logic)
+            // Need a way to know which tickers are active without fetching all predictions upfront
+            // Option A: Add a small list of active tickers to the main profile response
+            // Option B: Fetch first page of active predictions here just for tickers (less ideal)
+            // Let's assume Option A for now (modify backend if needed)
+
+            // --- Active Quotes Fetch Logic (keep, may need backend adjustment) ---
+            console.time("ProfilePage - Fetch Active Prediction Quotes");
+            // Assuming profile.activeTickers exists from backend now
+            if (profile.activeTickers && profile.activeTickers.length > 0) {
                 try {
-                    const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
+                    const tickers = [...new Set(profile.activeTickers)]; // Use the list from backend
                     const quotesRes = await axios.post(`${process.env.REACT_APP_API_URL}/api/quotes`, { tickers }, { withCredentials: true });
 
-                    // Check if quotesRes.data exists and is an array before reducing
                     if (quotesRes.data && Array.isArray(quotesRes.data)) {
                         const quotesMap = quotesRes.data.reduce((acc, quote) => {
-                            if (quote) { // Ensure quote is not null
-                                acc[quote.symbol] = quote.regularMarketPrice;
+                            if (quote && quote.symbol && quote.price != null) { // Use standardized 'price'
+                                acc[quote.symbol] = quote.price;
                             }
                             return acc;
                         }, {});
@@ -99,16 +111,19 @@ const ProfilePage = ({ settings, requestLogin }) => {
                     }
                 } catch (quoteError) {
                     console.warn("Could not fetch live prices for active predictions. Page will still load.", quoteError);
-                    // On failure, we simply don't set the active prediction quotes,
-                    // and the component will show "..." placeholders.
+                    setActivePredictionQuotes({});
                 }
+            } else {
+                // If no active predictions, clear the quotes state
+                setActivePredictionQuotes({});
             }
         } catch (error) {
             toast.error("Could not load profile.");
+            console.error("Profile fetch error:", error); // Log the actual error
         } finally {
             setLoading(false);
         }
-    }, [userId]);
+    }, [userId]); // Keep dependency array minimal
 
     useEffect(() => {
         fetchData();
@@ -155,12 +170,10 @@ const ProfilePage = ({ settings, requestLogin }) => {
     if (loading) return <div className="text-center text-white mt-10">{t('profile.loading')}</div>;
     if (!profileData) return <div className="text-center text-white mt-10">{t('profile.userNotFound')}</div>;
 
-    const { user, predictions, performance, watchlistQuotes } = profileData;
+    const { user, performance, watchlistQuotes } = profileData;
     const isOwnProfile = currentUser?._id === user._id;
     const isFollowing = currentUser?.following?.includes(user._id);
     const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);
-    const activePredictions = predictions.filter(p => p.status === 'Active');
-    const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
 
     return (
         <>
@@ -209,7 +222,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 <ProfileStats
                     user={user}
                     performance={filteredPerformance}
-                    predictionCount={predictions.length}
+                    // Use the total count directly from profileData
+                    predictionCount={profileData.totalPredictionCount} // <-- Correct
                     onInfoClick={() => setIsAggressivenessInfoOpen(true)}
                 />
 
@@ -232,7 +246,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
                         <div className="lg:col-span-1 space-y-8 self-start">
                             <PredictionList
                                 titleKey="active_predictions_title"
-                                predictions={activePredictions}
+                                userId={userId} // Pass userId
+                                predictionStatus="Active" // Pass status
                                 quotes={activePredictionQuotes}
                                 isOwnProfile={isOwnProfile}
                                 onEditClick={handleEditClick}
@@ -240,9 +255,11 @@ const ProfilePage = ({ settings, requestLogin }) => {
                             />
                             <PredictionList
                                 titleKey="prediction_history_title"
-                                predictions={assessedPredictions}
+                                userId={userId} // Pass userId
+                                predictionStatus="Assessed" // Pass status
                                 isOwnProfile={isOwnProfile}
-                                onEditClick={handleEditClick}
+                                // Edit button likely not needed for assessed predictions
+                                // onEditClick={handleEditClick} 
                                 emptyTextKey="no_prediction_history_label"
                             />
                         </div>
