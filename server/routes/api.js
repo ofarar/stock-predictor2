@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const yahooFinance = require('yahoo-finance2').default;
+const financeAPI = require('../services/financeAPI'); // Import the adapter
 const axios = require('axios'); // <-- Added for making API calls
 const User = require('../models/User');
 const Prediction = require('../models/Prediction');
@@ -130,10 +130,10 @@ router.post('/admin/health-check/:service', async (req, res) => {
                 if (state === 1) resolve();
                 else reject(new Error(`DB state is not connected (state: ${state})`));
             }));
-        case 'yahoo-current':
-            return checkService(() => yahooFinance.quote('AAPL'));
-        case 'yahoo-historical':
-            return checkService(() => yahooFinance.historical('AAPL', { period1: '2024-01-01' }));
+        case 'finance-current':
+            return checkService(() => financeAPI.getQuote('AAPL'));
+        case 'finance-historical':
+            return checkService(() => financeAPI.getHistorical('AAPL', { period1: '2024-01-01' }));
         case 'avatar':
             return checkService(() => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test'));
         case 'email':
@@ -445,7 +445,6 @@ router.put('/watchlist/order', async (req, res) => {
 });
 
 router.get('/market/key-assets', async (req, res) => {
-    // 1. Define our two groups of assets
     const fixedTickers = [
         { ticker: 'GC=F', name: 'Gold' },
         { ticker: 'BTC-USD', name: 'Bitcoin' },
@@ -456,46 +455,50 @@ router.get('/market/key-assets', async (req, res) => {
     const allTickers = [...fixedTickers.map(t => t.ticker), ...magSevenTickers];
 
     try {
-        // 2. Fetch all quotes in a single API call
-        const quotes = await yahooFinance.quote(allTickers);
+        // Use the adapter to fetch all quotes
+        const quotes = await financeAPI.getQuote(allTickers); // returns StandardQuote[] or []
 
-        // 3. Separate the Magnificent Seven quotes to find the top movers
+        // If quotes array is empty due to API failure, return empty response
+        if (quotes.length === 0) {
+            console.warn("Market Assets: getQuote returned empty array, likely API issue.");
+            return res.json([]);
+        }
+
+        // Separate the Magnificent Seven quotes
         const magSevenQuotes = quotes.filter(q => magSevenTickers.includes(q.symbol));
 
-        // 4. Find the top 2 movers based on the largest absolute percentage change (up or down)
+        // Find top 2 movers using standardized field names
         const topTwoMovers = magSevenQuotes
-            .sort((a, b) => Math.abs(b.regularMarketChangePercent) - Math.abs(a.regularMarketChangePercent))
+            .sort((a, b) => Math.abs(b.changePercent ?? 0) - Math.abs(a.changePercent ?? 0)) // Use standardized changePercent
             .slice(0, 2);
 
-        // 5. Combine the fixed list with the top 2 movers
+        // Combine fixed list with top movers
         const finalTickers = [
             ...fixedTickers.map(t => t.ticker),
             ...topTwoMovers.map(t => t.symbol)
         ];
 
-        // 6. Format the final combined list for the frontend
+        // Format the final list using standardized fields
         const assets = finalTickers.map(ticker => {
             const quote = quotes.find(q => q.symbol === ticker);
-            // Use the predefined friendly name for fixed assets, or the stock name for others
-            const name = fixedTickers.find(t => t.ticker === ticker)?.name || quote.longName || quote.symbol;
+            if (!quote) return null; // Handle case where a quote might be missing
+
+            const name = fixedTickers.find(t => t.ticker === ticker)?.name || quote.name || quote.symbol;
 
             return {
                 ticker: quote.symbol,
                 name: name,
-                price: quote.regularMarketPrice,
-                currency: quote.currency,
-                percentChange: quote.regularMarketChangePercent,
-                isUp: (quote.regularMarketChange || 0) >= 0
+                price: quote.price, // Use standardized price
+                currency: quote.currency, // Use standardized currency
+                percentChange: quote.changePercent, // Use standardized changePercent
+                isUp: (quote.changeAbsolute ?? 0) >= 0 // Use standardized changeAbsolute
             };
-        });
+        }).filter(a => a !== null); // Filter out any missing quotes
 
         res.json(assets);
     } catch (err) {
-        // --- MODIFIED FOR ROBUSTNESS ---
-        // Instead of sending a 500 error which breaks the frontend UI,
-        // we log the error and send an empty array. The frontend can handle this gracefully.
-        console.error("Key assets fetch error from Yahoo. Returning empty array to prevent UI crash:", err.message);
-        res.json([]);
+        console.error("Key assets fetch error:", err.message);
+        res.json([]); // Send empty array on any unexpected error
     }
 });
 
@@ -520,11 +523,11 @@ router.put('/predictions/:id/edit', async (req, res) => {
         let priceAtTimeOfUpdate = null; // Default to null
         try {
             // Attempt to fetch the current price
-            const quote = await yahooFinance.quote(prediction.stockTicker);
+            const quote = await financeAPI.getQuote(prediction.stockTicker);
             priceAtTimeOfUpdate = quote.regularMarketPrice;
-        } catch (yahooError) {
+        } catch (financeApiError) {
             // Log the non-critical error but continue
-            console.warn(`Edit Prediction: Could not fetch price for ${prediction.stockTicker} during edit. Error: ${yahooError.message}`);
+            console.warn(`Edit Prediction: Could not fetch price for ${prediction.stockTicker} during edit. Error: ${financeApiError.message}`);
             // priceAtTimeOfUpdate remains null
         }
         // --- End of Resilient Logic ---
@@ -678,12 +681,12 @@ router.post('/posts/golden', async (req, res) => {
 
             try {
                 // Attempt to fetch the quote
-                const quote = await yahooFinance.quote(attachedPrediction.stockTicker);
+                const quote = await financeAPI.getQuote(attachedPrediction.stockTicker);
                 priceAtCreation = quote.regularMarketPrice;
                 currency = quote.currency;
-            } catch (yahooError) {
+            } catch (financeApiError) {
                 // Log the non-critical error but continue
-                console.warn(`Golden Post: Could not fetch price for ${attachedPrediction.stockTicker} at creation. Error: ${yahooError.message}`);
+                console.warn(`Golden Post: Could not fetch price for ${attachedPrediction.stockTicker} at creation. Error: ${financeApiError.message}`);
                 // priceAtCreation remains null
             }
 
@@ -735,7 +738,7 @@ router.post('/quotes', async (req, res) => {
     // Use individual fetches to prevent one failure from crashing the whole request
     const quotePromises = tickers.map(async (ticker) => {
         try {
-            return await yahooFinance.quote(ticker);
+            return await financeAPI.getQuote(ticker);
         } catch (err) {
             console.error(`Multi-quote: Failed to fetch quote for ${ticker}. Error: ${err.message}`);
             return null; // Return null for any ticker that fails
@@ -883,10 +886,10 @@ router.get('/watchlist', async (req, res) => {
         let quotes = []; // Initialize quotes as an empty array
         try {
             // Attempt to fetch the quotes from the external API
-            quotes = await yahooFinance.quote(tickers);
-        } catch (yahooError) {
+            quotes = await financeAPI.getQuote(tickers);
+        } catch (financeApiError) {
             // If the API fails, log the error but don't crash the request
-            console.error("Watchlist: Non-critical error fetching quotes from Yahoo Finance. Sending empty quotes array.", yahooError.message);
+            console.error("Watchlist: Non-critical error fetching quotes from Yahoo Finance. Sending empty quotes array.", financeApiError.message);
             // quotes remains an empty array, which is the desired fallback
         }
 
@@ -1174,9 +1177,9 @@ router.get('/market/top-movers', async (req, res) => {
 
     try {
 
-        const trending = await yahooFinance.trendingSymbols('US', { count: 6 });
+        const trending = await financeAPI.getTrendingSymbols('US', { count: 6 });
         const tickers = trending.quotes.map(q => q.symbol);
-        const quotes = await yahooFinance.quote(tickers);
+        const quotes = await financeAPI.getQuote(tickers);
 
         const movers = quotes.map(q => ({
             ticker: q.symbol,
@@ -1399,14 +1402,14 @@ router.post('/predict', async (req, res) => {
         let percentageChange = null;
 
         try {
-            const quote = await yahooFinance.quote(stockTicker);
+            const quote = await financeAPI.getQuote(stockTicker);
             currentPrice = quote.regularMarketPrice;
             currency = quote.currency;
             if (currentPrice > 0) {
                 percentageChange = ((targetPrice - currentPrice) / currentPrice) * 100;
             }
-        } catch (yahooError) {
-            console.warn(`Predict API: Could not fetch price for ${stockTicker} at creation. Saving prediction without it. Error: ${yahooError.message}`);
+        } catch (financeApiError) {
+            console.warn(`Predict API: Could not fetch price for ${stockTicker} at creation. Saving prediction without it. Error: ${financeApiError.message}`);
             // currentPrice remains null
         }
         // --- End Resilient Price Fetch ---
@@ -1484,39 +1487,50 @@ router.post('/predict', async (req, res) => {
 router.get('/search/:keyword', async (req, res) => {
     const keyword = req.params.keyword.toLowerCase();
 
+    // 1. Check the cache first (this logic remains the same)
     if (searchCache.has(keyword)) {
         const cacheEntry = searchCache.get(keyword);
-        if (Date.now() - cacheEntry.timestamp < 3600000) {
+        if (Date.now() - cacheEntry.timestamp < 3600000) { // 1 hour cache
             console.log(`Serving search for "${keyword}" from cache.`);
             return res.json(cacheEntry.data);
         }
     }
 
-    console.log(`Fetching search for "${keyword}" from Yahoo Finance.`);
+    console.log(`Fetching search for "${keyword}" via Adapter.`);
     try {
-        const searchResults = await yahooFinance.search(keyword);
-        const cacheEntry = { data: searchResults, timestamp: Date.now() };
-        searchCache.set(keyword, cacheEntry);
-        res.json(searchResults);
-    } catch (error) {
-        console.error(`Search API: Non-critical error for "${keyword}". Error: ${error.message}`);
-        // If API fails, create a fallback result so the user can still add the ticker
-        const fallbackData = {
-            quotes: [{
-                symbol: keyword.toUpperCase(),
-                shortname: `Add "${keyword.toUpperCase()}" manually`,
-                isFallback: true // Add a flag to identify this result
-            }]
+        // 2. Call the adapter to get standardized results
+        const adapterResults = await financeAPI.search(keyword); // Returns [{ symbol, name }, ...]
+
+        // 3. Map the adapter results BACK to the format the frontend expects
+        const frontendCompatibleData = {
+            quotes: adapterResults.map(r => ({
+                symbol: r.symbol,
+                // Use the standardized 'name' for both shortname and longname
+                shortname: r.name,
+                longname: r.name,
+                // Include isFallback if your adapter provides it
+                // isFallback: r.isFallback 
+            }))
         };
-        res.json(fallbackData);
+
+        // 4. Cache the frontend-compatible data
+        const cacheEntry = { data: frontendCompatibleData, timestamp: Date.now() };
+        searchCache.set(keyword, cacheEntry);
+
+        // 5. Send the frontend-compatible data
+        res.json(frontendCompatibleData);
+
+    } catch (error) { // Catch errors from the adapter call itself (should be rare now)
+        console.error(`CRITICAL Search API Error for "${keyword}":`, error);
+        // Send an empty structure that the frontend expects
+        res.json({ quotes: [] });
     }
 });
-
 // server/routes/api.js
 router.get('/quote/:symbol', async (req, res) => {
     const symbol = req.params.symbol;
     try {
-        const quote = await yahooFinance.quote(symbol);
+        const quote = await financeAPI.getQuote(symbol);
         const displayPrice = quote.regularMarketPrice || quote.marketPrice || quote.regularMarketPreviousClose || null;
         res.json({ ...quote, displayPrice });
     } catch (error) {
@@ -1554,7 +1568,7 @@ router.get('/profile/:userId', async (req, res) => {
         if (user.watchlist && user.watchlist.length > 0) {
             try {
 
-                watchlistQuotes = await yahooFinance.quote(user.watchlist);
+                watchlistQuotes = await financeAPI.getQuote(user.watchlist);
             } catch (quoteError) {
                 console.error("Failed to fetch some watchlist quotes for profile:", quoteError.message);
             }
@@ -1840,13 +1854,13 @@ router.get('/stock/:ticker/historical', async (req, res) => {
         startDate.setDate(startDate.getDate() - 90); // Get data for the last 90 days
 
 
-        const result = await yahooFinance.historical(ticker, {
+        const result = await financeAPI.getHistorical(ticker, {
             period1: startDate,
         });
 
         res.json(result);
     } catch (error) {
-        console.error(`Yahoo Finance historical error for ${ticker}:`, error.message);
+        console.error(`Finance API historical error for ${ticker}:`, error.message);
         res.status(500).json({ message: "Error fetching historical data" });
     }
 });
@@ -2057,7 +2071,7 @@ router.get('/widgets/community-feed', async (req, res) => {
 
         // Fetch current prices for the tickers in the feed for comparison
         const tickers = [...new Set(predictions.map(p => p.stockTicker))];
-        const quotes = await yahooFinance.quote(tickers);
+        const quotes = await financeAPI.getQuote(tickers);
         const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
 
         const feed = predictions.map(p => {
@@ -2175,9 +2189,9 @@ router.get('/stock/:ticker', async (req, res) => {
     try {
         let quote = null;
         try {
-            quote = await yahooFinance.quote(ticker);
-        } catch (yahooError) {
-            console.error(`StockPage: Non-critical error fetching quote for ${ticker}. Error: ${yahooError.message}`);
+            quote = await financeAPI.getQuote(ticker);
+        } catch (financeApiError) {
+            console.error(`StockPage: Non-critical error fetching quote for ${ticker}. Error: ${financeApiError.message}`);
         }
         res.json({ quote }); // Only send the quote
     } catch (dbError) {
@@ -2351,7 +2365,7 @@ router.get('/explore/feed', async (req, res) => {
                 try {
 
                     if (tickers.length > 0) {
-                        const quotes = await yahooFinance.quote(tickers);
+                        const quotes = await financeAPI.getQuote(tickers);
                         const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
                         predictions.forEach(p => {
                             p.currentPrice = priceMap.get(p.stockTicker) || 0;

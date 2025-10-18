@@ -16,8 +16,8 @@ const initialChecks = [
     { id: 'email', name: 'Email Service', status: 'pending', result: null },
 
     // --- External APIs ---
-    { id: 'yahoo-current', name: 'Yahoo Finance (Current Price)', status: 'pending', result: null },
-    { id: 'yahoo-historical', name: 'Yahoo Finance (Historical Data)', status: 'pending', result: null },
+    { id: 'finance-current', name: 'Finance API (Current Price)', status: 'pending', result: null },
+    { id: 'finance-historical', name: 'Finance API (Historical Data)', status: 'pending', result: null },
     { id: 'avatar', name: 'Avatar API (DiceBear)', status: 'pending', result: null },
 ];
 
