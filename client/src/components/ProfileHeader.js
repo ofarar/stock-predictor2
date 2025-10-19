@@ -9,6 +9,12 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
     const { user, followersCount, followingCount, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
 
+    // --- Start: Logic to split username ---
+    const usernameParts = user.username.split(' ');
+    const lastWord = usernameParts.pop() || ''; // Get last word, handle empty strings
+    const usernameWithoutLastWord = usernameParts.join(' '); // Get the rest
+    // --- End: Logic to split username ---
+
     return (
         <div className="relative flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
             {/* Settings Icon (Top Right) - Only for own profile */}
@@ -27,9 +33,18 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
             </div>
             <div className="flex-grow text-center sm:text-left">
                 <h1 className="text-4xl font-bold text-white text-center">
-                    <span className="inline-block">
-                        {user.username}
-                        <span ref={ref} className={`ml-2 inline-flex items-center ${isAnimating ? 'animate-blink-success' : ''}`}>
+                    {/* Render the main part of the username first, add space if it exists */}
+                    {usernameWithoutLastWord && <span>{usernameWithoutLastWord} </span>}
+
+                    {/* Wrap the last word and the tick in a non-breaking span */}
+                    <span className="inline-block whitespace-nowrap">
+                        <span>{lastWord}</span>
+                        {/* The tick span remains largely the same, but is now inside the nowrap span */}
+                        <span
+                            ref={ref} // Ref stays here for animation positioning
+                            className={`ml-1 inline-flex items-center
+                                ${isAnimating ? 'animate-blink-success' : ''}`}
+                        >
                             {settings?.isVerificationEnabled && user.isVerified && (
                                 <span className="inline-block translate-y-[1px]">
                                     {isOwnProfile ? (
