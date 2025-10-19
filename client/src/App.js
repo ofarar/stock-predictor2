@@ -32,6 +32,7 @@ import ContactPage from './pages/ContactPage';
 import AIWizardPage from './pages/AIWizardPage';
 import FeatureRoute from './components/FeatureRoute';
 import CompleteProfilePage from './pages/CompleteProfilePage';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
 
 
 // A small helper component to handle the conditional rendering
@@ -113,6 +114,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/watchlist" element={<WatchlistPage settings={settings} />} />
             <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
             <Route
               path="/ai-wizard"
               element={

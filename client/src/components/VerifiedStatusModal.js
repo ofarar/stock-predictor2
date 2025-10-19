@@ -2,9 +2,24 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
-const VerifiedStatusModal = ({ isOpen, onClose, onCancel }) => {
+const VerifiedStatusModal = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
+
+    const handleManageSubscription = async () => {
+        try {
+            // 1. Call your backend to create a portal session
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/stripe/create-portal-session`, {}, { withCredentials: true });
+            const { url } = response.data;
+
+            // 2. Redirect user to the Stripe Customer Portal
+            window.location.href = url;
+        } catch (error) {
+            toast.error("Could not open subscription manager. Please try again.");
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -32,10 +47,10 @@ const VerifiedStatusModal = ({ isOpen, onClose, onCancel }) => {
                         {t('verifiedStatusModal.closeButton')}
                     </button>
                     <button
-                        onClick={onCancel}
-                        className="text-sm text-red-500 hover:underline"
+                        onClick={handleManageSubscription}
+                        className="text-sm text-blue-400 hover:underline"
                     >
-                        {t('verifiedStatusModal.removeButton')}
+                        {t('verifiedStatusModal.manageButton', 'Manage Subscription')}
                     </button>
                 </div>
             </div>

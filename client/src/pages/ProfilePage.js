@@ -78,6 +78,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             ]);
             const profile = profileRes.data;
+            console.log("ProfilePage fetched data:", profile.user);
             setProfileData(profile);
             setCurrentUser(currentUserRes.data);
             setFilteredPerformance(profile.performance); // Initialize with overall performance

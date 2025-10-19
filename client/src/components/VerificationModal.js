@@ -3,12 +3,45 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../utils/formatters';
 import axios from 'axios';
+import { loadStripe } from '@stripe/stripe-js';
 import toast from 'react-hot-toast';
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
     const { t, i18n } = useTranslation();
-    const [view, setView] = useState('initial'); // 'initial', 'loading', 'success'
+    const [view, setView] = useState('initial');
+    // *** ADD isProcessing STATE ***
+    const [isProcessing, setIsProcessing] = useState(false);
 
+    const handleGetVerifiedClick = async () => {
+        // *** SET isProcessing TO true ***
+        setIsProcessing(true);
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/stripe/create-checkout-session`,
+                {},
+                { withCredentials: true }
+            );
+
+            const { url } = response.data;
+
+            if (!url) {
+                toast.error("Checkout URL missing.");
+                setIsProcessing(false); // *** RESET on error ***
+                return;
+            }
+            // Redirect happens here, no need to reset isProcessing on success
+            window.location.href = url;
+        } catch (error) {
+            console.error("Stripe initiation error:", error);
+            toast.error("Could not initiate payment. Please try again.");
+            // *** RESET isProcessing on error ***
+            setIsProcessing(false);
+        }
+    };
+
+    // This function seems unused now with direct redirect, but keep for structure
     const handleConfirm = async () => {
         setView('loading');
         try {
@@ -16,8 +49,18 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
             setView('success');
         } catch (error) {
             toast.error(t('verification_failed_msg'));
-            setView('initial'); // Go back to the initial view on error
+            setView('initial');
         }
+    };
+
+    // Renamed for clarity, handles modal close regardless of view
+    const handleClose = () => {
+        if (view === 'success' && onUpdate) {
+            onUpdate(); // Call update if we were on the success screen
+        }
+        setView('initial'); // Reset view state
+        setIsProcessing(false); // Reset processing state
+        onClose(); // Call the original onClose prop
     };
 
     const handleCloseAndRefresh = () => {
@@ -27,21 +70,40 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
         onClose();
     };
 
+
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={handleCloseAndRefresh}>
-            <div className="bg-gray-800 p-8 rounded-lg w-full max-w-md text-center" onClick={(e) => e.stopPropagation()}>
+        // *** Use handleClose for the backdrop click ***
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={handleClose}>
+            <div className="relative bg-gray-800 p-8 rounded-lg w-full max-w-md text-center" onClick={(e) => e.stopPropagation()}>
+                {/* *** ADD CLOSE BUTTON ('X') *** */}
+                <button
+                    onClick={handleClose}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                    aria-label="Close modal"
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
 
                 {view === 'initial' && (
                     <>
                         <h2 className="text-2xl font-bold text-white mb-4">{t('verificationModal.title')}</h2>
                         <p className="text-gray-300 mb-6">{t('verificationModal.description')}</p>
-                        <ul className="text-left space-y-3 mb-8 text-gray-300">
-                            {/* ... benefits list ... */}
+                        <ul className="text-left space-y-2 mb-8 text-gray-300 text-sm list-disc list-inside">
+                            {/* Added example benefits using translation keys */}
+                            <li>{t('verificationModal.benefits.greenCheck')}</li>
+                            <li>{t('verificationModal.benefits.verifiedFilter')}</li>
+                            <li>{t('verificationModal.benefits.verifiedExpert')}</li>
                         </ul>
-                        <button type="button" onClick={handleConfirm} className="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600">
-                            {t('verificationModal.button', { price: formatCurrency(parseFloat(price), i18n.language, 'USD') })}
+                        <button
+                            onClick={handleGetVerifiedClick}
+                            // *** DISABLE BUTTON WHEN PROCESSING ***
+                            disabled={isProcessing}
+                            className="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {/* Show different text when processing */}
+                            {isProcessing ? t('processing_verification_msg') : t('verificationModal.button', { price: formatCurrency(parseFloat(price), i18n.language, 'USD') })}
                         </button>
                     </>
                 )}

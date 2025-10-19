@@ -39,30 +39,34 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json());
+/// 2. Body Parsers
+// The webhook route in stripe.js has its own raw body parser,
+// so express.json() here is fine for all other routes.
 
-// Heroku/Render use proxies. This is needed for session cookies in production.
+
+// 3. Trust Proxy (for production environments like Render/Heroku)
 app.set('trust proxy', 1);
 
-// Use session middleware ONCE
+// 4. Session Management
 app.use(
     session({
         secret: process.env.COOKIE_KEY,
         resave: false,
         saveUninitialized: false,
-        store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }), // <-- Use MongoStore
+        store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
         cookie: {
-            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-            secure: process.env.NODE_ENV === "production", // Cookie only works in HTTPS
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         }
     })
 );
 
+// 5. Passport Authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Log session info for debugging
+// 6. Request Logging (for debugging)
 app.use((req, res, next) => {
     console.log(`--- NEW REQUEST: ${req.method} ${req.originalUrl} ---`);
     console.log('Session ID:', req.sessionID);
@@ -70,22 +74,23 @@ app.use((req, res, next) => {
     next();
 });
 
-// DB Connection
+// --- DB Connection ---
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 
-// Routes
+// --- API Routes ---
+// All routes that require authentication must be placed AFTER passport middleware.
 app.use('/api', require('./routes/api'));
-app.use('/auth', require('./routes/auth')); // Use the auth routes
+app.use('/auth', require('./routes/auth'));
+app.use('/api/stripe', require('./routes/stripe')); // <-- MOVED HERE
 
-// --- Schedule the Assessment Job ---
-// This cron schedule runs the job every 5 minutes.
-// You can change it to '0 * * * *' to run at the top of every hour.
+app.use(express.json());
+
+// --- Scheduled Jobs ---
 cron.schedule('*/5 * * * *', () => {
     console.log('Running the scheduled assessment job...');
     runAssessmentJob();
 });
-
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

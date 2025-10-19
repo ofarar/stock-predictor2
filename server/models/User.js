@@ -13,6 +13,13 @@ const UserSchema = new Schema({
     xLink: { type: String },
     isAdmin: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
+    // --- STRIPE FIELDS ---
+    stripeCustomerId: { type: String },
+    stripeSubscriptionId: { type: String },
+    stripeSubscriptionStatus: { type: String, enum: ['active', 'canceled', 'incomplete', 'past_due', null], default: null },
+    // This stores the date when the subscription will officially end after a cancellation.
+    stripeSubscriptionEndDate: { type: Date },
+    // --- END STRIPE FIELDS ---
     score: { type: Number, default: 0, index: true },
     language: { type: String, default: 'en' },
 
