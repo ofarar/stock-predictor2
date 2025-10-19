@@ -246,6 +246,7 @@
     "create_golden_post_btn": "Créer une Publication Or",
     "processing_verification_msg": "Traitement de la vérification...",
     "verification_success_msg": "Vérification réussie !",
+    "verification_removed_success_msg": "Statut de vérification supprimé.",
     "verification_failed_msg": "Échec de la vérification.",
     "cancel_verification_title": "Annuler la Vérification",
     "cancel_verification_msg": "Êtes-vous sûr ? Vous perdrez votre statut vérifié et ses avantages.",

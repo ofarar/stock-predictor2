@@ -246,6 +246,7 @@
     "create_golden_post_btn": "Создать Золотой пост",
     "processing_verification_msg": "Обработка верификации...",
     "verification_success_msg": "Верификация прошла успешно!",
+    "verification_removed_success_msg": "Статус верификации удален.",
     "verification_failed_msg": "Ошибка верификации.",
     "cancel_verification_title": "Отменить верификацию",
     "cancel_verification_msg": "Вы уверены? Вы потеряете свой статус верификации и его преимущества.",

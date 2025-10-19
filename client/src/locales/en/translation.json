@@ -246,6 +246,7 @@
   "create_golden_post_btn": "Create Golden Post",
   "processing_verification_msg": "Processing verification...",
   "verification_success_msg": "Verification successful!",
+  "verification_removed_success_msg": "Verification status removed.",
   "verification_failed_msg": "Verification failed.",
   "cancel_verification_title": "Cancel Verification",
   "cancel_verification_msg": "Are you sure? You will lose your verified status and benefits.",

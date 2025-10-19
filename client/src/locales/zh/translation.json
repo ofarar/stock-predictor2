@@ -246,6 +246,7 @@
     "create_golden_post_btn": "创建黄金帖子",
     "processing_verification_msg": "正在处理认证...",
     "verification_success_msg": "认证成功！",
+    "verification_removed_success_msg": "已移除验证状态。",
     "verification_failed_msg": "认证失败。",
     "cancel_verification_title": "取消认证",
     "cancel_verification_msg": "您确定吗？您将失去您的认证状态和权益。",

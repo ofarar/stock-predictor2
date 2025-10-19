@@ -246,6 +246,7 @@
     "create_golden_post_btn": "Gold-Beitrag erstellen",
     "processing_verification_msg": "Verifizierung wird bearbeitet...",
     "verification_success_msg": "Verifizierung erfolgreich!",
+    "verification_removed_success_msg": "Verifizierungsstatus entfernt.",
     "verification_failed_msg": "Verifizierung fehlgeschlagen.",
     "cancel_verification_title": "Verifizierung abbrechen",
     "cancel_verification_msg": "Sind Sie sicher? Sie verlieren Ihren verifizierten Status und Ihre Vorteile.",

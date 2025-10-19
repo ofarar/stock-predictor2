@@ -246,6 +246,7 @@
     "create_golden_post_btn": "Crear Publicación Dorada",
     "processing_verification_msg": "Procesando verificación...",
     "verification_success_msg": "¡Verificación exitosa!",
+    "verification_removed_success_msg": "Estado de verificación eliminado.",
     "verification_failed_msg": "La verificación falló.",
     "cancel_verification_title": "Cancelar Verificación",
     "cancel_verification_msg": "¿Estás seguro? Perderás tu estado de verificado y sus beneficios.",

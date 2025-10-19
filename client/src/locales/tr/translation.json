@@ -246,6 +246,7 @@
   "create_golden_post_btn": "Altın Gönderi Oluştur",
   "processing_verification_msg": "Doğrulama işleniyor...",
   "verification_success_msg": "Doğrulama başarılı!",
+  "verification_removed_success_msg": "Doğrulama durumu kaldırıldı.",
   "verification_failed_msg": "Doğrulama başarısız oldu.",
   "cancel_verification_title": "Doğrulamayı İptal Et",
   "cancel_verification_msg": "Emin misiniz? Doğrulanmış durumunuzu ve avantajlarınızı kaybedeceksiniz.",

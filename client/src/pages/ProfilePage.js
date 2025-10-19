@@ -130,23 +130,12 @@ const ProfilePage = ({ settings, requestLogin }) => {
         setIsEditModalOpen(true);
     };
 
-    const handleGetVerified = () => {
-        const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/profile/verify`, {}, { withCredentials: true })
-            .then(() => fetchData());
-        toast.promise(promise, {
-            loading: t('processing_verification_msg'),
-            success: t('verification_success_msg'),
-            error: t('verification_failed_msg'),
-        });
-        setIsVerificationModalOpen(false);
-    };
-
     const confirmCancelVerification = () => {
         const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/profile/cancel-verification`, {}, { withCredentials: true })
             .then(() => fetchData());
         toast.promise(promise, {
             loading: t('processing_verification_msg'),
-            success: t('verification_success_msg'),
+            success: t('verification_removed_success_msg'),
             error: t('verification_failed_msg'),
         });
         setIsCancelConfirmOpen(false);

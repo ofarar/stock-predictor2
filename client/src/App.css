@@ -67,3 +67,20 @@ body {
   animation: blink-success 0.8s 3 ease-in-out;
   /* Blinks 3 times */
 }
+
+@keyframes blink-removal {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1.2);
+    color: #f87171; /* Red color */
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1);
+    color: #ef4444; /* Darker Red */
+  }
+}
+
+.animate-blink-removal {
+  animation: blink-removal 0.8s 3 ease-in-out; /* Blinks 3 times, red */
+}
