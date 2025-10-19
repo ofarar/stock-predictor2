@@ -420,7 +420,15 @@
         "deactivateFail": "更新设置失败。",
         "updateButton": "更新设置",
         "activateButton": "激活黄金会员",
-        "deactivateButton": "停用"
+        "deactivateButton": "停用",
+        "onboarding": {
+            "actionRequired": "需要操作：完成 Stripe 注册流程",
+            "connectPrompt": "您需要连接您的 Stripe 账户才能接收订阅者的付款。",
+            "complete": "✅ Stripe 账户已连接并准备好接收付款",
+            "tooltip": "请在更新设置前完成 Stripe 注册流程。",
+            "connectButton": "连接 Stripe",
+            "processingButton": "处理中..."
+        }
     },
     "goldenPostForm": {
         "title": "创建黄金帖子",

@@ -20,6 +20,10 @@ const UserSchema = new Schema({
     stripeSubscriptionStatus: { type: String, enum: ['active', 'canceled', 'incomplete', 'past_due', null], default: null },
     // This stores the date when the subscription will officially end after a cancellation.
     stripeSubscriptionEndDate: { type: Date },
+    // --- STRIPE CONNECT (FOR GOLDEN MEMBERS) FIELDS ---
+    stripeConnectAccountId: { type: String, index: true }, // ID of their Express account
+    stripeConnectOnboardingComplete: { type: Boolean, default: false }, // Has Stripe onboarding finished?
+    goldenMemberPriceId: { type: String }, // Stripe Price ID specific to this member
     // --- END STRIPE FIELDS ---
     score: { type: Number, default: 0, index: true },
     language: { type: String, default: 'en' },

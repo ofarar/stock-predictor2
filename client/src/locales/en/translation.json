@@ -420,7 +420,15 @@
     "deactivateFail": "Failed to update settings.",
     "updateButton": "Update Settings",
     "activateButton": "Activate Golden Membership",
-    "deactivateButton": "Deactivate"
+    "deactivateButton": "Deactivate",
+    "onboarding": {
+      "actionRequired": "Action Required: Complete Stripe Onboarding",
+      "connectPrompt": "You need to connect your Stripe account to receive payments from subscribers.",
+      "complete": "✅ Stripe Account Connected & Ready for Payouts",
+      "tooltip": "Please complete Stripe onboarding before updating settings.",
+      "connectButton": "Connect with Stripe",
+      "processingButton": "Processing..."
+    }
   },
   "goldenPostForm": {
     "title": "Create Golden Post",

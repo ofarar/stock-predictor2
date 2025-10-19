@@ -420,7 +420,15 @@
         "deactivateFail": "No se pudieron actualizar los ajustes.",
         "updateButton": "Actualizar Ajustes",
         "activateButton": "Activar Membresía Dorada",
-        "deactivateButton": "Desactivar"
+        "deactivateButton": "Desactivar",
+        "onboarding": {
+            "actionRequired": "Acción requerida: Completar registro en Stripe",
+            "connectPrompt": "Necesitas conectar tu cuenta de Stripe para recibir pagos de los suscriptores.",
+            "complete": "✅ Cuenta de Stripe conectada y lista para recibir pagos",
+            "tooltip": "Por favor, completa el registro en Stripe antes de actualizar la configuración.",
+            "connectButton": "Conectar con Stripe",
+            "processingButton": "Procesando..."
+        }
     },
     "goldenPostForm": {
         "title": "Crear Publicación Dorada",

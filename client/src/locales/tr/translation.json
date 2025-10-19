@@ -420,7 +420,15 @@
     "deactivateFail": "Ayarlar güncellenemedi.",
     "updateButton": "Ayarları Güncelle",
     "activateButton": "Altın Üyeliği Etkinleştir",
-    "deactivateButton": "Devre Dışı Bırak"
+    "deactivateButton": "Devre Dışı Bırak",
+    "onboarding": {
+      "actionRequired": "Eylem Gerekli: Stripe Kaydını Tamamlayın",
+      "connectPrompt": "Abonelerden ödeme almak için Stripe hesabınızı bağlamanız gerekir.",
+      "complete": "✅ Stripe Hesabı Bağlandı ve Ödemeler İçin Hazır",
+      "tooltip": "Lütfen ayarları güncellemeden önce Stripe kaydını tamamlayın.",
+      "connectButton": "Stripe ile Bağlan",
+      "processingButton": "İşleniyor..."
+    }
   },
   "goldenPostForm": {
     "title": "Altın Gönderi Oluştur",

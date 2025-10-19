@@ -420,7 +420,15 @@
         "deactivateFail": "Einstellungen konnten nicht aktualisiert werden.",
         "updateButton": "Einstellungen aktualisieren",
         "activateButton": "Gold-Mitgliedschaft aktivieren",
-        "deactivateButton": "Deaktivieren"
+        "deactivateButton": "Deaktivieren",
+        "onboarding": {
+            "actionRequired": "Aktion erforderlich: Stripe-Onboarding abschließen",
+            "connectPrompt": "Sie müssen Ihr Stripe-Konto verbinden, um Zahlungen von Abonnenten zu erhalten.",
+            "complete": "✅ Stripe-Konto verbunden & bereit für Auszahlungen",
+            "tooltip": "Bitte schließen Sie das Stripe-Onboarding ab, bevor Sie die Einstellungen aktualisieren.",
+            "connectButton": "Mit Stripe verbinden",
+            "processingButton": "Verarbeite..."
+        }
     },
     "goldenPostForm": {
         "title": "Gold-Beitrag erstellen",

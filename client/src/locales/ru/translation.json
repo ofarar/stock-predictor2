@@ -420,7 +420,15 @@
         "deactivateFail": "Не удалось обновить настройки.",
         "updateButton": "Обновить настройки",
         "activateButton": "Активировать золотое членство",
-        "deactivateButton": "Деактивировать"
+        "deactivateButton": "Деактивировать",
+        "onboarding": {
+            "actionRequired": "Требуется действие: Завершите регистрацию в Stripe",
+            "connectPrompt": "Вам необходимо подключить свой аккаунт Stripe для получения платежей от подписчиков.",
+            "complete": "✅ Аккаунт Stripe подключен и готов к выплатам",
+            "tooltip": "Пожалуйста, завершите регистрацию в Stripe перед обновлением настроек.",
+            "connectButton": "Подключить Stripe",
+            "processingButton": "Обработка..."
+        }
     },
     "goldenPostForm": {
         "title": "Создать Золотой пост",

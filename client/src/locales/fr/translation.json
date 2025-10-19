@@ -420,7 +420,15 @@
         "deactivateFail": "Échec de la mise à jour des paramètres.",
         "updateButton": "Mettre à jour les Paramètres",
         "activateButton": "Activer l'adhésion Or",
-        "deactivateButton": "Désactiver"
+        "deactivateButton": "Désactiver",
+        "onboarding": {
+            "actionRequired": "Action requise : Compléter l'intégration Stripe",
+            "connectPrompt": "Vous devez connecter votre compte Stripe pour recevoir les paiements des abonnés.",
+            "complete": "✅ Compte Stripe connecté et prêt pour les virements",
+            "tooltip": "Veuillez compléter l'intégration Stripe avant de mettre à jour les paramètres.",
+            "connectButton": "Connecter avec Stripe",
+            "processingButton": "Traitement..."
+        }
     },
     "goldenPostForm": {
         "title": "Créer une Publication Or",

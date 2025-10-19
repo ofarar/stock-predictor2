@@ -18,6 +18,7 @@ const purify = DOMPurify(window);
 const rateLimit = require('express-rate-limit');
 const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
+const { createOrUpdateStripePriceForUser } = require('../routes/stripe');
 
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({
@@ -1765,51 +1766,97 @@ router.put('/profile/golden-member', async (req, res) => {
 
     try {
         const { isGoldenMember, price, description, acceptingNewSubscribers } = req.body;
-        const userToUpdate = await User.findById(req.user._id).populate('goldenSubscribers.user');
+        const userId = req.user._id;
 
+        // Fetch the user *before* making updates to check current state
+        let userToUpdate = await User.findById(userId).populate('goldenSubscribers.user');
         if (!userToUpdate) return res.status(404).json({ message: "User not found." });
 
+        const wasGoldenBefore = userToUpdate.isGoldenMember;
+
         // --- Deactivation Logic ---
-        if (userToUpdate.isGoldenMember && isGoldenMember === false) {
+        if (wasGoldenBefore && isGoldenMember === false) {
+            console.log(`Deactivating Golden status for user ${userId}`);
+            // --- Add Notifications for Subscribers ---
             const validSubscribers = userToUpdate.goldenSubscribers.filter(sub => sub.user);
             const subscriberIds = validSubscribers.map(sub => sub.user._id);
 
             if (subscriberIds.length > 0) {
-                const message = `${userToUpdate.username} is no longer a Golden Member. Your subscription has been cancelled.`;
-                const notifications = subscriberIds.map(id => ({
-                    recipient: id, type: 'GoldenPost', message, link: `/profile/${userToUpdate._id}`
-                }));
-                await Notification.insertMany(notifications);
+                // Remove this user from each subscriber's 'goldenSubscriptions' list
                 await User.updateMany(
                     { _id: { $in: subscriberIds } },
-                    { $pull: { goldenSubscriptions: { user: userToUpdate._id } } }
+                    { $pull: { goldenSubscriptions: { user: userId } } }
                 );
+                // TODO: Consider sending notifications to subscribers about cancellation
+                console.log(`Removed ${userId} from goldenSubscriptions of ${subscriberIds.length} users.`);
             }
+
+            // Prepare update data for deactivation
+            let updateData = {
+                isGoldenMember: false,
+                goldenMemberPrice: price, // Keep price setting even if inactive
+                goldenMemberDescription: description,
+                acceptingNewSubscribers: acceptingNewSubscribers,
+                goldenSubscribers: [], // Clear subscribers list on deactivation
+                goldenMemberPriceId: null, // Clear Stripe Price ID
+                // Keep stripeConnectAccountId and stripeConnectOnboardingComplete
+            };
+
+            const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
+            console.log(`Golden status deactivated for user ${userId}.`);
+            return res.json(updatedUser); // Exit early after deactivation
         }
 
-        // FIX: Use findByIdAndUpdate for a more robust and direct update.
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user._id,
-            {
-                $set: {
-                    isGoldenMember,
-                    goldenMemberPrice: price,
-                    goldenMemberDescription: description,
-                    acceptingNewSubscribers,
-                    // Conditionally clear the subscribers list only on deactivation
-                    goldenSubscribers: isGoldenMember === false ? [] : userToUpdate.goldenSubscribers
-                }
-            },
-            { new: true, runValidators: true } // runValidators ensures price limits are still checked
-        );
+        // --- Activation / Update Logic ---
+        if (isGoldenMember === true) {
+            console.log(`Processing Golden activation/update for user ${userId}`);
+            let updateData = {
+                isGoldenMember: true,
+                goldenMemberPrice: price,
+                goldenMemberDescription: description,
+                acceptingNewSubscribers: acceptingNewSubscribers,
+                // Don't clear subscribers on update/activation
+            };
 
-        res.json(updatedUser);
+            // Check if Stripe onboarding is complete BEFORE trying to create/update price
+            if (userToUpdate.stripeConnectAccountId && userToUpdate.stripeConnectOnboardingComplete) {
+                console.log(`User ${userId} is onboarded. Creating/Updating Stripe Price.`);
+                try {
+                    const newPriceId = await createOrUpdateStripePriceForUser(userId, parseFloat(price), userToUpdate.username);
+                    updateData.goldenMemberPriceId = newPriceId;
+                } catch (stripeError) {
+                    console.error(`Failed to create/update Stripe Price for user ${userId}:`, stripeError);
+                    // Return error - user must fix price or Stripe issue before activating fully
+                    return res.status(500).json({ message: "Could not update subscription price details. Please check Stripe connection and price settings." });
+                }
+            } else {
+                // Onboarding not complete, activate status in DB but warn/inform user
+                console.log(`User ${userId} activating Golden status, but Stripe onboarding is pending. Price ID not set yet.`);
+                updateData.goldenMemberPriceId = null; // Ensure price ID is null if onboarding isn't done
+            }
+
+            // Apply the updates to the user
+            const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
+            console.log(`Golden status activated/updated for user ${userId}.`);
+            return res.json(updatedUser);
+        }
+
+        // Fallback for cases where isGoldenMember might not be explicitly true/false in request? Unlikely.
+        return res.status(400).json({ message: "Invalid request data." });
 
     } catch (err) {
-        if (err.name === 'ValidationError' && err.errors.goldenMemberPrice) {
-            return res.status(400).json({ message: 'Price must be between $1 and $500.' });
+        // Handle validation errors specifically
+        if (err.name === 'ValidationError') {
+            // Check specifically for price range error
+            if (err.errors.goldenMemberPrice) {
+                return res.status(400).json({ message: 'Price must be between $1 and $500.' });
+            }
+            // Generic validation error
+            return res.status(400).json({ message: err.message });
         }
-        res.status(400).json({ message: 'Failed to update settings.' });
+        // Handle other errors
+        console.error("Error in PUT /profile/golden-member:", err);
+        res.status(500).json({ message: 'Failed to update settings due to a server error.' });
     }
 });
 
