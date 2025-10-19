@@ -1,13 +1,15 @@
+// src/components/AIWizardWaitlist.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import VerifiedTick from './VerifiedTick';
-import LoadMoreButton from './LoadMoreButton';
+import LoadMoreButton from './LoadMoreButton'; // Ensure LoadMoreButton is imported
 
 const AIWizardWaitlist = ({ settings }) => {
     const [waitlist, setWaitlist] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [visibleCount, setVisibleCount] = useState(10); // State for "Load More"
+    const [visibleCount, setVisibleCount] = useState(10);
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/api/admin/ai-wizard-waitlist`, { withCredentials: true })
@@ -26,29 +28,50 @@ const AIWizardWaitlist = ({ settings }) => {
             </div>
             <div className="space-y-3">
                 {waitlist.length > 0 ? (
-                    // Use .slice() to only show the visible portion of the list
-                    waitlist.slice(0, visibleCount).map(entry => (
-                        entry.userId && (
-                            <div key={entry._id} className="bg-gray-700 p-3 rounded-lg flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <img src={entry.userId.avatar} alt="avatar" className="w-10 h-10 rounded-full" />
-                                    <div className="flex items-center gap-2 ml-4">
-                                        <div className="flex items-center gap-1">
-                                            <Link
-                                                to={`/profile/${entry.userId._id}`}
-                                                className="font-semibold text-white hover:underline"
-                                            >
-                                                {entry.userId.username}
-                                            </Link>
-                                            {settings?.isVerificationEnabled && entry.userId.isVerified && <VerifiedTick />}
-                                        </div>
+                    waitlist.slice(0, visibleCount).map((entry, index) => {
+                        // Ensure userId exists before trying to access properties
+                        if (!entry.userId) return null;
 
+                        // --- Start: Logic to split username ---
+                        const username = entry.userId.username || ''; // Handle potential missing username
+                        const usernameParts = username.split(' ');
+                        const lastWord = usernameParts.pop() || '';
+                        const usernameWithoutLastWord = usernameParts.join(' ');
+                        // --- End: Logic to split username ---
+
+                        return (
+                            <div key={entry._id} className="bg-gray-700 p-3 rounded-lg flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    {/* Index Number */}
+                                    <span className="text-gray-400 w-6 text-right flex-shrink-0">{index + 1}.</span>
+                                    {/* Avatar */}
+                                    <img
+                                        src={entry.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${entry.userId._id}`}
+                                        alt="avatar"
+                                        className="w-10 h-10 rounded-full flex-shrink-0"
+                                    />
+                                    {/* Username and Tick - Updated */}
+                                    <div className="font-semibold text-white">
+                                        {/* Render username parts with non-breaking span for last word + tick */}
+                                        {usernameWithoutLastWord && <span>{usernameWithoutLastWord} </span>}
+                                        <span className="inline-block whitespace-nowrap">
+                                            <span>{lastWord}</span>
+                                            {/* Conditionally render tick */}
+                                            {settings?.isVerificationEnabled && entry.userId.isVerified && (
+                                                <span className="ml-1 inline-block align-middle">
+                                                    <VerifiedTick />
+                                                </span>
+                                            )}
+                                        </span>
                                     </div>
                                 </div>
-                                <p className="text-sm text-gray-400">Joined: {new Date(entry.createdAt).toLocaleDateString()}</p>
+                                {/* Joined Date */}
+                                <p className="text-sm text-gray-400 flex-shrink-0 ml-4">
+                                    Joined: {new Date(entry.createdAt).toLocaleDateString()}
+                                </p>
                             </div>
-                        )
-                    ))
+                        );
+                    })
                 ) : (
                     <p className="text-gray-500 text-center py-4">No one has joined the waitlist yet.</p>
                 )}
@@ -58,7 +81,7 @@ const AIWizardWaitlist = ({ settings }) => {
             {visibleCount < waitlist.length && (
                 <LoadMoreButton
                     onClick={() => setVisibleCount(prev => prev + 10)}
-                    hasMore={visibleCount < waitlist.length} // or < entries.length for AIWizardWaitlist
+                    hasMore={visibleCount < waitlist.length}
                 />
             )}
         </div>
