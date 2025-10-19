@@ -170,10 +170,17 @@ const ProfilePage = ({ settings, requestLogin }) => {
             <VerificationModal
                 isOpen={isVerificationModalOpen}
                 onClose={() => setIsVerificationModalOpen(false)}
-                // This function now also triggers the animation state
-                onUpdate={() => {
-                    fetchData();
-                    setIsVerifiedJustNow(true);
+                // Make the function async to await fetchData
+                onUpdate={async () => {
+                    try {
+                        // 1. Wait for the data to finish loading FIRST
+                        await fetchData();
+                        // 2. THEN trigger the animation state
+                        setIsVerifiedJustNow(true);
+                    } catch (error) {
+                        // Handle potential errors during fetchData if necessary
+                        console.error("Error fetching data after verification:", error);
+                    }
                 }}
                 price={settings?.verificationPrice.toFixed(2) || '4.99'}
             />
