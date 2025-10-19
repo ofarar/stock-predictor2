@@ -18,7 +18,7 @@ const purify = DOMPurify(window);
 const rateLimit = require('express-rate-limit');
 const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
-const { createOrUpdateStripePriceForUser } = require('../routes/stripe');
+const { createOrUpdateStripePriceForUser } = require('./stripe');
 
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({

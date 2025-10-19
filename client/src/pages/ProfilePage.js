@@ -37,7 +37,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
     const [activeTab, setActiveTab] = useState('Profile');
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // All state for modals remains in the parent component
     const [isGoldenModalOpen, setIsGoldenModalOpen] = useState(false);
@@ -53,6 +53,27 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isAggressivenessInfoOpen, setIsAggressivenessInfoOpen] = useState(false);
     const [filteredPerformance, setFilteredPerformance] = useState(null);
     const [isVerifiedJustNow, setIsVerifiedJustNow] = useState(false);
+
+    useEffect(() => {
+        // Check if the success parameter exists
+        if (searchParams.get('subscribe') === 'success') {
+            toast.success(t('joinGoldenModal.toast.success', { username: profileData?.user?.username || 'member' }));
+            // Optionally remove the query parameter from the URL without reloading
+            searchParams.delete('subscribe');
+            setSearchParams(searchParams, { replace: true });
+        }
+        // Also handle onboarding redirect parameter if needed
+        if (searchParams.get('onboarding') === 'complete') {
+            toast.success("Stripe onboarding completed successfully!");
+            searchParams.delete('onboarding');
+            setSearchParams(searchParams, { replace: true });
+        }
+        if (searchParams.get('onboarding') === 'refresh') {
+            toast.info("Stripe onboarding link expired or invalid. Please try connecting again.");
+            searchParams.delete('onboarding');
+            setSearchParams(searchParams, { replace: true });
+        }
+    }, [searchParams, setSearchParams, t, profileData?.user?.username]);
 
     useEffect(() => {
         if (isVerifiedJustNow) {

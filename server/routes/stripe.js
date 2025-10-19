@@ -529,4 +529,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     res.json({ received: true });
 }); // End webhook handler
 
-module.exports = router;
+module.exports = {
+    router, // Keep exporting the router
+    createOrUpdateStripePriceForUser // Export the helper function too
+};

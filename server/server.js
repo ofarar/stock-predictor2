@@ -69,7 +69,7 @@ app.use(passport.session());
 // --- CORRECT MIDDLEWARE ORDER ---
 
 // 1. Mount Stripe routes FIRST (webhook needs raw body BEFORE json parser runs)
-app.use('/api/stripe', require('./routes/stripe'));
+app.use('/api/stripe', require('./routes/stripe').router);
 
 // 2. Apply global JSON body parser AFTER Stripe webhook is defined
 //    This will parse JSON for routes defined *after* this point.
