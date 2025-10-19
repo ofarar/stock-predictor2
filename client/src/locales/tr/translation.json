@@ -889,5 +889,14 @@
     "unfollowing": "Takip bırakılıyor...",
     "unfollowSuccess": "Kullanıcı takipten çıkarıldı!",
     "unfollowError": "Kullanıcı takipten çıkarılamadı."
+  },
+  "paymentSuccess": {
+    "toastSuccess": "Ödeme başarılı! Doğrulamanız şimdi etkin.",
+    "errorSession": "Kullanıcı oturumu doğrulanamadı.",
+    "errorFetchUser": "Kullanıcı verileri alınırken hata oluştu.",
+    "title": "Başarılı!",
+    "redirecting": "Ödemeniz işleme alındı. Profilinize yönlendiriliyorsunuz...",
+    "verifyingSession": "Oturum doğrulanıyor...",
+    "goNow": "Şimdi git"
   }
 }

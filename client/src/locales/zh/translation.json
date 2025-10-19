@@ -888,5 +888,14 @@
         "unfollowing": "正在取消关注...",
         "unfollowSuccess": "已取消关注用户！",
         "unfollowError": "无法取消关注用户。"
+    },
+    "paymentSuccess": {
+        "toastSuccess": "付款成功！您的验证现已激活。",
+        "errorSession": "无法验证用户会话。",
+        "errorFetchUser": "获取用户数据时出错。",
+        "title": "成功！",
+        "redirecting": "您的付款已处理。正在重定向到您的个人资料...",
+        "verifyingSession": "正在验证会话...",
+        "goNow": "立即前往"
     }
 }

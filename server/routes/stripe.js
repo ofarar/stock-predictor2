@@ -145,6 +145,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
                 const updateData = {
                     isVerified: true,
+                    verifiedAt: new Date(),
                     stripeSubscriptionId: subscriptionId,
                     stripeCustomerId: customerId,
                     stripeSubscriptionStatus: subscription.status,
@@ -196,6 +197,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                             : new Date(subscription.current_period_end * 1000),
                         // Potentially update isVerified based on status (e.g., set to false if 'canceled' or 'unpaid')
                         isVerified: ['active', 'trialing'].includes(subscription.status), // Example: Keep verified if active or trialing
+                        verifiedAt: newIsVerified ? (await User.findOne({ stripeSubscriptionId: subscription.id }).select('verifiedAt'))?.verifiedAt || new Date() : null,
                     }
                 );
                 console.log(`Updated subscription status for user ${userId} to ${subscription.status}.`);
@@ -223,6 +225,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                     { stripeSubscriptionId: subscription.id },
                     {
                         isVerified: false,
+                        verifiedAt: null,
                         stripeSubscriptionStatus: null, // Clear status
                         stripeSubscriptionEndDate: null, // Clear end date
                         stripeSubscriptionId: null, // Optional: Clear the subscription ID too

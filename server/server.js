@@ -66,6 +66,22 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// --- CORRECT MIDDLEWARE ORDER ---
+
+// 1. Mount Stripe routes FIRST (webhook needs raw body BEFORE json parser runs)
+app.use('/api/stripe', require('./routes/stripe'));
+
+// 2. Apply global JSON body parser AFTER Stripe webhook is defined
+//    This will parse JSON for routes defined *after* this point.
+app.use(express.json());
+
+// 3. Mount other API routes AFTER the JSON parser
+//    These routes (like /api/quotes) will now receive req.body correctly.
+app.use('/api', require('./routes/api'));
+app.use('/auth', require('./routes/auth'));
+
+// --- END CORRECT MIDDLEWARE ORDER ---
+
 // 6. Request Logging (for debugging)
 app.use((req, res, next) => {
     console.log(`--- NEW REQUEST: ${req.method} ${req.originalUrl} ---`);
@@ -78,14 +94,6 @@ app.use((req, res, next) => {
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
-
-// --- API Routes ---
-// All routes that require authentication must be placed AFTER passport middleware.
-app.use('/api', require('./routes/api'));
-app.use('/auth', require('./routes/auth'));
-app.use('/api/stripe', require('./routes/stripe')); // <-- MOVED HERE
-
-app.use(express.json());
 
 // --- Scheduled Jobs ---
 cron.schedule('*/5 * * * *', () => {

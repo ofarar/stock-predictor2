@@ -889,5 +889,14 @@
     "unfollowing": "Unfollowing...",
     "unfollowSuccess": "User unfollowed!",
     "unfollowError": "Could not unfollow user."
+  },
+  "paymentSuccess": {
+    "toastSuccess": "Payment successful! Your verification is now active.",
+    "errorSession": "Could not verify user session.",
+    "errorFetchUser": "Error fetching user data.",
+    "title": "Success!",
+    "redirecting": "Your payment was processed. Redirecting you to your profile...",
+    "verifyingSession": "Verifying session...",
+    "goNow": "Go now"
   }
 }

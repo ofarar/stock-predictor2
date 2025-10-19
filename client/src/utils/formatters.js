@@ -141,3 +141,24 @@ export const formatDateTime = (dateInput, locale) => {
 
     return new Intl.DateTimeFormat(locale, options).format(date);
 };
+
+/**
+ * Formats a date object into a locale-specific short date and time string.
+ * @param {string | Date} dateInput - The date object or string to format.
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted short date/time string (e.g., "10/19/25, 4:30 PM").
+ */
+export const formatDateTimeShort = (dateInput, locale) => {
+    const date = new Date(dateInput);
+    if (isNaN(date)) return '';
+
+    const options = {
+        year: '2-digit', // Short year
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+    };
+
+    return new Intl.DateTimeFormat(locale, options).format(date);
+};

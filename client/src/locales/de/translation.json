@@ -888,5 +888,14 @@
         "unfollowing": "Entfolgen...",
         "unfollowSuccess": "Benutzer entfolgt!",
         "unfollowError": "Konnte Benutzer nicht entfolgen."
+    },
+    "paymentSuccess": {
+        "toastSuccess": "Zahlung erfolgreich! Ihre Verifizierung ist jetzt aktiv.",
+        "errorSession": "Benutzersitzung konnte nicht überprüft werden.",
+        "errorFetchUser": "Fehler beim Abrufen der Benutzerdaten.",
+        "title": "Erfolg!",
+        "redirecting": "Ihre Zahlung wurde verarbeitet. Sie werden zu Ihrem Profil weitergeleitet...",
+        "verifyingSession": "Sitzung wird überprüft...",
+        "goNow": "Jetzt gehen"
     }
 }

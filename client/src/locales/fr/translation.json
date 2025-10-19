@@ -912,5 +912,14 @@
         "unfollowing": "Ne plus suivre...",
         "unfollowSuccess": "Utilisateur non suivi !",
         "unfollowError": "Impossible de ne plus suivre l'utilisateur."
+    },
+    "paymentSuccess": {
+        "toastSuccess": "Paiement réussi ! Votre vérification est maintenant active.",
+        "errorSession": "Impossible de vérifier la session utilisateur.",
+        "errorFetchUser": "Erreur lors de la récupération des données utilisateur.",
+        "title": "Succès !",
+        "redirecting": "Votre paiement a été traité. Redirection vers votre profil...",
+        "verifyingSession": "Vérification de la session...",
+        "goNow": "Aller maintenant"
     }
 }

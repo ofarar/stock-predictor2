@@ -13,6 +13,7 @@ const UserSchema = new Schema({
     xLink: { type: String },
     isAdmin: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
+    verifiedAt: { type: Date, default: null },
     // --- STRIPE FIELDS ---
     stripeCustomerId: { type: String },
     stripeSubscriptionId: { type: String },

@@ -808,6 +808,7 @@ router.get('/admin/all-users', async (req, res) => {
             {
                 $project: {
                     username: 1, avatar: 1, isGoldenMember: 1, isVerified: 1,
+                    verifiedAt: 1,
                     followersCount: 1, followingCount: 1,
                     goldenSubscribersCount: 1, goldenSubscriptionsCount: 1,
                     predictionCount: 1,

@@ -888,5 +888,14 @@
         "unfollowing": "Dejando de seguir...",
         "unfollowSuccess": "¡Has dejado de seguir al usuario!",
         "unfollowError": "No se pudo dejar de seguir al usuario."
+    },
+    "paymentSuccess": {
+        "toastSuccess": "¡Pago exitoso! Tu verificación ya está activa.",
+        "errorSession": "No se pudo verificar la sesión del usuario.",
+        "errorFetchUser": "Error al obtener los datos del usuario.",
+        "title": "¡Éxito!",
+        "redirecting": "Tu pago ha sido procesado. Redirigiendo a tu perfil...",
+        "verifyingSession": "Verificando sesión...",
+        "goNow": "Ir ahora"
     }
 }
