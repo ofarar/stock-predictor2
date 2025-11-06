@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from '../components/VerifiedTick';
 import AddStockModal from '../components/AddStockModal';
@@ -14,10 +14,11 @@ import JoinGoldenModal from '../components/JoinGoldenModal';
 
 const WatchlistPage = ({ settings }) => {
     const { t, i18n } = useTranslation();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [selectedTicker, setSelectedTicker] = useState(null);
+    const [selectedTicker, setSelectedTicker] = useState(searchParams.get('stock'));
     const [currentUser, setCurrentUser] = useState(null);
     const [predictionTypeFilter, setPredictionTypeFilter] = useState('All');
     const [sortBy, setSortBy] = useState('date');
@@ -30,6 +31,12 @@ const WatchlistPage = ({ settings }) => {
 
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
+    const handleTickerSelect = (ticker) => {
+        if (isEditMode) return;
+        setSelectedTicker(ticker); // 1. Update the state
+        setSearchParams({ stock: ticker }, { replace: true }); // 2. Update the URL
+    };
+
     const fetchAllData = useCallback(() => {
         setLoading(true);
         Promise.all([
@@ -40,12 +47,25 @@ const WatchlistPage = ({ settings }) => {
             setCurrentUser(user);
             setData(watchlistRes.data);
 
-            // This is more robust. It uses the user's saved list.
-            if (user && user.watchlist.length > 0 && !selectedTicker) {
-                setSelectedTicker(user.watchlist[0]);
-            } else if (!user || user.watchlist.length === 0) {
+            // --- NEW LOGIC TO SET DEFAULT TICKER ---
+            const stockFromUrl = searchParams.get('stock');
+
+            if (user && user.watchlist.length > 0) {
+                // Check if the stock from the URL is valid and still in the user's watchlist
+                if (stockFromUrl && user.watchlist.includes(stockFromUrl)) {
+                    setSelectedTicker(stockFromUrl); // URL is valid, use it.
+                } else {
+                    // No valid stock in URL (or list changed), set a new default.
+                    const defaultTicker = user.watchlist[0];
+                    setSelectedTicker(defaultTicker);
+                    setSearchParams({ stock: defaultTicker }, { replace: true });
+                }
+            } else {
+                // User has no watchlist.
                 setSelectedTicker(null);
+                setSearchParams({}, { replace: true }); // Clear URL params
             }
+            // --- END NEW LOGIC ---
         }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
             .finally(() => setLoading(false));
     }, [t, selectedTicker]);
@@ -90,12 +110,15 @@ const WatchlistPage = ({ settings }) => {
 
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/watchlist`, { ticker, action }, { withCredentials: true })
             .then(() => {
-                // After the API call, refetch ALL data.
-                fetchAllData();
-                // AND set the newly added stock as the selected one.
                 if (action === 'add') {
+                    // Set the newly added stock as selected in *both* state and URL
                     setSelectedTicker(ticker);
+                    setSearchParams({ stock: ticker }, { replace: true });
                 }
+                // Refetch all data. The fetchAllData function will
+                // automatically handle selecting a new default if the
+                // currently selected stock was the one being removed.
+                fetchAllData();
             });
 
         toast.promise(promise, {
@@ -246,7 +269,7 @@ const WatchlistPage = ({ settings }) => {
                                                         quote={quoteData}
                                                         isSelected={selectedTicker === ticker}
                                                         isEditMode={isEditMode}
-                                                        onClick={() => !isEditMode && setSelectedTicker(ticker)}
+                                                        onClick={() => handleTickerSelect(ticker)} // <-- USE NEW HANDLER
                                                         onRemove={() => handleWatchlistUpdate(ticker, 'remove')}
                                                     />
                                                 </SortableItem>
