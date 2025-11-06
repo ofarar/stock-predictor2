@@ -10,7 +10,7 @@ import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
 import EditPredictionModal from '../components/EditPredictionModal';
 import PredictionHistoryModal from '../components/PredictionHistoryModal';
-import { formatPercentage, formatCurrency, formatTimeLeft } from '../utils/formatters';
+import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } from '../utils/formatters';
 
 const calculateLiveScore = (predictedPrice, actualPrice) => {
     if (!actualPrice || actualPrice <= 0) return '...';
@@ -266,7 +266,7 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                                 </Link>
                             </div>
                         </div>
-                        <p className="ml-auto text-sm text-gray-500 text-right">{t("Made on")} {new Date(prediction.createdAt).toLocaleDateString()}</p>
+                        <p className="ml-auto text-sm text-gray-500 text-right">{t("Made on")} {formatNumericDate(prediction.createdAt, i18n.language)}</p>
                     </div>
                 </div>
             </div>
