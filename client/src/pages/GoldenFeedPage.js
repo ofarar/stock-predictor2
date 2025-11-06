@@ -5,6 +5,7 @@ import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
 import VerifiedTick from '../components/VerifiedTick';
 import { formatPercentage, formatCurrency, formatDateTime } from '../utils/formatters';
+import LoadMoreButton from '../components/LoadMoreButton';
 
 const CentralPostCard = ({ post, settings }) => {
     const { t, i18n } = useTranslation();
@@ -190,17 +191,11 @@ const GoldenFeedPage = ({ settings }) => {
                                 </div>
                             )}
                         </div>
-                        {page < totalPages && (
-                            <div className="text-center mt-8">
-                                <button
-                                    onClick={handleLoadMore}
-                                    disabled={loading}
-                                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg disabled:bg-gray-500"
-                                >
-                                    {loading ? t('explore_loading') : t('explore_load_more')}
-                                </button>
-                            </div>
-                        )}
+                        <LoadMoreButton
+                            onClick={handleLoadMore}
+                            isLoading={loading} // 'loading' will be true when fetching new pages
+                            hasMore={page < totalPages}
+                        />
                     </>
                 )}
             </div>
