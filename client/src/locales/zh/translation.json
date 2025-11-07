@@ -894,7 +894,9 @@
     "stockPage": {
         "chart": {
             "unavailableTitle": "图表数据不可用",
-            "unavailableDescription": "我们暂时无法加载历史价格数据。请稍后再试。"
+            "unavailableDescription": "我们暂时无法加载历史价格数据。请稍后再试。",
+            "lazyTitle": "显示90天价格历史",
+            "lazyButton": "加载图表"
         }
     },
     "followers": {

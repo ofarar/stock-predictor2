@@ -895,7 +895,9 @@
     "stockPage": {
         "chart": {
             "unavailableTitle": "Chartdaten nicht verfügbar",
-            "unavailableDescription": "Die historischen Kursdaten konnten im Moment nicht geladen werden. Bitte versuchen Sie es später erneut."
+            "unavailableDescription": "Die historischen Kursdaten konnten im Moment nicht geladen werden. Bitte versuchen Sie es später erneut.",
+            "lazyTitle": "90-Tage-Preisverlauf anzeigen",
+            "lazyButton": "Chart laden"
         }
     },
     "followers": {

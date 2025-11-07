@@ -895,7 +895,9 @@
   "stockPage": {
     "chart": {
       "unavailableTitle": "Grafik Verileri Mevcut Değil",
-      "unavailableDescription": "Geçmiş fiyat verilerini şu anda yükleyemedik. Lütfen daha sonra tekrar deneyin."
+      "unavailableDescription": "Geçmiş fiyat verilerini şu anda yükleyemedik. Lütfen daha sonra tekrar deneyin.",
+      "lazyTitle": "90 günlük fiyat geçmişini göster",
+      "lazyButton": "Grafiği Yükle"
     }
   },
   "followers": {

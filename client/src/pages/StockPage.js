@@ -17,6 +17,7 @@ const StockPage = ({ onPredictClick, settings }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
+    const [showChart, setShowChart] = useState(false);
 
     // Paginated state for Top Predictors
     const [topPredictors, setTopPredictors] = useState({ items: [], page: 1, totalPages: 0 });
@@ -212,15 +213,26 @@ const StockPage = ({ onPredictClick, settings }) => {
                             hasMore={topPredictors.page < topPredictors.totalPages}
                         />
                     </div>
+                    {/* --- START: MODIFY THIS BLOCK --- */}
                     <div className="lg:col-span-1">
-                        {quote ? <StockChart ticker={ticker} /> : (
+                        {showChart ? (
+                            // 2. Conditionally render the chart
+                            <StockChart ticker={ticker} />
+                        ) : (
+                            // 3. Show a placeholder/button instead
                             <div className="bg-gray-800 p-4 sm:p-6 rounded-lg h-96 flex flex-col items-center justify-center text-center">
-                                <svg className="w-12 h-12 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <h4 className="font-bold text-white">{t('stockPage.chart.unavailableTitle')}</h4>
-                                <p className="text-sm text-gray-400">{t('stockPage.chart.unavailableDescription')}</p>
+                                <svg className="w-12 h-12 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+                                <p className="text-gray-400 mb-4">{t('stockPage.chart.lazyTitle')}</p>
+                                <button
+                                    onClick={() => setShowChart(true)}
+                                    className="bg-gray-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-gray-600"
+                                >
+                                    {t('stockPage.chart.lazyButton')}
+                                </button>
                             </div>
                         )}
                     </div>
+                    {/* --- END: MODIFY THIS BLOCK --- */}
                 </div>
 
                 <div className="bg-gray-800 p-6 rounded-lg">

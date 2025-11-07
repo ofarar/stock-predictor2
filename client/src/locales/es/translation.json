@@ -894,7 +894,9 @@
     "stockPage": {
         "chart": {
             "unavailableTitle": "Datos del gráfico no disponibles",
-            "unavailableDescription": "No pudimos cargar los datos históricos de precios en este momento. Por favor, inténtelo de nuevo más tarde."
+            "unavailableDescription": "No pudimos cargar los datos históricos de precios en este momento. Por favor, inténtelo de nuevo más tarde.",
+            "lazyTitle": "Mostrar historial de precios de 90 días",
+            "lazyButton": "Cargar gráfico"
         }
     },
     "followers": {

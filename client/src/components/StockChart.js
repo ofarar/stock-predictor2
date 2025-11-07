@@ -13,14 +13,17 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const StockChart = ({ ticker }) => {
     const { t, i18n } = useTranslation();
     const [chartData, setChartData] = useState(null);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
+        setChartData(null); // Reset data to show loading
+        setError(false);    // Reset error on new ticker
+
         axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}/historical`)
             .then(res => {
                 const historicalData = res.data;
                 if (historicalData && historicalData.length > 0) {
                     setChartData({
-                        // 3. Create a clean 'yyyy-MM-dd' string for the label
                         labels: historicalData.map(v => format(new Date(v.date), 'yyyy-MM-dd')),
                         datasets: [{
                             label: t('stockChart.priceLabel', { ticker }),
@@ -33,10 +36,16 @@ const StockChart = ({ ticker }) => {
                             pointHoverRadius: 5,
                         }]
                     });
+                } else {
+                    // Handle API returning empty data as an error
+                    setError(true);
                 }
             })
-            .catch(err => console.error("Failed to fetch chart data", err));
-    }, [ticker, t]);
+            .catch(err => {
+                console.error("Failed to fetch chart data", err);
+                setError(true); // <-- 2. SET ERROR ON CATCH
+            });
+    }, [ticker, t, i18n.language]); // Add i18n.language as a dependency
 
     const options = {
         responsive: true,
@@ -76,6 +85,17 @@ const StockChart = ({ ticker }) => {
         }
     };
 
+    // First, check for the error
+    if (error) {
+        return (
+            <div className="bg-gray-800 p-4 sm:p-6 rounded-lg h-96 flex flex-col items-center justify-center text-center">
+                <svg className="w-12 h-12 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h4 className="font-bold text-white">{t('stockPage.chart.unavailableTitle')}</h4>
+                <p className="text-sm text-gray-400">{t('stockPage.chart.unavailableDescription')}</p>
+            </div>
+        );
+    }
+
     if (!chartData) {
         return (
             <div className="h-96 flex items-center justify-center text-gray-500 bg-gray-800 rounded-lg">
@@ -84,6 +104,7 @@ const StockChart = ({ ticker }) => {
         );
     }
 
+    // Finally, show the chart
     return (
         <div className="bg-gray-800 p-4 sm:p-6 rounded-lg h-96">
             <Line options={options} data={chartData} />

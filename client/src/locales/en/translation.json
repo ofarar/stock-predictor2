@@ -895,7 +895,9 @@
   "stockPage": {
     "chart": {
       "unavailableTitle": "Chart Data Unavailable",
-      "unavailableDescription": "We couldn't load the historical price data at this time. Please try again later."
+      "unavailableDescription": "We couldn't load the historical price data at this time. Please try again later.",
+      "lazyTitle": "Display 90-day price history",
+      "lazyButton": "Load Chart"
     }
   },
   "followers": {
