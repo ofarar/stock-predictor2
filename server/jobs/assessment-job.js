@@ -1,52 +1,46 @@
+// server/jobs/assessment-job.js
+
 const Prediction = require('../models/Prediction');
 const User = require('../models/User');
 const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
 const Notification = require('../models/Notification');
-const yahooFinance = require('yahoo-finance2').default;
-const { awardBadges } = require('../services/badgeService'); // FIX: Import the awardBadges function
+const { awardBadges } = require('../services/badgeService');
+const financeAPI = require('../services/financeAPI'); // <-- USE THE ADAPTER
 
 /**
  * Calculates a score based on how close a prediction was to the actual price.
- * @param {number} predictedPrice - The user's predicted price.
- * @param {number} actualPrice - The actual market price at the deadline.
- * @returns {number} - The calculated score, from 0 to 100.
+ * (This function remains unchanged)
  */
 function calculateProximityScore(predictedPrice, actualPrice) {
     const MAX_SCORE = 100;
     const MAX_ERROR_PERCENTAGE = 0.20; // Predictions off by >20% get 0 points.
-
     if (actualPrice === 0) return 0;
-
     const error = Math.abs(predictedPrice - actualPrice);
     const errorPercentage = error / actualPrice;
-
     if (errorPercentage > MAX_ERROR_PERCENTAGE) {
         return 0;
     }
-
     const score = MAX_SCORE * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
-
-    // --- THIS IS THE CORRECT LINE ---
-    // It ensures the score is saved with one decimal place (e.g., 91.8)
     return parseFloat(score.toFixed(1));
 }
 
 /**
  * Fetches the historical price of a stock for a specific date (deadline).
- * @param {string} ticker - The stock ticker.
- * @param {Date} deadline - The date for which to fetch the closing price.
- * @returns {number|null} - The closing price or null if not found.
+ * (This function is now updated to use the financeAPI adapter)
  */
 async function getActualStockPrice(ticker, deadline) {
     try {
-        console.log(`Fetching historical price for ${ticker} on ${deadline.toISOString().split('T')[0]}`);
-        const queryOptions = {
-            period1: deadline,
-            period2: new Date(deadline.getTime() + 24 * 60 * 60 * 1000), // A one-day range
-        };
-
-        const result = await yahooFinance.historical(ticker, queryOptions);
+        // Format deadline to 'YYYY-MM-DD'
+        const dateString = deadline.toISOString().split('T')[0];
+        
+        console.log(`Fetching historical price for ${ticker} on ${dateString}`);
+        
+        // Use the adapter's getHistorical function
+        const result = await financeAPI.getHistorical(ticker, {
+            period1: dateString,
+            interval: '1d' // Ensure we ask for daily
+        });
 
         if (result && result.length > 0) {
             // Return the closing price for that day
@@ -60,7 +54,6 @@ async function getActualStockPrice(ticker, deadline) {
 }
 
 const runAssessmentJob = async () => {
-    // This is the "heartbeat". It runs every time the job is triggered.
     try {
         await JobLog.findOneAndUpdate(
             { jobId: 'assessment-job' },
@@ -69,14 +62,14 @@ const runAssessmentJob = async () => {
         );
     } catch (err) {
         console.error("CRITICAL: Could not update cron job heartbeat.", err);
-        // We don't stop the job, but this is a serious warning.
     }
+    
     console.log('Starting assessment job...');
 
     const predictionsToAssess = await Prediction.find({
         status: 'Active',
         deadline: { $lte: new Date() }
-    }).populate('userId', 'username followers'); // Also populate followers for badge notifications
+    }).populate('userId', 'username followers notificationSettings'); // <-- Get notificationSettings
 
     if (predictionsToAssess.length === 0) {
         console.log('No predictions to assess.');
@@ -85,69 +78,113 @@ const runAssessmentJob = async () => {
 
     console.log(`Found ${predictionsToAssess.length} predictions to assess.`);
 
+    // --- START: OPTIMIZATION LOGIC ---
+
+    // 1. Group predictions by Ticker and Deadline
+    // We create a unique key like "AAPL-2025-11-07"
+    const predictionGroups = new Map();
+
     for (const prediction of predictionsToAssess) {
+        // Use toISOString and split to get a clean 'YYYY-MM-DD' date key
+        const dateKey = prediction.deadline.toISOString().split('T')[0];
+        const key = `${prediction.stockTicker}-${dateKey}`;
+
+        if (!predictionGroups.has(key)) {
+            predictionGroups.set(key, []);
+        }
+        predictionGroups.get(key).push(prediction);
+    }
+
+    console.log(`Grouped into ${predictionGroups.size} unique API calls.`);
+
+    // 2. Loop over the GROUPS, not the individual predictions
+    for (const [key, predictions] of predictionGroups.entries()) {
+        const [ticker, dateKey] = key.split('-');
+        const deadline = new Date(dateKey); // Re-create the Date object for the API call
+
         try {
-            const actualPrice = await getActualStockPrice(prediction.stockTicker, prediction.deadline);
+            // 3. Make ONE API call per group
+            const actualPrice = await getActualStockPrice(ticker, deadline);
 
             if (actualPrice === null) {
-                console.error(`Could not get price for ${prediction.stockTicker}. Skipping.`);
-                continue;
+                console.error(`Could not get price for ${ticker}. Skipping ${predictions.length} predictions.`);
+                continue; // Skip this whole group
             }
 
-            const score = calculateProximityScore(prediction.targetPrice, actualPrice);
+            // A map to hold user score updates, so we only update each user once
+            const userScoreUpdates = new Map();
 
-            // Update Prediction
-            prediction.status = 'Assessed';
-            prediction.score = score;
-            prediction.actualPrice = actualPrice;
-            await prediction.save();
+            // 4. Loop over the PREDICTIONS within the group (fast, no API calls)
+            for (const prediction of predictions) {
+                try {
+                    const score = calculateProximityScore(prediction.targetPrice, actualPrice);
 
-            // Update User's Total Score
-            const user = await User.findById(prediction.userId._id);
-            if (user) {
-                user.score += score;
-                await user.save();
-            } else {
-                console.warn(`Could not find user with ID ${prediction.userId._id} to update score.`);
-                continue;
+                    // Update Prediction
+                    prediction.status = 'Assessed';
+                    prediction.score = score;
+                    prediction.actualPrice = actualPrice;
+                    await prediction.save();
+
+                    // Add score to the user's update map
+                    const userId = prediction.userId._id.toString();
+                    userScoreUpdates.set(userId, (userScoreUpdates.get(userId) || 0) + score);
+
+                    // --- Create "Score Assessed" Notification ---
+                    await new Notification({
+                        recipient: prediction.userId._id,
+                        type: 'PredictionAssessed',
+                        messageKey: 'notifications.predictionAssessed',
+                        metadata: {
+                            stockTicker: prediction.stockTicker,
+                            predictionType: prediction.predictionType,
+                            score: score
+                        },
+                        link: `/prediction/${prediction._id}`
+                    }).save();
+
+                    // Create a detailed log
+                    await new PredictionLog({
+                        predictionId: prediction._id,
+                        userId: prediction.userId._id,
+                        username: prediction.userId.username,
+                        stockTicker: prediction.stockTicker,
+                        predictionType: prediction.predictionType,
+                        predictedPrice: prediction.targetPrice,
+                        actualPrice: actualPrice,
+                        score: score,
+                    }).save();
+
+                    console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} scored ${score} points.`);
+                
+                } catch (innerError) {
+                    console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
+                    // Don't stop, continue to the next prediction in the group
+                }
+            } // --- End of inner prediction loop ---
+
+            // 5. Now, update all users in this group (Batch DB update)
+            for (const [userId, totalScore] of userScoreUpdates.entries()) {
+                try {
+                    // Update user's total score
+                    await User.findByIdAndUpdate(userId, { $inc: { score: totalScore } });
+
+                    // We must fetch the user *after* the score update to run badge check
+                    const user = await User.findById(userId);
+                    if (user) {
+                        await awardBadges(user);
+                    }
+                } catch (userUpdateError) {
+                    console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
+                }
             }
-
-            // --- Create "Score Assessed" Notification ---
-            await new Notification({
-                recipient: prediction.userId._id,
-                type: 'PredictionAssessed',
-                messageKey: 'notifications.predictionAssessed',
-                metadata: {
-                    stockTicker: prediction.stockTicker,
-                    predictionType: prediction.predictionType,
-                    score: score
-                },
-                link: `/prediction/${prediction._id}`
-            }).save();
-            // ------------------------------------------
-
-            // Create a detailed log for your records
-            await new PredictionLog({
-                predictionId: prediction._id,
-                userId: prediction.userId._id,
-                username: prediction.userId.username,
-                stockTicker: prediction.stockTicker,
-                predictionType: prediction.predictionType,
-                predictedPrice: prediction.targetPrice,
-                actualPrice: actualPrice,
-                score: score,
-            }).save();
-
-            console.log(`Assessed prediction for ${prediction.stockTicker}. User ${prediction.userId.username} scored ${score} points.`);
-
-            // FIX: This call will now work because awardBadges is imported.
-            // Pass the full user object, as the service calculates stats internally.
-            await awardBadges(user);
-
-        } catch (error) {
-            console.error(`Failed to assess prediction ${prediction._id}:`, error);
+            
+        } catch (outerError) {
+            console.error(`Failed to process group ${key}:`, outerError);
+            // Don't stop, continue to the next group
         }
-    }
+    } // --- End of outer group loop ---
+
+    // --- END: OPTIMIZATION LOGIC ---
 
     console.log('Assessment job finished.');
 };
