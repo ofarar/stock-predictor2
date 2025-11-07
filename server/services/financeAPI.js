@@ -92,10 +92,31 @@ const getQuote = async (tickers) => {
  * @param {object} queryOptions
  * @returns {Promise<StandardHistoricalPoint[]>}
  */
+// --- START: MODIFY THIS FUNCTION ---
 const getHistorical = async (ticker, queryOptions) => {
+    // 1. Create a unique key based on the ticker and options
+    const cacheKey = `hist:${ticker}:${JSON.stringify(queryOptions)}`;
+    const now = Date.now();
+
+    // 2. Check for a valid, non-expired cache entry
+    if (historicalCache.has(cacheKey)) {
+        const cacheEntry = historicalCache.get(cacheKey);
+        if (now - cacheEntry.timestamp < HISTORICAL_CACHE_TTL_MS) {
+            // Cache hit! Return the cached data.
+            return cacheEntry.data;
+        }
+    }
+
+    // 3. Cache miss or expired. Increment counter and fetch.
     incrementCounter('getHistorical'); // <-- INCREMENT
-    return currentProvider.getHistorical(ticker, queryOptions);
+    const data = await currentProvider.getHistorical(ticker, queryOptions);
+
+    // 4. Store the new data in the cache
+    historicalCache.set(cacheKey, { data: data, timestamp: now });
+
+    return data;
 };
+// --- END: MODIFY THIS FUNCTION ---
 
 /**
  * Searches for symbols using the currently configured provider.
