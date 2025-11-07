@@ -288,6 +288,10 @@
             "limitation_of_liability": {
                 "title": "4. Limitation de Responsabilité",
                 "content": "En aucun cas, StockPredictor, ni ses administrateurs ou employés, ne pourront être tenus responsables de tout dommage indirect, accessoire, spécial, consécutif ou punitif, y compris, sans limitation, la perte de profits, de données ou d'autres pertes immatérielles, résultant de votre accès ou de votre utilisation du Service."
+            },
+            "golden_members": {
+                "title": "5. Abonnements Golden Member et Frais de Plateforme",
+                "content": "StockPredictor fournit une plateforme permettant à certains utilisateurs ('Golden Members') de proposer du contenu par abonnement. En activant votre statut de Golden Member, vous acceptez de proposer ces services à d'autres utilisateurs. Pour couvrir l'exploitation de la plateforme, le traitement des paiements et les coûts administratifs, StockPredictor retiendra des frais de plateforme de trente pour cent (30%) (les 'Frais de Plateforme') sur les revenus bruts d'abonnement générés par vos abonnés. Les soixante-dix pour cent (70%) restants vous seront versés via notre processeur de paiement, Stripe. Ces frais de 30% sont automatiquement déduits de chaque transaction. En devenant un Golden Member, vous reconnaissez et acceptez cette structure de Frais de Plateforme de 30%."
             }
         }
     },
@@ -501,7 +505,8 @@
         "goldenPost": "{{username}} a publié un nouveau Post Doré.",
         "badgeEarnedSelf": "Félicitations ! Vous avez remporté le badge {{tier}} {{badgeName}}.",
         "badgeEarnedFollower": "{{username}} a remporté le badge {{tier}} {{badgeName}} !",
-        "predictionAssessed": "Votre prédiction {{predictionType}} sur {{stockTicker}} a marqué {{score}} points !"
+        "predictionAssessed": "Votre prédiction {{predictionType}} sur {{stockTicker}} a marqué {{score}} points !",
+        "priceChange": "Le prix de l'abonnement de {{creatorName}} passera de ${{oldPrice}} à ${{newPrice}} le {{effectiveDate}}."
     },
     "hourlyWinnersFeed": {
         "title": "Gagnants de la Dernière Heure",

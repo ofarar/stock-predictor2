@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const NotificationSchema = new Schema({
     recipient: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     sender: { type: Schema.Types.ObjectId, ref: 'User' },
-    type: { type: String, enum: ['NewPrediction', 'NewFollower', 'BadgeEarned', 'GoldenPost'], required: true },
+    type: { type: String, enum: ['NewPrediction', 'NewFollower', 'BadgeEarned', 'GoldenPost', 'PriceChange'], required: true },
     messageKey: { type: String, required: true },
     metadata: { type: Object },
     read: { type: Boolean, default: false },

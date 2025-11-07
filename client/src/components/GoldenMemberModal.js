@@ -53,6 +53,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                 // Check if onboarding is needed AFTER update
                 // Need to refresh user data to see if connect account was created
                 onUpdate(true); // Pass true to signal potential need for re-checking onboarding
+                onClose();
 
             } else {
                 toast.success(t('goldenMemberModal.deactivateSuccess'));

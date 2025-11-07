@@ -288,6 +288,10 @@
       "limitation_of_liability": {
         "title": "4. Limitation of Liability",
         "content": "In no event shall StockPredictor, nor its directors or employees, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, or other intangible losses, resulting from your access to or use of the Service."
+      },
+      "golden_members": {
+        "title": "5. Golden Member Subscriptions and Platform Fees",
+        "content": "StockPredictor provides a platform for certain users ('Golden Members') to offer subscription-based content. By activating your Golden Member status, you agree to offer these services to other users. To cover platform operation, payment processing, and administrative costs, StockPredictor will retain a thirty percent (30%) platform fee (the 'Platform Fee') from the gross subscription revenue generated from your subscribers. The remaining seventy percent (70%) will be paid out to you via our payment processor, Stripe. This 30% fee is automatically deducted from each transaction. By becoming a Golden Member, you acknowledge and agree to this 30% Platform Fee structure."
       }
     }
   },
@@ -501,7 +505,8 @@
     "goldenPost": "{{username}} has published a new Golden Post.",
     "badgeEarnedSelf": "Congratulations! You've earned the {{tier}} {{badgeName}} badge.",
     "badgeEarnedFollower": "{{username}} has earned the {{tier}} {{badgeName}} badge!",
-    "predictionAssessed": "Your {{predictionType}} prediction on {{stockTicker}} scored {{score}} points!"
+    "predictionAssessed": "Your {{predictionType}} prediction on {{stockTicker}} scored {{score}} points!",
+    "priceChange": "{{creatorName}}'s subscription price is changing from ${{oldPrice}} to ${{newPrice}} on {{effectiveDate}}."
   },
   "hourlyWinnersFeed": {
     "title": "Last Hour's Winners",

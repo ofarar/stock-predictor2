@@ -29,6 +29,12 @@ const TermsPage = () => {
                     {t('terms_page.sections.limitation_of_liability.title')}
                 </h2>
                 <p>{t('terms_page.sections.limitation_of_liability.content')}</p>
+                {/* --- ADD THIS NEW SECTION --- */}
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.golden_members.title')}
+                </h2>
+                <p>{t('terms_page.sections.golden_members.content')}</p>
+                {/* --- END OF NEW SECTION --- */}
             </div>
         </div>
     );

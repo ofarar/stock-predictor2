@@ -288,7 +288,12 @@
             "limitation_of_liability": {
                 "title": "4. Haftungsbeschränkung",
                 "content": "In keinem Fall haften StockPredictor, seine Direktoren oder Mitarbeiter für indirekte, zufällige, spezielle, Folge- oder Strafschäden, einschließlich, aber nicht beschränkt auf entgangenen Gewinn, Datenverlust oder andere immaterielle Verluste, die sich aus Ihrem Zugriff auf oder Ihrer Nutzung des Dienstes ergeben."
-            }
+            },
+            "golden_members": {
+                "title": "5. Golden Member-Abonnements und Plattformgebühren",
+                "content": "StockPredictor bietet eine Plattform für bestimmte Benutzer ('Golden Members'), um abonnementbasierte Inhalte anzubieten. Durch die Aktivierung Ihres Golden Member-Status erklären Sie sich damit einverstanden, diese Dienste anderen Benutzern anzubieten. Zur Deckung des Plattformbetriebs, der Zahlungsabwicklung und der Verwaltungskosten behält StockPredictor eine Plattformgebühr von dreißig Prozent (30%) (die 'Plattformgebühr') von den Brutto-Abonnementeinnahmen ein, die von Ihren Abonnenten generiert werden. Die verbleibenden siebzig Prozent (70%) werden Ihnen über unseren Zahlungsabwickler Stripe ausgezahlt. Diese 30%-Gebühr wird automatisch von jeder Transaktion abgezogen. Indem Sie ein Golden Member werden, erkennen Sie diese 30%-Plattformgebühr-Struktur an und stimmen ihr zu."
+            },
+            "notifications.priceChange": "Der Abonnementpreis von {{creatorName}} ändert sich von ${{oldPrice}} auf ${{newPrice}} am {{effectiveDate}}."
         }
     },
     "watchlist_page": {
@@ -501,7 +506,8 @@
         "goldenPost": "{{username}} hat einen neuen Goldenen Beitrag veröffentlicht.",
         "badgeEarnedSelf": "Glückwunsch! Du hast das {{tier}} {{badgeName}}-Abzeichen erhalten.",
         "badgeEarnedFollower": "{{username}} hat das {{tier}} {{badgeName}} Abzeichen verdient!",
-        "predictionAssessed": "Ihre {{predictionType}} Vorhersage für {{stockTicker}} hat {{score}} Punkte erzielt!"
+        "predictionAssessed": "Ihre {{predictionType}} Vorhersage für {{stockTicker}} hat {{score}} Punkte erzielt!",
+        "priceChange": "Der Abonnementpreis von {{creatorName}} ändert sich von ${{oldPrice}} auf ${{newPrice}} am {{effectiveDate}}."
     },
     "hourlyWinnersFeed": {
         "title": "Gewinner der letzten Stunde",

@@ -288,6 +288,10 @@
             "limitation_of_liability": {
                 "title": "4. 责任限制",
                 "content": "在任何情况下，StockPredictor 及其董事或员工均不对因您访问或使用本服务而导致的任何间接、附带、特殊、后果性或惩罚性损害负责，包括但不限于利润、数据或其他无形损失。"
+            },
+            "golden_members": {
+                "title": "5. 黄金会员订阅和平台费用",
+                "content": "StockPredictor 为某些用户（“黄金会员”）提供一个平台，以提供基于订阅的内容。激活您的黄金会员身份，即表示您同意向其他用户提供这些服务。为支付平台运营、支付处理和管理成本，StockPredictor 将从您的订阅者产生的总订阅收入中保留百分之三十（30%）的平台费（“平台费”）。剩余的百分之七十（70%）将通过我们的支付处理商 Stripe 支付给您。这笔 30% 的费用会自动从每笔交易中扣除。成为黄金会员，即表示您承认并同意此 30% 平台费结构。"
             }
         }
     },
@@ -501,7 +505,8 @@
         "goldenPost": "{{username}} 发布了新的黄金帖子。",
         "badgeEarnedSelf": "恭喜！您已获得 {{tier}} {{badgeName}} 徽章。",
         "badgeEarnedFollower": "{{username}} 获得了 {{tier}} {{badgeName}} 徽章！",
-        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{score}} 分！"
+        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{score}} 分！",
+        "priceChange": "{{creatorName}} 的订阅价格将于 {{effectiveDate}} 从 ${{oldPrice}} 更改为 ${{newPrice}}。"
     },
     "hourlyWinnersFeed": {
         "title": "上一小时的获胜者",

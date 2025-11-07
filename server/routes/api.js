@@ -9,7 +9,7 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
-const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail, transporter } = require('../services/email');
+const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail, sendGoldenActivationEmail, sendGoldenDeactivationEmail, sendPriceChangeEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
 const { JSDOM } = require('jsdom');
 const DOMPurify = require('dompurify');
@@ -19,6 +19,7 @@ const rateLimit = require('express-rate-limit');
 const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
 const { createOrUpdateStripePriceForUser } = require('./stripe');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({
@@ -1777,7 +1778,7 @@ router.put('/profile/golden-member', async (req, res) => {
         // --- Deactivation Logic ---
         if (wasGoldenBefore && isGoldenMember === false) {
             console.log(`Deactivating Golden status for user ${userId}`);
-            // --- Add Notifications for Subscribers ---
+            
             const validSubscribers = userToUpdate.goldenSubscribers.filter(sub => sub.user);
             const subscriberIds = validSubscribers.map(sub => sub.user._id);
 
@@ -1787,8 +1788,31 @@ router.put('/profile/golden-member', async (req, res) => {
                     { _id: { $in: subscriberIds } },
                     { $pull: { goldenSubscriptions: { user: userId } } }
                 );
-                // TODO: Consider sending notifications to subscribers about cancellation
-                console.log(`Removed ${userId} from goldenSubscriptions of ${subscriberIds.length} users.`);
+
+                // --- START FIX ---
+                const oldPriceId = userToUpdate.goldenMemberPriceId; // Get the user's price ID
+
+                // Find all active Stripe subscriptions for this creator's price
+                let subscriptions = { data: [] }; // Default to empty
+                if (oldPriceId) {
+                     subscriptions = await stripe.subscriptions.list({
+                        price: oldPriceId, // <-- CORRECTED PARAMETER
+                        status: 'active'
+                    });
+                } else {
+                    console.log(`User ${userId} has no oldPriceId, skipping subscriber cancellation loop.`);
+                }
+                // --- END FIX ---
+
+                // Loop and cancel each one. This will trigger the webhook for each subscriber.
+                for (const sub of subscriptions.data) {
+                    try {
+                        await stripe.subscriptions.cancel(sub.id);
+                    } catch (err) {
+                        console.error(`Failed to cancel subscription ${sub.id} for user ${userId} deactivation:`, err);
+                    }
+                }
+                console.log(`Triggered Stripe cancellation for ${subscriptions.data.length} subscribers.`);
             }
 
             // Prepare update data for deactivation
@@ -1803,7 +1827,12 @@ router.put('/profile/golden-member', async (req, res) => {
             };
 
             const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
-            console.log(`Golden status deactivated for user ${userId}.`);
+
+            // --- CORRECTED EMAIL PLACEMENT ---
+            console.log(`Golden status DEACTIVATED for user ${userId}. Sending email.`);
+            sendGoldenDeactivationEmail(updatedUser.email, updatedUser.username);
+            // --- END ---
+
             return res.json(updatedUser); // Exit early after deactivation
         }
 
@@ -1821,23 +1850,118 @@ router.put('/profile/golden-member', async (req, res) => {
             // Check if Stripe onboarding is complete BEFORE trying to create/update price
             if (userToUpdate.stripeConnectAccountId && userToUpdate.stripeConnectOnboardingComplete) {
                 console.log(`User ${userId} is onboarded. Creating/Updating Stripe Price.`);
-                try {
-                    const newPriceId = await createOrUpdateStripePriceForUser(userId, parseFloat(price), userToUpdate.username);
-                    updateData.goldenMemberPriceId = newPriceId;
-                } catch (stripeError) {
-                    console.error(`Failed to create/update Stripe Price for user ${userId}:`, stripeError);
-                    // Return error - user must fix price or Stripe issue before activating fully
-                    return res.status(500).json({ message: "Could not update subscription price details. Please check Stripe connection and price settings." });
+
+                // --- START: PRICE CHANGE LOGIC ---
+                const oldPrice = userToUpdate.goldenMemberPrice;
+                const newPrice = parseFloat(price);
+                let newPriceId;
+
+                // Check if the price has actually changed and the user is already Golden
+                if (wasGoldenBefore && newPrice !== oldPrice) {
+                    console.log(`Price change detected for ${userId}: from $${oldPrice} to $${newPrice}`);
+
+                    // --- START FIX (This block is already correct) ---
+                    const oldPriceId = userToUpdate.goldenMemberPriceId; // Get the *old* price ID
+                    if (!oldPriceId) {
+                        console.error(`Cannot change price for user ${userId}: Old Price ID is missing.`);
+                        return res.status(500).json({ message: "Cannot update subscribers: Old Price ID not found." });
+                    }
+
+                    // 1. Find all active Stripe subscriptions for this creator's OLD price
+                    const subscriptions = await stripe.subscriptions.list({
+                        price: oldPriceId, // <-- CORRECTED PARAMETER
+                        status: 'active'
+                    });
+                    // --- END FIX ---
+
+                    // 2. Create the new Stripe Price
+                    newPriceId = await createOrUpdateStripePriceForUser(userId, newPrice, userToUpdate.username);
+
+
+                    // 3. Notify subscribers and update their subscriptions
+                    for (const sub of subscriptions.data) {
+                        // --- FIX: Check for metadata on subscription ---
+                        // Stripe does not guarantee metadata on list.
+                        // We must retrieve the full subscription object to get metadata.
+                        const fullSub = await stripe.subscriptions.retrieve(sub.id);
+                        const payingUserId = fullSub.metadata.payingUserId;
+
+                        if (!payingUserId) {
+                            console.warn(`Subscription ${fullSub.id} is missing payingUserId in metadata. Skipping notification.`);
+                            continue;
+                        }
+                        
+                        const subscriber = await User.findById(payingUserId);
+                        // --- END FIX ---
+                        
+                        if (subscriber) {
+
+                            // --- START FIX (Robust Date) ---
+                            const periodEndTimestamp = sub.current_period_end;
+                            let effectiveDate = "an upcoming billing cycle"; // A safe fallback
+
+                            if (typeof periodEndTimestamp === 'number') {
+                                effectiveDate = new Date(periodEndTimestamp * 1000).toLocaleDateString(subscriber.language || 'en-US', {
+                                    year: 'numeric', month: 'long', day: 'numeric'
+                                });
+                            } else {
+                                console.error(`Could not determine effectiveDate for sub ${sub.id}, timestamp was: ${periodEndTimestamp}`);
+                            }
+                            // --- END FIX ---
+
+                            // 3a. Send the email
+                            sendPriceChangeEmail(subscriber.email, subscriber.username, userToUpdate.username, oldPrice, newPrice, effectiveDate);
+
+                            // 3b. Send in-app notification
+                            await new Notification({
+                                recipient: subscriber._id,
+                                sender: userId,
+                                type: 'PriceChange', // Correct type
+                                messageKey: 'notifications.priceChange',
+                                link: '/profile/' + userId,
+                                metadata: {
+                                    creatorName: userToUpdate.username,
+                                    oldPrice: oldPrice.toFixed(2),
+                                    newPrice: newPrice.toFixed(2),
+                                    effectiveDate: effectiveDate
+                                }
+                            }).save();
+
+                            // 3c. Update the subscription in Stripe to use the new price
+                            await stripe.subscriptions.update(sub.id, {
+                                items: [{
+                                    id: sub.items.data[0].id,
+                                    price: newPriceId,
+                                }],
+                                proration_behavior: 'none' // This makes it apply at the next billing cycle
+                            });
+                        }
+                    }
+                } else {
+                    // This is a new activation or just a description change, set the price normally.
+                    newPriceId = await createOrUpdateStripePriceForUser(userId, newPrice, userToUpdate.username);
                 }
+                // --- END: PRICE CHANGE LOGIC ---
+
+                updateData.goldenMemberPriceId = newPriceId;
+
             } else {
                 // Onboarding not complete, activate status in DB but warn/inform user
                 console.log(`User ${userId} activating Golden status, but Stripe onboarding is pending. Price ID not set yet.`);
                 updateData.goldenMemberPriceId = null; // Ensure price ID is null if onboarding isn't done
             }
 
-            // Apply the updates to the user
             const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
             console.log(`Golden status activated/updated for user ${userId}.`);
+
+            // --- CORRECTED EMAIL PLACEMENT ---
+            // Send email only if they weren't golden before and are now.
+            if (!wasGoldenBefore && updatedUser.isGoldenMember) {
+                console.log(`User was not golden before. Sending ACTIVATION email.`);
+                sendGoldenActivationEmail(updatedUser.email, updatedUser.username);
+            }
+            // --- END ---
+
             return res.json(updatedUser);
         }
 

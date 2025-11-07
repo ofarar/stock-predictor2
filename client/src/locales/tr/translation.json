@@ -288,6 +288,10 @@
       "limitation_of_liability": {
         "title": "4. Sorumluluğun Sınırlandırılması",
         "content": "StockPredictor, yöneticileri veya çalışanları, Hizmete erişiminizden veya kullanımınızdan kaynaklanan kar kaybı, veri kaybı veya diğer maddi olmayan kayıplar dahil ancak bunlarla sınırlı olmamak üzere dolaylı, arızi, özel, sonuç olarak ortaya çıkan veya cezai zararlardan hiçbir durumda sorumlu tutulamaz."
+      },
+      "golden_members": {
+        "title": "5. Golden Üye Abonelikleri ve Platform Ücretleri",
+        "content": "StockPredictor, belirli kullanıcılara ('Golden Üyeler') abonelik tabanlı içerik sunmaları için bir platform sağlar. Golden Üye statünüzü etkinleştirerek, bu hizmetleri diğer kullanıcılara sunmayı kabul etmiş olursunuz. Platform işletim, ödeme işleme ve idari maliyetleri karşılamak için StockPredictor, abonelerinizden elde edilen brüt abonelik gelirinden yüzde otuz (%30) oranında bir platform ücreti ('Platform Ücreti') alıkoyacaktır. Kalan yüzde yetmiş (%70), ödeme işlemcimiz Stripe aracılığıyla size ödenecektir. Bu %30 ücret, her işlemden otomatik olarak düşülür. Golden Üye olarak, bu %30'luk Platform Ücreti yapısını kabul etmiş ve onaylamış olursunuz."
       }
     }
   },
@@ -501,7 +505,8 @@
     "goldenPost": "{{username}} yeni bir Altın Gönderi yayınladı.",
     "badgeEarnedSelf": "Tebrikler! {{tier}} {{badgeName}} rozetini kazandınız.",
     "badgeEarnedFollower": "{{username}}, {{tier}} {{badgeName}} rozetini kazandı!",
-    "predictionAssessed": "{{stockTicker}} üzerine yaptığınız {{predictionType}} tahmininiz {{score}} puan kazandı!"
+    "predictionAssessed": "{{stockTicker}} üzerine yaptığınız {{predictionType}} tahmininiz {{score}} puan kazandı!",
+    "priceChange": "{{creatorName}} adlı kullanıcının abonelik fiyatı {{effectiveDate}} tarihinde ${{oldPrice}} seviyesinden ${{newPrice}} seviyesine değişiyor."
   },
   "hourlyWinnersFeed": {
     "title": "Son Saatin Kazananları",

@@ -1,7 +1,19 @@
+// server/routes/stripe.js
+
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User'); // Ensure User model is required
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// --- NEW: Import all the new email functions ---
+const {
+    sendVerificationSuccessEmail,
+    sendVerificationCancelledEmail,
+    sendNewSubscriberEmail,
+    sendCreatorNotificationEmail,
+    sendSubscriptionCancelledEmail,
+    sendCreatorCancellationEmail
+} = require('../services/email'); // <-- ADD THIS
 
 // Define your single Product ID (Create this manually in Stripe Dashboard or once via API)
 // Ensure this is in your .env file!
@@ -10,7 +22,7 @@ const GOLDEN_MEMBERSHIP_PRODUCT_ID = process.env.STRIPE_GOLDEN_PRODUCT_ID;
 // Helper function to create/update Stripe Price (kept internal to this file)
 async function createOrUpdateStripePriceForUser(userId, priceInDollars, username) {
     const user = await User.findById(userId);
-    if (!user || !user.isGoldenMember) throw new Error("User not found or not a Golden Member");
+    if (!user) throw new Error("User not found");
 
     const priceInCents = Math.round(priceInDollars * 100); // Ensure integer cents
 
@@ -26,7 +38,7 @@ async function createOrUpdateStripePriceForUser(userId, priceInDollars, username
     const price = await stripe.prices.create({
         product: GOLDEN_MEMBERSHIP_PRODUCT_ID,
         unit_amount: priceInCents,
-        currency: 'usd', // Or determine dynamically based on user/platform settings
+        currency: 'eur', // Or determine dynamically based on user/platform settings
         recurring: { interval: 'month' },
         nickname: `Golden Sub for ${username} (${userId})`, // Helpful label in Stripe
         // Add metadata if needed: metadata: { userId: userId },
@@ -328,8 +340,17 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         ),
                     };
                     console.log(`Webhook: Attempting to update VERIFICATION for user ${userId} with data:`, updateData);
-                    await User.findByIdAndUpdate(userId, updateData);
+                    
+                    // --- MODIFICATION: Fetch user *after* update ---
+                    const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
                     console.log(`User ${userId} successfully verified via checkout session ${session.id}.`);
+                    
+                    // Send the email
+                    if (user) {
+                        sendVerificationSuccessEmail(user.email, user.username);
+                    }
+                    // --- END MODIFICATION ---
+
                 } catch (dbOrApiError) {
                     console.error(`Webhook Processing Error for Verification (User ${userId}, Sub ${subscriptionId}):`, dbOrApiError);
                     return res.status(500).send('Webhook Error: Internal processing failed.');
@@ -349,9 +370,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 }
 
                 try {
-                    // Update relationships in DB
-                    // Note: Consider adding the stripeSubscriptionId to these relationship arrays
-                    // if you need to handle specific cancellations between users later.
+                    // --- MODIFICATION: Add email logic ---
                     await Promise.all([
                         User.findByIdAndUpdate(payingUserId, {
                             $addToSet: { goldenSubscriptions: { user: goldenMemberUserId, subscribedAt: new Date() } }
@@ -361,7 +380,19 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         })
                     ]);
                     console.log(`Webhook: Successfully recorded Golden Subscription: ${payingUserId} subscribed to ${goldenMemberUserId}`);
-                    // TODO: Send notifications (e.g., to Golden Member about new subscriber)
+                    
+                    // Send emails to both parties
+                    const payingUser = await User.findById(payingUserId);
+                    const goldenMember = await User.findById(goldenMemberUserId);
+
+                    if (payingUser && goldenMember) {
+                        // Email to the subscriber
+                        sendNewSubscriberEmail(payingUser.email, payingUser.username, goldenMember.username);
+                        // Email to the creator
+                        sendCreatorNotificationEmail(goldenMember.email, goldenMember.username, payingUser.username);
+                    }
+                    // --- END MODIFICATION ---
+
                 } catch (dbError) {
                     console.error(`Webhook DB Error: Failed to update users for Golden Subscription (Paying: ${payingUserId}, Member: ${goldenMemberUserId}, Sub: ${subscriptionId}):`, dbError);
                     return res.status(500).send('Webhook Error: Failed to update subscription details.');
@@ -479,7 +510,8 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 const userId = subscriptionMetadata.userId;
                 console.log(`Webhook: Processing sub deletion as Verification for user ${userId}`);
                 try {
-                    await User.findOneAndUpdate(
+                    // --- MODIFICATION: Add email logic ---
+                    const user = await User.findOneAndUpdate(
                         { stripeSubscriptionId: subscription.id }, // Find by THEIR sub ID
                         {
                             isVerified: false,
@@ -490,6 +522,13 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         }
                     );
                     console.log(`Webhook: Verification removed for user ${userId} due to sub ${subscription.id} deletion.`);
+
+                    // Send cancellation email
+                    if (user) {
+                        sendVerificationCancelledEmail(user.email, user.username);
+                    }
+                    // --- END MODIFICATION ---
+
                 } catch (dbError) {
                     console.error(`Webhook DB Error: Failed updating Verification sub deletion for user ${userId}, sub ${subscription.id}:`, dbError);
                     return res.status(500).send('Webhook Error: Internal processing failed.');
@@ -499,6 +538,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 const goldenMemberUserId = subscriptionMetadata.goldenMemberUserId;
                 console.log(`Webhook: Processing sub deletion as Golden Sub: Paying User ${payingUserId} to Member ${goldenMemberUserId}, sub ${subscription.id}`);
                 try {
+                    // --- MODIFICATION: Add email logic ---
                     // Remove the relationship from both users' arrays
                     await Promise.all([
                         User.findByIdAndUpdate(payingUserId, {
@@ -509,7 +549,19 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         })
                     ]);
                     console.log(`Webhook: Removed Golden Subscription relationship between ${payingUserId} and ${goldenMemberUserId}.`);
-                    // TODO: Send notifications (e.g., to Golden Member about cancellation)
+                    
+                    // Send cancellation emails
+                    const payingUser = await User.findById(payingUserId);
+                    const goldenMember = await User.findById(goldenMemberUserId);
+
+                    if (payingUser && goldenMember) {
+                        // Email to the subscriber
+                        sendSubscriptionCancelledEmail(payingUser.email, payingUser.username, goldenMember.username);
+                        // Email to the creator
+                        sendCreatorCancellationEmail(goldenMember.email, goldenMember.username, payingUser.username);
+                    }
+                    // --- END MODIFICATION ---
+
                 } catch (dbError) {
                     console.error(`Webhook DB Error: Failed removing Golden Subscription relationship (Paying: ${payingUserId}, Member: ${goldenMemberUserId}, Sub: ${subscription.id}):`, dbError);
                     return res.status(500).send('Webhook Error: Failed to update subscription details.');
