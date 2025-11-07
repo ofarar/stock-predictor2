@@ -30,6 +30,20 @@ const contactLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
+// --- ADD THESE NEW LIMITERS ---
+const predictLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 100, // Max 100 predictions per hour per IP (adjust as needed)
+    message: 'You have made too many predictions, please try again after an hour',
+});
+
+const actionLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 200, // Max 200 "actions" (like/follow) per 15 min per IP
+    message: 'Too many actions, please try again later.',
+});
+// --- END ADDITION ---
+
 // NEW: Paginated endpoint for Top Predictors on a Stock Page
 router.get('/stock/:ticker/top-predictors', async (req, res) => {
     const { ticker } = req.params;
@@ -1141,7 +1155,7 @@ router.get('/posts/golden/:userId', async (req, res) => {
 });
 
 // POST: Like a prediction
-router.post('/predictions/:id/like', async (req, res) => {
+router.post('/predictions/:id/like', actionLimiter, async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
     try {
         const prediction = await Prediction.findById(req.params.id);
@@ -1165,7 +1179,7 @@ router.post('/predictions/:id/like', async (req, res) => {
 });
 
 // POST: Dislike a prediction
-router.post('/predictions/:id/dislike', async (req, res) => {
+router.post('/predictions/:id/dislike', actionLimiter, async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
     try {
         const prediction = await Prediction.findById(req.params.id);
@@ -1374,7 +1388,7 @@ router.get('/scoreboard', async (req, res) => {
         res.json({ users: topUsers, totalPages, currentPage: pageNum });
     } catch (err) {
         console.error("Scoreboard error:", err);
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "An internal server error occurred." });
     }
 });
 
@@ -1387,13 +1401,13 @@ router.get('/predictions/:ticker', async (req, res) => {
         }).populate('userId', 'username'); // Show username instead of just ID
         res.json(predictions);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "An internal server error occurred." });
     }
 });
 
 // This route handles creating new predictions and sending notifications
 
-router.post('/predict', async (req, res) => {
+router.post('/predict', predictLimiter, async (req, res) => {
     if (!req.user) return res.status(401).send('You must be logged in.');
 
     try {
@@ -1573,7 +1587,7 @@ router.get('/my-predictions', async (req, res) => {
         const predictions = await Prediction.find({ userId: req.user._id }).sort({ createdAt: -1 });
         res.json(predictions);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "An internal server error occurred." });
     }
 });
 
@@ -1775,7 +1789,7 @@ router.get('/profile/:userId', async (req, res) => {
         res.json(jsonResponse);
     } catch (err) {
         console.error("Error fetching profile:", err);
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "An internal server error occurred." });
     }
 });
 
@@ -2069,7 +2083,7 @@ router.get('/stock/:ticker/historical', async (req, res) => {
 // Add this to api.js
 // In server/routes/api.js
 
-router.post('/users/:userId/follow', async (req, res) => {
+router.post('/users/:userId/follow', actionLimiter, async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
 
     const followedUserId = req.params.userId;
@@ -2105,7 +2119,7 @@ router.post('/users/:userId/follow', async (req, res) => {
     }
 });
 
-router.post('/users/:userId/unfollow', async (req, res) => {
+router.post('/users/:userId/unfollow', actionLimiter, async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
 
     const unfollowedUserId = req.params.userId;
