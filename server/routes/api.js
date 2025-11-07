@@ -1307,8 +1307,10 @@ router.get('/scoreboard', async (req, res) => {
     try {
         const { predictionType = 'Overall', stock = '', page = 1, limit = 20 } = req.query;
 
-        const pageNum = parseInt(page, 10);
-        const limitNum = parseInt(limit, 10);
+        // --- START FIX ---
+        const pageNum = Math.max(parseInt(req.query.page, 10) || 1, 1);
+        const limitNum = Math.min(parseInt(req.query.limit, 10) || 20, 50); // Default 20, Max 50
+        // --- END FIX ---
         const skip = (pageNum - 1) * limitNum;
 
         const predictionMatch = { status: 'Assessed' };
@@ -2005,11 +2007,21 @@ router.put('/profile', async (req, res) => {
         return res.status(401).send('You must be logged in.');
     }
     try {
-        // Add 'avatar' to the list of fields to update
         const { username, about, youtubeLink, xLink, avatar } = req.body;
+
+        // --- START FIX: Sanitize all string inputs ---
+        const sanitizedUpdate = {
+            username: purify.sanitize(username),
+            about: purify.sanitize(about),
+            youtubeLink: purify.sanitize(youtubeLink),
+            xLink: purify.sanitize(xLink),
+            avatar: purify.sanitize(avatar) // Avatar is a URL, so it should also be sanitized
+        };
+        // --- END FIX ---
+
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,
-            { username, about, youtubeLink, xLink, avatar }, // Add avatar here
+            sanitizedUpdate,
             { new: true, runValidators: true }
         );
         res.json(updatedUser);
