@@ -8,6 +8,28 @@ const yahooProvider = require('./financeProviders/yahooProvider');
 // In the future, you could use an environment variable to choose the provider
 const currentProvider = yahooProvider; // For now, we are hardcoding Yahoo
 
+// --- START: ADD THIS CACHE ---
+const quoteCache = new Map();
+const CACHE_TTL_MS = 2 * 60 * 1000; // 2 Minutes
+// --- END: ADD THIS CACHE ---
+
+// --- START: ADD THIS COUNTER ---
+let apiCallCounter = {
+    getQuote: 0,
+    getHistorical: 0,
+    search: 0,
+};
+const incrementCounter = (funcName) => {
+    if (apiCallCounter.hasOwnProperty(funcName)) {
+        apiCallCounter[funcName]++;
+    }
+};
+// Function to send data to the admin panel
+const getApiCallStats = () => {
+    return apiCallCounter;
+};
+// --- END: ADD THIS COUNTER ---
+
 // --- Standardized Type Definitions (Keep these here) ---
 /**
  * Standardized format for quote data.
@@ -30,10 +52,39 @@ const currentProvider = yahooProvider; // For now, we are hardcoding Yahoo
  * @param {string|string[]} tickers
  * @returns {Promise<StandardQuote|StandardQuote[]|null>}
  */
+// --- START: MODIFY THIS FUNCTION ---
 const getQuote = async (tickers) => {
-    // Simply call the corresponding function from the selected provider
-    return currentProvider.getQuote(tickers);
+    // This function will now use the cache and the counter
+
+    // 1. Handle array case by calling self (this logic is recursive)
+    if (Array.isArray(tickers)) {
+        const promises = tickers.map(ticker => getQuote(ticker));
+        return Promise.all(promises);
+    }
+
+    const ticker = tickers;
+    const cacheKey = `quote:${ticker}`;
+    const now = Date.now();
+
+    // 2. Check for a valid, non-expired cache entry
+    if (quoteCache.has(cacheKey)) {
+        const cacheEntry = quoteCache.get(cacheKey);
+        if (now - cacheEntry.timestamp < CACHE_TTL_MS) {
+            // Cache hit! Return the cached data.
+            return cacheEntry.data;
+        }
+    }
+
+    // 3. Cache miss or expired. Increment counter and fetch.
+    incrementCounter('getQuote'); // <-- INCREMENT
+    const data = await currentProvider.getQuote(ticker);
+
+    // 4. Store the new data in the cache
+    quoteCache.set(cacheKey, { data: data, timestamp: now });
+
+    return data;
 };
+// --- END: MODIFY THIS FUNCTION ---
 
 /**
  * Fetches historical data using the currently configured provider.
@@ -42,6 +93,7 @@ const getQuote = async (tickers) => {
  * @returns {Promise<StandardHistoricalPoint[]>}
  */
 const getHistorical = async (ticker, queryOptions) => {
+    incrementCounter('getHistorical'); // <-- INCREMENT
     return currentProvider.getHistorical(ticker, queryOptions);
 };
 
@@ -51,6 +103,7 @@ const getHistorical = async (ticker, queryOptions) => {
  * @returns {Promise<StandardSearchResult[]>}
  */
 const search = async (keyword) => {
+    incrementCounter('search'); // <-- INCREMENT
     return currentProvider.search(keyword);
 };
 
@@ -58,5 +111,6 @@ module.exports = {
     getQuote,
     getHistorical,
     search,
+    getApiCallStats
     // You can also export the typedefs if needed elsewhere, though usually not necessary
 };

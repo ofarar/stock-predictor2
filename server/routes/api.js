@@ -9,7 +9,7 @@ const Notification = require('../models/Notification');
 const Setting = require('../models/Setting'); // Import the new model
 const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
-const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail, sendGoldenActivationEmail, sendGoldenDeactivationEmail, sendPriceChangeEmail } = require('../services/email');
+const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail, transporter, sendGoldenActivationEmail, sendGoldenDeactivationEmail, sendPriceChangeEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
 const { JSDOM } = require('jsdom');
 const DOMPurify = require('dompurify');
@@ -114,14 +114,18 @@ router.post('/admin/health-check/:service', async (req, res) => {
     const checkService = async (promiseFn, successDetails) => {
         const startTime = Date.now();
         try {
-            await promiseFn();
+            // 1. Capture the resolved value from the promise (e.g., "Quotes: 5...")
+            const resolvedDetails = await promiseFn();
             const latency = Date.now() - startTime;
-            return res.json({ service, status: 'success', latency: `${latency}ms`, details: successDetails || 'OK' });
-        } catch (error) { // Keep this generic catch for other services
+
+            // 2. Prioritize the resolved value. Fallback to successDetails, then 'OK'.
+            const details = resolvedDetails || successDetails || 'OK';
+
+            return res.json({ service, status: 'success', latency: `${latency}ms`, details: details });
+        } catch (error) {
             const latency = Date.now() - startTime;
-            // Log the error for the specific service being checked
-            console.error(`Health Check Error [${service}]:`, error); // <-- Add detailed logging
-            return res.json({ service, status: 'failed', latency: `${latency}ms`, details: error.message });
+            console.error(`Health Check Error [${service}]:`, error);
+            return res.json({ service, status: 'failed', latency: `${latency}ms`, details: error.message }); // <-- FIX
         }
     };
 
@@ -133,12 +137,24 @@ router.post('/admin/health-check/:service', async (req, res) => {
                 if (state === 1) resolve();
                 else reject(new Error(`DB state is not connected (state: ${state})`));
             }));
+        // --- ADD THIS NEW CASE ---
+        case 'api-calls':
+            return checkService(() => new Promise((resolve, reject) => {
+                const stats = financeAPI.getApiCallStats();
+                // Format the stats into a string for the 'details' field
+                const details = `Quotes: ${stats.getQuote}, History: ${stats.getHistorical}, Search: ${stats.search}`;
+                resolve(details);
+            }), 'OK'); // The 'OK' here is just a fallback
+        // --- END NEW CASE ---
         case 'finance-current':
             return checkService(() => financeAPI.getQuote('AAPL'));
         case 'finance-historical':
             return checkService(() => financeAPI.getHistorical('AAPL', { period1: '2024-01-01' }));
         case 'avatar':
-            return checkService(() => axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test'));
+            return checkService(async () => {
+                await axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test');
+                return 'OK (DiceBear API is responsive)'; // <-- FIX
+            });
         case 'email':
             return checkService(() => transporter.verify());
         case 'cron':
@@ -1778,7 +1794,7 @@ router.put('/profile/golden-member', async (req, res) => {
         // --- Deactivation Logic ---
         if (wasGoldenBefore && isGoldenMember === false) {
             console.log(`Deactivating Golden status for user ${userId}`);
-            
+
             const validSubscribers = userToUpdate.goldenSubscribers.filter(sub => sub.user);
             const subscriberIds = validSubscribers.map(sub => sub.user._id);
 
@@ -1795,7 +1811,7 @@ router.put('/profile/golden-member', async (req, res) => {
                 // Find all active Stripe subscriptions for this creator's price
                 let subscriptions = { data: [] }; // Default to empty
                 if (oldPriceId) {
-                     subscriptions = await stripe.subscriptions.list({
+                    subscriptions = await stripe.subscriptions.list({
                         price: oldPriceId, // <-- CORRECTED PARAMETER
                         status: 'active'
                     });
@@ -1890,10 +1906,10 @@ router.put('/profile/golden-member', async (req, res) => {
                             console.warn(`Subscription ${fullSub.id} is missing payingUserId in metadata. Skipping notification.`);
                             continue;
                         }
-                        
+
                         const subscriber = await User.findById(payingUserId);
                         // --- END FIX ---
-                        
+
                         if (subscriber) {
 
                             // --- START FIX (Robust Date) ---
@@ -2533,13 +2549,20 @@ router.get('/explore/feed', async (req, res) => {
                 .populate('userId', 'username avatar isGoldenMember score isVerified')
                 .lean();
 
+            // --- START: MODIFY THIS BLOCK ---
             if (status === 'Active' && predictions.length > 0) {
+                // 1. Find unique tickers from the prediction list
                 const tickers = [...new Set(predictions.map(p => p.stockTicker))];
-                try {
 
+                try {
                     if (tickers.length > 0) {
+                        // 2. Make ONE call to our (now cached) getQuote function
                         const quotes = await financeAPI.getQuote(tickers);
-                        const priceMap = new Map(quotes.map(q => [q.symbol, q.regularMarketPrice]));
+
+                        // 3. Create a simple map for fast lookups
+                        const priceMap = new Map(quotes.map(q => [q.symbol, q.price]));
+
+                        // 4. Attach the currentPrice to each prediction
                         predictions.forEach(p => {
                             p.currentPrice = priceMap.get(p.stockTicker) || 0;
                         });
@@ -2549,6 +2572,7 @@ router.get('/explore/feed', async (req, res) => {
                     predictions.forEach(p => { p.currentPrice = 0; });
                 }
             }
+            // --- END: MODIFY THIS BLOCK ---
             return res.json({ predictions, totalPages, currentPage: pageNum });
         }
     } catch (err) {
