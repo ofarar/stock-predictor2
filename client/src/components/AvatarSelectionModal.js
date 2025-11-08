@@ -3,15 +3,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+// --- START FIX ---
+// Avatar styles with translation keys
+// Moved outside the component to be a stable constant.
+const avatarStyles = [
+    'adventurer', 'lorelei', 'miniavs', 'openPeeks', 'personas',
+    'pixelArt', 'notionists', 'bottts', 'shapes', 'thumbs',
+    'funEmoji', 'identicon', 'initials', 'rings'
+];
+// --- END FIX ---
+
 const AvatarSelectionModal = ({ isOpen, onClose, onSave, initialAvatarUrl }) => {
     const { t } = useTranslation();
-
-    // Avatar styles with translation keys
-    const avatarStyles = [
-        'adventurer', 'lorelei', 'miniavs', 'openPeeks', 'personas',
-        'pixelArt', 'notionists', 'bottts', 'shapes', 'thumbs',
-        'funEmoji', 'identicon', 'initials', 'rings'
-    ];
 
     const [currentStyle, setCurrentStyle] = useState(avatarStyles[0]);
     const [currentSeed, setCurrentSeed] = useState('user');
@@ -34,7 +37,7 @@ const AvatarSelectionModal = ({ isOpen, onClose, onSave, initialAvatarUrl }) => 
                 // ignore
             }
         }
-    }, [isOpen, initialAvatarUrl]);
+    }, [isOpen, initialAvatarUrl, avatarStyles]);
 
     useEffect(() => {
         setPreviewUrl(getAvatarUrl(currentStyle, currentSeed));
