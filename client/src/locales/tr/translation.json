@@ -292,6 +292,22 @@
       "golden_members": {
         "title": "5. Golden Üye Abonelikleri ve Platform Ücretleri",
         "content": "StockPredictor, belirli kullanıcılara ('Golden Üyeler') abonelik tabanlı içerik sunmaları için bir platform sağlar. Golden Üye statünüzü etkinleştirerek, bu hizmetleri diğer kullanıcılara sunmayı kabul etmiş olursunuz. Platform işletim, ödeme işleme ve idari maliyetleri karşılamak için StockPredictor, abonelerinizden elde edilen brüt abonelik gelirinden yüzde otuz (%30) oranında bir platform ücreti ('Platform Ücreti') alıkoyacaktır. Kalan yüzde yetmiş (%70), ödeme işlemcimiz Stripe aracılığıyla size ödenecektir. Bu %30 ücret, her işlemden otomatik olarak düşülür. Golden Üye olarak, bu %30'luk Platform Ücreti yapısını kabul etmiş ve onaylamış olursunuz."
+      },
+      "payments_and_refunds": {
+        "title": "6. Ödemeler, Abonelikler ve Geri Ödemeler",
+        "content": "Platformumuz, 'Verified Predictor' statüsü ve 'Golden Member' abonelikleri (topluca 'Abonelikler') dahil olmak üzere ücretli hizmetler sunmaktadır. Tüm ödemeler, üçüncü taraf ödeme işlemcimiz Stripe aracılığıyla işlenir. Kredi kartı bilgilerinizi saklamayız veya tutmayız. Tüm Abonelikler aylık yinelenen bir temelde faturalandırılır. Aboneliğinizi istediğiniz zaman kullanıcı profilinizden veya ödeme işlemcimizin portalından iptal edebilirsiniz. İptaliniz mevcut fatura döneminin sonunda yürürlüğe girecek ve o tarihe kadar ücretli özelliklere erişiminiz devam edecektir. Abonelikler için yapılan tüm ödemeler kesindir ve geri ödenemez. Kısmi abonelik dönemleri veya kullanılmayan içerik için geri ödeme veya kredi sağlamayız."
+      },
+      "content_and_ip": {
+        "title": "7. Kullanıcı İçeriği ve Fikri Mülkiyet Hakları",
+        "content": "Profil bilgileriniz, tahmin gerekçeleriniz ve Golden Feed gönderileriniz ('Kullanıcı İçeriği') dahil olmak üzere Hizmette oluşturduğunuz içeriğin tüm mülkiyet haklarını elinizde tutarsınız. Kullanıcı İçeriği yayınlayarak, StockPredictor'a, Kullanıcı İçeriğinizi yalnızca Hizmeti işletmek, tanıtmak ve iyileştirmek amacıyla kullanma, barındırma, görüntüleme, çoğaltma ve dağıtma konusunda münhasır olmayan, dünya çapında, telifsiz, kalıcı bir lisans vermiş olursunuz. Kullanıcı İçeriğinizin sahibi olduğunuzu veya yayınlamak ve bize bu lisansı vermek için gerekli tüm haklara sahip olduğunuzu ve içeriğinizin herhangi bir üçüncü tarafın haklarını ihlal etmediğini garanti edersiniz. Telif hakkınızın ihlal edildiğini düşünüyorsanız, lütfen predictostock@gmail.com adresinden bir DMCA Yayından Kaldırma Bildirimi ile derhal bizimle iletişime geçin."
+      },
+      "termination": {
+        "title": "8. Hesabın Sonlandırılması",
+        "content": "StockPredictor, bu Koşulların ihlali dahil olmak üzere herhangi bir nedenle, tamamen kendi takdirine bağlı olarak, bildirimde bulunarak veya bulunmaksızın hesabınızı ve Hizmete erişiminizi askıya alma veya sonlandırma hakkını saklı tutar. Ayrıca, bizimle iletişime geçerek veya varsa uygulama içi bir silme özelliğini kullanarak hesabınızı istediğiniz zaman sonlandırabilirsiniz. Taraflardan herhangi biri tarafından sonlandırılması durumunda, Hizmeti kullanma hakkınız derhal sona erecektir. Abonelikler için önceden ödenmiş tüm ücretler iade edilmez ve sonlandırma anında kalan abonelik sürenizin herhangi bir kısmı için geri ödeme alamazsınız. Sonlandırma üzerine Kullanıcı İçeriğinizi silme hakkımızı saklı tutarız ancak bunu yapma yükümlülüğümüz yoktur."
+      },
+      "disputes": {
+        "title": "9. Uyuşmazlık Çözümü ve Geçerli Hukuk",
+        "content": "Bu Hizmet Koşulları, kanunlar ihtilafı prensiplerine bakılmaksızın Hollanda yasalarına tabidir ve bu yasalara göre yorumlanacaktır. StockPredictor ile aranızdaki herhangi bir uyuşmazlığı, bir mahkemede değil, yalnızca Lahey, Hollanda'da bağlayıcı tahkim yoluyla çözmeyi kabul edersiniz. Siz ve StockPredictor, bir toplu davaya veya toplu tahkime katılma hakkından feragat etmeyi kabul edersiniz. Tüm uyuşmazlıklar, herhangi bir sözde toplu veya temsili davada davacı veya toplu üye olarak değil, bireysel sıfatınızla ileri sürülmelidir."
       }
     }
   },

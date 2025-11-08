@@ -292,6 +292,22 @@
       "golden_members": {
         "title": "5. Golden Member Subscriptions and Platform Fees",
         "content": "StockPredictor provides a platform for certain users ('Golden Members') to offer subscription-based content. By activating your Golden Member status, you agree to offer these services to other users. To cover platform operation, payment processing, and administrative costs, StockPredictor will retain a thirty percent (30%) platform fee (the 'Platform Fee') from the gross subscription revenue generated from your subscribers. The remaining seventy percent (70%) will be paid out to you via our payment processor, Stripe. This 30% fee is automatically deducted from each transaction. By becoming a Golden Member, you acknowledge and agree to this 30% Platform Fee structure."
+      },
+      "payments_and_refunds": {
+        "title": "6. Payments, Subscriptions, and Refunds",
+        "content": "Our platform offers paid services, including the 'Verified Predictor' status and 'Golden Member' subscriptions (collectively, 'Subscriptions'). All payments are processed through our third-party payment processor, Stripe. We do not store or retain your credit card information. All Subscriptions are billed on a recurring monthly basis. You may cancel your Subscription at any time through your user profile or our payment processor's portal. Your cancellation will take effect at the end of the current billing cycle, and you will retain access to the paid features until that date. All payments for Subscriptions are final and non-refundable. We do not provide refunds or credits for any partial subscription periods or unused content."
+      },
+      "content_and_ip": {
+        "title": "7. User Content and Intellectual Property Rights",
+        "content": "You retain all ownership rights to the content you create on the Service, including your profile information, prediction rationales, and Golden Feed posts ('User Content'). By posting User Content, you grant StockPredictor a non-exclusive, worldwide, royalty-free, perpetual license to use, host, display, reproduce, and distribute your User Content solely for the purpose of operating, promoting, and improving the Service. You warrant that you own your User Content or have all necessary rights to post it and grant us this license, and that your content does not infringe on the rights of any third party. If you believe your copyright has been infringed upon, please contact us immediately at predictostock@gmail.com with a DMCA Takedown Notice."
+      },
+      "termination": {
+        "title": "8. Account Termination",
+        "content": "StockPredictor reserves the right to suspend or terminate your account and access to the Service at our sole discretion, with or without notice, for any reason, including for violation of these Terms. You may also terminate your account at any time by contacting us or using an in-app deletion feature, if available. Upon termination by either party, your right to use the Service will immediately cease. All pre-paid fees for Subscriptions are non-refundable, and you will not be eligible for a refund for any portion of your subscription term remaining at the time of termination. We reserve the right to delete your User Content upon termination, but are not obligated to do so."
+      },
+      "disputes": {
+        "title": "9. Dispute Resolution and Governing Law",
+        "content": "These Terms of Service are governed by and construed in accordance with the laws of the Netherlands, without regard to its conflict of law principles. You agree to resolve any dispute you have with StockPredictor exclusively through binding arbitration in Den Haag, the Netherlands, and not in a court of law. You and StockPredictor agree to waive any right to participate in a class-action lawsuit or class-wide arbitration. All disputes must be brought in your individual capacity, and not as a plaintiff or class member in any purported class or representative proceeding."
       }
     }
   },

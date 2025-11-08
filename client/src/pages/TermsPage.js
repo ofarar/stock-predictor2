@@ -1,3 +1,4 @@
+// src/pages/TermsPage.js
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,12 +30,35 @@ const TermsPage = () => {
                     {t('terms_page.sections.limitation_of_liability.title')}
                 </h2>
                 <p>{t('terms_page.sections.limitation_of_liability.content')}</p>
-                {/* --- ADD THIS NEW SECTION --- */}
+
                 <h2 className="text-xl font-semibold text-white">
                     {t('terms_page.sections.golden_members.title')}
                 </h2>
                 <p>{t('terms_page.sections.golden_members.content')}</p>
-                {/* --- END OF NEW SECTION --- */}
+
+                {/* --- ADD ALL NEW SECTIONS HERE --- */}
+                
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.payments_and_refunds.title')}
+                </h2>
+                <p>{t('terms_page.sections.payments_and_refunds.content')}</p>
+
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.content_and_ip.title')}
+                </h2>
+                <p>{t('terms_page.sections.content_and_ip.content')}</p>
+
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.termination.title')}
+                </h2>
+                <p>{t('terms_page.sections.termination.content')}</p>
+
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.disputes.title')}
+                </h2>
+                <p>{t('terms_page.sections.disputes.content')}</p>
+                
+                {/* --- END OF NEW SECTIONS --- */}
             </div>
         </div>
     );
