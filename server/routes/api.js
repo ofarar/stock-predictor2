@@ -11,10 +11,7 @@ const { awardBadges } = require('../services/badgeService');
 const Post = require('../models/Post');
 const { sendContactFormEmail, sendWaitlistConfirmationEmail, sendWelcomeEmail, transporter, sendGoldenActivationEmail, sendGoldenDeactivationEmail, sendPriceChangeEmail } = require('../services/email');
 const AIWizardWaitlist = require('../models/AIWizardWaitlist');
-const { JSDOM } = require('jsdom');
-const DOMPurify = require('dompurify');
-const window = new JSDOM('').window;
-const purify = DOMPurify(window);
+const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
@@ -423,7 +420,7 @@ router.post('/contact', contactLimiter, async (req, res) => {
 
     try {
         // Sanitize the message to prevent XSS
-        const sanitizedMessage = purify.sanitize(message);
+        const sanitizedMessage = xss(message);
 
         await sendContactFormEmail(name, email, sanitizedMessage);
         res.status(200).json({ message: 'Message sent successfully!' });
@@ -2025,11 +2022,11 @@ router.put('/profile', async (req, res) => {
 
         // --- START FIX: Sanitize all string inputs ---
         const sanitizedUpdate = {
-            username: purify.sanitize(username),
-            about: purify.sanitize(about),
-            youtubeLink: purify.sanitize(youtubeLink),
-            xLink: purify.sanitize(xLink),
-            avatar: purify.sanitize(avatar) // Avatar is a URL, so it should also be sanitized
+            username: xss(username),
+            about: xss(about),
+            youtubeLink: xss(youtubeLink),
+            xLink: xss(xLink),
+            avatar: xss(avatar)
         };
         // --- END FIX ---
 
