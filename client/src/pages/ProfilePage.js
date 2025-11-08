@@ -1,6 +1,6 @@
 // src/pages/ProfilePage.js
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -166,7 +166,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     if (loading) return <div className="text-center text-white mt-10">{t('profile.loading')}</div>;
     if (!profileData) return <div className="text-center text-white mt-10">{t('profile.userNotFound')}</div>;
 
-    const { user, predictions, performance, watchlistQuotes } = profileData;
+    const { user, predictions, performance } = profileData;
     const isOwnProfile = currentUser?._id === user._id;
     const isFollowing = currentUser?.following?.includes(user._id);
     const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);

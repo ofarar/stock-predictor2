@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -68,11 +68,11 @@ const WatchlistPage = ({ settings }) => {
             // --- END NEW LOGIC ---
         }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
             .finally(() => setLoading(false));
-    }, [t, selectedTicker]);
+    }, [t, searchParams, setSearchParams]);
 
     useEffect(() => {
         fetchAllData();
-    }, []);
+    }, [fetchAllData]);
 
     const handleLoadMorePredictions = (ticker) => {
         const currentPredictionData = data.predictions[ticker];
@@ -405,13 +405,6 @@ const WatchlistPage = ({ settings }) => {
                                                 // 1. Determine if the current user is already following or subscribed
                                                 const isFollowing = currentUser?.following.includes(user._id);
                                                 const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);
-
-                                                // 2. Determine if the "Follow" button should be shown
-                                                const shouldShowFollowButton = !isFollowing && currentUser && currentUser._id !== user._id;
-
-                                                // 3. Determine if the "Join" button should be shown
-                                                // It should only appear if the member is golden, accepting subs, and is not the current user.
-                                                const shouldShowJoinButton = user.isGoldenMember && user.acceptingNewSubscribers && currentUser?._id !== user._id;
 
                                                 return (
                                                     <div key={user._id} className="bg-gray-700 p-3 rounded-lg flex items-center justify-between">

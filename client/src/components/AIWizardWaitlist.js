@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import VerifiedTick from './VerifiedTick';
 import LoadMoreButton from './LoadMoreButton'; // Ensure LoadMoreButton is imported
 

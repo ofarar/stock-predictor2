@@ -46,13 +46,13 @@ const ScoreboardPage = ({ settings }) => {
     useEffect(() => {
         setPage(1);
         fetchScoreboard(1, true);
-    }, [predictionTypeFilter, stockFilter]);
+    }, [predictionTypeFilter, stockFilter, fetchScoreboard]);
 
     useEffect(() => {
         if (page > 1) {
             fetchScoreboard(page, false);
         }
-    }, [page]);
+    }, [page, fetchScoreboard]);
 
     const handleLoadMore = () => {
         if (page < totalPages) {
