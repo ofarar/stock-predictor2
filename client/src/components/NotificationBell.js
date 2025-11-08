@@ -33,7 +33,6 @@ const NotificationBell = ({ user }) => {
     const [notifications, setNotifications] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
-    const [setIsNotificationsOpen] = useState(false);
     const isInitialMount = useRef(true);
 
     useEffect(() => {

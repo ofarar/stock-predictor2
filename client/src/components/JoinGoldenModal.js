@@ -46,14 +46,6 @@ const JoinGoldenModal = ({ isOpen, onClose, goldenMember, onUpdate }) => {
         // No finally block needed because success causes a redirect
     };
 
-    // This function is potentially called by the success_url redirect handler later
-    const handleCloseOnSuccess = () => {
-        // onUpdate() might be needed if the redirect back doesn't trigger a full data refresh
-        if (onUpdate) onUpdate();
-        setIsProcessing(false); // Ensure reset if modal somehow stays open
-        onClose();
-    };
-
     const modalContent = (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-[100] animate-fade-in-fast" onClick={onClose}>
             <div className="relative bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg text-gray-300" onClick={e => e.stopPropagation()}>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 const Aim = () => {
-  const { t } = useTranslation();
 
   return (
     <div className="text-center mb-8 animate-fade-in">

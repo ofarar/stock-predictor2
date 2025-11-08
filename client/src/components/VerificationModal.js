@@ -3,10 +3,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../utils/formatters';
 import axios from 'axios';
-import { loadStripe } from '@stripe/stripe-js';
 import toast from 'react-hot-toast';
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
     const { t, i18n } = useTranslation();
