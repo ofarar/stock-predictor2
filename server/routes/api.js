@@ -700,7 +700,7 @@ router.post('/posts/golden', async (req, res) => {
     try {
         const newPostData = {
             userId: req.user._id,
-            message,
+            message: purify.sanitize(message),
             isGoldenPost: true,
         };
 
@@ -1428,6 +1428,7 @@ router.post('/predict', predictLimiter, async (req, res) => {
         // --- End Daily Limit Check ---
 
         const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
+        const sanitizedDescription = purify.sanitize(description);
 
         // --- Resilient Price Fetch ---
         let currentPrice = null;
@@ -1456,8 +1457,8 @@ router.post('/predict', predictLimiter, async (req, res) => {
             predictionType,
             priceAtCreation: currentPrice, // Will be null if API failed
             currency: currency,
-            description,
-            initialDescription: description,
+            description: sanitizedDescription, // <-- USE THIS
+            initialDescription: sanitizedDescription,
             status: 'Active'
         });
         await prediction.save();
@@ -2022,11 +2023,11 @@ router.put('/profile', async (req, res) => {
 
         // --- START FIX: Sanitize all string inputs ---
         const sanitizedUpdate = {
-            username: xss(username),
-            about: xss(about),
-            youtubeLink: xss(youtubeLink),
-            xLink: xss(xLink),
-            avatar: xss(avatar)
+            username: purify.sanitize(username),
+            about: purify.sanitize(about), // <-- SANITIZE
+            youtubeLink: purify.sanitize(youtubeLink), // <-- SANITIZE
+            xLink: purify.sanitize(xLink), // <-- SANITIZE
+            avatar: purify.sanitize(avatar)
         };
         // --- END FIX ---
 
