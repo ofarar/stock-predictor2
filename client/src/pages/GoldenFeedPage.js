@@ -72,10 +72,10 @@ const GoldenFeedPage = ({ settings }) => {
     const [totalPages, setTotalPages] = useState(0);
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    const markFeedAsRead = () => {
+    const markFeedAsRead = useCallback(() => {
         axios.post(`${process.env.REACT_APP_API_URL}/api/golden-feed/mark-as-read`, {}, { withCredentials: true })
             .catch(err => console.error(t('golden_feed_failed_mark_read'), err));
-    };
+    }, [t]);
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })

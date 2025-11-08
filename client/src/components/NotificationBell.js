@@ -57,7 +57,7 @@ const NotificationBell = ({ user }) => {
                     setNotifications(readNotifications);
                 });
         }
-    }, [isOpen]);
+    }, [isOpen, notifications, unreadCount]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

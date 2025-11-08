@@ -38,18 +38,6 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
         }
     };
 
-    // This function seems unused now with direct redirect, but keep for structure
-    const handleConfirm = async () => {
-        setView('loading');
-        try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/profile/verify`, {}, { withCredentials: true });
-            setView('success');
-        } catch (error) {
-            toast.error(t('verification_failed_msg'));
-            setView('initial');
-        }
-    };
-
     // Renamed for clarity, handles modal close regardless of view
     const handleClose = () => {
         if (view === 'success' && onUpdate) {

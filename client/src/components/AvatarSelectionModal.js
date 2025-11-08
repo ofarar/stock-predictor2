@@ -37,7 +37,7 @@ const AvatarSelectionModal = ({ isOpen, onClose, onSave, initialAvatarUrl }) => 
                 // ignore
             }
         }
-    }, [isOpen, initialAvatarUrl, avatarStyles]);
+    }, [isOpen, initialAvatarUrl]);
 
     useEffect(() => {
         setPreviewUrl(getAvatarUrl(currentStyle, currentSeed));
