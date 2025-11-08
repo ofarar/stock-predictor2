@@ -13,7 +13,8 @@ const AdminPage = () => {
         verificationPrice: 0,
         isAIWizardEnabled: false, // Add initial state
         maxPredictionsPerDay: 10,
-        badgeSettings: {}
+        badgeSettings: {},
+        isFinanceApiEnabled: true
     });
     const [loading, setLoading] = useState(true);
     const [badgeSettingsJson, setBadgeSettingsJson] = useState('');
@@ -56,7 +57,8 @@ const AdminPage = () => {
             verificationPrice: parseFloat(settings.verificationPrice) || 0,
             isAIWizardEnabled: settings.isAIWizardEnabled,
             maxPredictionsPerDay: parseInt(settings.maxPredictionsPerDay) || 20,
-            badgeSettings: badgeSettings
+            badgeSettings: badgeSettings,
+            isFinanceApiEnabled: settings.isFinanceApiEnabled
         };
 
         const promise = axios.put(`${process.env.REACT_APP_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
@@ -83,6 +85,20 @@ const AdminPage = () => {
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">General Settings</h2>
+                {/* --- ADD THIS NEW TOGGLE --- */}
+                <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
+                    <label htmlFor="isFinanceApiEnabled" className="font-medium text-gray-300">
+                        Enable Live Finance API
+                        <p className="text-xs text-gray-400">If disabled, the app will stop fetching new stock prices to save API quota.</p>
+                    </label>
+                    <input
+                        type="checkbox"
+                        id="isFinanceApiEnabled"
+                        checked={settings.isFinanceApiEnabled}
+                        onChange={(e) => handleSettingsChange('isFinanceApiEnabled', e.target.checked)}
+                    />
+                </div>
+                {/* --- END OF NEW TOGGLE --- */}
                 <div>
                     <label className="block text-sm font-medium text-gray-300">Max Predictions Per Day Per User</label>
                     <input

@@ -1,17 +1,37 @@
-// server/services/financeAPI.js
-
-// Import the specific provider implementation(s)
 const yahooProvider = require('./financeProviders/yahooProvider');
-// Future: const alphaVantageProvider = require('./financeProviders/alphaVantageProvider');
+const currentProvider = yahooProvider;
+const Setting = require('../models/Setting'); // <-- 1. IMPORT SETTING MODEL
 
-// --- Configuration ---
-// In the future, you could use an environment variable to choose the provider
-const currentProvider = yahooProvider; // For now, we are hardcoding Yahoo
-
-// --- START: ADD THIS CACHE ---
+// --- Cache for API calls ---
 const quoteCache = new Map();
-const CACHE_TTL_MS = 2 * 60 * 1000; // 2 Minutes
-// --- END: ADD THIS CACHE ---
+const historicalCache = new Map();
+const CACHE_TTL_MS = 2 * 60 * 1000;
+const HISTORICAL_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+
+// --- Cache for the API setting itself (so we don't hit the DB every time) ---
+let financeApiEnabled = true;
+let settingLastChecked = 0;
+const SETTING_CACHE_TTL_MS = 60 * 1000; // 1 Minute
+
+/**
+ * Checks if the finance API is enabled in settings.
+ * Uses a 1-minute cache to avoid constant DB calls.
+ */
+async function isFinanceApiEnabled() {
+    const now = Date.now();
+    if (now - settingLastChecked > SETTING_CACHE_TTL_MS) {
+        try {
+            const settings = await Setting.findOne();
+            financeApiEnabled = settings ? settings.isFinanceApiEnabled : true;
+        } catch (err) {
+            console.error("Could not fetch finance API setting, defaulting to true.", err);
+            financeApiEnabled = true;
+        }
+        settingLastChecked = now;
+    }
+    return financeApiEnabled;
+}
+
 
 // --- START: ADD THIS COUNTER ---
 let apiCallCounter = {
@@ -54,6 +74,13 @@ const getApiCallStats = () => {
  */
 // --- START: MODIFY THIS FUNCTION ---
 const getQuote = async (tickers) => {
+    // --- 2. ADD THIS CHECK ---
+    if (!(await isFinanceApiEnabled())) {
+        console.warn("Finance API is disabled. Returning null for getQuote.");
+        // Return null or an empty array to match what the app expects on failure
+        return Array.isArray(tickers) ? [] : null;
+    }
+    // --- END CHECK ---
     // This function will now use the cache and the counter
 
     // 1. Handle array case by calling self (this logic is recursive)
@@ -94,6 +121,12 @@ const getQuote = async (tickers) => {
  */
 // --- START: MODIFY THIS FUNCTION ---
 const getHistorical = async (ticker, queryOptions) => {
+    // --- 3. ADD THIS CHECK ---
+    if (!(await isFinanceApiEnabled())) {
+        console.warn("Finance API is disabled. Returning [] for getHistorical.");
+        return []; // Return an empty array
+    }
+    // --- END CHECK ---
     // 1. Create a unique key based on the ticker and options
     const cacheKey = `hist:${ticker}:${JSON.stringify(queryOptions)}`;
     const now = Date.now();
@@ -124,6 +157,11 @@ const getHistorical = async (ticker, queryOptions) => {
  * @returns {Promise<StandardSearchResult[]>}
  */
 const search = async (keyword) => {
+    // --- 4. ADD THIS CHECK ---
+    if (!(await isFinanceApiEnabled())) {
+        console.warn("Finance API is disabled. Returning [] for search.");
+        return []; // Return an empty array
+    }
     incrementCounter('search'); // <-- INCREMENT
     return currentProvider.search(keyword);
 };

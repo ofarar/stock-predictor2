@@ -1298,6 +1298,9 @@ router.put('/settings/admin', async (req, res) => {
             updateData.maxPredictionsPerDay = parseInt(req.body.maxPredictionsPerDay) || 10;
         }
         // --- END: ADDED FIX ---
+        if (req.body.isFinanceApiEnabled !== undefined) { // <-- ADD THIS BLOCK
+            updateData.isFinanceApiEnabled = req.body.isFinanceApiEnabled;
+        }
 
         const updatedSettings = await Setting.findOneAndUpdate({},
             { $set: updateData },

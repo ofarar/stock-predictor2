@@ -32,6 +32,7 @@ const SettingSchema = new Schema({
     verificationPrice: { type: Number, default: 4.99 },
     isAIWizardEnabled: { type: Boolean, default: false },
     maxPredictionsPerDay: { type: Number, default: 20 },
+    isFinanceApiEnabled: { type: Boolean, default: true }
 });
 
 // FIX: Changed from 'export default mongoose.model(...);'
