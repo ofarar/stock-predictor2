@@ -1,13 +1,11 @@
 // src/pages/FollowersPage.js
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import ConfirmationModal from '../components/ConfirmationModal';
-import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
-import { formatNumericDate } from '../utils/formatters';
 import FindMemberWizardTrigger from '../components/FindMemberWizardTrigger';
 import RecommendationWizard from '../components/RecommendationWizard';
 import UserCard from '../components/UserCard'; // Import the new UserCard component

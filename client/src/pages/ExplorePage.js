@@ -145,13 +145,13 @@ const ExplorePage = ({ requestLogin, settings }) => {
     useEffect(() => {
         setPage(1);
         fetchPredictions(1, true);
-    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly]);
+    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, fetchPredictions]);
 
     useEffect(() => {
         if (page > 1) {
             fetchPredictions(page, false);
         }
-    }, [page]);
+    }, [page, fetchPredictions])
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));

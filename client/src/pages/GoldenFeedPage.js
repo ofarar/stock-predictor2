@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import StockFilterSearch from '../components/StockFilterSearch';
 import GoldenPostForm from '../components/GoldenPostForm';
 import VerifiedTick from '../components/VerifiedTick';
-import { formatPercentage, formatCurrency, formatDateTime } from '../utils/formatters';
+import { formatPercentage, formatDateTime } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
 
 const CentralPostCard = ({ post, settings }) => {
@@ -104,13 +104,13 @@ const GoldenFeedPage = ({ settings }) => {
         fetchPosts(1, true);
         const timer = setTimeout(markFeedAsRead, 2000);
         return () => clearTimeout(timer);
-    }, [filters.authorId, filters.stock, filters.predictionType]);
+    }, [filters.authorId, filters.stock, filters.predictionType, fetchPosts, markFeedAsRead]);
 
     useEffect(() => {
         if (page > 1) {
             fetchPosts(page, false);
         }
-    }, [page]);
+    }, [page, fetchPosts]);
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
