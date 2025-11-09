@@ -68,7 +68,7 @@ const WatchlistPage = ({ settings }) => {
             // --- END NEW LOGIC ---
         }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
             .finally(() => setLoading(false));
-    }, [t, searchParams, setSearchParams]);
+    }, [t]);
 
     useEffect(() => {
         fetchAllData();
