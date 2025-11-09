@@ -15,7 +15,6 @@ import JoinGoldenModal from '../components/JoinGoldenModal';
 const WatchlistPage = ({ settings }) => {
     const { t, i18n } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const stockFromUrl = searchParams.get('stock');
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -38,39 +37,55 @@ const WatchlistPage = ({ settings }) => {
         setSearchParams({ stock: ticker }, { replace: true }); // 2. Update the URL
     };
 
+    // --- 1. fetchAllData NOW ONLY FETCHES DATA ---
+    // It no longer reads searchParams or calls setSearchParams.
+    // This breaks the dependency loop and solves the double-loading problem.
     const fetchAllData = useCallback(() => {
         setLoading(true);
         Promise.all([
             axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }),
             axios.get(`${process.env.REACT_APP_API_URL}/api/watchlist`, { withCredentials: true })
-        ])
-            .then(([userRes, watchlistRes]) => {
-                const user = userRes.data;
-                setCurrentUser(user);
-                setData(watchlistRes.data);
-
-                // --- NEW LOGIC TO SET DEFAULT TICKER ---
-                if (user && user.watchlist.length > 0) {
-                    if (stockFromUrl && user.watchlist.includes(stockFromUrl)) {
-                        setSelectedTicker(stockFromUrl);
-                    } else {
-                        const defaultTicker = user.watchlist[0];
-                        setSelectedTicker(defaultTicker);
-                        setSearchParams({ stock: defaultTicker }, { replace: true });
-                    }
-                } else {
-                    setSelectedTicker(null);
-                    setSearchParams({}, { replace: true });
-                }
-                // --- END NEW LOGIC ---
-            })
-            .catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
+        ]).then(([userRes, watchlistRes]) => {
+            setCurrentUser(userRes.data);
+            setData(watchlistRes.data);
+        }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
             .finally(() => setLoading(false));
-    }, [t, stockFromUrl]); // ✅ stable deps only
+    }, [t]); // <-- Now only depends on 't' for the toast error
 
+    // --- 2. THIS useEffect runs ONCE to fetch data ---
     useEffect(() => {
         fetchAllData();
     }, [fetchAllData]);
+
+    // --- 3. THIS NEW useEffect manages the default ticker ---
+    // It waits for data to load, THEN it checks the URL and sets the default stock.
+    useEffect(() => {
+        // Don't run this logic until the data is loaded (loading is false)
+        // and we have the user object
+        if (loading || !currentUser) {
+            return;
+        }
+
+        const stockFromUrl = searchParams.get('stock');
+
+        if (currentUser.watchlist && currentUser.watchlist.length > 0) {
+            // Check if the stock from the URL is valid and still in the user's watchlist
+            if (stockFromUrl && currentUser.watchlist.includes(stockFromUrl)) {
+                setSelectedTicker(stockFromUrl); // URL is valid, use it.
+            } else {
+                // No valid stock in URL (or list changed), set a new default.
+                const defaultTicker = currentUser.watchlist[0];
+                setSelectedTicker(defaultTicker);
+                setSearchParams({ stock: defaultTicker }, { replace: true });
+            }
+        } else {
+            // User has no watchlist.
+            setSelectedTicker(null);
+            setSearchParams({}, { replace: true }); // Clear URL params
+        }
+
+        // This hook correctly depends on all its reactive values.
+    }, [loading, currentUser, searchParams, setSearchParams]);
 
     const handleLoadMorePredictions = (ticker) => {
         const currentPredictionData = data.predictions[ticker];
