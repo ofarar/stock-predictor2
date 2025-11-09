@@ -37,6 +37,7 @@ const WatchlistPage = ({ settings }) => {
         setSearchParams({ stock: ticker }, { replace: true }); // 2. Update the URL
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchAllData = useCallback(() => {
         setLoading(true);
         Promise.all([
