@@ -15,8 +15,7 @@ import JoinGoldenModal from '../components/JoinGoldenModal';
 const WatchlistPage = ({ settings }) => {
     const { t, i18n } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const page = searchParams.get('page');
-    const filter = searchParams.get('filter');
+    const stockFromUrl = searchParams.get('stock');
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -39,39 +38,35 @@ const WatchlistPage = ({ settings }) => {
         setSearchParams({ stock: ticker }, { replace: true }); // 2. Update the URL
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchAllData = useCallback(() => {
         setLoading(true);
         Promise.all([
             axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }),
             axios.get(`${process.env.REACT_APP_API_URL}/api/watchlist`, { withCredentials: true })
-        ]).then(([userRes, watchlistRes]) => {
-            const user = userRes.data;
-            setCurrentUser(user);
-            setData(watchlistRes.data);
+        ])
+            .then(([userRes, watchlistRes]) => {
+                const user = userRes.data;
+                setCurrentUser(user);
+                setData(watchlistRes.data);
 
-            // --- NEW LOGIC TO SET DEFAULT TICKER ---
-            const stockFromUrl = searchParams.get('stock');
-
-            if (user && user.watchlist.length > 0) {
-                // Check if the stock from the URL is valid and still in the user's watchlist
-                if (stockFromUrl && user.watchlist.includes(stockFromUrl)) {
-                    setSelectedTicker(stockFromUrl); // URL is valid, use it.
+                // --- NEW LOGIC TO SET DEFAULT TICKER ---
+                if (user && user.watchlist.length > 0) {
+                    if (stockFromUrl && user.watchlist.includes(stockFromUrl)) {
+                        setSelectedTicker(stockFromUrl);
+                    } else {
+                        const defaultTicker = user.watchlist[0];
+                        setSelectedTicker(defaultTicker);
+                        setSearchParams({ stock: defaultTicker }, { replace: true });
+                    }
                 } else {
-                    // No valid stock in URL (or list changed), set a new default.
-                    const defaultTicker = user.watchlist[0];
-                    setSelectedTicker(defaultTicker);
-                    setSearchParams({ stock: defaultTicker }, { replace: true });
+                    setSelectedTicker(null);
+                    setSearchParams({}, { replace: true });
                 }
-            } else {
-                // User has no watchlist.
-                setSelectedTicker(null);
-                setSearchParams({}, { replace: true }); // Clear URL params
-            }
-            // --- END NEW LOGIC ---
-        }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
+                // --- END NEW LOGIC ---
+            })
+            .catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
             .finally(() => setLoading(false));
-    }, [t, page, filter]);
+    }, [t, stockFromUrl]); // ✅ stable deps only
 
     useEffect(() => {
         fetchAllData();
