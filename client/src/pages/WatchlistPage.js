@@ -15,6 +15,8 @@ import JoinGoldenModal from '../components/JoinGoldenModal';
 const WatchlistPage = ({ settings }) => {
     const { t, i18n } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
+    const page = searchParams.get('page');
+    const filter = searchParams.get('filter');
     const [data, setData] = useState({ quotes: [], predictions: {}, recommendedUsers: {} });
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -69,7 +71,7 @@ const WatchlistPage = ({ settings }) => {
             // --- END NEW LOGIC ---
         }).catch(() => toast.error(t('watchlistPage.toast.errorLoadWatchlist')))
             .finally(() => setLoading(false));
-    }, [t]);
+    }, [t, page, filter]);
 
     useEffect(() => {
         fetchAllData();
