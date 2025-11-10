@@ -13,14 +13,45 @@ const MiniAggressivenessBar = ({ score }) => (
     </div>
 );
 
+// A simple X/Twitter icon component
+const XIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.46 13.825h1.546L5.48 2.165H3.893l9.098 11.66Z"/>
+    </svg>
+);
+
+
 const StatCard = ({ label, avgScore, rank, isStock, aggressivenessScore, isSelected, onClick }) => {
     const { t } = useTranslation();
     const circumference = 2 * Math.PI * 20;
     const offset = circumference - (avgScore / 100) * circumference;
 
+    const handleShare = (e) => {
+        e.stopPropagation(); // Prevent card's main onClick from firing
+
+        const shareText = isStock
+            ? t('performanceTabs.shareText.byStock', { rank, ticker: label })
+            : t('performanceTabs.shareText.byType', { rank, type: label });
+        
+        const appUrl = window.location.origin; // Links back to your site
+        
+        // Dynamically add stock ticker to hashtags
+        let hashtags = "StockPredictions,Investing,Trading";
+        if (isStock) {
+            // Remove any special characters from the label for the hashtag
+            const cleanLabel = label.replace(/[^a-zA-Z0-9]/g, '');
+            hashtags += `,${cleanLabel}`;
+        }
+        
+        const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(appUrl)}&hashtags=${hashtags}`;
+        
+        window.open(twitterIntentUrl, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <div 
-            className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 ${isSelected ? 'ring-2 ring-green-400 scale-[1.03]' : 'hover:scale-[1.02]'}`}
+            onClick={onClick}
+            className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 cursor-pointer ${isSelected ? 'ring-2 ring-green-400 scale-[1.03]' : 'hover:scale-[1.02]'}`}
         >
             <div className="flex items-center flex-grow">
                 {/* Circular Progress Bar for Accuracy */}
@@ -51,8 +82,22 @@ const StatCard = ({ label, avgScore, rank, isStock, aggressivenessScore, isSelec
                     <p className="text-xl font-bold text-white">#{rank}</p>
                 </div>
             </div>
-            {/* Add the mini aggressiveness bar at the bottom */}
-            <MiniAggressivenessBar score={aggressivenessScore} />
+            
+            <div className="flex items-center justify-between mt-3">
+                {/* Mini aggressiveness bar */}
+                <div className="w-10/12">
+                    <MiniAggressivenessBar score={aggressivenessScore} />
+                </div>
+                
+                {/* Share on X Button */}
+                <button 
+                    onClick={handleShare}
+                    className="text-gray-500 hover:text-white transition-colors duration-200 p-1 rounded-full hover:bg-gray-600"
+                    title={t('performanceTabs.shareOnX')}
+                >
+                    <XIcon />
+                </button>
+            </div>
         </div>
     );
 };

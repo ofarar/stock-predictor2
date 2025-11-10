@@ -616,9 +616,14 @@
     "tooltipLabel": "Puan: {{score}}"
   },
   "performanceTabs": {
+    "shareOnX": "X'te Paylaş",
+    "shareText": {
+      "byStock": "Stock-Predictor'da ${{ticker}} tahminlerim için {{rank}}. sıradayım! Daha iyisini yapıp yapamayacağını gör.",
+      "byType": "Stock-Predictor'da '{{type}}' tahminlerim için {{rank}}. sıradayım! İstatistiklerime göz at."
+    },
     "tabs": {
       "byType": "Türe Göre",
-      "byStock": "Hisseye Göre"
+      "byStock": "Hisse Senedine Göre"
     },
     "statCard": {
       "averageScore": "Ortalama Puan",
@@ -689,7 +694,7 @@
   "scoreboard": {
     "title": "Liderler Tablosu",
     "trophy": "🏆",
-    "loadError": "Skor tablosu verileri yüklenemedi.",
+    "loadError": "Liderler tablosu verileri yüklenemedi.",
     "predictionType": "Tahmin Türü",
     "filterStock": "Hisseye Göre Filtrele",
     "avgScore": "Ort. Puan",
@@ -808,7 +813,7 @@
   },
   "predictionStatus": {
     "Active": "Aktif",
-    "Assessed": "Değerlendirildi"
+    "Assessed": "Değerlendirilmiş"
   },
   "editPredictionModal": {
     "title": "{{ticker}} için Tahmini Düzenle",

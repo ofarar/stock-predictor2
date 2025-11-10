@@ -616,19 +616,24 @@
         "tooltipLabel": "Счёт: {{score}}"
     },
     "performanceTabs": {
-        "tabs": {
-            "byType": "По типу",
-            "byStock": "По акции"
-        },
-        "statCard": {
-            "averageScore": "Средний балл",
-            "rank": "РАНГ",
-            "topRankTitle": "Топ-{{rank}} ранг"
-        },
-        "noData": {
-            "byType": "Нет данных для типов прогнозов.",
-            "byStock": "Нет данных по отдельным акциям."
-        }
+      "shareOnX": "Поделиться в X",
+      "shareText": {
+        "byStock": "Я на #{{rank}} месте по прогнозам для ${{ticker}} на Stock-Predictor! Попробуйте превзойти меня.",
+        "byType": "Я на #{{rank}} месте по прогнозам типа '{{type}}' на Stock-Predictor! Посмотрите мою статистику."
+      },
+      "tabs": {
+        "byType": "По типу",
+        "byStock": "По акциям"
+      },
+      "statCard": {
+          "averageScore": "Средний балл",
+          "rank": "РАНГ",
+          "topRankTitle": "Топ-{{rank}} ранг"
+      },
+      "noData": {
+          "byType": "Нет данных для типов прогнозов.",
+          "byStock": "Нет данных по отдельным акциям."
+      }
     },
     "predictionJourney": {
         "initial": "Начальная",

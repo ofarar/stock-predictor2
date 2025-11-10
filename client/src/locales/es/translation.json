@@ -616,7 +616,12 @@
         "tooltipLabel": "Puntuación: {{score}}"
     },
     "performanceTabs": {
-        "tabs": {
+      "shareOnX": "Compartir en X",
+      "shareText": {
+        "byStock": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de ${{ticker}} en Stock-Predictor! A ver si puedes superarme.",
+        "byType": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de tipo '{{type}}' en Stock-Predictor! Echa un vistazo a mis estadísticas."
+      },
+      "tabs": {
             "byType": "Por Tipo",
             "byStock": "Por Acción"
         },

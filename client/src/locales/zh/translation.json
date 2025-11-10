@@ -616,19 +616,24 @@
         "tooltipLabel": "分数: {{score}}"
     },
     "performanceTabs": {
-        "tabs": {
-            "byType": "按类型",
-            "byStock": "按股票"
-        },
-        "statCard": {
-            "averageScore": "平均得分",
-            "rank": "排名",
-            "topRankTitle": "排名前 {{rank}}"
-        },
-        "noData": {
-            "byType": "没有可用于预测类型的数据。",
-            "byStock": "没有可用于个别股票的数据。"
-        }
+      "shareOnX": "在 X 上分享",
+      "shareText": {
+        "byStock": "我在 Stock-Predictor 上对 ${{ticker}} 的预测排名第 #{{rank}}！看看你能不能做得更好。",
+        "byType": "我在 Stock-Predictor 上对“{{type}}”类型的预测排名第 #{{rank}}！快来看看我的统计数据。"
+      },
+      "tabs": {
+        "byType": "按类型",
+        "byStock": "按股票"
+      },
+      "statCard": {
+        "averageScore": "平均得分",
+        "rank": "排名",
+        "topRankTitle": "排名前 {{rank}}"
+      },
+      "noData": {
+          "byType": "没有可用于预测类型的数据。",
+          "byStock": "没有可用于个别股票的数据。"
+      }
     },
     "predictionJourney": {
         "initial": "初始",

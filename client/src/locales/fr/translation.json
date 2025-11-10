@@ -616,19 +616,24 @@
         "tooltipLabel": "Score : {{score}}"
     },
     "performanceTabs": {
-        "tabs": {
-            "byType": "Par Type",
-            "byStock": "Par Action"
-        },
-        "statCard": {
-            "averageScore": "Score Moyen",
-            "rank": "RANG",
-            "topRankTitle": "Top {{rank}}"
-        },
-        "noData": {
-            "byType": "Aucune donnée disponible pour les types de prédictions.",
-            "byStock": "Aucune donnée disponible pour les actions individuelles."
-        }
+      "shareOnX": "Partager sur X",
+      "shareText": {
+        "byStock": "Je suis classé(e) n°{{rank}} pour mes prédictions sur ${{ticker}} sur Stock-Predictor ! Voyez si vous pouvez faire mieux.",
+        "byType": "Je suis classé(e) n°{{rank}} pour les prédictions de type '{{type}}' sur Stock-Predictor ! Consultez mes statistiques."
+      },
+      "tabs": {
+          "byType": "Par Type",
+          "byStock": "Par Action"
+      },
+      "statCard": {
+          "averageScore": "Score Moyen",
+          "rank": "RANG",
+          "topRankTitle": "Top {{rank}}"
+      },
+      "noData": {
+          "byType": "Aucune donnée disponible pour les types de prédictions.",
+          "byStock": "Aucune donnée disponible pour les actions individuelles."
+      }
     },
     "predictionJourney": {
         "initial": "Initial",
