@@ -880,6 +880,8 @@
             "Bronze": "Bronze"
         }
     },
+    "shareTweet": "Je viens de gagner le badge {{tier}} {{name}} sur @StockPredictor ! {{icon}} Découvrez mon profil : {{url}}",
+    "shareButton": "Partager",
     "market_watch": {
         "title": "Observation du marché",
         "unavailable": "Les données du marché en direct sont temporairement indisponibles."

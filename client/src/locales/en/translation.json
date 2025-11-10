@@ -881,6 +881,8 @@
       "Bronze": "Bronze"
     }
   },
+  "badgeDetailModal.shareTweet": "I just earned the {{tier}} {{name}} badge on @StockPredictor! {{icon}} Check out my profile: {{url}}",
+  "badgeDetailModal.shareButton": "Share",
   "market_watch": {
     "title": "Market Watch",
     "unavailable": "Live market data is temporarily unavailable."

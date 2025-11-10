@@ -880,6 +880,8 @@
             "Bronze": "Bronze"
         }
     },
+    "shareTweet": "Ich habe gerade das {{tier}} {{name}}-Abzeichen auf @StockPredictor verdient! {{icon}} Schaut euch mein Profil an: {{url}}",
+    "shareButton": "Teilen",
     "market_watch": {
         "title": "Marktbeobachtung",
         "unavailable": "Live-Marktdaten sind vorübergehend nicht verfügbar."
