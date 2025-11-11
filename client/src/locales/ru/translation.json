@@ -435,6 +435,13 @@
         "predictionsText_historical": "{{count}} прогноз(ов) (7д)",
         "noData": "В данный момент нет популярных акций."
     },
+    "share": {
+        "shareOnX": "Поделиться в X",
+        "ownerActive": "Я прогнозирую, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. Посмотрите мой прогноз и проголосуйте на Stock-Predictor!",
+        "ownerAssessed": "Мой прогноз по ${{ticker}} завершился с результатом {{score}}! Я прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}. Посмотрите результат!",
+        "visitorActive": "Интересный прогноз: {{username}} считает, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. А вы что думаете?",
+        "visitorAssessed": "Оцените результат: прогноз пользователя {{username}} по ${{ticker}} получил {{score}} очков! Он/она прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}."
+    },
     "footer": {
         "about": "О нас",
         "contact": "Контакты",
@@ -616,24 +623,24 @@
         "tooltipLabel": "Счёт: {{score}}"
     },
     "performanceTabs": {
-      "shareOnX": "Поделиться в X",
-      "shareText": {
-        "byStock": "Я на #{{rank}} месте по прогнозам для ${{ticker}} на Stock-Predictor! Попробуйте превзойти меня.",
-        "byType": "Я на #{{rank}} месте по прогнозам типа '{{type}}' на Stock-Predictor! Посмотрите мою статистику."
-      },
-      "tabs": {
-        "byType": "По типу",
-        "byStock": "По акциям"
-      },
-      "statCard": {
-          "averageScore": "Средний балл",
-          "rank": "РАНГ",
-          "topRankTitle": "Топ-{{rank}} ранг"
-      },
-      "noData": {
-          "byType": "Нет данных для типов прогнозов.",
-          "byStock": "Нет данных по отдельным акциям."
-      }
+        "shareOnX": "Поделиться в X",
+        "shareText": {
+            "byStock": "Я на #{{rank}} месте по прогнозам для ${{ticker}} на Stock-Predictor! Попробуйте превзойти меня.",
+            "byType": "Я на #{{rank}} месте по прогнозам типа '{{type}}' на Stock-Predictor! Посмотрите мою статистику."
+        },
+        "tabs": {
+            "byType": "По типу",
+            "byStock": "По акциям"
+        },
+        "statCard": {
+            "averageScore": "Средний балл",
+            "rank": "РАНГ",
+            "topRankTitle": "Топ-{{rank}} ранг"
+        },
+        "noData": {
+            "byType": "Нет данных для типов прогнозов.",
+            "byStock": "Нет данных по отдельным акциям."
+        }
     },
     "predictionJourney": {
         "initial": "Начальная",

@@ -435,6 +435,13 @@
         "predictionsText_historical": "{{count}} predicciones (7d)",
         "noData": "No hay acciones populares en este momento."
     },
+    "share": {
+        "shareOnX": "Compartir en X",
+        "ownerActive": "Predigo que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¡Mira mi predicción y vota en Stock-Predictor!",
+        "ownerAssessed": "¡Mi predicción para ${{ticker}} terminó con una puntuación de {{score}}! Predije {{targetPrice}} y cerró en {{actualPrice}}. ¡Mira el resultado!",
+        "visitorActive": "Predicción interesante: {{username}} cree que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¿Qué opinas?",
+        "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{score}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}."
+    },
     "footer": {
         "about": "Acerca de",
         "contact": "Contacto",
@@ -616,12 +623,12 @@
         "tooltipLabel": "Puntuación: {{score}}"
     },
     "performanceTabs": {
-      "shareOnX": "Compartir en X",
-      "shareText": {
-        "byStock": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de ${{ticker}} en Stock-Predictor! A ver si puedes superarme.",
-        "byType": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de tipo '{{type}}' en Stock-Predictor! Echa un vistazo a mis estadísticas."
-      },
-      "tabs": {
+        "shareOnX": "Compartir en X",
+        "shareText": {
+            "byStock": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de ${{ticker}} en Stock-Predictor! A ver si puedes superarme.",
+            "byType": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de tipo '{{type}}' en Stock-Predictor! Echa un vistazo a mis estadísticas."
+        },
+        "tabs": {
             "byType": "Por Tipo",
             "byStock": "Por Acción"
         },

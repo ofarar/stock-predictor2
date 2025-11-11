@@ -12,6 +12,12 @@ import EditPredictionModal from '../components/EditPredictionModal';
 import PredictionHistoryModal from '../components/PredictionHistoryModal';
 import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } from '../utils/formatters';
 
+const ShareIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+    </svg>
+);
+
 const calculateLiveScore = (predictedPrice, actualPrice) => {
     if (!actualPrice || actualPrice <= 0) return '...';
     const MAX_SCORE = 100;
@@ -137,6 +143,36 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
             .catch(() => { toast.error(t("Vote failed.")); setPrediction(originalPrediction); });
     };
 
+    const handleShare = () => {
+        const isOwner = currentUser?._id === prediction.userId._id;
+        const isAssessed = prediction.status === 'Assessed';
+        const url = window.location.href;
+        const hashtags = `StockPredictions,${prediction.stockTicker}`;
+
+        let shareText;
+        const params = {
+            ticker: prediction.stockTicker,
+            targetPrice: formatCurrency(prediction.targetPrice, i18n.language),
+            deadline: formatNumericDate(prediction.deadline, i18n.language),
+            username: prediction.userId.username,
+            score: prediction.score?.toFixed(1),
+            actualPrice: formatCurrency(prediction.actualPrice, i18n.language),
+        };
+
+        if (isOwner) {
+            shareText = isAssessed
+                ? t('share.ownerAssessed', params)
+                : t('share.ownerActive', params);
+        } else {
+            shareText = isAssessed
+                ? t('share.visitorAssessed', params)
+                : t('share.visitorActive', params);
+        }
+
+        const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`;
+        window.open(twitterIntentUrl, '_blank', 'noopener,noreferrer');
+    };
+
     if (loading) return <div className="text-center text-white">{t("Loading Prediction...")}</div>;
     if (!prediction) return <div className="text-center text-white">{t("Prediction not found.")}</div>;
 
@@ -172,8 +208,13 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                                 {t('prediction_type', { type: t(`predictionTypes.${prediction.predictionType.toLowerCase()}`) })}
                             </p>
                         </div>
-                        <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
-                            {t(`predictionStatus.${prediction.status}`)}
+                        <div className="flex items-center gap-4">
+                            <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
+                                {t(`predictionStatus.${prediction.status}`)}
+                            </div>
+                            <button onClick={handleShare} title={t('share.shareOnX')} className="text-gray-400 hover:text-white">
+                                <ShareIcon />
+                            </button>
                         </div>
                     </div>
 

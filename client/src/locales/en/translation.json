@@ -435,6 +435,13 @@
     "predictionsText_historical": "{{count}} predictions (7d)",
     "noData": "No trending stocks right now."
   },
+  "share": {
+    "shareOnX": "Share on X",
+    "ownerActive": "I'm predicting that ${{ticker}} will reach {{targetPrice}} by {{deadline}}. See my prediction and vote on Stock-Predictor!",
+    "ownerAssessed": "My prediction for ${{ticker}} finished with a score of {{score}}! I predicted {{targetPrice}}, and it closed at {{actualPrice}}. See the result!",
+    "visitorActive": "Interesting prediction: {{username}} thinks ${{ticker}} will hit {{targetPrice}} by {{deadline}}. What do you think?",
+    "visitorAssessed": "Check out this result: {{username}}'s prediction for ${{ticker}} scored {{score}}! They predicted {{targetPrice}}, and it closed at {{actualPrice}}."
+  },
   "footer": {
     "about": "About",
     "contact": "Contact",

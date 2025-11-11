@@ -435,6 +435,13 @@
         "predictionsText_historical": "{{count}} prédictions (7j)",
         "noData": "Aucune action tendance pour le moment."
     },
+    "share": {
+        "shareOnX": "Partager sur X",
+        "ownerActive": "Je prédis que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Voir ma prédiction et voter sur Stock-Predictor !",
+        "ownerAssessed": "Ma prédiction pour ${{ticker}} s'est terminée avec un score de {{score}} ! J'avais prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}. Voir le résultat !",
+        "visitorActive": "Prédiction intéressante : {{username}} pense que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Qu'en pensez-vous ?",
+        "visitorAssessed": "Regardez ce résultat : la prédiction de {{username}} pour ${{ticker}} a obtenu un score de {{score}} ! Il/elle avait prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}."
+    },
     "footer": {
         "about": "À propos",
         "contact": "Contact",
@@ -616,24 +623,24 @@
         "tooltipLabel": "Score : {{score}}"
     },
     "performanceTabs": {
-      "shareOnX": "Partager sur X",
-      "shareText": {
-        "byStock": "Je suis classé(e) n°{{rank}} pour mes prédictions sur ${{ticker}} sur Stock-Predictor ! Voyez si vous pouvez faire mieux.",
-        "byType": "Je suis classé(e) n°{{rank}} pour les prédictions de type '{{type}}' sur Stock-Predictor ! Consultez mes statistiques."
-      },
-      "tabs": {
-          "byType": "Par Type",
-          "byStock": "Par Action"
-      },
-      "statCard": {
-          "averageScore": "Score Moyen",
-          "rank": "RANG",
-          "topRankTitle": "Top {{rank}}"
-      },
-      "noData": {
-          "byType": "Aucune donnée disponible pour les types de prédictions.",
-          "byStock": "Aucune donnée disponible pour les actions individuelles."
-      }
+        "shareOnX": "Partager sur X",
+        "shareText": {
+            "byStock": "Je suis classé(e) n°{{rank}} pour mes prédictions sur ${{ticker}} sur Stock-Predictor ! Voyez si vous pouvez faire mieux.",
+            "byType": "Je suis classé(e) n°{{rank}} pour les prédictions de type '{{type}}' sur Stock-Predictor ! Consultez mes statistiques."
+        },
+        "tabs": {
+            "byType": "Par Type",
+            "byStock": "Par Action"
+        },
+        "statCard": {
+            "averageScore": "Score Moyen",
+            "rank": "RANG",
+            "topRankTitle": "Top {{rank}}"
+        },
+        "noData": {
+            "byType": "Aucune donnée disponible pour les types de prédictions.",
+            "byStock": "Aucune donnée disponible pour les actions individuelles."
+        }
     },
     "predictionJourney": {
         "initial": "Initial",
