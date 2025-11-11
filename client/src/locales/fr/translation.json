@@ -971,10 +971,9 @@
     },
     "sentiment": {
         "title": "Sentiment de la Communauté",
-        "subtitle": "Objectifs de prix moyens basés sur les prédictions actives de la communauté.",
-        "current_price": "Prix Actuel",
-        "avg_target": "Cible Moy.",
+        "subtitle": "Que pense la foule ?",
         "based_on_count": "Basé sur {{count}} prédictions",
+        "question": "Quel est l'objectif de cours {{type}} de la communauté pour {{ticker}} ?",
         "hourly": "Horaire",
         "daily": "Quotidien",
         "weekly": "Hebdomadaire",

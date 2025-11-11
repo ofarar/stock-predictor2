@@ -966,10 +966,9 @@
     },
     "sentiment": {
         "title": "Community-Stimmung",
-        "subtitle": "Durchschnittliche Kursziele basierend auf aktiven Community-Prognosen.",
-        "current_price": "Aktueller Preis",
-        "avg_target": "Ø-Ziel",
-        "based_on_count": "Basiert auf {{count}} Prognosen",
+        "subtitle": "Was denkt die Masse?",
+        "based_on_count": "Basierend auf {{count}} Vorhersagen",
+        "question": "Was ist das {{type}} Kursziel der Community für {{ticker}}?",
         "hourly": "Stündlich",
         "daily": "Täglich",
         "weekly": "Wöchentlich",

@@ -972,10 +972,9 @@
   },
   "sentiment": {
     "title": "Topluluk Görüşü",
-    "subtitle": "Aktif topluluk tahminlerine dayalı ortalama fiyat hedefleri.",
-    "current_price": "Mevcut Fiyat",
-    "avg_target": "Ort. Hedef",
+    "subtitle": "Kalabalık ne düşünüyor?",
     "based_on_count": "{{count}} tahmine göre",
+    "question": "Topluluğun {{ticker}} için {{type}} fiyat hedefi nedir?",
     "hourly": "Saatlik",
     "daily": "Günlük",
     "weekly": "Haftalık",

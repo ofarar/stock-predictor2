@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
-import CommunitySentiment from '../components/CommunitySentiment'; // 1. Import the new component
+import CommunitySentiment from '../components/CommunitySentiment';
 
 const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
@@ -20,9 +20,6 @@ const StockPage = ({ onPredictClick, settings }) => {
     const [error, setError] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const [showChart, setShowChart] = useState(false);
-
-    // 2. Add state for the new component
-    const [sentiment, setSentiment] = useState(null);
 
     // Paginated state for Top Predictors
     const [topPredictors, setTopPredictors] = useState({ items: [], page: 1, totalPages: 0 });
@@ -50,17 +47,6 @@ const StockPage = ({ onPredictClick, settings }) => {
             setLoading(false);
         }
     }, [ticker, t]);
-
-    // 3. Add independent data fetching for sentiment
-    const fetchCommunitySentiment = useCallback(async () => {
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}/community-sentiment`);
-            setSentiment(res.data);
-        } catch (err) {
-            console.error("Community sentiment failed to load:", err);
-            // Fails silently, doesn't block the page
-        }
-    }, [ticker]);
 
     const fetchTopPredictors = useCallback(async (pageNum = 1) => {
         setLoadingPredictors(true);
@@ -95,8 +81,7 @@ const StockPage = ({ onPredictClick, settings }) => {
     useEffect(() => {
         fetchPageData();
         fetchActivePredictions(1);
-        fetchCommunitySentiment(); // 4. Call the new fetch function
-    }, [fetchPageData, fetchActivePredictions, fetchCommunitySentiment]);
+    }, [fetchPageData, fetchActivePredictions]);
 
     useEffect(() => {
         fetchTopPredictors(1);
@@ -173,8 +158,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                 </div>
             </div>
 
-            {/* 5. Add the CommunitySentiment component if data exists */}
-            {sentiment && <CommunitySentiment sentiment={sentiment} currentPrice={currentPrice} />}
+            <CommunitySentiment ticker={ticker} currentPrice={currentPrice} />
 
             <div className="space-y-8">
                 {/* All other sections remain unchanged */}

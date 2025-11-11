@@ -971,10 +971,9 @@
     },
     "sentiment": {
         "title": "社区情绪",
-        "subtitle": "基于活跃社区预测的平均目标价格。",
-        "current_price": "当前价格",
-        "avg_target": "平均目标",
-        "based_on_count": "基于 {{count}} 条预测",
+        "subtitle": "大家在想什么？",
+        "based_on_count": "基于 {{count}} 个预测",
+        "question": "社区对 {{ticker}} 的 {{type}} 价格目标是多少？",
         "hourly": "每小时",
         "daily": "每日",
         "weekly": "每周",

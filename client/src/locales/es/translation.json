@@ -971,10 +971,9 @@
     },
     "sentiment": {
         "title": "Sentimiento de la Comunidad",
-        "subtitle": "Objetivos de precio promedio basados en predicciones activas de la comunidad.",
-        "current_price": "Precio Actual",
-        "avg_target": "Obj. Prom.",
+        "subtitle": "¿Qué está pensando la multitud?",
         "based_on_count": "Basado en {{count}} predicciones",
+        "question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
         "hourly": "Por hora",
         "daily": "Diario",
         "weekly": "Semanal",

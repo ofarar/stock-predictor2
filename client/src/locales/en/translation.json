@@ -972,10 +972,9 @@
   },
   "sentiment": {
     "title": "Community Sentiment",
-    "subtitle": "Average price targets based on active community predictions.",
-    "current_price": "Current Price",
-    "avg_target": "Avg. Target",
-    "based_on_count": "{{count}} predictions",
+    "subtitle": "What's the crowd thinking?",
+    "based_on_count": "Based on {{count}} predictions",
+    "question": "What is the community's {{type}} price target for {{ticker}}?",
     "hourly": "Hourly",
     "daily": "Daily",
     "weekly": "Weekly",

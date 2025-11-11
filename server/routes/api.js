@@ -47,6 +47,48 @@ const viewLimiter = rateLimit({
 });
 // --- END ADDITION ---
 
+// NEW: Community Sentiment Endpoint
+router.get('/community-sentiment/:ticker', async (req, res) => {
+    const { ticker } = req.params;
+
+    try {
+        const sentiment = await Prediction.aggregate([
+            {
+                $match: {
+                    stockTicker: ticker.toUpperCase(),
+                    status: 'Active'
+                }
+            },
+            {
+                $group: {
+                    _id: '$predictionType', // Group by prediction type
+                    averageTarget: { $avg: '$targetPrice' },
+                    predictionCount: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude the default _id field
+                    predictionType: '$_id',
+                    averageTarget: { $round: ['$averageTarget', 2] }, // Round to 2 decimal places
+                    predictionCount: 1
+                }
+            },
+            {
+                $sort: { predictionCount: -1 } // Sort by most popular type
+            }
+        ]);
+
+        // It's better to return an empty array than a 404
+        // The frontend can then display a "no data" message.
+        res.json(sentiment);
+
+    } catch (err) {
+        console.error(`Community sentiment fetch error for ${ticker}:`, err.message);
+        res.status(500).json({ message: "Failed to fetch community sentiment" });
+    }
+});
+
 // NEW: Paginated endpoint for Top Predictors on a Stock Page
 router.get('/stock/:ticker/top-predictors', async (req, res) => {
     const { ticker } = req.params;
@@ -1718,6 +1760,7 @@ router.get('/profile/:userId', async (req, res) => {
             Monthly: { def: 8, neu: 20 },
             Quarterly: { def: 10, neu: 25 },
             Yearly: { def: 15, neu: 35 }
+       
         };
 
         const perfByType = assessedPredictions.reduce((acc, p) => {
@@ -2324,7 +2367,7 @@ const getSentimentForTicker = async (ticker) => {
                 }
             },
             { $project: { _id: 0, type: "$_id", avgTargetPrice: "$avgTargetPrice", count: 1 } },
-            { $sort: { count: -1 } }
+            { $sort: { count: -1 } } // Sort by most popular
         ]);
 
         // Find the most relevant sentiment (Daily or Weekly)
@@ -2409,7 +2452,8 @@ router.get('/widgets/community-feed', async (req, res) => {
         const predictions = await Prediction.find({ status: 'Active' })
             .sort({ createdAt: -1 })
             .limit(5)
-            .populate('userId', 'username avatar isGoldenMember');
+            .populate('userId', 'username avatar isGoldenMember')
+            .lean();
 
 
         // Fetch current prices for the tickers in the feed for comparison
@@ -2594,22 +2638,6 @@ router.post('/users/:userId/join-golden', async (req, res) => {
 // Replace 'POST /users/:userId/cancel-golden'
 router.post('/users/:userId/cancel-golden', async (req, res) => {
     if (!req.user) return res.status(401).send('Not logged in');
-    const goldenMemberId = req.params.userId;
-    const currentUserId = req.user._id;
-
-    try {
-        await User.findByIdAndUpdate(goldenMemberId, { $pull: { goldenSubscribers: { user: currentUserId } } });
-        await User.findByIdAndUpdate(currentUserId, { $pull: { goldenSubscriptions: { user: goldenMemberId } } });
-        res.status(200).send('Successfully canceled subscription.');
-    } catch (error) {
-        res.status(500).json({ message: 'Error canceling subscription.' });
-    }
-});
-
-// POST: Cancel a golden member's subscription
-router.post('/users/:userId/cancel-golden', async (req, res) => {
-    if (!req.user) return res.status(401).send('Not logged in');
-
     const goldenMemberId = req.params.userId;
     const currentUserId = req.user._id;
 
