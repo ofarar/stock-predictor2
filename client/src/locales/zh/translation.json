@@ -892,8 +892,10 @@
             "Bronze": "青铜"
         }
     },
-    "shareTweet": "我刚刚在 @StockPredictor 上获得了 {{tier}} {{name}} 徽章！{{icon}} 快来看看我的个人资料：{{url}}",
-    "shareButton": "分享",
+    "badgeDetailModal": {
+        "shareButton": "分享",
+        "shareTweet": "我刚刚获得了 {{tier}} “{{name}}” 徽章！{{icon}} 快来关注我的预测吧：{{url}}"
+    },
     "market_watch": {
         "title": "市场观察",
         "unavailable": "实时市场数据暂时不可用。"

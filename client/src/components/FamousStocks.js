@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../utils/formatters';
@@ -23,7 +23,7 @@ const SentimentStockCard = ({ stock }) => {
 
     if (!sentimentData) {
         return (
-             <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-between hover:bg-gray-700 h-full">
+            <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-between hover:bg-gray-700 h-full">
                 <div>
                     <p className="font-bold text-white">{stock.quote.shortName || stock.ticker}</p>
                     <p className="text-sm text-gray-400">{stock.ticker}</p>
@@ -54,14 +54,16 @@ const SentimentStockCard = ({ stock }) => {
 
 const FamousStocks = ({ stocks, isHistorical }) => {
     const { t } = useTranslation();
-    const [prevTickers, setPrevTickers] = useState([]);
     const [updatedTickers, setUpdatedTickers] = useState(new Set());
+    const prevTickersRef = useRef([]);
 
     useEffect(() => {
         const currentTickers = stocks.map(s => s.ticker);
-        // Only animate if the component was already mounted (prevTickers has been set)
-        if (prevTickers.length > 0) {
-            const newTickers = currentTickers.filter(t => !prevTickers.includes(t));
+        const previousTickers = prevTickersRef.current;
+
+        // Only animate if the component was already mounted and has previous tickers to compare against
+        if (previousTickers.length > 0) {
+            const newTickers = currentTickers.filter(t => !previousTickers.includes(t));
             if (newTickers.length > 0) {
                 const newSet = new Set(newTickers);
                 setUpdatedTickers(newSet);
@@ -71,8 +73,10 @@ const FamousStocks = ({ stocks, isHistorical }) => {
                 return () => clearTimeout(timer);
             }
         }
-        setPrevTickers(currentTickers);
-    }, [stocks]);
+
+        // After the logic runs, update the ref to hold the current tickers for the next render.
+        prevTickersRef.current = currentTickers;
+    }, [stocks]); // This effect now correctly only depends on the 'stocks' prop.
 
     const validStocks = stocks?.filter(stock => stock.quote) || [];
 

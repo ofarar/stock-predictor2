@@ -892,8 +892,10 @@
             "Bronze": "Бронза"
         }
     },
-    "shareTweet": "Я только что получил(а) значок '{{name}}' ({{tier}}) на @StockPredictor! {{icon}} Посмотрите мой профиль: {{url}}",
-    "shareButton": "Поделиться",
+    "badgeDetailModal": {
+        "shareButton": "Поделиться",
+        "shareTweet": "Я только что получил значок '{{name}}' {{tier}} уровня! {{icon}} Следите за моими прогнозами: {{url}}"
+    },
     "market_watch": {
         "title": "Обзор рынка",
         "unavailable": "Рыночные данные в реальном времени временно недоступны."

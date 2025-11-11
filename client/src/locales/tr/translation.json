@@ -893,8 +893,10 @@
       "Bronze": "Bronz"
     }
   },
-  "shareTweet": "@StockPredictor'da {{tier}} {{name}} rozetini kazandım! {{icon}} Profilime göz atın: {{url}}",
-  "shareButton": "Paylaş",
+  "badgeDetailModal": {
+    "shareButton": "Paylaş",
+    "shareTweet": "{{tier}} '{{name}}' rozetini kazandım! {{icon}} Tahminlerimi takip et: {{url}}"
+  },
   "market_watch": {
     "title": "Piyasa Takibi",
     "unavailable": "Canlı piyasa verileri geçici olarak kullanılamıyor."

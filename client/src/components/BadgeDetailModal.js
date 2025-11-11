@@ -35,7 +35,8 @@ const BadgeDetailModal = ({ badge, onClose }) => {
                 </button>
                 <span className={`text-7xl ${style.color}`}>{style.icon}</span>
                 <h2 className="text-2xl font-bold text-white mt-4">{badge.name}</h2>
-                <p className={`font-semibold ${style.color}`}>{badge.tier} Tier</p>
+                {/* Correctly use translation for the tier display */}
+                <p className={`font-semibold ${style.color}`}>{t(`badges.tiers.${badge.tier}`, `${badge.tier} Tier`)}</p>
                 <p className="text-gray-400 mt-2 text-sm">{badge.description}</p>
                 {/* --- NEW BUTTONS FOOTER --- */}
                 <div className="flex justify-center gap-4 mt-8 pt-4 border-t border-gray-700">

@@ -892,8 +892,10 @@
             "Bronze": "Bronce"
         }
     },
-    "shareTweet": "¡Acabo de ganar la insignia {{tier}} {{name}} en @StockPredictor! {{icon}} Echa un vistazo a mi perfil: {{url}}",
-    "shareButton": "Compartir",
+    "badgeDetailModal": {
+        "shareButton": "Compartir",
+        "shareTweet": "¡Acabo de ganar la insignia '{{name}}' de nivel {{tier}}! {{icon}} Sigue mis predicciones: {{url}}"
+    },
     "market_watch": {
         "title": "Vigilancia del mercado",
         "unavailable": "Los datos del mercado en vivo no están disponibles temporalmente."
