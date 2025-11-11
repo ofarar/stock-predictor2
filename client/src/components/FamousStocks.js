@@ -1,71 +1,96 @@
-// src/components/FamousStocks.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency, formatPercentage } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 
-const FamousStocks = ({ stocks = [], isHistorical = false }) => {
+const SentimentStockCard = ({ stock }) => {
     const { t, i18n } = useTranslation();
 
-    const titleText = isHistorical 
-        ? t('famousStocks.title_historical', 'Trending (Last 7 Days)') 
-        : t('famousStocks.title');
+    if (!stock.quote) {
+        return (
+            <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-center text-center text-gray-400 hover:bg-gray-700 h-full">
+                <div>
+                    <p className="font-bold text-white">{stock.ticker}</p>
+                    <p className="text-sm">{t('famousStocks.noData')}</p>
+                </div>
+            </Link>
+        );
+    }
+
+    const hasSentiment = stock.sentiment && Object.keys(stock.sentiment).length > 0;
+    const relevantSentimentType = hasSentiment ? (['Daily', 'Weekly', 'Monthly'].find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0]) : null;
+    const sentimentData = relevantSentimentType ? stock.sentiment[relevantSentimentType] : null;
+
+    if (!sentimentData) {
+        return (
+             <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-between hover:bg-gray-700 h-full">
+                <div>
+                    <p className="font-bold text-white">{stock.quote.shortName || stock.ticker}</p>
+                    <p className="text-sm text-gray-400">{stock.ticker}</p>
+                </div>
+                <p className="font-bold text-lg text-white">{formatCurrency(stock.quote.regularMarketPrice, i18n.language, stock.quote.currency)}</p>
+            </Link>
+        );
+    }
 
     return (
-        <div className="bg-gray-800 p-6 rounded-xl">
-            <div className="flex items-center mb-4">
-                <svg className="w-6 h-6 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-                <h3 className="text-xl font-bold text-white">{titleText}</h3>
+        <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-colors flex flex-col justify-between h-full">
+            <div>
+                <p className="text-sm text-gray-400 mb-2">
+                    {t('sentiment.question', { context: relevantSentimentType, ticker: stock.ticker })}
+                </p>
             </div>
+            <div className="text-right">
+                <p className="text-2xl font-bold text-white">
+                    {formatCurrency(sentimentData.averageTarget, i18n.language, stock.quote.currency)}
+                </p>
+                <p className="text-xs text-gray-500">
+                    {t('sentiment.based_on_count', { count: sentimentData.predictionCount })}
+                </p>
+            </div>
+        </Link>
+    );
+};
 
-            <div className="space-y-3">
-                {stocks.length > 0 ? (
-                    stocks.map(stock => {
-                        
-                        // Extract new sentiment data
-                        const sentiment = stock.sentiments && stock.sentiments[0];
-                        let percentageChange = null;
-                        if (sentiment && stock.currentPrice > 0) {
-                            percentageChange = ((sentiment.avgTargetPrice - stock.currentPrice) / stock.currentPrice) * 100;
-                        }
-                        const isBullish = percentageChange !== null && percentageChange >= 0;
+const FamousStocks = ({ stocks, isHistorical }) => {
+    const { t } = useTranslation();
+    const [prevTickers, setPrevTickers] = useState([]);
+    const [updatedTickers, setUpdatedTickers] = useState(new Set());
 
-                        return (
-                            <Link
-                                to={`/stock/${stock.ticker}`}
-                                key={stock.ticker}
-                                className="block bg-gray-700 p-3 rounded-lg hover:bg-gray-600"
-                            >
-                                <div className="flex justify-between items-center">
-                                    <span className="font-bold text-white">{stock.ticker}</span>
-                                    {/* --- NEW SENTIMENT UI --- */}
-                                    {sentiment && (
-                                        <div className={`flex items-center text-sm font-bold ${isBullish ? 'text-green-400' : 'text-red-400'}`}>
-                                            {isBullish ? (
-                                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
-                                            ) : (
-                                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V4a1 1 0 112 0v8.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                                            )}
-                                            <span>{formatPercentage(percentageChange, i18n.language)}</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="flex justify-between items-center mt-1">
-                                    <span className="text-sm text-gray-400">
-                                        {formatCurrency(stock.currentPrice, i18n.language, 'USD')}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                        {t('famousStocks.predictionsText', { count: stock.predictions })}
-                                    </span>
-                                </div>
-                            </Link>
-                        );
-                    })
-                ) : (
-                    <p className="text-gray-500 text-center py-4">{t('famousStocks.noData')}</p>
-                )}
+    useEffect(() => {
+        const currentTickers = stocks.map(s => s.ticker);
+        // Only animate if the component was already mounted (prevTickers has been set)
+        if (prevTickers.length > 0) {
+            const newTickers = currentTickers.filter(t => !prevTickers.includes(t));
+            if (newTickers.length > 0) {
+                const newSet = new Set(newTickers);
+                setUpdatedTickers(newSet);
+                const timer = setTimeout(() => {
+                    setUpdatedTickers(new Set());
+                }, 1000); // Animation duration should match CSS
+                return () => clearTimeout(timer);
+            }
+        }
+        setPrevTickers(currentTickers);
+    }, [stocks]);
+
+    const validStocks = stocks?.filter(stock => stock.quote) || [];
+
+    if (validStocks.length === 0) {
+        return null;
+    }
+
+    return (
+        <div>
+            <h3 className="text-xl font-bold text-white mb-4">
+                {isHistorical ? t('famousStocks.titleHistorical') : t('famousStocks.titleToday')}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {validStocks.map(stock => (
+                    <div key={stock.ticker} className={updatedTickers.has(stock.ticker) ? 'animate-fade-in' : ''}>
+                        <SentimentStockCard stock={stock} />
+                    </div>
+                ))}
             </div>
         </div>
     );

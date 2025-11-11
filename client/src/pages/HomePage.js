@@ -1,9 +1,9 @@
-// src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import toast from 'react-hot-toast'; // Make sure toast is imported
+import toast from 'react-hot-toast';
+import { io } from 'socket.io-client';
 
 // Import all necessary components
 import DailyLeaderboard from '../components/DailyLeaderboard';
@@ -27,6 +27,7 @@ const HomePage = ({ user, settings }) => {
     const [isPredictionModalOpen, setPredictionModalOpen] = useState(false);
     const location = useLocation();
 
+    // Effect to open prediction modal via URL parameter
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         if (params.get('action') === 'predict') {
@@ -34,33 +35,21 @@ const HomePage = ({ user, settings }) => {
         }
     }, [location]);
 
+    // Effect for all data fetching and real-time updates
     useEffect(() => {
         const fetchAllData = async () => {
+            setLoading(true);
             try {
-                // Fetch all widget data in parallel
-                const [
-                    hourlyWinnersPromise,
-                    dailyLeadersPromise,
-                    longTermLeadersPromise,
-                    famousStocksPromise
-                ] = [
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
-                    // --- THIS IS THE REAL API CALL ---
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`)
-                ];
-
                 const [
                     hourlyWinnersRes,
                     dailyLeadersRes,
                     longTermLeadersRes,
                     famousStocksRes
                 ] = await Promise.all([
-                    hourlyWinnersPromise,
-                    dailyLeadersPromise,
-                    longTermLeadersPromise,
-                    famousStocksPromise
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`)
                 ]);
 
                 setWidgetData({
@@ -80,14 +69,33 @@ const HomePage = ({ user, settings }) => {
         };
 
         fetchAllData();
-    }, [t]);
+
+        // --- START: REAL-TIME UPDATE ---
+        const socket = io(process.env.REACT_APP_API_URL);
+
+        socket.on('famous-stocks-update', (newFamousStocksData) => {
+            // Update the correct part of the widgetData state
+            setWidgetData(prevData => ({
+                ...prevData,
+                famousStocks: newFamousStocksData.stocks,
+                isFamousHistorical: newFamousStocksData.isHistorical,
+            }));
+        });
+
+        // Disconnect on component unmount
+        return () => {
+            socket.disconnect();
+        };
+        // --- END: REAL-TIME UPDATE ---
+
+    }, [t]); // Dependency array includes 't' for toast translation
 
     if (loading) {
         return <div className="text-center text-gray-400 py-10">{t('loading_dashboard')}</div>;
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 animate-fade-in">
             {!user && settings?.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
@@ -100,10 +108,9 @@ const HomePage = ({ user, settings }) => {
                 {/* Sidebar Column */}
                 <div className="md:col-span-1 flex flex-col gap-8">
                     <MarketWatch />
-                    {/* Render FamousStocks with the new data */}
-                    <FamousStocks 
-                        stocks={widgetData.famousStocks} 
-                        isHistorical={widgetData.isFamousHistorical} 
+                    <FamousStocks
+                        stocks={widgetData.famousStocks}
+                        isHistorical={widgetData.isFamousHistorical}
                     />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} settings={settings} />
                 </div>

@@ -17,42 +17,56 @@ const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
 const { createOrUpdateStripePriceForUser } = require('./stripe');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { getCommunitySentiment } = require('../utils/sentimentHelper'); 
 
-// NEW: Reusable function to calculate community sentiment
-const getCommunitySentiment = async (ticker) => {
-    try {
-        const sentiment = await Prediction.aggregate([
-            {
-                $match: {
-                    stockTicker: ticker.toUpperCase(),
-                    status: 'Active'
-                }
-            },
-            {
-                $group: {
-                    _id: '$predictionType', // Group by prediction type
-                    averageTarget: { $avg: '$targetPrice' },
-                    predictionCount: { $sum: 1 }
-                }
-            },
-            {
-                $project: {
-                    _id: 0, // Exclude the default _id field
-                    predictionType: '$_id',
-                    averageTarget: { $round: ['$averageTarget', 2] }, // Round to 2 decimal places
-                    predictionCount: 1
-                }
-            },
-            {
-                $sort: { predictionCount: -1 } // Sort by most popular type
-            }
+const getFamousStocks = async () => {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    let famousStocks = await Prediction.aggregate([
+        { $match: { createdAt: { $gte: today }, status: 'Active' } },
+        { $group: { _id: '$stockTicker', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 },
+        { $project: { _id: 0, ticker: '$_id', count: '$count' } }
+    ]);
+
+    let isHistorical = false;
+    if (famousStocks.length === 0) {
+        famousStocks = await Prediction.aggregate([
+            { $match: { status: 'Active' } },
+            { $group: { _id: '$stockTicker', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 5 },
+            { $project: { _id: 0, ticker: '$_id', count: '$count' } }
         ]);
-        return sentiment;
-    } catch (err) {
-        console.error(`Error calculating community sentiment for ${ticker}:`, err.message);
-        // In case of an error, return an empty array to prevent crashes downstream
-        return [];
+        isHistorical = true;
     }
+
+    const enrichedStocksPromises = famousStocks.map(async (stock) => {
+        try {
+            const [quote, sentiment] = await Promise.all([
+                yahooFinance.quote(stock.ticker),
+                getCommunitySentiment(stock.ticker)
+            ]);
+            return {
+                ...stock,
+                quote: {
+                    longName: quote.longName,
+                    shortName: quote.shortName,
+                    regularMarketPrice: quote.regularMarketPrice,
+                    currency: quote.currency
+                },
+                sentiment: sentiment
+            };
+        } catch (error) {
+            console.error(`Failed to enrich data for ${stock.ticker}:`, error);
+            return { ...stock, quote: null, sentiment: null };
+        }
+    });
+
+    const enrichedStocks = await Promise.all(enrichedStocksPromises);
+    return { stocks: enrichedStocks, isHistorical };
 };
 
 // Rate limiter for the contact form
@@ -2445,38 +2459,14 @@ router.post('/prediction/:id/view', viewLimiter, async (req, res) => {
 
 router.get('/widgets/famous-stocks', async (req, res) => {
     try {
-        // 1. Get the top 4 tickers (same as before)
-        const topStocks = await Prediction.aggregate([
-            { $match: { status: 'Active' } },
-            { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
-            { $sort: { predictions: -1 } },
-            { $limit: 4 }
-        ]);
-        const tickers = topStocks.map(s => s._id);
-
-        // 2. Fetch sentiment data for these tickers in parallel
-        const sentimentPromises = tickers.map(async (ticker) => {
-            const sentimentData = await getSentimentForTicker(ticker);
-            const stock = topStocks.find(s => s._id === ticker);
-            return {
-                ticker: ticker,
-                predictions: stock.predictions,
-                ...sentimentData
-            };
-        });
-
-        const stocksWithSentiment = await Promise.all(sentimentPromises);
-
-        res.json({
-            stocks: stocksWithSentiment,
-            isHistorical: false // This flag is from your old code
-        });
-
-    } catch (err) {
-        console.error("Error fetching famous stocks widget:", err);
-        res.status(500).json({ message: "Error loading widget data" });
+        const famousStocksData = await getFamousStocks();
+        res.json(famousStocksData);
+    } catch (error) {
+        console.error('Error fetching famous stocks:', error);
+        res.status(500).json({ message: 'Failed to fetch famous stocks' });
     }
 });
+
 
 // GET Community Feed (most recent predictions) - UPDATED
 router.get('/widgets/community-feed', async (req, res) => {
