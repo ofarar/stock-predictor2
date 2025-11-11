@@ -20,25 +20,21 @@ const PORT = process.env.PORT || 5001;
 // Use Helmet to set various security headers
 app.use(helmet());
 
-// Middleware
-const whitelist = [
-    'http://localhost:3000',
-    'https://predictostock.vercel.app'
-];
+// --- CORS Configuration ---
+// This tells your server to accept requests from your Vercel app.
+const allowedOrigins = ['http://localhost:3000', 'https://predictostock.vercel.app'];
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
+        // allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-
-        // Check if the origin is in the whitelist or if it's a Vercel preview URL
-        if (whitelist.indexOf(origin) !== -1 || new URL(origin).hostname.endsWith('.vercel.app')) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
         }
+        return callback(null, true);
     },
-    credentials: true // Allow cookies to be sent
+    credentials: true, // This is important for cookies/sessions
 };
 
 const io = new Server(server, {
@@ -115,14 +111,14 @@ cron.schedule('*/5 * * * *', () => {
 // WebSocket Connection Handler
 io.on('connection', (socket) => {
     console.log('a user connected:', socket.id);
-  
+
     socket.on('joinRoom', (ticker) => {
-      socket.join(ticker);
-      console.log(`Socket ${socket.id} joined room for ${ticker}`);
+        socket.join(ticker);
+        console.log(`Socket ${socket.id} joined room for ${ticker}`);
     });
-  
+
     socket.on('disconnect', () => {
-      console.log('user disconnected:', socket.id);
+        console.log('user disconnected:', socket.id);
     });
 });
 
