@@ -17,7 +17,7 @@ const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
 const { createOrUpdateStripePriceForUser } = require('./stripe');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getCommunitySentiment } = require('../utils/sentimentHelper'); 
+const { getCommunitySentiment } = require('../utils/sentimentHelper');
 
 const getFamousStocks = async () => {
     const today = new Date();
@@ -1806,7 +1806,7 @@ router.get('/profile/:userId', async (req, res) => {
             Monthly: { def: 8, neu: 20 },
             Quarterly: { def: 10, neu: 25 },
             Yearly: { def: 15, neu: 35 }
-       
+
         };
 
         const perfByType = assessedPredictions.reduce((acc, p) => {
@@ -2173,6 +2173,7 @@ router.put('/profile/golden-member', async (req, res) => {
     }
 });
 
+// from server/routes/api.js
 router.put('/profile', async (req, res) => {
     if (!req.user) {
         return res.status(401).send('You must be logged in.');
@@ -2180,13 +2181,13 @@ router.put('/profile', async (req, res) => {
     try {
         const { username, about, youtubeLink, xLink, avatar } = req.body;
 
-        // --- START FIX: Sanitize all string inputs ---
+        // --- START FIX: Use xss() instead of purify.sanitize() ---
         const sanitizedUpdate = {
-            username: purify.sanitize(username),
-            about: purify.sanitize(about), // <-- SANITIZE
-            youtubeLink: purify.sanitize(youtubeLink), // <-- SANITIZE
-            xLink: purify.sanitize(xLink), // <-- SANITIZE
-            avatar: purify.sanitize(avatar)
+            username: xss(username),
+            about: xss(about),
+            youtubeLink: xss(youtubeLink),
+            xLink: xss(xLink),
+            avatar: xss(avatar)
         };
         // --- END FIX ---
 
@@ -2197,7 +2198,12 @@ router.put('/profile', async (req, res) => {
         );
         res.json(updatedUser);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        // Also add the username check we discussed
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ message: 'Username cannot be empty.' });
+        }
+        console.error("Error in PUT /profile:", err);
+        res.status(500).json({ message: 'Failed to update profile.' });
     }
 });
 

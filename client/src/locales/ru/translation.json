@@ -982,5 +982,6 @@
         "monthly": "Месячная",
         "quarterly": "Квартальная",
         "yearly": "Годовая"
-    }
+    },
+    "editprofile_username_empty": "Имя пользователя не может быть пустым."
 }

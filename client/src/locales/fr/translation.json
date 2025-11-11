@@ -982,5 +982,6 @@
         "monthly": "Mensuel",
         "quarterly": "Trimestriel",
         "yearly": "Annuel"
-    }
+    },
+    "editprofile_username_empty": "Le nom d'utilisateur ne peut pas être vide."
 }

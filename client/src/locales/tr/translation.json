@@ -983,5 +983,6 @@
     "monthly": "Aylık",
     "quarterly": "Çeyreklik",
     "yearly": "Yıllık"
-  }
+  },
+  "editprofile_username_empty": "Kullanıcı adı boş bırakılamaz."
 }

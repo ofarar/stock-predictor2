@@ -977,5 +977,6 @@
         "monthly": "Monatlich",
         "quarterly": "Vierteljährlich",
         "yearly": "Jährlich"
-    }
+    },
+    "editprofile_username_empty": "Benutzername darf nicht leer sein."
 }

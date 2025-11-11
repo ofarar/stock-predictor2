@@ -982,5 +982,6 @@
         "monthly": "每月",
         "quarterly": "每季度",
         "yearly": "每年"
-    }
+    },
+    "editprofile_username_empty": "用户名不能为空。"
 }

@@ -44,8 +44,17 @@ const EditProfilePage = ({ onProfileUpdate }) => {
         setFormData(prev => ({ ...prev, avatar: newAvatarUrl }));
     };
 
+// src/pages/EditProfilePage.js
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // --- START FIX: Add client-side validation ---
+        if (!formData.username || formData.username.trim() === '') {
+            toast.error(t('editprofile_username_empty', 'Username cannot be empty.'));
+            return; // Stop the submission
+        }
+        // --- END FIX ---
+
         setIsSaving(true);
         axios.put(`${process.env.REACT_APP_API_URL}/api/profile`, formData, { withCredentials: true })
             .then(() => {
@@ -53,10 +62,13 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                 onProfileUpdate();
                 navigate(`/profile/${user._id}`);
             })
-            .catch(() => toast.error(t('editprofile_error')))
+            // Also, let's improve the error logging to see the server message
+            .catch((err) => {
+                const message = err.response?.data?.message || t('editprofile_error');
+                toast.error(message);
+            })
             .finally(() => setIsSaving(false));
     };
-
     return (
         <>
             <AvatarSelectionModal
@@ -69,7 +81,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
             <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg">
                 <h1 className="text-3xl font-bold text-white mb-6">{t('editprofile_title')}</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    
+
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">{t('editprofile_avatar_label')}</label>
                         <div className="flex items-center gap-4">
@@ -78,7 +90,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                                 alt="Avatar Preview"
                                 className="w-16 h-16 rounded-full bg-white flex-shrink-0"
                             />
-                            <button 
+                            <button
                                 type="button"
                                 onClick={() => setIsAvatarModalOpen(true)}
                                 className="bg-gray-600 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-700"
