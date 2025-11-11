@@ -24,6 +24,7 @@ const XIcon = () => (
 const StatCard = ({ label, avgScore, rank, isStock, aggressivenessScore, isSelected, onClick }) => {
     const { t } = useTranslation();
     const circumference = 2 * Math.PI * 20;
+    const validAvgScore = avgScore || 0;
     const offset = circumference - (avgScore / 100) * circumference;
 
     const handleShare = (e) => {
@@ -61,7 +62,7 @@ const StatCard = ({ label, avgScore, rank, isStock, aggressivenessScore, isSelec
                         <circle className="text-green-400" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22" transform="rotate(-90 22 22)"/>
                     </svg>
                     <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">
-                        {avgScore.toFixed(1)}
+                        {validAvgScore.toFixed(1)}
                     </span>
                 </div>
 
@@ -117,7 +118,10 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
         } else {
             // Otherwise, set the new filter
             setSelectedFilter(filterKey);
-            onFilterChange({ aggressiveness: performanceData.aggressiveness }); // Pass filtered performance
+            onFilterChange({
+            ...performance,
+            aggressiveness: performanceData.aggressiveness
+        });
         }
     };
 
