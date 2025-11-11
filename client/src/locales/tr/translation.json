@@ -362,7 +362,7 @@
     "follow_button": "Takip Et"
   },
   "prediction_types": {
-    "All": "Tümü",
+    "Overall": "Tümü",
     "Hourly": "Saatlik",
     "Daily": "Günlük",
     "Weekly": "Haftalık",
@@ -969,5 +969,18 @@
     "redirecting": "Ödemeniz işleme alındı. Profilinize yönlendiriliyorsunuz...",
     "verifyingSession": "Oturum doğrulanıyor...",
     "goNow": "Şimdi git"
+  },
+  "sentiment": {
+    "title": "Topluluk Görüşü",
+    "subtitle": "Aktif topluluk tahminlerine dayalı ortalama fiyat hedefleri.",
+    "current_price": "Mevcut Fiyat",
+    "avg_target": "Ort. Hedef",
+    "based_on_count": "{{count}} tahmine göre",
+    "hourly": "Saatlik",
+    "daily": "Günlük",
+    "weekly": "Haftalık",
+    "monthly": "Aylık",
+    "quarterly": "Çeyreklik",
+    "yearly": "Yıllık"
   }
 }

@@ -362,7 +362,7 @@
         "follow_button": "Seguir"
     },
     "prediction_types": {
-        "All": "Todos",
+        "Overall": "Todos",
         "Hourly": "Por Hora",
         "Daily": "Diario",
         "Weekly": "Semanal",
@@ -968,5 +968,18 @@
         "redirecting": "Tu pago ha sido procesado. Redirigiendo a tu perfil...",
         "verifyingSession": "Verificando sesión...",
         "goNow": "Ir ahora"
+    },
+    "sentiment": {
+        "title": "Sentimiento de la Comunidad",
+        "subtitle": "Objetivos de precio promedio basados en predicciones activas de la comunidad.",
+        "current_price": "Precio Actual",
+        "avg_target": "Obj. Prom.",
+        "based_on_count": "Basado en {{count}} predicciones",
+        "hourly": "Por hora",
+        "daily": "Diario",
+        "weekly": "Semanal",
+        "monthly": "Mensual",
+        "quarterly": "Trimestral",
+        "yearly": "Anual"
     }
 }

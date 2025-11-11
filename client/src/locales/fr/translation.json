@@ -362,7 +362,7 @@
         "follow_button": "Suivre"
     },
     "prediction_types": {
-        "All": "Tous",
+        "Overall": "Tous",
         "Hourly": "Horaire",
         "Daily": "Quotidien",
         "Weekly": "Hebdomadaire",
@@ -968,5 +968,18 @@
         "redirecting": "Votre paiement a été traité. Redirection vers votre profil...",
         "verifyingSession": "Vérification de la session...",
         "goNow": "Aller maintenant"
+    },
+    "sentiment": {
+        "title": "Sentiment de la Communauté",
+        "subtitle": "Objectifs de prix moyens basés sur les prédictions actives de la communauté.",
+        "current_price": "Prix Actuel",
+        "avg_target": "Cible Moy.",
+        "based_on_count": "Basé sur {{count}} prédictions",
+        "hourly": "Horaire",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel",
+        "quarterly": "Trimestriel",
+        "yearly": "Annuel"
     }
 }

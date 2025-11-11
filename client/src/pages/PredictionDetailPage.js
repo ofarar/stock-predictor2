@@ -14,7 +14,7 @@ import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } f
 
 const ShareIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
     </svg>
 );
 
@@ -79,6 +79,36 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    // --- ADD THIS useEffect TO LOG THE VIEW ---
+    useEffect(() => {
+        const logView = () => {
+            try {
+                // Use localStorage to prevent counting a view multiple times in a short period.
+                const viewedPredictions = JSON.parse(localStorage.getItem('viewed_predictions') || '{}');
+                const now = Date.now();
+                const oneHour = 60 * 60 * 1000;
+
+                // If this prediction hasn't been viewed or was viewed over an hour ago
+                if (!viewedPredictions[predictionId] || (now - viewedPredictions[predictionId] > oneHour)) {
+                    // Make a fire-and-forget request to the backend
+                    axios.post(`${process.env.REACT_APP_API_URL}/api/prediction/${predictionId}/view`);
+
+                    // Update localStorage
+                    viewedPredictions[predictionId] = now;
+                    localStorage.setItem('viewed_predictions', JSON.stringify(viewedPredictions));
+                }
+            } catch (error) {
+                // Silently fail if localStorage or the request fails
+                console.error("Failed to log prediction view:", error);
+            }
+        };
+
+        if (predictionId) {
+            logView();
+        }
+    }, [predictionId]);
+    // --- END ADDITION ---
 
     useEffect(() => {
         if (prediction?.status === 'Active') {
@@ -276,7 +306,16 @@ const PredictionDetailPage = ({ requestLogin, settings }) => {
                     )}
 
                     <div className="mt-6 pt-6 border-t border-gray-700">
-                        <h3 className="text-center text-sm text-gray-400 font-bold mb-4">{t("DO YOU AGREE?")}</h3>
+                        <div className="relative mb-4">
+                            <h3 className="text-center text-sm text-gray-400 font-bold">{t("DO YOU AGREE?")}</h3>
+                            <div className="absolute right-0 top-0 text-sm text-gray-400 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                </svg>
+                                <span>{prediction.views.toLocaleString(i18n.language)}</span>
+                            </div>
+                        </div>
                         <div className="flex justify-center items-center gap-6 text-gray-400">
                             <button onClick={() => handleVote('like')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userLike ? 'text-green-500' : 'hover:text-white'}`} disabled={isAssessed} title={t("Agree")}>
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>

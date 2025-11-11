@@ -362,7 +362,7 @@
     "follow_button": "Follow"
   },
   "prediction_types": {
-    "All": "All",
+    "Overall": "All",
     "Hourly": "Hourly",
     "Daily": "Daily",
     "Weekly": "Weekly",
@@ -969,5 +969,18 @@
     "redirecting": "Your payment was processed. Redirecting you to your profile...",
     "verifyingSession": "Verifying session...",
     "goNow": "Go now"
+  },
+  "sentiment": {
+    "title": "Community Sentiment",
+    "subtitle": "Average price targets based on active community predictions.",
+    "current_price": "Current Price",
+    "avg_target": "Avg. Target",
+    "based_on_count": "{{count}} predictions",
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "yearly": "Yearly"
   }
 }

@@ -39,6 +39,12 @@ const actionLimiter = rateLimit({
     max: 200, // Max 200 "actions" (like/follow) per 15 min per IP
     message: 'Too many actions, please try again later.',
 });
+
+const viewLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 100, // Limit each IP to 100 view requests per hour
+    message: 'Too many requests.',
+});
 // --- END ADDITION ---
 
 // NEW: Paginated endpoint for Top Predictors on a Stock Page
@@ -1313,6 +1319,67 @@ router.put('/settings/admin', async (req, res) => {
     }
 });
 
+// --- NEW ENDPOINT: GET COMMUNITY SENTIMENT FOR A STOCK ---
+router.get('/stock/:ticker/community-sentiment', async (req, res) => {
+    try {
+        const { ticker } = req.params;
+        const upperTicker = ticker.toUpperCase();
+
+        // 1. Get the current price using the financeAPI adapter
+        let currentPrice = 0; // Default to 0
+        try {
+            const quote = await financeAPI.getQuote(upperTicker);
+            if (quote) {
+                currentPrice = quote.price;
+            }
+        } catch (quoteError) {
+            console.warn(`(Sentiment) Non-critical: Failed to get quote for ${upperTicker}: ${quoteError.message}`);
+        }
+
+        // 2. Use MongoDB Aggregation to get average prices
+        const sentiments = await Prediction.aggregate([
+            {
+                $match: {
+                    stockTicker: upperTicker,
+                    status: 'Active',
+                    deadline: { $gt: new Date() } // Only future predictions
+                }
+            },
+            {
+                $group: {
+                    _id: "$predictionType", // Group by type (Hourly, Daily, etc.)
+                    avgTargetPrice: { $avg: "$targetPrice" },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    type: "$_id",
+                    avgTargetPrice: "$avgTargetPrice",
+                    count: 1
+                }
+            },
+            { $sort: { count: -1 } } // Sort by most popular
+        ]);
+
+        const processedSentiments = sentiments.map(s => ({
+            ...s,
+            avgTargetPrice: s.avgTargetPrice ? parseFloat(s.avgTargetPrice.toFixed(2)) : 0
+        }));
+
+        res.json({
+            ticker: upperTicker,
+            currentPrice: currentPrice,
+            sentiments: processedSentiments // <-- Use the processed results
+        });
+
+    } catch (err) {
+        console.error(`Error fetching community sentiment for ${req.params.ticker}:`, err);
+        res.status(500).json({ message: "Failed to fetch community sentiment." });
+    }
+});
+
 // ===================================
 // Original Prediction & User Routes
 // ===================================
@@ -2234,45 +2301,105 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
     } catch (err) { res.status(500).json({ message: 'Error fetching long-term leaders' }); }
 });
 
-// GET Famous (Trending) Stocks
-router.get('/widgets/famous-stocks', async (req, res) => {
+// Helper function for the widget
+const getSentimentForTicker = async (ticker) => {
     try {
-        const startOfDay = new Date();
-        startOfDay.setUTCHours(0, 0, 0, 0); // Use UTC for consistency
-
-        let stocks = await Prediction.aggregate([
-            { $match: { createdAt: { $gte: startOfDay } } }, // Find predictions made today
-            { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
-            { $sort: { predictions: -1 } },
-            { $limit: 4 },
-            { $project: { ticker: '$_id', predictions: 1, _id: 0 } }
-        ]);
-
-        let isHistorical = false;
-
-        // If no stocks were predicted today, try the last 7 days
-        if (stocks.length === 0) {
-            isHistorical = true;
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7); // Use UTC
-            sevenDaysAgo.setUTCHours(0, 0, 0, 0);
-
-            stocks = await Prediction.aggregate([
-                { $match: { createdAt: { $gte: sevenDaysAgo } } }, // Find predictions in the last 7 days
-                { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
-                { $sort: { predictions: -1 } },
-                { $limit: 4 },
-                { $project: { ticker: '$_id', predictions: 1, _id: 0 } }
-            ]);
+        let currentPrice = 0; // Default to 0
+        try {
+            const quote = await financeAPI.getQuote(ticker);
+            if (quote) {
+                currentPrice = quote.price;
+            }
+        } catch (quoteError) {
+            console.warn(`(FamousStocks) Non-critical: Failed to get quote for ${ticker}: ${quoteError.message}`);
         }
 
-        // Send the stocks and a flag indicating if it's historical data
-        res.json({ stocks, isHistorical });
+        const sentiments = await Prediction.aggregate([
+            { $match: { stockTicker: ticker, status: 'Active', deadline: { $gt: new Date() } } },
+            {
+                $group: {
+                    _id: "$predictionType",
+                    avgTargetPrice: { $avg: "$targetPrice" },
+                    count: { $sum: 1 }
+                }
+            },
+            { $project: { _id: 0, type: "$_id", avgTargetPrice: "$avgTargetPrice", count: 1 } },
+            { $sort: { count: -1 } }
+        ]);
+
+        // Find the most relevant sentiment (Daily or Weekly)
+        const daily = sentiments.find(s => s.type === 'Daily');
+        const weekly = sentiments.find(s => s.type === 'Weekly');
+
+        let relevantSentiment = [];
+        if (daily) {
+            relevantSentiment.push(daily);
+        } else if (weekly) {
+            relevantSentiment.push(weekly);
+        }
+
+        // Round the numbers in JavaScript before returning
+        const processedSentiments = relevantSentiment.map(s => ({
+            ...s,
+            avgTargetPrice: s.avgTargetPrice ? parseFloat(s.avgTargetPrice.toFixed(2)) : 0
+        }));
+
+        return {
+            currentPrice: currentPrice,
+            sentiments: processedSentiments // <-- Use processed results
+        };
+    } catch (err) {
+        console.error(`Error in getSentimentForTicker for ${ticker}:`, err);
+        return { currentPrice: 0, sentiments: [] };
+    }
+};
+
+router.post('/prediction/:id/view', viewLimiter, async (req, res) => {
+    try {
+        // Use findByIdAndUpdate with $inc to atomically increment the views field.
+        // We don't need to wait for the result or send anything back.
+        Prediction.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } }).exec();
+        // Respond immediately with 202 Accepted.
+        res.status(202).send();
+    } catch (err) {
+        // This will only catch critical errors if the DB is down, etc.
+        // We still send a success-like status to not block the client.
+        res.status(202).send();
+    }
+});
+
+router.get('/widgets/famous-stocks', async (req, res) => {
+    try {
+        // 1. Get the top 4 tickers (same as before)
+        const topStocks = await Prediction.aggregate([
+            { $match: { status: 'Active' } },
+            { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
+            { $sort: { predictions: -1 } },
+            { $limit: 4 }
+        ]);
+        const tickers = topStocks.map(s => s._id);
+
+        // 2. Fetch sentiment data for these tickers in parallel
+        const sentimentPromises = tickers.map(async (ticker) => {
+            const sentimentData = await getSentimentForTicker(ticker);
+            const stock = topStocks.find(s => s._id === ticker);
+            return {
+                ticker: ticker,
+                predictions: stock.predictions,
+                ...sentimentData
+            };
+        });
+
+        const stocksWithSentiment = await Promise.all(sentimentPromises);
+
+        res.json({
+            stocks: stocksWithSentiment,
+            isHistorical: false // This flag is from your old code
+        });
 
     } catch (err) {
-        console.error("Error fetching famous stocks:", err);
-        // Send empty on error to prevent frontend crash
-        res.json({ stocks: [], isHistorical: false });
+        console.error("Error fetching famous stocks widget:", err);
+        res.status(500).json({ message: "Error loading widget data" });
     }
 });
 

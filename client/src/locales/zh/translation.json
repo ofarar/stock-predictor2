@@ -362,7 +362,7 @@
         "follow_button": "关注"
     },
     "prediction_types": {
-        "All": "全部",
+        "Overall": "全部",
         "Hourly": "每小时",
         "Daily": "每日",
         "Weekly": "每周",
@@ -968,5 +968,18 @@
         "redirecting": "您的付款已处理。正在重定向到您的个人资料...",
         "verifyingSession": "正在验证会话...",
         "goNow": "立即前往"
+    },
+    "sentiment": {
+        "title": "社区情绪",
+        "subtitle": "基于活跃社区预测的平均目标价格。",
+        "current_price": "当前价格",
+        "avg_target": "平均目标",
+        "based_on_count": "基于 {{count}} 条预测",
+        "hourly": "每小时",
+        "daily": "每日",
+        "weekly": "每周",
+        "monthly": "每月",
+        "quarterly": "每季度",
+        "yearly": "每年"
     }
 }

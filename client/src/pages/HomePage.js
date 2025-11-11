@@ -1,7 +1,9 @@
+// src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast'; // Make sure toast is imported
 
 // Import all necessary components
 import DailyLeaderboard from '../components/DailyLeaderboard';
@@ -9,7 +11,7 @@ import LongTermLeaders from '../components/LongTermLeaders';
 import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
 import MarketWatch from '../components/MarketWatch';
-import FamousStocks from '../components/FamousStocks'; // <-- Import FamousStocks
+import FamousStocks from '../components/FamousStocks';
 import PredictionModal from '../components/PredictionModal';
 
 const HomePage = ({ user, settings }) => {
@@ -18,8 +20,8 @@ const HomePage = ({ user, settings }) => {
         dailyLeaders: [],
         longTermLeaders: [],
         hourlyWinners: [],
-        famousStocks: [], // <-- Add state for famous stocks
-        isFamousHistorical: false, // <-- Add state for historical flag
+        famousStocks: [],
+        isFamousHistorical: false,
     });
     const [loading, setLoading] = useState(true);
     const [isPredictionModalOpen, setPredictionModalOpen] = useState(false);
@@ -35,32 +37,50 @@ const HomePage = ({ user, settings }) => {
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-                // Add the new API call to the Promise.all array
-                const [hourlyRes, dailyRes, longTermRes, famousRes] = await Promise.all([
+                // Fetch all widget data in parallel
+                const [
+                    hourlyWinnersPromise,
+                    dailyLeadersPromise,
+                    longTermLeadersPromise,
+                    famousStocksPromise
+                ] = [
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`), // <-- New API call
+                    // --- THIS IS THE REAL API CALL ---
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`)
+                ];
+
+                const [
+                    hourlyWinnersRes,
+                    dailyLeadersRes,
+                    longTermLeadersRes,
+                    famousStocksRes
+                ] = await Promise.all([
+                    hourlyWinnersPromise,
+                    dailyLeadersPromise,
+                    longTermLeadersPromise,
+                    famousStocksPromise
                 ]);
 
-                // Update the state with all the fetched data
                 setWidgetData({
-                    hourlyWinners: hourlyRes.data,
-                    dailyLeaders: dailyRes.data,
-                    longTermLeaders: longTermRes.data,
-                    famousStocks: famousRes.data.stocks, // <-- Store stocks
-                    isFamousHistorical: famousRes.data.isHistorical, // <-- Store flag
+                    hourlyWinners: hourlyWinnersRes.data,
+                    dailyLeaders: dailyLeadersRes.data,
+                    longTermLeaders: longTermLeadersRes.data,
+                    famousStocks: famousStocksRes.data.stocks,
+                    isFamousHistorical: famousStocksRes.data.isHistorical,
                 });
-            } catch (error) {
-                console.error("Failed to load dashboard data", error);
-                // On failure, set sensible defaults to prevent crashes
-                setWidgetData({ dailyLeaders: [], longTermLeaders: [], hourlyWinners: [], famousStocks: [] });
+
+            } catch (err) {
+                console.error("Failed to load homepage widgets:", err);
+                toast.error(t('homepage.toast.errorLoad'));
             } finally {
                 setLoading(false);
             }
         };
+
         fetchAllData();
-    }, []);
+    }, [t]);
 
     if (loading) {
         return <div className="text-center text-gray-400 py-10">{t('loading_dashboard')}</div>;
@@ -80,7 +100,7 @@ const HomePage = ({ user, settings }) => {
                 {/* Sidebar Column */}
                 <div className="md:col-span-1 flex flex-col gap-8">
                     <MarketWatch />
-                    {/* Render FamousStocks with the fetched data */}
+                    {/* Render FamousStocks with the new data */}
                     <FamousStocks 
                         stocks={widgetData.famousStocks} 
                         isHistorical={widgetData.isFamousHistorical} 

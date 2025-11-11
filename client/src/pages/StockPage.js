@@ -1,3 +1,4 @@
+// src/pages/StockPage.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -5,19 +6,23 @@ import { useTranslation } from 'react-i18next';
 import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
-import { formatCurrency } from '../utils/formatters';
-import LoadMoreButton from '../components/LoadMoreButton'; // Import the button
+import { formatCurrency, formatPercentage } from '../utils/formatters';
+import LoadMoreButton from '../components/LoadMoreButton';
+import CommunitySentiment from '../components/CommunitySentiment'; // 1. Import the new component
 
 const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
     const { ticker } = useParams();
 
-    // State for main page data (quote and user)
+    // State for main page data
     const [quote, setQuote] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const [showChart, setShowChart] = useState(false);
+
+    // 2. Add state for the new component
+    const [sentiment, setSentiment] = useState(null);
 
     // Paginated state for Top Predictors
     const [topPredictors, setTopPredictors] = useState({ items: [], page: 1, totalPages: 0 });
@@ -30,14 +35,12 @@ const StockPage = ({ onPredictClick, settings }) => {
 
     const predictionTypes = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    // --- DATA FETCHING LOGIC ---
-
     const fetchPageData = useCallback(async () => {
         setLoading(true);
         try {
             const [quoteRes, userRes] = await Promise.all([
                 axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}`),
-                axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
+                axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true }).catch(() => ({ data: null })) // Prevent user fetch from breaking page
             ]);
             setQuote(quoteRes.data.quote);
             setCurrentUser(userRes.data);
@@ -47,6 +50,17 @@ const StockPage = ({ onPredictClick, settings }) => {
             setLoading(false);
         }
     }, [ticker, t]);
+
+    // 3. Add independent data fetching for sentiment
+    const fetchCommunitySentiment = useCallback(async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/stock/${ticker}/community-sentiment`);
+            setSentiment(res.data);
+        } catch (err) {
+            console.error("Community sentiment failed to load:", err);
+            // Fails silently, doesn't block the page
+        }
+    }, [ticker]);
 
     const fetchTopPredictors = useCallback(async (pageNum = 1) => {
         setLoadingPredictors(true);
@@ -78,18 +92,15 @@ const StockPage = ({ onPredictClick, settings }) => {
         finally { setLoadingActive(false); }
     }, [ticker]);
 
-    // --- EFFECT HOOKS TO TRIGGER FETCHING ---
-
     useEffect(() => {
         fetchPageData();
         fetchActivePredictions(1);
-    }, [fetchPageData, fetchActivePredictions]);
+        fetchCommunitySentiment(); // 4. Call the new fetch function
+    }, [fetchPageData, fetchActivePredictions, fetchCommunitySentiment]);
 
     useEffect(() => {
         fetchTopPredictors(1);
     }, [fetchTopPredictors]);
-
-    // --- HANDLERS FOR USER ACTIONS ---
 
     const handleLoadMorePredictors = () => {
         if (!loadingPredictors && topPredictors.page < topPredictors.totalPages) {
@@ -111,9 +122,9 @@ const StockPage = ({ onPredictClick, settings }) => {
                 setCurrentUser(prev => ({ ...prev, watchlist: res.data.watchlist }));
             });
         toast.promise(promise, {
-            loading: isWatching ? 'Removing...' : 'Adding...',
-            success: isWatching ? `Removed ${ticker}` : `Added ${ticker}`,
-            error: 'Failed to update watchlist.',
+            loading: isWatching ? t('watchlistPage.toast.loadingRemove', { ticker }) : t('watchlistPage.toast.loadingAdd', { ticker }),
+            success: t('watchlistPage.toast.successUpdate'),
+            error: t('watchlistPage.toast.errorUpdate'),
         });
     };
 
@@ -127,6 +138,7 @@ const StockPage = ({ onPredictClick, settings }) => {
 
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
+            {/* This is your original, working header section */}
             <div className="grid grid-cols-[1fr,auto] gap-x-6 gap-y-2 items-end">
                 <div className="text-left min-w-0">
                     <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight truncate">
@@ -139,7 +151,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                         {formatCurrency(quote?.regularMarketPrice, i18n.language, quote?.currency)}
                     </p>
                     <p className={`font-semibold text-base ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {priceChange >= 0 ? '+' : ''}{priceChange?.toFixed(2) ?? '...'} ({percentChange?.toFixed(2) ?? '...'}%)
+                        {priceChange >= 0 ? '+' : ''}{formatCurrency(priceChange, i18n.language, quote?.currency)} ({formatPercentage(percentChange, i18n.language)})
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -152,36 +164,33 @@ const StockPage = ({ onPredictClick, settings }) => {
                         <svg className="w-5 h-5" fill={isWatching ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </button>
                     <button
-                        onClick={() => {
-                            // Always pass an object with the ticker
-                            // If quote exists, pass the whole quote object
-                            // Otherwise, pass a minimal object with just the symbol
-                            const stockInfoToSend = quote ? quote : { symbol: ticker };
-                            onPredictClick(stockInfoToSend);
-                        }}
-                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg" // Removed disabled styles
+                        onClick={() => onPredictClick(quote ? quote : { symbol: ticker })}
+                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
                         title={t('make_prediction')}
-                    // disabled prop removed
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
                     </button>
                 </div>
             </div>
 
+            {/* 5. Add the CommunitySentiment component if data exists */}
+            {sentiment && <CommunitySentiment sentiment={sentiment} currentPrice={currentPrice} />}
+
             <div className="space-y-8">
+                {/* All other sections remain unchanged */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 bg-gray-800 p-4 sm:p-6 rounded-lg">
                         <h3 className="text-xl font-bold text-white mb-4">{t('top_predictors_for', { ticker })}</h3>
                         <div className="flex flex-wrap border-b border-gray-700 mb-4">
                             {predictionTypes.map(type => (
                                 <button key={type} onClick={() => setFilter(type)} className={`px-4 py-2 font-bold text-sm transition-colors ${filter === type ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
-                                    {t(`predictionTypes.${type.toLowerCase()}`)}
+                                    {t(`prediction_types.${type}`)}
                                 </button>
                             ))}
                         </div>
                         <div className="space-y-3">
                             {loadingPredictors && topPredictors.page === 1 ? (
-                                <p className="text-gray-500 text-center py-8">Loading...</p>
+                                <p className="text-gray-500 text-center py-8">{t('explore_loading')}</p>
                             ) : topPredictors.items.length > 0 ? topPredictors.items.map((user, index) => (
                                 <div key={user._id} className="bg-gray-700 rounded-lg p-3 flex items-center justify-between">
                                     <div className="flex items-center">
@@ -213,13 +222,10 @@ const StockPage = ({ onPredictClick, settings }) => {
                             hasMore={topPredictors.page < topPredictors.totalPages}
                         />
                     </div>
-                    {/* --- START: MODIFY THIS BLOCK --- */}
                     <div className="lg:col-span-1">
                         {showChart ? (
-                            // 2. Conditionally render the chart
                             <StockChart ticker={ticker} />
                         ) : (
-                            // 3. Show a placeholder/button instead
                             <div className="bg-gray-800 p-4 sm:p-6 rounded-lg h-96 flex flex-col items-center justify-center text-center">
                                 <svg className="w-12 h-12 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
                                 <p className="text-gray-400 mb-4">{t('stockPage.chart.lazyTitle')}</p>
@@ -232,14 +238,13 @@ const StockPage = ({ onPredictClick, settings }) => {
                             </div>
                         )}
                     </div>
-                    {/* --- END: MODIFY THIS BLOCK --- */}
                 </div>
 
                 <div className="bg-gray-800 p-6 rounded-lg">
                     <h3 className="text-xl font-bold text-white mb-4">{t('active_predictions_on', { ticker })}</h3>
                     <div className="space-y-3">
                         {loadingActive && activePredictions.page === 1 ? (
-                            <p className="text-gray-500 text-center py-8">Loading...</p>
+                            <p className="text-gray-500 text-center py-8">{t('explore_loading')}</p>
                         ) : activePredictions.items.length > 0 ? activePredictions.items.map(p => {
                             const percentageChange =
                                 (currentPrice > 0 && p.targetPrice)
@@ -255,7 +260,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                                             {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
                                         </div>
                                         <p className="text-xs text-gray-400">
-                                            {t('prediction_type', { type: t(`predictionTypes.${p.predictionType.toLowerCase()}`) })}
+                                            {t('prediction_type', { type: t(`prediction_types.${p.predictionType}`) })}
                                         </p>
                                     </div>
                                     <div className="text-right">

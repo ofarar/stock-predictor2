@@ -23,7 +23,8 @@ const PredictionSchema = new Schema({
         newTargetPrice: { type: Number, required: true },
         reason: { type: String, maxLength: 500 },
         priceAtTimeOfUpdate: { type: Number } // The "blue dot" value
-    }]
+    }],
+    views: { type: Number, default: 0, index: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Prediction', PredictionSchema);

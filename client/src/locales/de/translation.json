@@ -362,7 +362,7 @@
         "follow_button": "Folgen"
     },
     "prediction_types": {
-        "All": "Alle",
+        "Overall": "Alle",
         "Hourly": "Stündlich",
         "Daily": "Täglich",
         "Weekly": "Wöchentlich",
@@ -963,5 +963,18 @@
         "redirecting": "Ihre Zahlung wurde verarbeitet. Sie werden zu Ihrem Profil weitergeleitet...",
         "verifyingSession": "Sitzung wird überprüft...",
         "goNow": "Jetzt gehen"
+    },
+    "sentiment": {
+        "title": "Community-Stimmung",
+        "subtitle": "Durchschnittliche Kursziele basierend auf aktiven Community-Prognosen.",
+        "current_price": "Aktueller Preis",
+        "avg_target": "Ø-Ziel",
+        "based_on_count": "Basiert auf {{count}} Prognosen",
+        "hourly": "Stündlich",
+        "daily": "Täglich",
+        "weekly": "Wöchentlich",
+        "monthly": "Monatlich",
+        "quarterly": "Vierteljährlich",
+        "yearly": "Jährlich"
     }
 }
