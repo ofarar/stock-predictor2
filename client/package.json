@@ -21,6 +21,7 @@
     "react-router-dom": "^7.9.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.10.2",
+    "socket.io-client": "^4.8.1",
     "tailwind-scrollbar": "^3.0.5"
   },
   "scripts": {

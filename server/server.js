@@ -10,8 +10,11 @@ const helmet = require('helmet');
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
+const http = require('http');
+const { Server } = require("socket.io");
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5001;
 
 // Use Helmet to set various security headers
@@ -37,6 +40,13 @@ const corsOptions = {
     },
     credentials: true // Allow cookies to be sent
 };
+
+const io = new Server(server, {
+    cors: corsOptions
+});
+
+// Make io accessible to our router
+app.set('io', io);
 
 app.use(cors(corsOptions));
 /// 2. Body Parsers
@@ -102,4 +112,18 @@ cron.schedule('*/5 * * * *', () => {
     runAssessmentJob();
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// WebSocket Connection Handler
+io.on('connection', (socket) => {
+    console.log('a user connected:', socket.id);
+  
+    socket.on('joinRoom', (ticker) => {
+      socket.join(ticker);
+      console.log(`Socket ${socket.id} joined room for ${ticker}`);
+    });
+  
+    socket.on('disconnect', () => {
+      console.log('user disconnected:', socket.id);
+    });
+});
+
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

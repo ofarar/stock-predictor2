@@ -18,6 +18,43 @@ const JobLog = require('../models/JobLog');
 const { createOrUpdateStripePriceForUser } = require('./stripe');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// NEW: Reusable function to calculate community sentiment
+const getCommunitySentiment = async (ticker) => {
+    try {
+        const sentiment = await Prediction.aggregate([
+            {
+                $match: {
+                    stockTicker: ticker.toUpperCase(),
+                    status: 'Active'
+                }
+            },
+            {
+                $group: {
+                    _id: '$predictionType', // Group by prediction type
+                    averageTarget: { $avg: '$targetPrice' },
+                    predictionCount: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude the default _id field
+                    predictionType: '$_id',
+                    averageTarget: { $round: ['$averageTarget', 2] }, // Round to 2 decimal places
+                    predictionCount: 1
+                }
+            },
+            {
+                $sort: { predictionCount: -1 } // Sort by most popular type
+            }
+        ]);
+        return sentiment;
+    } catch (err) {
+        console.error(`Error calculating community sentiment for ${ticker}:`, err.message);
+        // In case of an error, return an empty array to prevent crashes downstream
+        return [];
+    }
+};
+
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
@@ -52,38 +89,14 @@ router.get('/community-sentiment/:ticker', async (req, res) => {
     const { ticker } = req.params;
 
     try {
-        const sentiment = await Prediction.aggregate([
-            {
-                $match: {
-                    stockTicker: ticker.toUpperCase(),
-                    status: 'Active'
-                }
-            },
-            {
-                $group: {
-                    _id: '$predictionType', // Group by prediction type
-                    averageTarget: { $avg: '$targetPrice' },
-                    predictionCount: { $sum: 1 }
-                }
-            },
-            {
-                $project: {
-                    _id: 0, // Exclude the default _id field
-                    predictionType: '$_id',
-                    averageTarget: { $round: ['$averageTarget', 2] }, // Round to 2 decimal places
-                    predictionCount: 1
-                }
-            },
-            {
-                $sort: { predictionCount: -1 } // Sort by most popular type
-            }
-        ]);
-
+        // Use the reusable function
+        const sentiment = await getCommunitySentiment(ticker);
         // It's better to return an empty array than a 404
         // The frontend can then display a "no data" message.
         res.json(sentiment);
 
     } catch (err) {
+        // This outer catch is for network/request-level errors
         console.error(`Community sentiment fetch error for ${ticker}:`, err.message);
         res.status(500).json({ message: "Failed to fetch community sentiment" });
     }
@@ -622,6 +635,15 @@ router.put('/predictions/:id/edit', async (req, res) => {
         if (reason) prediction.description = reason; // Update main description too
 
         await prediction.save();
+
+        // --- START: REAL-TIME UPDATE ---
+        const io = req.app.get('io');
+        if (io) {
+            const updatedSentiment = await getCommunitySentiment(prediction.stockTicker);
+            io.to(prediction.stockTicker.toUpperCase()).emit('sentiment-update', updatedSentiment);
+        }
+        // --- END: REAL-TIME UPDATE ---
+
         res.json(prediction);
 
     } catch (err) {
@@ -1389,7 +1411,7 @@ router.get('/stock/:ticker/community-sentiment', async (req, res) => {
             },
             {
                 $group: {
-                    _id: "$predictionType", // Group by type (Hourly, Daily, etc.)
+                    _id: "$predictionType",
                     avgTargetPrice: { $avg: "$targetPrice" },
                     count: { $sum: 1 }
                 }
@@ -1536,11 +1558,12 @@ router.post('/predict', predictLimiter, async (req, res) => {
         } else {
             dailyCountUpdate = { $set: { dailyPredictionCount: 1, lastPredictionDate: new Date() } };
         }
-        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate(/*...*/);
+        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true });
         // --- End Daily Limit Check ---
 
         const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
-        const sanitizedDescription = purify.sanitize(description);
+        const sanitizedDescription = xss(description);
+
 
         // --- Resilient Price Fetch ---
         let currentPrice = null;
@@ -1574,6 +1597,15 @@ router.post('/predict', predictLimiter, async (req, res) => {
             status: 'Active'
         });
         await prediction.save();
+
+        // --- START: REAL-TIME UPDATE ---
+        const io = req.app.get('io');
+        if (io) {
+            const updatedSentiment = await getCommunitySentiment(stockTicker);
+            io.to(stockTicker.toUpperCase()).emit('sentiment-update', updatedSentiment);
+        }
+        // --- END: REAL-TIME UPDATE ---
+
 
         // --- Notification Logic (conditionally use percentageChange) ---
         const absPercentageChange = percentageChange !== null ? Math.abs(percentageChange) : 0;

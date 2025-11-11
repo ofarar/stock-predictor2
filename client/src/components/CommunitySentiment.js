@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 
-const SentimentCard = ({ type, avgTargetPrice, count, currentPrice, ticker }) => {
+const SentimentCard = ({ type, avgTargetPrice, count, currentPrice, ticker, isUpdating }) => {
     const { t, i18n } = useTranslation();
     
     if (!avgTargetPrice) return null;
@@ -11,8 +12,10 @@ const SentimentCard = ({ type, avgTargetPrice, count, currentPrice, ticker }) =>
     const percentageChange = currentPrice > 0 ? ((avgTargetPrice - currentPrice) / currentPrice) * 100 : 0;
     const isBullish = percentageChange >= 0;
 
+    const animationClass = isUpdating ? 'animate-flash' : '';
+
     return (
-        <div className="bg-gray-700 p-4 rounded-lg flex-1 min-w-[260px] flex flex-col justify-between">
+        <div className={`bg-gray-700 p-4 rounded-lg flex-1 min-w-[260px] flex flex-col justify-between transition-all duration-300 ${animationClass}`}>
             <h4 className="text-md font-semibold text-gray-300">
                 {t('sentiment.question', { type: t(`sentiment.${type.toLowerCase()}`), ticker: ticker.toUpperCase() })}
             </h4>
@@ -42,6 +45,7 @@ const CommunitySentiment = ({ ticker, currentPrice }) => {
     const { t } = useTranslation();
     const [sentiments, setSentiments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [updating, setUpdating] = useState(''); // State to track which card is updating
 
     useEffect(() => {
         const fetchCommunitySentiment = async () => {
@@ -59,6 +63,44 @@ const CommunitySentiment = ({ ticker, currentPrice }) => {
         };
 
         fetchCommunitySentiment();
+
+        // --- WebSocket Logic ---
+        const socket = io(process.env.REACT_APP_API_URL);
+
+        socket.on('connect', () => {
+            console.log('Socket connected');
+            if (ticker) {
+                socket.emit('joinRoom', ticker.toUpperCase());
+            }
+        });
+
+        socket.on('sentiment-update', (updatedSentiment) => {
+            console.log('Sentiment update received:', updatedSentiment);
+            setSentiments(currentSentiments => {
+                // Find the type that has changed to trigger animation
+                const changedType = updatedSentiment.find(newS => {
+                    const oldS = currentSentiments.find(old => old.predictionType === newS.predictionType);
+                    return !oldS || oldS.averageTarget !== newS.averageTarget || oldS.predictionCount !== newS.predictionCount;
+                })?.predictionType;
+
+                if (changedType) {
+                    setUpdating(changedType);
+                    setTimeout(() => setUpdating(''), 1000); // Reset animation state after 1s
+                }
+                return updatedSentiment;
+            });
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Socket disconnected');
+        });
+
+        // Cleanup on component unmount
+        return () => {
+            socket.disconnect();
+        };
+        // --- End WebSocket Logic ---
+
     }, [ticker]);
 
     if (loading) {
@@ -113,7 +155,8 @@ const CommunitySentiment = ({ ticker, currentPrice }) => {
                             type={type} 
                             avgTargetPrice={sentiment.averageTarget} 
                             count={sentiment.predictionCount} 
-                            currentPrice={currentPrice} 
+                            currentPrice={currentPrice}
+                            isUpdating={updating === type}
                         />
                     );
                 })}
