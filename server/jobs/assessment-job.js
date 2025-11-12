@@ -216,7 +216,40 @@ const runAssessmentJob = async () => {
                 }
             }
 
-        } catch (outerError) {
+            // --- FIX: This block was removed in a previous step by mistake ---
+            // This block should be *outside* the inner loop, but *inside* the outer loop
+            for (const [userId, updates] of userScoreUpdates.entries()) {
+                try {
+                    // --- FIX: Use Read-Modify-Save & Data Migration ---
+                    const user = await User.findById(userId);
+                    if (!user) continue; // Skip if user was deleted
+
+                    let currentRating = user.analystRating;
+                    if (typeof currentRating !== 'object' || currentRating === null) {
+                        const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
+                        user.analystRating = {
+                            total: oldPoints, fromPredictions: oldPoints, fromBadges: 0,
+                            fromShares: 0, fromReferrals: 0, fromRanks: 0
+                        };
+                    }
+
+                    user.score = (user.score || 0) + updates.score;
+                    user.analystRating.total = (user.analystRating.total || 0) + updates.rating;
+                    user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.rating;
+
+                    await user.save();
+                    // --- END FIX ---
+
+                    // We already have the user object, so we can pass it directly
+                    await awardBadges(user); // <-- This is correct
+
+                } catch (userUpdateError) {
+                    console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
+                }
+            }
+            // --- END FIX ---
+
+        } catch (outerError) { // This catch is for the getActualStockPrice call
             console.error(`Failed to process group ${key}:`, outerError);
             // Don't stop, continue to the next group
         }

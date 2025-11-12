@@ -10,6 +10,7 @@ const helmet = require('helmet');
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
+const { runWeeklyRankJob, runMonthlyRankJob, runRealtimeRankJob } = require('./jobs/long-term-rank-job'); // Import the new rank jobs
 const http = require('http');
 const { Server } = require("socket.io");
 
@@ -106,6 +107,26 @@ mongoose.connect(process.env.MONGO_URI)
 cron.schedule('*/5 * * * *', () => {
     console.log('Running the scheduled assessment job...');
     runAssessmentJob();
+});
+
+// --- NEW RANKING JOBS ---
+
+// Run the "real-time" rank checks every 15 minutes
+cron.schedule('*/15 * * * *', () => {
+    console.log('Running the scheduled Realtime Rank Job...');
+    runRealtimeRankJob();
+});
+
+// Run the "weekly" rank check at 1 AM on Sunday
+cron.schedule('0 1 * * 0', () => {
+    console.log('Running the scheduled Weekly Rank Job...');
+    runWeeklyRankJob();
+});
+
+// Run the "long-term" rank checks at 2 AM on the 1st of every month
+cron.schedule('0 2 1 * *', () => {
+    console.log('Running the scheduled Monthly Rank Job...');
+    runMonthlyRankJob();
 });
 
 // WebSocket Connection Handler

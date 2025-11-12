@@ -1010,6 +1010,7 @@
     "analystRatingInfo.section3.title": "3. Inhalte Teilen (+5 Rating)",
     "analystRatingInfo.section3.text": "Sie erhalten einen kleinen Rating-Bonus, wenn Sie Ihre Ränge oder Abzeichen teilen. Dies ist ratenbegrenzt, um Spam zu verhindern.",
     "analystRatingInfo.section4.title": "4. Bestenlisten-Ränge (Bald Verfügbar)",
+    "analystRatingInfo.section4.text": "Sie erhalten große, periodische Boni für eine Platzierung in den Top 100 einer beliebigen Bestenliste. Die Punkte werden nach Wettbewerb gewichtet: Ein Top-10-Rang bei einer beliebten Aktie (wie $AAPL) ist mehr wert als ein Top-10-Rang bei einer ruhigen. Stündliche/tägliche Ränge werden alle 15 Minuten überprüft; längerfristige Ränge (wöchentlich, monatlich) werden nach ihrem jeweiligen Zeitplan überprüft.",
     "analystRatingInfo.section5.title": "5. Empfehlungen (Bald Verfügbar)",
     "analystRatingInfo.section5.text": "Sie werden einen erheblichen Rating-Bonus für das Einladen neuer, aktiver Benutzer auf die Plattform erhalten.",
     "analystRating.pie.predictions": "Aus Prognosen",
