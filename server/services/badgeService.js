@@ -77,14 +77,21 @@ const awardBadges = async (user) => {
                     user.badges = user.badges.filter(b => b.badgeId !== badgeId);
                     user.badges.push({ badgeId, tier: earnedTier });
                     earnedBadges.push({ badgeId, tier: earnedTier });
-                    console.log(`   ==> AWARDING new/upgraded badge: ${definition.name} (${earnedTier})`);
+                    // --- NEW RATING LOGIC ---
+                    let ratingToAward = 0;
+                    if (earnedTier === 'Bronze') ratingToAward = 100;
+                    if (earnedTier === 'Silver') ratingToAward = 250;
+                    if (earnedTier === 'Gold') ratingToAward = 500;
+                    user.analystRating = (user.analystRating || 0) + ratingToAward;
+                    console.log(`   ==> AWARDING new/upgraded badge: ${definition.name} (${earnedTier}) and +${ratingToAward} Rating`);
+                    // --- END NEW LOGIC ---
                 }
             }
         }
     }
 
     if (earnedBadges.length > 0) {
-        await user.save();
+        await user.save(); // This now saves the new rating AND the badges
 
         for (const badge of earnedBadges) {
             const badgeInfo = badgeDefinitions[badge.badgeId];

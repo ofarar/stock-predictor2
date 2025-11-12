@@ -28,6 +28,8 @@ import BadgeInfoModal from '../components/BadgeInfoModal';
 import VerificationModal from '../components/VerificationModal';
 import VerifiedStatusModal from '../components/VerifiedStatusModal';
 import ConfirmationModal from '../components/ConfirmationModal';
+import CreatorPoolModal from '../components/CreatorPoolModal';
+import AnalystRatingInfoModal from '../components/AnalystRatingInfoModal';
 
 const ProfilePage = ({ settings, requestLogin }) => {
     const { t } = useTranslation();
@@ -53,6 +55,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isAggressivenessInfoOpen, setIsAggressivenessInfoOpen] = useState(false);
     const [filteredPerformance, setFilteredPerformance] = useState(null);
     const [isVerifiedJustNow, setIsVerifiedJustNow] = useState(false);
+    const [isCreatorPoolModalOpen, setIsCreatorPoolModalOpen] = useState(false);
+    const [isRatingInfoModalOpen, setIsRatingInfoModalOpen] = useState(false);
 
     useEffect(() => {
         // Check if the success parameter exists
@@ -203,6 +207,18 @@ const ProfilePage = ({ settings, requestLogin }) => {
             <EditPredictionModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} prediction={predictionToEdit} onUpdate={fetchData} />
             <AggressivenessInfoModal isOpen={isAggressivenessInfoOpen} onClose={() => setIsAggressivenessInfoOpen(false)} />
 
+            {/* 3. ADD THE NEW MODAL */}
+            <CreatorPoolModal
+                isOpen={isCreatorPoolModalOpen}
+                onClose={() => setIsCreatorPoolModalOpen(false)}
+            />
+
+            {/* 3. ADD THE NEW MODAL */}
+            <AnalystRatingInfoModal
+                isOpen={isRatingInfoModalOpen}
+                onClose={() => setIsRatingInfoModalOpen(false)}
+            />
+
             <div className="animate-fade-in max-w-6xl mx-auto">
                 <ProfileHeader
                     profileData={profileData}
@@ -228,7 +244,10 @@ const ProfilePage = ({ settings, requestLogin }) => {
                     user={user}
                     performance={filteredPerformance}
                     predictionCount={predictions.length}
+                    totalAnalystRating={profileData.totalAnalystRating}
                     onInfoClick={() => setIsAggressivenessInfoOpen(true)}
+                    onCreatorPoolClick={() => setIsCreatorPoolModalOpen(true)}
+                    onRatingInfoClick={() => setIsRatingInfoModalOpen(true)}
                 />
 
                 <div className="flex border-b border-gray-700 mb-8">

@@ -37,7 +37,7 @@ const TermsPage = () => {
                 <p>{t('terms_page.sections.golden_members.content')}</p>
 
                 {/* --- ADD ALL NEW SECTIONS HERE --- */}
-                
+
                 <h2 className="text-xl font-semibold text-white">
                     {t('terms_page.sections.payments_and_refunds.title')}
                 </h2>
@@ -57,7 +57,17 @@ const TermsPage = () => {
                     {t('terms_page.sections.disputes.title')}
                 </h2>
                 <p>{t('terms_page.sections.disputes.content')}</p>
-                
+
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.analyst_rating.title')}
+                </h2>
+                <p>{t('terms_page.sections.analyst_rating.content')}</p>
+
+                <h2 className="text-xl font-semibold text-white">
+                    {t('terms_page.sections.creator_pool.title')}
+                </h2>
+                <p>{t('terms_page.sections.creator_pool.content')}</p>
+
                 {/* --- END OF NEW SECTIONS --- */}
             </div>
         </div>

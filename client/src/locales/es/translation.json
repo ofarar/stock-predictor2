@@ -266,6 +266,11 @@
     "overall_rank_label": "Rango General",
     "average_score_label": "Puntuación Media",
     "total_points_label": "Puntos Totales",
+    "analyst_rating_label": "Rating de Analista",
+    "creator_pool_share_label": "Cuota del Fondo de Creadores",
+    "creatorPoolModal.title": "Clasificación del Fondo de Creadores",
+    "creatorPoolModal.description": "Esta clasificación muestra la distribución de puntos de 'Rating de Analista' en la plataforma. Una parte de los ingresos de la plataforma se distribuirá a los principales contribuyentes en función de este rating.",
+    "creatorPoolModal.totalRating": "Rating Total de Analistas en la Plataforma",
     "total_predictions_label": "Predicciones Totales",
     "profile_tab_label": "Perfil",
     "golden_feed_tab_label": "Feed Dorado",
@@ -319,20 +324,28 @@
                 "title": "5. Suscripciones de Miembro Golden y Tarifas de la Plataforma",
                 "content": "StockPredictor proporciona una plataforma para que ciertos usuarios ('Miembros Golden') ofrezcan contenido basado en suscripción. Al activar su estado de Miembro Golden, acepta ofrecer estos servicios a otros usuarios. Para cubrir la operación de la plataforma, el procesamiento de pagos y los costos administrativos, StockPredictor retendrá una tarifa de plataforma del treinta por ciento (30%) (la 'Tarifa de Plataforma') de los ingresos brutos por suscripción generados por sus suscriptores. El setenta por ciento (70%) restante se le pagará a través de nuestro procesador de pagos, Stripe. Esta tarifa del 30% se deduce automáticamente de cada transacción. Al convertirse en Miembro Golden, usted reconoce y acepta esta estructura de Tarifa de Plataforma del 30%."
             },
+            "analyst_rating": {
+                "title": "6. Sistema de Rating de Analista",
+                "content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictor y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo."
+            },
+            "creator_pool": {
+                "title": "7. Pagos del Fondo de Creadores",
+                "content": "Como recompensa a nuestros principales contribuyentes, StockPredictor asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictor se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
+            },
             "payments_and_refunds": {
-                "title": "6. Pagos, Suscripciones y Reembolsos",
+                "title": "8. Pagos, Suscripciones y Reembolsos",
                 "content": "Nuestra plataforma ofrece servicios de pago, incluido el estado 'Verified Predictor' y las suscripciones 'Golden Member' (colectivamente, 'Suscripciones'). Todos los pagos se procesan a través de nuestro procesador de pagos externo, Stripe. No almacenamos ni retenemos la información de su tarjeta de crédito. Todas las Suscripciones se facturan de forma mensual recurrente. Puede cancelar su Suscripción en cualquier momento a través de su perfil de usuario o del portal de nuestro procesador de pagos. Su cancelación entrará en vigor al final del ciclo de facturación actual y conservará el acceso a las funciones de pago hasta esa fecha. Todos los pagos por Suscripciones son definitivos y no reembolsables. No proporcionamos reembolsos ni créditos por ningún período de suscripción parcial o contenido no utilizado."
             },
             "content_and_ip": {
-                "title": "7. Contenido del Usuario y Derechos de Propiedad Intelectual",
+                "title": "9. Contenido del Usuario y Derechos de Propiedad Intelectual",
                 "content": "Usted conserva todos los derechos de propiedad sobre el contenido que crea en el Servicio, incluida la información de su perfil, las justificaciones de las predicciones y las publicaciones del Golden Feed ('Contenido del Usuario'). Al publicar Contenido del Usuario, usted otorga a StockPredictor una licencia no exclusiva, mundial, libre de regalías y perpetua para usar, alojar, mostrar, reproducir y distribuir su Contenido del Usuario únicamente con el fin de operar, promocionar y mejorar el Servicio. Usted garantiza que es propietario de su Contenido del Usuario o que tiene todos los derechos necesarios para publicarlo y otorgarnos esta licencia, y que su contenido no infringe los derechos de ningún tercero. Si cree que se han infringido sus derechos de autor, contáctenos de inmediato en predictostock@gmail.com con un Aviso de Retirada de DMCA."
             },
             "termination": {
-                "title": "8. Cancelación de la Cuenta",
+                "title": "10. Cancelación de la Cuenta",
                 "content": "StockPredictor se reserva el derecho de suspender o cancelar su cuenta y el acceso al Servicio a nuestra entera discreción, con o sin previo aviso, por cualquier motivo, incluida la violación de estos Términos. También puede cancelar su cuenta en cualquier momento contactándonos o utilizando una función de eliminación en la aplicación, si estuviera disponible. Tras la cancelación por cualquiera de las partes, su derecho a utilizar el Servicio cesará de inmediato. Todas las tarifas prepagadas por Suscripciones no son reembolsables y no será elegible para un reembolso por ninguna parte del período de suscripción restante en el momento de la cancelación. Nos reservamos el derecho de eliminar su Contenido del Usuario tras la cancelación, pero no estamos obligados a hacerlo."
             },
             "disputes": {
-                "title": "9. Resolución de Disputas y Ley Aplicable",
+                "title": "11. Resolución de Disputas y Ley Aplicable",
                 "content": "Estos Términos de Servicio se rigen e interpretan de acuerdo con las leyes de los Países Bajos, sin tener en cuenta sus principios de conflicto de leyes. Usted acepta resolver cualquier disputa que tenga con StockPredictor exclusivamente a través de un arbitraje vinculante en La Haya, Países Bajos, y no en un tribunal de justicia. Usted y StockPredictor acuerdan renunciar a cualquier derecho a participar en una demanda colectiva o un arbitraje colectivo. Todas las disputas deben presentarse a título individual, y no como demandante o miembro de una clase en ningún presunto procedimiento colectivo o representativo."
             }
         }
@@ -991,5 +1004,20 @@
         "quarterly": "Trimestral",
         "yearly": "Anual"
     },
-    "editprofile_username_empty": "El nombre de usuario no puede estar vacío."
+    "editprofile_username_empty": "El nombre de usuario no puede estar vacío.",
+    "analystRating.pointsAwarded": "¡+5 Rating de Analista!",
+    "analystRatingInfo.title": "Rating de Analista Explicado",
+    "analystRatingInfo.description": "Tu 'Rating de Analista' es una medida de tus valiosas contribuciones a la plataforma. Este rating determina tu parte del Fondo de Creadores.",
+    "analystRatingInfo.section1.title": "1. Predicciones de Alta Calidad (+2 a +10 Rating)",
+    "analystRatingInfo.section1.text": "Ganas puntos de Rating de Analista por cada predicción que se evalúa con alta precisión (Puntuación > 70). Cuanto mayor sea tu puntuación, más puntos ganarás. Esto recompensa la calidad sobre la cantidad.",
+    "analystRatingInfo.section2.title": "2. Ganar Insignias (+100 a +500 Rating)",
+    "analystRatingInfo.section2.text": "Cuando ganas una nueva insignia (p. ej., 'Estratega Semanal'), recibes una gran bonificación única de rating. Las insignias de Oro proporcionan una bonificación mayor que las de Plata o Bronce.",
+    "analystRatingInfo.section3.title": "3. Compartir Contenido (+5 Rating)",
+    "analystRatingInfo.section3.text": "Recibes una pequeña bonificación de rating cuando compartes tus rangos o insignias. Esto está limitado para prevenir el spam.",
+    "analystRatingInfo.section4.title": "4. Rangos en la Clasificación (Próximamente)",
+    "analystRatingInfo.section4.text": "Alcanzar una posición superior en las clasificaciones globales proporcionará una bonificación de rating diaria o semanal, recompensando el alto rendimiento constante.",
+    "terms_page.sections.analyst_rating.title": "6. Sistema de Rating de Analista",
+    "terms_page.sections.analyst_rating.content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictor y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo.",
+    "terms_page.sections.creator_pool.title": "7. Pagos del Fondo de Creadores",
+    "terms_page.sections.creator_pool.content": "[MARCADOR_LEGAL: Lo siguiente es una plantilla para su abogado y NO es asesoramiento legal.] Como recompensa a nuestros principales contribuyentes, StockPredictor asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictor se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
 }

@@ -33,9 +33,9 @@ async function getActualStockPrice(ticker, deadline) {
     try {
         // Format deadline to 'YYYY-MM-DD'
         const dateString = deadline.toISOString().split('T')[0];
-        
+
         console.log(`Fetching historical price for ${ticker} on ${dateString}`);
-        
+
         // Use the adapter's getHistorical function
         const result = await financeAPI.getHistorical(ticker, {
             period1: dateString,
@@ -63,7 +63,7 @@ const runAssessmentJob = async () => {
     } catch (err) {
         console.error("CRITICAL: Could not update cron job heartbeat.", err);
     }
-    
+
     console.log('Starting assessment job...');
 
     const predictionsToAssess = await Prediction.find({
@@ -119,6 +119,18 @@ const runAssessmentJob = async () => {
                 try {
                     const score = calculateProximityScore(prediction.targetPrice, actualPrice);
 
+                    // --- NEW: Analyst Rating Logic ---
+                    let ratingToAward = 0;
+                    if (score > 90) {
+                        ratingToAward = 10; // Excellent Prediction
+                    } else if (score > 80) {
+                        ratingToAward = 5;  // Great Prediction
+                    } else if (score > 70) {
+                        ratingToAward = 2;  // Good Prediction
+                    }
+                    // (Scores below 70 get 0 points)
+                    // --- END NEW LOGIC ---
+
                     // Update Prediction
                     prediction.status = 'Assessed';
                     prediction.score = score;
@@ -127,7 +139,11 @@ const runAssessmentJob = async () => {
 
                     // Add score to the user's update map
                     const userId = prediction.userId._id.toString();
-                    userScoreUpdates.set(userId, (userScoreUpdates.get(userId) || 0) + score);
+                    const currentUpdate = userScoreUpdates.get(userId) || { score: 0, rating: 0 };
+                    userScoreUpdates.set(userId, {
+                        score: currentUpdate.score + score,
+                        rating: currentUpdate.rating + ratingToAward
+                    });
 
                     // --- Create "Score Assessed" Notification ---
                     await new Notification({
@@ -155,7 +171,7 @@ const runAssessmentJob = async () => {
                     }).save();
 
                     console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} scored ${score} points.`);
-                
+
                 } catch (innerError) {
                     console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
                     // Don't stop, continue to the next prediction in the group
@@ -163,10 +179,15 @@ const runAssessmentJob = async () => {
             } // --- End of inner prediction loop ---
 
             // 5. Now, update all users in this group (Batch DB update)
-            for (const [userId, totalScore] of userScoreUpdates.entries()) {
+            for (const [userId, updates] of userScoreUpdates.entries()) {
                 try {
-                    // Update user's total score
-                    await User.findByIdAndUpdate(userId, { $inc: { score: totalScore } });
+                    // Update user's total score AND new analyst rating
+                    await User.findByIdAndUpdate(userId, {
+                        $inc: {
+                            score: updates.score,
+                            analystRating: updates.rating
+                        }
+                    });
 
                     // We must fetch the user *after* the score update to run badge check
                     const user = await User.findById(userId);
@@ -177,7 +198,7 @@ const runAssessmentJob = async () => {
                     console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
                 }
             }
-            
+
         } catch (outerError) {
             console.error(`Failed to process group ${key}:`, outerError);
             // Don't stop, continue to the next group

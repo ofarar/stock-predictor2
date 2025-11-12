@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ShareModal from './ShareModal'; // <-- 1. Import new component
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const badgeStyles = {
     Bronze: { color: 'text-yellow-600', icon: '🥉' },
@@ -20,7 +22,7 @@ const ShareIcon = () => (
 
 const BadgeDetailModal = ({ badge, onClose }) => {
     const { t } = useTranslation();
-    
+
     // --- 3. Add state for the new modal ---
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
@@ -38,10 +40,24 @@ const BadgeDetailModal = ({ badge, onClose }) => {
         icon: icon
     });
 
+    // --- 5. NEW HANDLER FOR SHARE CLICK ---
+    const handleShareClick = () => {
+        // Award points for sharing
+        axios.post(`${process.env.REACT_APP_API_URL}/api/activity/share`, {}, { withCredentials: true })
+            .then(() => {
+                // 2. SHOW A SUCCESS TOAST
+                toast.success('+5 Analyst Rating!', { duration: 1500 });
+            })
+            .catch(err => console.log("Failed to log share activity."));
+
+        // Open the modal
+        setIsShareModalOpen(true);
+    };
+
     return (
         <>
             {/* --- 5. Render the ShareModal (it's invisible until opened) --- */}
-            <ShareModal 
+            <ShareModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
                 title={t('badge.shareTitle', 'Share Badge')}
@@ -58,7 +74,7 @@ const BadgeDetailModal = ({ badge, onClose }) => {
                     <h2 className="text-2xl font-bold text-white mt-4">{badge.name}</h2>
                     <p className={`font-semibold ${style.color}`}>{t(`badges.tiers.${badge.tier}`, `${badge.tier} Tier`)}</p>
                     <p className="text-gray-400 mt-2 text-sm">{badge.description}</p>
-                    
+
                     {/* --- 6. UPDATED BUTTONS FOOTER --- */}
                     <div className="flex justify-center gap-4 mt-8 pt-4 border-t border-gray-700">
                         <button
@@ -68,11 +84,11 @@ const BadgeDetailModal = ({ badge, onClose }) => {
                         >
                             {t('common.close')}
                         </button>
-                        
+
                         {/* --- This button now opens the ShareModal --- */}
                         <button
                             type="button"
-                            onClick={() => setIsShareModalOpen(true)}
+                            onClick={handleShareClick}
                             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 text-center flex items-center justify-center gap-2"
                         >
                             <ShareIcon />

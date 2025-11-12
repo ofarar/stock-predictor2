@@ -98,6 +98,21 @@ const viewLimiter = rateLimit({
 });
 // --- END ADDITION ---
 
+// --- NEW ROUTE FOR SHARING POINTS ---
+router.post('/activity/share', actionLimiter, async (req, res) => {
+    if (!req.user) return res.status(401).send('Not authenticated');
+
+    // Award a small, fixed amount of points for any share action.
+    // The 'actionLimiter' we already have prevents a user from spamming this.
+    try {
+        await User.findByIdAndUpdate(req.user._id, { $inc: { analystRating: 5 } });
+        res.status(200).json({ message: 'Rating applied.' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+// --- END NEW ROUTE ---
+
 // NEW: Community Sentiment Endpoint
 router.get('/community-sentiment/:ticker', async (req, res) => {
     const { ticker } = req.params;
@@ -1926,6 +1941,12 @@ router.get('/profile/:userId', async (req, res) => {
             id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
         }));
 
+        // --- NEW: Get total analyst rating from all users ---
+        const totalRatingResult = await User.aggregate([
+            { $group: { _id: null, total: { $sum: "$analystRating" } } }
+        ]);
+        const totalAnalystRating = totalRatingResult[0]?.total || 1; // Use 1 to prevent divide-by-zero
+
         const jsonResponse = {
             user,
             watchlistQuotes,
@@ -1934,6 +1955,7 @@ router.get('/profile/:userId', async (req, res) => {
             chartData,
             followersCount: user.followers.length,
             followingCount: user.following.length,
+            totalAnalystRating: totalAnalystRating
         };
 
         if (isOwnProfile) {
@@ -2828,6 +2850,25 @@ router.post('/admin/recalculate-badges', async (req, res) => {
     } catch (error) {
         console.error("Error during badge recalculation:", error);
         res.status(500).send('An error occurred during recalculation.');
+    }
+});
+
+// --- NEW LEADERBOARD ENDPOINT ---
+router.get('/leaderboard/rating', async (req, res) => {
+    try {
+        const users = await User.find({ analystRating: { $gt: 0 } })
+            .sort({ analystRating: -1 })
+            .limit(100)
+            .select('username avatar analystRating');
+
+        const totalRatingResult = await User.aggregate([
+            { $group: { _id: null, total: { $sum: "$analystRating" } } }
+        ]);
+        const totalAnalystRating = totalRatingResult[0]?.total || 1; // Use 1 to prevent divide-by-zero
+
+        res.json({ users, totalAnalystRating });
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching rating leaderboard." });
     }
 });
 

@@ -56,6 +56,28 @@ export const formatScorePercentage = (value, locale) => {
 };
 
 /**
+ * Formats a share percentage (e.g., 0.0521) into a locale-specific string.
+ * @param {number} value - The percentage value (e.g., 0.0521 for 0.05%).
+ * @param {string} locale - The language code (e.g., "en", "tr").
+ * @returns {string} The formatted percentage string (e.g., "0.05%" or "%0,05").
+ */
+export const formatSharePercentage = (value, locale) => {
+    if (typeof value !== 'number' || isNaN(value)) return '...';
+
+    // 1. Convert the percentage value (e.g., 0.0521) to its decimal equivalent (0.000521)
+    //    because Intl.NumberFormat with style: 'percent' expects a decimal.
+    const decimalValue = value / 100;
+
+    const formatter = new Intl.NumberFormat(locale, {
+        style: 'percent',
+        minimumFractionDigits: 2, // This will result in 0.05%
+        maximumFractionDigits: 2, // This will result in 0.05%
+    });
+
+    return formatter.format(decimalValue);
+};
+
+/**
  * Formats a number into a locale-specific percentage string (e.g., +10.5%, %-5,2).
  * @param {number} value - The percentage value (e.g., 25.5 for 25.5%).
  * @param {string} locale - The language code (e.g., "en", "tr").

@@ -266,6 +266,11 @@
     "overall_rank_label": "Rang Global",
     "average_score_label": "Score Moyen",
     "total_points_label": "Points Totaux",
+    "analyst_rating_label": "Note d'Analyste",
+    "creator_pool_share_label": "Part du Pool Créateurs",
+    "creatorPoolModal.title": "Classement du Pool Créateurs",
+    "creatorPoolModal.description": "Ce classement montre la répartition des points de 'Note d'Analyste' sur la plateforme. Une partie des revenus de la plateforme sera distribuée aux meilleurs contributeurs en fonction de cette note.",
+    "creatorPoolModal.totalRating": "Note Totale des Analystes sur la Plateforme",
     "total_predictions_label": "Prédictions Totales",
     "profile_tab_label": "Profil",
     "golden_feed_tab_label": "Fil d'Or",
@@ -319,20 +324,28 @@
                 "title": "5. Abonnements Golden Member et Frais de Plateforme",
                 "content": "StockPredictor fournit une plateforme permettant à certains utilisateurs ('Golden Members') de proposer du contenu par abonnement. En activant votre statut de Golden Member, vous acceptez de proposer ces services à d'autres utilisateurs. Pour couvrir l'exploitation de la plateforme, le traitement des paiements et les coûts administratifs, StockPredictor retiendra des frais de plateforme de trente pour cent (30%) (les 'Frais de Plateforme') sur les revenus bruts d'abonnement générés par vos abonnés. Les soixante-dix pour cent (70%) restants vous seront versés via notre processeur de paiement, Stripe. Ces frais de 30% sont automatiquement déduits de chaque transaction. En devenant un Golden Member, vous reconnaissez et acceptez cette structure de Frais de Plateforme de 30%."
             },
+            "analyst_rating": {
+                "title": "6. Système de Note d'Analyste",
+                "content": "Le Service propose un système de 'Note d'Analyste' pour récompenser les contributions de haute qualité. Les utilisateurs peuvent gagner des notes pour diverses activités, y compris, mais sans s'y limiter : atteindre des scores élevés sur les prédictions (par ex. >70% de précision), gagner des badges de la plateforme, atteindre des rangs élevés dans le classement et partager du contenu de la plateforme. Les activités spécifiques et les montants de note sont déterminés par StockPredictor et peuvent être modifiés à tout moment. Cette note est une fonctionnalité promotionnelle et n'a aucune valeur monétaire directe."
+            },
+            "creator_pool": {
+                "title": "7. Paiements du Pool Créateurs",
+                "content": "En récompense à nos meilleurs contributeurs, StockPredictor alloue cinquante pour cent (50%) de son bénéfice net trimestriel (revenus moins toutes les dépenses d'exploitation, taxes et frais) à un 'Pool Créateurs'. Ce pool est distribué aux utilisateurs en fonction de leur 'Note d'Analyste' en pourcentage de la Note d'Analyste totale sur la plateforme. Les paiements sont calculés trimestriellement et distribués sur une base Net-30 (30 jours après la fin du trimestre). Pour être éligible à un paiement, un utilisateur doit avoir un solde de paiement accumulé minimum de 100,00 $ US. Les soldes inférieurs à ce minimum seront reportés au trimestre suivant. Tous les utilisateurs sont responsables de leurs propres obligations fiscales résultant de tout paiement. StockPredictor se réserve le droit de modifier, de suspendre ou de mettre fin au programme du Pool Créateurs à tout moment, avec ou sans préavis."
+            },
             "payments_and_refunds": {
-                "title": "6. Paiements, Abonnements et Remboursements",
+                "title": "8. Paiements, Abonnements et Remboursements",
                 "content": "Notre plateforme propose des services payants, y compris le statut 'Verified Predictor' et les abonnements 'Golden Member' (collectivement, 'Abonnements'). Tous les paiements sont traités par notre processeur de paiement tiers, Stripe. Nous ne stockons ni ne conservons les informations de votre carte de crédit. Tous les Abonnements sont facturés sur une base mensuelle récurrente. Vous pouvez annuler votre Abonnement à tout moment via votre profil utilisateur ou le portail de notre processeur de paiement. Votre annulation prendra effet à la fin du cycle de facturation en cours et vous conserverez l'accès aux fonctionnalités payantes jusqu'à cette date. Tous les paiements pour les Abonnements sont définitifs et non remboursables. Nous ne fournissons aucun remboursement ni crédit pour les périodes d'abonnement partielles ou le contenu non utilisé."
             },
             "content_and_ip": {
-                "title": "7. Contenu Utilisateur et Droits de Propriété Intellectuelle",
+                "title": "9. Contenu Utilisateur et Droits de Propriété Intellectuelle",
                 "content": "Vous conservez tous les droits de propriété sur le contenu que vous créez sur le Service, y compris les informations de votre profil, les justifications de prédiction et les publications du Golden Feed ('Contenu Utilisateur'). En publiant du Contenu Utilisateur, vous accordez à StockPredictor une licence non exclusive, mondiale, libre de droits et perpétuelle pour utiliser, héberger, afficher, reproduire et distribuer votre Contenu Utilisateur uniquement dans le but d'exploiter, de promouvoir et d'améliorer le Service. Vous garantissez que vous possédez votre Contenu Utilisateur ou que vous disposez de tous les droits nécessaires pour le publier et nous accorder cette licence, et que votre contenu n'enfreint pas les droits d'un tiers. Si vous pensez que vos droits d'auteur ont été violés, veuillez nous contacter immédiatement à predictostock@gmail.com avec un avis de retrait DMCA."
             },
             "termination": {
-                "title": "8. Résiliation de Compte",
+                "title": "10. Résiliation de Compte",
                 "content": "StockPredictor se réserve le droit de suspendre ou de résilier votre compte et votre accès au Service à sa seule discrétion, avec ou sans préavis, pour quelque raison que ce soit, y compris en cas de violation de ces Conditions. Vous pouvez également résilier votre compte à tout moment en nous contactant ou en utilisant une fonction de suppression dans l'application, si disponible. En cas de résiliation par l'une ou l'autre des parties, votre droit d'utiliser le Service cessera immédiatement. Tous les frais prépayés pour les Abonnements ne sont pas remboursables et vous ne serez éligible à aucun remboursement pour toute partie de votre période d'abonnement restante au moment de la résiliation. Nous nous réservons le droit de supprimer votre Contenu Utilisateur lors de la résiliation, mais n'avons aucune obligation de le faire."
             },
             "disputes": {
-                "title": "9. Résolution des Litiges et Droit Applicable",
+                "title": "11. Résolution des Litiges et Droit Applicable",
                 "content": "Ces Conditions d'Utilisation sont régies et interprétées conformément aux lois des Pays-Bas, sans tenir compte de ses principes de conflit de lois. Vous acceptez de résoudre tout litige que vous avez avec StockPredictor exclusivement par arbitrage contraignant à La Haye, Pays-Bas, et non devant un tribunal. Vous et StockPredictor acceptez de renoncer à tout droit de participer à une action collective ou à un arbitrage collectif. Tous les litiges doivent être présentés à titre individuel, et non en tant que demandeur ou membre d'un groupe dans le cadre d'une prétendue action collective ou représentative."
             }
         }
@@ -991,5 +1004,20 @@
         "quarterly": "Trimestriel",
         "yearly": "Annuel"
     },
-    "editprofile_username_empty": "Le nom d'utilisateur ne peut pas être vide."
+    "editprofile_username_empty": "Le nom d'utilisateur ne peut pas être vide.",
+    "analystRating.pointsAwarded": "+5 Note d'Analyste !",
+    "analystRatingInfo.title": "Note d'Analyste Expliquée",
+    "analystRatingInfo.description": "Votre 'Note d'Analyste' est une mesure de vos précieuses contributions à la plateforme. Cette note détermine votre part du Pool Créateurs.",
+    "analystRatingInfo.section1.title": "1. Prédictions de Haute Qualité (+2 à +10 Note)",
+    "analystRatingInfo.section1.text": "Vous gagnez des points de Note d'Analyste pour chaque prédiction évaluée avec une grande précision (Score > 70). Plus votre score est élevé, plus vous gagnez de points. Cela récompense la qualité plutôt que la quantité.",
+    "analystRatingInfo.section2.title": "2. Gagner des Badges (+100 à +500 Note)",
+    "analystRatingInfo.section2.text": "Lorsque vous gagnez un nouveau badge (par ex. 'Stratège Hebdomadaire'), vous recevez un important bonus de note unique. Les badges Or offrent un bonus plus important que l'Argent ou le Bronze.",
+    "analystRatingInfo.section3.title": "3. Partager du Contenu (+5 Note)",
+    "analystRatingInfo.section3.text": "Vous recevez un petit bonus de note lorsque vous partagez vos rangs ou badges. Ceci est limité pour éviter le spam.",
+    "analystRatingInfo.section4.title": "4. Rangs de Classement (Bientôt)",
+    "analystRatingInfo.section4.text": "Atteindre une position de tête dans les classements mondiaux fournira un bonus de note quotidien ou hebdomadaire, récompensant une haute performance constante.",
+    "terms_page.sections.analyst_rating.title": "6. Système de Note d'Analyste",
+    "terms_page.sections.analyst_rating.content": "Le Service propose un système de 'Note d'Analyste' pour récompenser les contributions de haute qualité. Les utilisateurs peuvent gagner des notes pour diverses activités, y compris, mais sans s'y limiter : atteindre des scores élevés sur les prédictions (par ex. >70% de précision), gagner des badges de la plateforme, atteindre des rangs élevés dans le classement et partager du contenu de la plateforme. Les activités spécifiques et les montants de note sont déterminés par StockPredictor et peuvent être modifiés à tout moment. Cette note est une fonctionnalité promotionnelle et n'a aucune valeur monétaire directe.",
+    "terms_page.sections.creator_pool.title": "7. Paiements du Pool Créateurs",
+    "terms_page.sections.creator_pool.content": "[MARQUEUR_JURIDIQUE : Ce qui suit est un modèle pour votre avocat et ne constitue PAS un conseil juridique.] En récompense à nos meilleurs contributeurs, StockPredictor alloue cinquante pour cent (50%) de son bénéfice net trimestriel (revenus moins toutes les dépenses d'exploitation, taxes et frais) à un 'Pool Créateurs'. Ce pool est distribué aux utilisateurs en fonction de leur 'Note d'Analyste' en pourcentage de la Note d'Analyste totale sur la plateforme. Les paiements sont calculés trimestriellement et distribués sur une base Net-30 (30 jours après la fin du trimestre). Pour être éligible à un paiement, un utilisateur doit avoir un solde de paiement accumulé minimum de 100,00 $ US. Les soldes inférieurs à ce minimum seront reportés au trimestre suivant. Tous les utilisateurs sont responsables de leurs propres obligations fiscales résultant de tout paiement. StockPredictor se réserve le droit de modifier, de suspendre ou de mettre fin au programme du Pool Créateurs à tout moment, avec ou sans préavis."
 }

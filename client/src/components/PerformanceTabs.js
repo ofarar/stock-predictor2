@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaShareAlt } from 'react-icons/fa';
 import ShareModal from './ShareModal';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const MiniAggressivenessBar = ({ score }) => (
     <div className="w-full bg-gray-900 rounded-full h-1.5 mt-2">
@@ -22,19 +24,28 @@ const StatCard = ({ label, avgScore, rank, aggressivenessScore, isSelected, onCl
 
     const handleShare = (e) => {
         e.stopPropagation();
+        // --- 2. ADD "FIRE-AND-FORGET" API CALL ---
+        // Award points for sharing, but don't bother the user if it fails.
+        axios.post(`${process.env.REACT_APP_API_URL}/api/activity/share`, {}, { withCredentials: true })
+            .then(() => {
+                // 3. SHOW A SUCCESS TOAST
+                toast.success('+5 Analyst Rating!', { duration: 1500 });
+            })
+            .catch(err => console.log("Failed to log share activity."));
+        // --- END OF ADDITION ---
         onShareClick();
     };
 
     return (
-        <div 
+        <div
             onClick={onClick}
             className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 cursor-pointer ${isSelected ? 'ring-2 ring-green-400 scale-[1.03]' : 'hover:scale-[1.02]'}`}
         >
             <div className="flex items-center flex-grow">
                 <div className="relative w-12 h-12 flex-shrink-0">
                     <svg className="w-full h-full" viewBox="0 0 44 44">
-                        <circle className="text-gray-600" strokeWidth="4" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22"/>
-                        <circle className="text-green-400" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22" transform="rotate(-90 22 22)"/>
+                        <circle className="text-gray-600" strokeWidth="4" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22" />
+                        <circle className="text-green-400" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22" transform="rotate(-90 22 22)" />
                     </svg>
                     <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">
                         {validAvgScore.toFixed(1)}
@@ -58,10 +69,10 @@ const StatCard = ({ label, avgScore, rank, aggressivenessScore, isSelected, onCl
                 <div className="w-10/12">
                     <MiniAggressivenessBar score={aggressivenessScore} />
                 </div>
-                <button 
+                <button
                     onClick={handleShare}
                     className="text-gray-500 hover:text-white transition-colors duration-200 p-1 rounded-full hover:bg-gray-600"
-                    title={t('performanceTabs.shareStat')}
+                    title={t('shareModal.title')}
                 >
                     <FaShareAlt />
                 </button>
@@ -74,7 +85,7 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('ByType');
     const [selectedFilter, setSelectedFilter] = useState(null);
-    
+
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareData, setShareData] = useState({ text: '', url: '' });
 
@@ -103,7 +114,7 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
         } else { // 'ByType'
             shareText = t('performanceTabs.shareText.byType', { rank: item.rank, type: t(`predictionTypes.${item.type.toLowerCase()}`) });
         }
-        
+
         setShareData({ text: shareText, url: shareUrl });
         setIsShareModalOpen(true);
     };
@@ -128,11 +139,11 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                 {activeTab === 'ByType' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                         {performance.byType?.length > 0 ? performance.byType.map(p => (
-                            <StatCard 
-                                key={p.type} 
-                                label={t(`predictionTypes.${p.type.toLowerCase()}`)} 
-                                avgScore={p.accuracy} 
-                                rank={p.rank} 
+                            <StatCard
+                                key={p.type}
+                                label={t(`predictionTypes.${p.type.toLowerCase()}`)}
+                                avgScore={p.accuracy}
+                                rank={p.rank}
                                 aggressivenessScore={p.aggressivenessScore}
                                 isSelected={selectedFilter === p.type}
                                 onClick={() => handleCardClick(p.type, p)}
@@ -144,11 +155,11 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                 {activeTab === 'ByStock' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
                         {performance.byStock?.length > 0 ? performance.byStock.map(s => (
-                            <StatCard 
-                                key={s.ticker} 
-                                label={s.ticker} 
-                                avgScore={s.accuracy} 
-                                rank={s.rank} 
+                            <StatCard
+                                key={s.ticker}
+                                label={s.ticker}
+                                avgScore={s.accuracy}
+                                rank={s.rank}
                                 aggressivenessScore={s.aggressivenessScore}
                                 isSelected={selectedFilter === s.ticker}
                                 onClick={() => handleCardClick(s.ticker, s)}
