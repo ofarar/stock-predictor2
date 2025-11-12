@@ -1032,5 +1032,7 @@
     "analystRating.pie.shares": "Des Partages",
     "analystRating.pie.ranks": "Des Rangs",
     "analystRating.pie.referrals": "Des Parrainages",
-    "common.back": "Retour"
+    "common.back": "Retour",
+    "sentiment.question": "Quel est l'objectif de prix {{type}} de la communauté pour {{ticker}} ?",
+    "sentiment.based_on_count": "Basé sur {{count}} prédictions"
 }

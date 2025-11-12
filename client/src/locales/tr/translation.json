@@ -1033,5 +1033,7 @@
   "analystRating.pie.shares": "Paylaşımlardan",
   "analystRating.pie.ranks": "Sıralamalardan",
   "analystRating.pie.referrals": "Davetlerden",
-  "common.back": "Geri"
+  "common.back": "Geri",
+  "sentiment.question": "Topluluğun {{ticker}} için {{type}} fiyat hedefi nedir?",
+  "sentiment.based_on_count": "{{count}} tahmine göre"
 }

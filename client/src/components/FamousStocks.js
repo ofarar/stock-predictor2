@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '../utils/formatters';
+import { formatCurrency, formatPercentage } from '../utils/formatters';
 
 const SentimentStockCard = ({ stock }) => {
     const { t, i18n } = useTranslation();
@@ -21,6 +21,9 @@ const SentimentStockCard = ({ stock }) => {
     const relevantSentimentType = hasSentiment ? (['Daily', 'Weekly', 'Monthly'].find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0]) : null;
     const sentimentData = relevantSentimentType ? stock.sentiment[relevantSentimentType] : null;
 
+    const changePercent = stock.quote?.regularMarketChangePercent;
+    const isUp = stock.quote?.regularMarketChange >= 0;
+
     if (!sentimentData) {
         return (
             <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-between hover:bg-gray-700 h-full">
@@ -28,22 +31,40 @@ const SentimentStockCard = ({ stock }) => {
                     <p className="font-bold text-white">{stock.quote.shortName || stock.ticker}</p>
                     <p className="text-sm text-gray-400">{stock.ticker}</p>
                 </div>
-                <p className="font-bold text-lg text-white">{formatCurrency(stock.quote.regularMarketPrice, i18n.language, stock.quote.currency)}</p>
+                <div className="text-right">
+                    <p className="font-bold text-lg text-white">{formatCurrency(stock.quote.regularMarketPrice, i18n.language, stock.quote.currency)}</p>
+                    {/* --- ADDED % CHANGE --- */}
+                    {typeof changePercent === 'number' && (
+                        <p className={`text-sm font-bold ${isUp ? 'text-green-400' : 'text-red-400'}`}>
+                            {formatPercentage(changePercent, i18n.language)}
+                        </p>
+                    )}
+                </div>
             </Link>
         );
     }
+
+    // --- FIX for {{type}} ---
+    // Translate the type itself (e.g., "Weekly") before passing it into the question
+    const translatedType = t(`predictionTypes.${relevantSentimentType.toLowerCase()}`, relevantSentimentType);
 
     return (
         <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-colors flex flex-col justify-between h-full">
             <div>
                 <p className="text-sm text-gray-400 mb-2">
-                    {t('sentiment.question', { context: relevantSentimentType, ticker: stock.ticker })}
+                    {t('sentiment.question', { type: translatedType, ticker: stock.ticker })}
                 </p>
             </div>
             <div className="text-right">
                 <p className="text-2xl font-bold text-white">
                     {formatCurrency(sentimentData.averageTarget, i18n.language, stock.quote.currency)}
                 </p>
+                {/* --- ADDED % CHANGE --- */}
+                {typeof changePercent === 'number' && (
+                    <p className={`text-sm font-bold ${isUp ? 'text-green-400' : 'text-red-400'}`}>
+                        {formatPercentage(changePercent, i18n.language)}
+                    </p>
+                )}
                 <p className="text-xs text-gray-500">
                     {t('sentiment.based_on_count', { count: sentimentData.predictionCount })}
                 </p>
@@ -87,7 +108,7 @@ const FamousStocks = ({ stocks, isHistorical }) => {
     return (
         <div>
             <h3 className="text-xl font-bold text-white mb-4">
-                {isHistorical ? t('famousStocks.titleHistorical') : t('famousStocks.titleToday')}
+                {isHistorical ? t('famousStocks.title_historical') : t('famousStocks.title')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {validStocks.map(stock => (

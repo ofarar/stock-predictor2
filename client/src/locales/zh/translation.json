@@ -1032,5 +1032,7 @@
     "analystRating.pie.shares": "来自分享",
     "analystRating.pie.ranks": "来自排名",
     "analystRating.pie.referrals": "来自推荐",
-    "common.back": "返回"
+    "common.back": "返回",
+    "sentiment.question": "社区对 {{ticker}} 的 {{type}} 目标价是多少？",
+    "sentiment.based_on_count": "基于 {{count}} 条预测"
 }

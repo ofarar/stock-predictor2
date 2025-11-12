@@ -1032,5 +1032,7 @@
     "analystRating.pie.shares": "De Compartidos",
     "analystRating.pie.ranks": "De Rangos",
     "analystRating.pie.referrals": "De Referidos",
-    "common.back": "Volver"
+    "common.back": "Volver",
+    "sentiment.question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
+    "sentiment.based_on_count": "Basado en {{count}} predicciones"
 }

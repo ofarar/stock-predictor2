@@ -1027,5 +1027,7 @@
     "analystRating.pie.shares": "Aus Teilungen",
     "analystRating.pie.ranks": "Aus Rängen",
     "analystRating.pie.referrals": "Aus Empfehlungen",
-    "common.back": "Zurück"
+    "common.back": "Zurück",
+    "sentiment.question": "Was ist das {{type}}-Kursziel der Community für {{ticker}}?",
+    "sentiment.based_on_count": "Basierend auf {{count}} Prognosen"
 }

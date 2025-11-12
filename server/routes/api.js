@@ -46,7 +46,7 @@ const getFamousStocks = async () => {
     const enrichedStocksPromises = famousStocks.map(async (stock) => {
         try {
             const [quote, sentiment] = await Promise.all([
-                yahooFinance.quote(stock.ticker),
+                financeAPI.getQuote(stock.ticker),
                 getCommunitySentiment(stock.ticker)
             ]);
             return {

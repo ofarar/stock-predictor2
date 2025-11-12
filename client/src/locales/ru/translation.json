@@ -1032,5 +1032,7 @@
     "analystRating.pie.shares": "От Репостов",
     "analystRating.pie.ranks": "От Рангов",
     "analystRating.pie.referrals": "От Рефералов",
-    "common.back": "Назад"
+    "common.back": "Назад",
+    "sentiment.question": "Какова {{type}} целевая цена сообщества для {{ticker}}?",
+    "sentiment.based_on_count": "На основе {{count}} прогнозов"
 }
