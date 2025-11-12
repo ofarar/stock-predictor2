@@ -916,7 +916,7 @@
     },
     "badgeDetailModal": {
         "shareButton": "Partager",
-        "shareTweet": "Je viens de gagner le badge '{{name}}' de niveau {{tier}} ! {{icon}} Suivez mes prédictions : {{url}}"
+        "shareTweet": "Je viens de gagner le badge '{{name}}' de niveau {{tier}} ! {{icon}} Suivez mes prédictions : "
     },
     "market_watch": {
         "title": "Observation du marché",

@@ -911,7 +911,7 @@
     },
     "badgeDetailModal": {
         "shareButton": "Teilen",
-        "shareTweet": "Ich habe gerade das {{tier}} '{{name}}'-Abzeichen verdient! {{icon}} Folge meinen Vorhersagen: {{url}}"
+        "shareTweet": "Ich habe gerade das {{tier}} '{{name}}'-Abzeichen verdient! {{icon}} Folge meinen Vorhersagen: "
     },
     "market_watch": {
         "title": "Marktbeobachtung",

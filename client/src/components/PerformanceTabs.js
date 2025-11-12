@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaShareAlt } from 'react-icons/fa';
 import ShareModal from './ShareModal';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 
 const MiniAggressivenessBar = ({ score }) => (
     <div className="w-full bg-gray-900 rounded-full h-1.5 mt-2">
@@ -24,15 +22,6 @@ const StatCard = ({ label, avgScore, rank, aggressivenessScore, isSelected, onCl
 
     const handleShare = (e) => {
         e.stopPropagation();
-        // --- 2. ADD "FIRE-AND-FORGET" API CALL ---
-        // Award points for sharing, but don't bother the user if it fails.
-        axios.post(`${process.env.REACT_APP_API_URL}/api/activity/share`, {}, { withCredentials: true })
-            .then(() => {
-                // 3. SHOW A SUCCESS TOAST
-                toast.success('+5 Analyst Rating!', { duration: 1500 });
-            })
-            .catch(err => console.log("Failed to log share activity."));
-        // --- END OF ADDITION ---
         onShareClick();
     };
 

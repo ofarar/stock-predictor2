@@ -60,7 +60,7 @@ const ReferralModal = ({ isOpen, onClose, userId }) => {
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
                     <button
                         onClick={shareOnX}
-                        className="bg-[#1DA1F2] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0c85d0] flex items-center gap-2"
+                        className="bg-[#1DA1F2] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0c85d0] flex items-center justify-center gap-2 w-full sm:w-auto"
                     >
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                         {t('referralModal.share', 'Share on X')}

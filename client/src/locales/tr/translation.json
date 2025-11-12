@@ -917,7 +917,7 @@
   },
   "badgeDetailModal": {
     "shareButton": "Paylaş",
-    "shareTweet": "{{tier}} '{{name}}' rozetini kazandım! {{icon}} Tahminlerimi takip et: {{url}}"
+    "shareTweet": "{{tier}} '{{name}}' rozetini kazandım! {{icon}} Tahminlerimi takip et: "
   },
   "market_watch": {
     "title": "Piyasa Takibi",

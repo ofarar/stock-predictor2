@@ -917,7 +917,7 @@
   },
   "badgeDetailModal": {
     "shareButton": "Share",
-    "shareTweet": "I just earned the {{tier}} '{{name}}' badge! {{icon}} Follow my predictions: {{url}}",
+    "shareTweet": "I just earned the {{tier}} '{{name}}' badge! {{icon}} Follow my predictions: ",
     "shareTelegram": "{{icon}} I just earned the {{tier}} {{name}} badge on StockPredictor! Check out my profile.",
     "shareTelegramButton": "Share to Telegram"
   },

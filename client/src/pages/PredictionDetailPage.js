@@ -50,7 +50,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const [currentQuote, setCurrentQuote] = useState(null);
     const [timeLeft, setTimeLeft] = useState('');
     const [loading, setLoading] = useState(true);
-    
+
     // Modal states
     const [isDescModalOpen, setIsDescModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -129,7 +129,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     useEffect(() => {
         if (prediction?.status === 'Active' && isMarketOpen()) {
             const quoteTimer = setInterval(() => {
-                 axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${prediction.stockTicker}`)
+                axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${prediction.stockTicker}`)
                     .then(quoteRes => {
                         if (quoteRes) {
                             setCurrentQuote(quoteRes.data);
@@ -144,7 +144,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const handleVote = (voteType) => {
         if (!currentUser) return requestLogin();
         if (!prediction || prediction.status !== 'Active') return;
-        
+
         // Optimistic update
         const originalPrediction = { ...prediction };
         const newPrediction = { ...prediction, likes: [...prediction.likes], dislikes: [...prediction.dislikes] };
@@ -159,7 +159,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             else { newPrediction.dislikes.push(userId); if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1); }
         }
         setPrediction(newPrediction);
-        
+
         // API call
         axios.post(`${process.env.REACT_APP_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
             .catch(() => { toast.error(t("Vote failed.")); setPrediction(originalPrediction); });
@@ -171,7 +171,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
 
         const url = window.location.href;
         // Use prediction.userId (which is populated)
-        const isOwner = currentUser?._id === prediction.userId?._id; 
+        const isOwner = currentUser?._id === prediction.userId?._id;
         const isAssessed = prediction.status === 'Assessed';
 
         const params = {
@@ -182,7 +182,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             score: prediction.score?.toFixed(1),
             actualPrice: formatCurrency(prediction.actualPrice, i18n.language, prediction.currency),
         };
-        
+
         let messageKey;
         if (isOwner) {
             messageKey = isAssessed ? 'share.ownerAssessed' : 'share.ownerActive';
@@ -191,7 +191,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         }
 
         const text = t(messageKey, params);
-        
+
         // Set the content for the modal and open it
         setShareContent({ text, url });
         setIsShareModalOpen(true);
@@ -226,14 +226,15 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     return (
         <>
             {/* --- Render the ShareModal --- */}
-            <ShareModal 
+
+            <ShareModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
-                title={t('prediction.share_title')}
+                title={t('prediction.shareTitle', 'Share Prediction')}
                 text={shareContent.text}
                 url={shareContent.url}
             />
-            
+
             <DescriptionModal isOpen={isDescModalOpen} onClose={() => setIsDescModalOpen(false)} description={prediction.description} />
             <EditPredictionModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} prediction={prediction} onUpdate={fetchData} />
             <PredictionHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} prediction={prediction} />
@@ -326,7 +327,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                 <span>{prediction.views.toLocaleString(i18n.language)}</span>
                             </div>
                         </div>
-                        <div className="flex justify-center items-center gap-6 text-gray-400">
+                        <div className="flex justify-center items-center gap-8 text-gray-400">
                             <button onClick={() => handleVote('like')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userLike ? 'text-green-500' : 'hover:text-white'}`} disabled={isAssessed} title={t("Agree")}>
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
                                 <span>{(prediction.likes || []).length}</span>

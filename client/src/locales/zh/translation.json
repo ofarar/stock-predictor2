@@ -916,7 +916,7 @@
     },
     "badgeDetailModal": {
         "shareButton": "分享",
-        "shareTweet": "我刚刚获得了 {{tier}} “{{name}}” 徽章！{{icon}} 快来关注我的预测吧：{{url}}"
+        "shareTweet": "我刚刚获得了 {{tier}} “{{name}}” 徽章！{{icon}} 快来关注我的预测吧："
     },
     "market_watch": {
         "title": "市场观察",

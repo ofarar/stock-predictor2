@@ -916,7 +916,7 @@
     },
     "badgeDetailModal": {
         "shareButton": "Compartir",
-        "shareTweet": "¡Acabo de ganar la insignia '{{name}}' de nivel {{tier}}! {{icon}} Sigue mis predicciones: {{url}}"
+        "shareTweet": "¡Acabo de ganar la insignia '{{name}}' de nivel {{tier}}! {{icon}} Sigue mis predicciones: "
     },
     "market_watch": {
         "title": "Vigilancia del mercado",

@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ShareModal from './ShareModal'; // <-- 1. Import new component
-import axios from 'axios';
-import toast from 'react-hot-toast';
 
 const badgeStyles = {
     Bronze: { color: 'text-yellow-600', icon: '🥉' },
@@ -34,25 +32,11 @@ const BadgeDetailModal = ({ badge, onClose }) => {
     const url = window.location.href; // This will be the profile URL
     const icon = badgeStyles[badge.tier]?.icon || '🏆';
     // Use the *new* translation key
-    const shareText = t('badge.shareTweet', {
+    const shareText = t('badgeDetailModal.shareTweet', {
         tier: t(`badges.tiers.${badge.tier}`, badge.tier),
         name: badge.name,
         icon: icon
     });
-
-    // --- 5. NEW HANDLER FOR SHARE CLICK ---
-    const handleShareClick = () => {
-        // Award points for sharing
-        axios.post(`${process.env.REACT_APP_API_URL}/api/activity/share`, {}, { withCredentials: true })
-            .then(() => {
-                // 2. SHOW A SUCCESS TOAST
-                toast.success('+5 Analyst Rating!', { duration: 1500 });
-            })
-            .catch(err => console.log("Failed to log share activity."));
-
-        // Open the modal
-        setIsShareModalOpen(true);
-    };
 
     return (
         <>
@@ -60,7 +44,7 @@ const BadgeDetailModal = ({ badge, onClose }) => {
             <ShareModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
-                title={t('badge.shareTitle', 'Share Badge')}
+                title={t('badgeDetailModal.shareTitle', 'Share Badge')}
                 text={shareText}
                 url={url}
             />
@@ -88,7 +72,7 @@ const BadgeDetailModal = ({ badge, onClose }) => {
                         {/* --- This button now opens the ShareModal --- */}
                         <button
                             type="button"
-                            onClick={handleShareClick}
+                            onClick={() => setIsShareModalOpen(true)}
                             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 text-center flex items-center justify-center gap-2"
                         >
                             <ShareIcon />
