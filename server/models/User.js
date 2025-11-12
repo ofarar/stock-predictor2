@@ -72,7 +72,7 @@ const UserSchema = new Schema({
         badgeId: { type: String, required: true },
         tier: { type: String, enum: ['Bronze', 'Silver', 'Gold'], required: true },
         achievedAt: { type: Date, default: Date.now }
-    }],
+    }], default: [],
     lastCheckedGoldenFeed: { type: Date, default: Date.now },
     dailyPredictionCount: { type: Number, default: 0 }, // <-- ADD THIS LINE
     lastPredictionDate: { type: Date },

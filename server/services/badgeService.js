@@ -48,7 +48,7 @@ const awardBadges = async (user) => {
 
     console.log(`\n--- Checking badges for user: ${user.username} ---`);
 
-  // --- FIX: On-the-fly migration from Number to Object ---
+    // --- FIX: On-the-fly migration from Number to Object ---
     let currentRating = user.analystRating;
     if (typeof currentRating !== 'object' || currentRating === null) {
         const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
@@ -61,6 +61,12 @@ const awardBadges = async (user) => {
             fromReferrals: 0,
             fromRanks: 0
         };
+    }
+    // --- END FIX ---
+
+    // --- FIX: Initialize badges array if it's missing for old users ---
+    if (!user.badges) {
+        user.badges = [];
     }
     // --- END FIX ---
 

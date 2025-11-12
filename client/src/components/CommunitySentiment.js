@@ -24,7 +24,7 @@ const SentimentCard = ({ type, data, ticker, currentPrice, isUpdating }) => {
                 <div className="flex items-baseline justify-end gap-2">
                     {percentageChange !== null ? (
                         <p className={`text-sm font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            ({percentageChange >= 0 ? '+' : ''}{formatPercentage(percentageChange, i18n.language)})
+                            ({percentageChange >= 0 ? '' : ''}{formatPercentage(percentageChange, i18n.language)})
                         </p>
                     ) : (
                         <p className="text-sm font-bold text-gray-500">

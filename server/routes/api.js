@@ -127,7 +127,7 @@ router.post('/activity/share', actionLimiter, async (req, res) => {
             };
         }
         // --- END FIX ---
-console.error("Error in /api/activity/share:", user.analystRating.total); // Add logging
+        console.error("Error in /api/activity/share:", user.analystRating.total); // Add logging
         user.analystRating.total = (user.analystRating.total || 0) + 5;
         user.analystRating.fromShares = (user.analystRating.fromShares || 0) + 5;
 
@@ -2280,10 +2280,14 @@ router.get('/stock/:ticker/historical', async (req, res) => {
     try {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 90); // Get data for the last 90 days
+        const endDate = new Date(); // Today
 
+        const period1String = startDate.toISOString().split('T')[0];
+        const period2String = endDate.toISOString().split('T')[0];
 
         const result = await financeAPI.getHistorical(ticker, {
-            period1: startDate,
+            period1: period1String,
+            period2: period2String,
         });
 
         res.json(result);

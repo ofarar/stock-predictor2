@@ -6,15 +6,14 @@ const PredictionLog = require('../models/PredictionLog');
 const JobLog = require('../models/JobLog');
 const Notification = require('../models/Notification');
 const { awardBadges } = require('../services/badgeService');
-const financeAPI = require('../services/financeAPI'); // <-- USE THE ADAPTER
+const financeAPI = require('../services/financeAPI');
 
 /**
  * Calculates a score based on how close a prediction was to the actual price.
- * (This function remains unchanged)
  */
 function calculateProximityScore(predictedPrice, actualPrice) {
     const MAX_SCORE = 100;
-    const MAX_ERROR_PERCENTAGE = 0.20; // Predictions off by >20% get 0 points.
+    const MAX_ERROR_PERCENTAGE = 0.20;
     if (actualPrice === 0) return 0;
     const error = Math.abs(predictedPrice - actualPrice);
     const errorPercentage = error / actualPrice;
@@ -26,32 +25,68 @@ function calculateProximityScore(predictedPrice, actualPrice) {
 }
 
 /**
- * Fetches the historical price of a stock for a specific date (deadline).
- * (This function is now updated to use the financeAPI adapter)
+ * Fetches the historical price for a date.
+ * If it fails (weekend/holiday), it will "walk backwards" up to 4 days to find the last valid trading day.
  */
 async function getActualStockPrice(ticker, deadline) {
     try {
-        // Format deadline to 'YYYY-MM-DD'
-        const dateString = deadline.toISOString().split('T')[0];
+        // Helper function to format date to 'YYYY-MM-DD'
+        const toYYYYMMDD = (date) => date.toISOString().split('T')[0];
 
-        console.log(`Fetching historical price for ${ticker} on ${dateString}`);
+        // Helper function to make the API call (uses v3-compatible period1/period2)
+        const fetchPrice = async (date) => {
+            const period1 = toYYYYMMDD(date);
+            
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+            const period2 = toYYYYMMDD(nextDay);
+            
+            const result = await financeAPI.getHistorical(ticker, {
+                period1: period1,
+                period2: period2,
+                interval: '1d'
+            });
 
-        // Use the adapter's getHistorical function
-        const result = await financeAPI.getHistorical(ticker, {
-            period1: dateString,
-            interval: '1d' // Ensure we ask for daily
-        });
+            if (result && result.length > 0 && result[0].close) {
+                return result[0].close; // Success
+            }
+            return null; // No data for this day
+        };
 
-        if (result && result.length > 0) {
-            // Return the closing price for that day
-            return result[0].close;
-        }
+        let price = await fetchPrice(deadline);
+        if (price !== null) return price; // Got it on the first try
+
+        // 1st Retry (T-1)
+        console.warn(`No price data for ${ticker} on ${toYYYYMMDD(deadline)}. Retrying for T-1.`);
+        const tMinus1 = new Date(deadline);
+        tMinus1.setDate(tMinus1.getDate() - 1);
+        price = await fetchPrice(tMinus1);
+        if (price !== null) return price;
+
+        // 2nd Retry (T-2)
+        console.warn(`No price data for ${ticker} on ${toYYYYMMDD(tMinus1)}. Retrying for T-2.`);
+        const tMinus2 = new Date(deadline);
+        tMinus2.setDate(tMinus2.getDate() - 2);
+        price = await fetchPrice(tMinus2);
+        if (price !== null) return price;
+        
+        // 3rd Retry (T-3) - Final attempt (for long weekends)
+        console.warn(`No price data for ${ticker} on ${toYYYYMMDD(tMinus2)}. Retrying for T-3.`);
+        const tMinus3 = new Date(deadline);
+        tMinus3.setDate(tMinus3.getDate() - 3);
+        price = await fetchPrice(tMinus3);
+        if (price !== null) return price;
+
+        // Give up
+        console.error(`Could not get price for ${ticker} even after 3 retries. Skipping.`);
         return null;
+
     } catch (error) {
         console.error(`Could not fetch price for ${ticker}:`, error.message);
         return null;
     }
 }
+
 
 const runAssessmentJob = async () => {
     try {
@@ -63,13 +98,14 @@ const runAssessmentJob = async () => {
     } catch (err) {
         console.error("CRITICAL: Could not update cron job heartbeat.", err);
     }
-
+    
     console.log('Starting assessment job...');
 
+    // Populate the full user object, including new fields
     const predictionsToAssess = await Prediction.find({
         status: 'Active',
         deadline: { $lte: new Date() }
-    }).populate('userId', 'username followers notificationSettings'); // <-- Get notificationSettings
+    }).populate('userId'); 
 
     if (predictionsToAssess.length === 0) {
         console.log('No predictions to assess.');
@@ -78,14 +114,8 @@ const runAssessmentJob = async () => {
 
     console.log(`Found ${predictionsToAssess.length} predictions to assess.`);
 
-    // --- START: OPTIMIZATION LOGIC ---
-
-    // 1. Group predictions by Ticker and Deadline
-    // We create a unique key like "AAPL-2025-11-07"
     const predictionGroups = new Map();
-
     for (const prediction of predictionsToAssess) {
-        // Use toISOString and split to get a clean 'YYYY-MM-DD' date key
         const dateKey = prediction.deadline.toISOString().split('T')[0];
         const key = `${prediction.stockTicker}-${dateKey}`;
 
@@ -97,58 +127,46 @@ const runAssessmentJob = async () => {
 
     console.log(`Grouped into ${predictionGroups.size} unique API calls.`);
 
-    // 2. Loop over the GROUPS, not the individual predictions
     for (const [key, predictions] of predictionGroups.entries()) {
         const [ticker, dateKey] = key.split('-');
-        const deadline = new Date(dateKey); // Re-create the Date object for the API call
+        const deadline = new Date(dateKey); 
 
         try {
-            // 3. Make ONE API call per group
             const actualPrice = await getActualStockPrice(ticker, deadline);
 
             if (actualPrice === null) {
-                console.error(`Could not get price for ${ticker}. Skipping ${predictions.length} predictions.`);
-                continue; // Skip this whole group
+                console.error(`Could not get price for ${ticker} on ${dateKey} after retries. Skipping ${predictions.length} predictions.`);
+                continue; 
             }
 
-            // A map to hold user score updates, so we only update each user once
-            const userScoreUpdates = new Map();
+            const userUpdates = new Map();
 
-            // 4. Loop over the PREDICTIONS within the group (fast, no API calls)
             for (const prediction of predictions) {
                 try {
                     const score = calculateProximityScore(prediction.targetPrice, actualPrice);
 
-                    // --- NEW: Analyst Rating Logic ---
                     let ratingToAward = 0;
-                    if (score > 90) {
-                        ratingToAward = 10; // Excellent Prediction
-                    } else if (score > 80) {
-                        ratingToAward = 5;  // Great Prediction
-                    } else if (score > 70) {
-                        ratingToAward = 2;  // Good Prediction
-                    }
-                    // (Scores below 70 get 0 points)
-                    // --- END NEW LOGIC ---
+                    if (score > 90) ratingToAward = 10;
+                    else if (score > 80) ratingToAward = 5;
+                    else if (score > 70) ratingToAward = 2;
 
-                    // Update Prediction
                     prediction.status = 'Assessed';
                     prediction.score = score;
                     prediction.actualPrice = actualPrice;
                     await prediction.save();
 
-                    // Add score to the user's update map
                     const userId = prediction.userId._id.toString();
-                    const currentUpdate = userScoreUpdates.get(userId) || { score: 0, rating: 0 };
-                    userScoreUpdates.set(userId, {
-                        score: currentUpdate.score + score,
-                        rating: currentUpdate.rating + ratingToAward
-                    });
+                    if (!userUpdates.has(userId)) {
+                        // Store the populated user object from the prediction
+                        userUpdates.set(userId, { score: 0, rating: 0, user: prediction.userId });
+                    }
+                    const currentUpdate = userUpdates.get(userId);
+                    currentUpdate.score += score;
+                    currentUpdate.rating += ratingToAward;
 
-                    // --- Create "Score Assessed" Notification ---
                     await new Notification({
                         recipient: prediction.userId._id,
-                        type: 'PredictionAssessed',
+                        type: 'PredictionAssessed', // This is now a valid type
                         messageKey: 'notifications.predictionAssessed',
                         metadata: {
                             stockTicker: prediction.stockTicker,
@@ -158,7 +176,6 @@ const runAssessmentJob = async () => {
                         link: `/prediction/${prediction._id}`
                     }).save();
 
-                    // Create a detailed log
                     await new PredictionLog({
                         predictionId: prediction._id,
                         userId: prediction.userId._id,
@@ -171,91 +188,49 @@ const runAssessmentJob = async () => {
                     }).save();
 
                     console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} scored ${score} points.`);
-
+                
                 } catch (innerError) {
                     console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
-                    // Don't stop, continue to the next prediction in the group
                 }
-            } // --- End of inner prediction loop ---
+            } 
 
             // 5. Now, update all users in this group (Batch DB update)
-            for (const [userId, updates] of userScoreUpdates.entries()) {
+            for (const [userId, updates] of userUpdates.entries()) {
                 try {
-                    // --- FIX: Use Read-Modify-Save ---
-                    // --- FIX: Use Read-Modify-Save & Data Migration ---
-                    const user = await User.findById(userId);
-                    if (!user) continue; // Skip if user was deleted
-
-                    let currentRating = user.analystRating;
-                    if (typeof currentRating !== 'object' || currentRating === null) {
-                        // This user has the old 'number' schema or no schema.
-                        // We'll assume old points were from predictions as a default.
-                        const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
+                    const user = updates.user; // Get the populated user object
+                    
+                    // --- FIX: On-the-fly migration for old users ---
+                    if (typeof user.analystRating !== 'object' || user.analystRating === null) {
+                        const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
                         user.analystRating = {
                             total: oldPoints,
-                            fromPredictions: oldPoints, // Assume old points came from here
+                            fromPredictions: oldPoints,
                             fromBadges: 0,
                             fromShares: 0,
                             fromReferrals: 0,
                             fromRanks: 0
                         };
                     }
-
+                    
+                    // Apply updates
                     user.score = (user.score || 0) + updates.score;
                     user.analystRating.total = (user.analystRating.total || 0) + updates.rating;
                     user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.rating;
 
                     await user.save();
-                    // --- END FIX ---
-
-                    // We already have the user object, so we can pass it directly
+                    
+                    // Award badges with the now-updated user object
                     await awardBadges(user);
-                    // --- END FIX ---
-                } catch (userUpdateError) {
-                    console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
-                }
-            }
-
-            // --- FIX: This block was removed in a previous step by mistake ---
-            // This block should be *outside* the inner loop, but *inside* the outer loop
-            for (const [userId, updates] of userScoreUpdates.entries()) {
-                try {
-                    // --- FIX: Use Read-Modify-Save & Data Migration ---
-                    const user = await User.findById(userId);
-                    if (!user) continue; // Skip if user was deleted
-
-                    let currentRating = user.analystRating;
-                    if (typeof currentRating !== 'object' || currentRating === null) {
-                        const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
-                        user.analystRating = {
-                            total: oldPoints, fromPredictions: oldPoints, fromBadges: 0,
-                            fromShares: 0, fromReferrals: 0, fromRanks: 0
-                        };
-                    }
-
-                    user.score = (user.score || 0) + updates.score;
-                    user.analystRating.total = (user.analystRating.total || 0) + updates.rating;
-                    user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.rating;
-
-                    await user.save();
-                    // --- END FIX ---
-
-                    // We already have the user object, so we can pass it directly
-                    await awardBadges(user); // <-- This is correct
 
                 } catch (userUpdateError) {
                     console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
                 }
             }
-            // --- END FIX ---
-
-        } catch (outerError) { // This catch is for the getActualStockPrice call
+            
+        } catch (outerError) {
             console.error(`Failed to process group ${key}:`, outerError);
-            // Don't stop, continue to the next group
         }
-    } // --- End of outer group loop ---
-
-    // --- END: OPTIMIZATION LOGIC ---
+    } 
 
     console.log('Assessment job finished.');
 };
