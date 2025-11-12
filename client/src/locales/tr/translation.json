@@ -1026,6 +1026,8 @@
   "referralModal.copy": "Kopyala",
   "referralModal.share": "X'te Paylaş",
   "referralModal.shareTweet": "StockPredictor'a katıl ve piyasa tahminleri yapmaya başla! Sadece doğru tahmin yaparak platform gelirinden pay alabiliriz.",
+  "referralModal.shareOnTelegram": "Telegram'da Paylaş",
+  "referralModal.shareTelegram": "StockPredictor'a katıl ve piyasa tahminleri yapmaya başla! Sadece doğru tahmin yaparak platform gelirinden pay alabiliriz.",
   "analystRating.pie.predictions": "Tahminlerden",
   "analystRating.pie.badges": "Rozetlerden",
   "analystRating.pie.shares": "Paylaşımlardan",
