@@ -211,6 +211,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
             <CreatorPoolModal
                 isOpen={isCreatorPoolModalOpen}
                 onClose={() => setIsCreatorPoolModalOpen(false)}
+                currentProfileId={user._id}
             />
 
             {/* 3. ADD THE NEW MODAL */}

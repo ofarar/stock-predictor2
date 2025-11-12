@@ -8,7 +8,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const CreatorPoolModal = ({ isOpen, onClose }) => {
+const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
     const { t, i18n } = useTranslation();
     const [leaderboard, setLeaderboard] = useState([]);
     const [totalRating, setTotalRating] = useState(1);
@@ -28,6 +28,29 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
                 .finally(() => setLoading(false));
         }
     }, [isOpen]);
+
+    // --- NEW useEffect to handle scrolling ---
+    useEffect(() => {
+        if (!isOpen || loading || selectedUser || !currentProfileId) {
+            return; // Don't run if modal is closed, loading, in pie view, or no ID provided
+        }
+
+        // We need to wait a brief moment for the UI to render before scrolling
+        const timer = setTimeout(() => {
+            // Find the specific user's row element
+            const userElement = document.getElementById(`leaderboard-user-${currentProfileId}`);
+            
+            if (userElement) {
+                // Scroll to it and center it
+                userElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }, 100); // 100ms delay is usually enough
+
+        return () => clearTimeout(timer); // Cleanup the timer
+    }, [isOpen, loading, selectedUser, currentProfileId]); // Runs when data is loaded
 
     if (!isOpen) return null;
 
@@ -75,7 +98,7 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
             },
             tooltip: {
                 callbacks: {
-                    label: function (context) {
+                    label: function(context) {
                         const label = context.label || '';
                         const value = context.parsed || 0;
                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -93,7 +116,7 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
                 {/* --- HEADER --- */}
                 <div className="flex items-center justify-between mb-4">
                     {selectedUser ? (
-                        <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-white flex items-center gap-1">
+                        <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-white flex items-center gap-1 text-sm font-medium">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
                             {t('common.back')}
                         </button>
@@ -104,14 +127,13 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-
-
-
+                
+                {/* --- BODY (Conditional) --- */}
                 {selectedUser ? (
                     // --- PIE CHART VIEW ---
                     <div className="animate-fade-in-fast space-y-4">
                         <div className="flex flex-col items-center">
-                            <img src={selectedUser.avatar} alt="avatar" className="w-16 h-16 rounded-full" />
+                            <img src={selectedUser.avatar} alt="avatar" className="w-16 h-16 rounded-full"/>
                             <h3 className="text-xl font-bold text-white mt-2">{selectedUser.username}</h3>
                             <p className="text-gray-400">{t('analyst_rating_label')}: {selectedUser.analystRating.toLocaleString()}</p>
                         </div>
@@ -125,7 +147,7 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
                         <p className="text-gray-400 text-sm mb-4">
                             {t('creatorPoolModal.description')}
                         </p>
-
+                        
                         <div className="bg-gray-700 p-3 rounded-md text-center mb-4">
                             <p className="text-gray-300 text-sm">{t('creatorPoolModal.totalRating')}</p>
                             <p className="text-2xl font-bold text-white">{totalRating.toLocaleString()}</p>
@@ -135,14 +157,19 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
                             {loading ? (
                                 <p className="text-gray-400 text-center">{t('explore_loading')}</p>
                             ) : (
-                                leaderboard.map((user, index) => (
-                                    <button
-                                        key={user._id}
+                                leaderboard.map((user, index) => {
+                                    const isCurrentUser = user._id === currentProfileId;
+                                    
+                                    return (
+                                    <button 
+                                        key={user._id} 
+                                        id={isCurrentUser ? `leaderboard-user-${user._id}` : undefined} // <-- Add ID
                                         onClick={() => setSelectedUser(user)}
-                                        className="w-full flex items-center bg-gray-700 p-2 rounded-md hover:bg-gray-600"
+                                        // <-- Add highlight ring -->
+                                        className={`w-full flex items-center bg-gray-700 p-2 rounded-md hover:bg-gray-600 transition-all ${isCurrentUser ? 'ring-2 ring-green-400' : ''}`}
                                     >
                                         <span className="font-bold text-gray-400 w-8 text-center">{index + 1}</span>
-                                        <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2" />
+                                        <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2"/>
                                         <span className="text-white font-semibold flex-grow text-left">{user.username}</span>
                                         <div className="text-right">
                                             <p className="font-bold text-green-400">{user.analystRating.toLocaleString()}</p>
@@ -151,7 +178,8 @@ const CreatorPoolModal = ({ isOpen, onClose }) => {
                                             </p>
                                         </div>
                                     </button>
-                                ))
+                                    );
+                                })
                             )}
                         </div>
                     </>
