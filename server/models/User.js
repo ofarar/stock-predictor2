@@ -27,7 +27,14 @@ const UserSchema = new Schema({
     goldenMemberPriceId: { type: String }, // Stripe Price ID specific to this member
     // --- END STRIPE FIELDS ---
     score: { type: Number, default: 0, index: true },
-    analystRating: { type: Number, default: 0, index: true },
+    analystRating: {
+        total: { type: Number, default: 0, index: true },
+        fromPredictions: { type: Number, default: 0 },
+        fromBadges: { type: Number, default: 0 },
+        fromShares: { type: Number, default: 0 },
+        fromReferrals: { type: Number, default: 0 }, // For your new feature
+        fromRanks: { type: Number, default: 0 }      // For your new feature
+    },
     language: { type: String, default: 'en' },
 
     // --- START: NEW FIELDS ---

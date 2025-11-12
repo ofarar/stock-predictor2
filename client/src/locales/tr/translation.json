@@ -1017,8 +1017,12 @@
   "analystRatingInfo.section3.text": "Sıralamalarınızı veya rozetlerinizi paylaştığınızda küçük bir puan bonusu alırsınız. Bu, spam'ı önlemek için sınırlandırılmıştır.",
   "analystRatingInfo.section4.title": "4. Lider Tablosu Sıralamaları (Yakında)",
   "analystRatingInfo.section4.text": "Küresel lider tablolarında üst sıralara ulaşmak, tutarlı yüksek performansı ödüllendiren günlük veya haftalık bir puan bonusu sağlayacaktır.",
-  "terms_page.sections.analyst_rating.title": "6. Analist Puanı Sistemi",
-  "terms_page.sections.analyst_rating.content": "Hizmet, yüksek kaliteli katkıları ödüllendirmek için bir 'Analist Puanı' sistemine sahiptir. Kullanıcılar, tahminlerde yüksek puanlar elde etmek (örn. >%70 doğruluk), platform rozetleri kazanmak, yüksek lider tablosu sıralamalarına ulaşmak ve platform içeriğini paylaşmak dahil ancak bunlarla sınırlı olmamak üzere çeşitli etkinlikler için puan kazanabilirler. Belirli etkinlikler ve puan miktarları StockPredictor tarafından belirlenir ve herhangi bir zamanda değiştirilebilir. Bu puan bir promosyon özelliğidir ve doğrudan nakit değeri yoktur.",
-  "terms_page.sections.creator_pool.title": "7. İçerik Üretici Havuzu Ödemeleri",
-  "terms_page.sections.creator_pool.content": "[YASAL_PLATZHOLDER: Aşağıdakiler avukatınız için bir şablondur ve YASAL TAVSİYE DEĞİLDİR.] En iyi katkıda bulunanlarımızı ödüllendirmek amacıyla StockPredictor, üç aylık net kârının (gelir eksi tüm işletme giderleri, vergiler ve ücretler) yüzde ellisini (%50) bir 'İçerik Üretici Havuzuna' ayırır. Bu havuz, kullanıcılara platformdaki toplam Analist Puanı içindeki yüzdelerine göre 'Analist Puanı' baz alınarak dağıtılır. Ödemeler üç ayda bir hesaplanır ve Net-30 bazında (çeyrek bittikten 30 gün sonra) dağıtılır. Bir ödeme almaya hak kazanmak için, bir kullanıcının en az 100,00 USD tutarında birikmiş ödeme bakiyesine sahip olması gerekir. Bu minimumun altındaki bakiyeler bir sonraki çeyreğe devreder. Tüm kullanıcılar, herhangi bir ödemeden kaynaklanan kendi vergi yükümlülüklerinden sorumludur. StockPredictor, İçerik Üretici Havuzu programını herhangi bir zamanda bildirimde bulunarak veya bulunmaksızın değiştirme, duraklatma veya sonlandırma hakkını saklı tutar."
+  "analystRatingInfo.section5.title": "5. Davetler (Yakında)",
+  "analystRatingInfo.section5.text": "Platforma yeni, aktif kullanıcılar davet ettiğinizde önemli bir puan bonusu kazanacaksınız.",
+  "analystRating.pie.predictions": "Tahminlerden",
+  "analystRating.pie.badges": "Rozetlerden",
+  "analystRating.pie.shares": "Paylaşımlardan",
+  "analystRating.pie.ranks": "Sıralamalardan",
+  "analystRating.pie.referrals": "Davetlerden",
+  "common.back": "Geri"
 }

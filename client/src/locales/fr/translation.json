@@ -1016,8 +1016,12 @@
     "analystRatingInfo.section3.text": "Vous recevez un petit bonus de note lorsque vous partagez vos rangs ou badges. Ceci est limité pour éviter le spam.",
     "analystRatingInfo.section4.title": "4. Rangs de Classement (Bientôt)",
     "analystRatingInfo.section4.text": "Atteindre une position de tête dans les classements mondiaux fournira un bonus de note quotidien ou hebdomadaire, récompensant une haute performance constante.",
-    "terms_page.sections.analyst_rating.title": "6. Système de Note d'Analyste",
-    "terms_page.sections.analyst_rating.content": "Le Service propose un système de 'Note d'Analyste' pour récompenser les contributions de haute qualité. Les utilisateurs peuvent gagner des notes pour diverses activités, y compris, mais sans s'y limiter : atteindre des scores élevés sur les prédictions (par ex. >70% de précision), gagner des badges de la plateforme, atteindre des rangs élevés dans le classement et partager du contenu de la plateforme. Les activités spécifiques et les montants de note sont déterminés par StockPredictor et peuvent être modifiés à tout moment. Cette note est une fonctionnalité promotionnelle et n'a aucune valeur monétaire directe.",
-    "terms_page.sections.creator_pool.title": "7. Paiements du Pool Créateurs",
-    "terms_page.sections.creator_pool.content": "[MARQUEUR_JURIDIQUE : Ce qui suit est un modèle pour votre avocat et ne constitue PAS un conseil juridique.] En récompense à nos meilleurs contributeurs, StockPredictor alloue cinquante pour cent (50%) de son bénéfice net trimestriel (revenus moins toutes les dépenses d'exploitation, taxes et frais) à un 'Pool Créateurs'. Ce pool est distribué aux utilisateurs en fonction de leur 'Note d'Analyste' en pourcentage de la Note d'Analyste totale sur la plateforme. Les paiements sont calculés trimestriellement et distribués sur une base Net-30 (30 jours après la fin du trimestre). Pour être éligible à un paiement, un utilisateur doit avoir un solde de paiement accumulé minimum de 100,00 $ US. Les soldes inférieurs à ce minimum seront reportés au trimestre suivant. Tous les utilisateurs sont responsables de leurs propres obligations fiscales résultant de tout paiement. StockPredictor se réserve le droit de modifier, de suspendre ou de mettre fin au programme du Pool Créateurs à tout moment, avec ou sans préavis."
+    "analystRatingInfo.section5.title": "5. Parrainages (Bientôt disponible)",
+    "analystRatingInfo.section5.text": "Vous gagnerez un bonus de note important pour avoir invité de nouveaux utilisateurs actifs sur la plateforme.",
+    "analystRating.pie.predictions": "Des Prédictions",
+    "analystRating.pie.badges": "Des Badges",
+    "analystRating.pie.shares": "Des Partages",
+    "analystRating.pie.ranks": "Des Rangs",
+    "analystRating.pie.referrals": "Des Parrainages",
+    "common.back": "Retour"
 }

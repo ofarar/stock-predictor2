@@ -1016,8 +1016,12 @@
     "analystRatingInfo.section3.text": "当您分享您的排名或徽章时，您会收到少量评分奖励。此功能有频率限制以防止垃圾信息。",
     "analystRatingInfo.section4.title": "4. 排行榜排名（即将推出）",
     "analystRatingInfo.section4.text": "在全球排行榜上取得最高排名将提供每日或每周的评分奖励，以表彰持续的高水平表现。",
-    "terms_page.sections.analyst_rating.title": "6. 分析师评分系统",
-    "terms_page.sections.analyst_rating.content": "本服务设有“分析师评分”系统，以奖励高质量的贡献。用户可以通过各种活动获得评分，包括但不限于：在预测中获得高分（例如 >70% 的准确率）、赢得平台徽章、在排行榜上获得高排名以及分享平台内容。具体的活动和评分数量由 StockPredictor 决定，并可能随时更改。此评分为一项促销功能，没有直接的现金价值。",
-    "terms_page.sections.creator_pool.title": "7. 创作者池支付",
-    "terms_page.sections.creator_pool.content": "[法律占位符：以下内容仅供您的律师参考，不构成法律建议。] 作为对我们顶级贡献者的奖励，StockPredictor 将其季度净利润（收入减去所有运营支出、税费）的百分之五十（50%）分配到一个“创作者池”。该池根据用户在平台总分析师评分中所占百分比的“分析师评分”分配给用户。付款按季度计算，并按 Net-30（季度结束后 30 天）分配。用户必须累积至少 100.00 美元的付款余额才有资格获得付款。低于此最低金额的余额将结转至下一季度。所有用户均需自行承担因任何付款而产生的税务责任。StockPredictor 保留随时修改、暂停或终止创作者池计划的权利，无论是否另行通知。"
+    "analystRatingInfo.section5.title": "5. 推荐 (即将推出)",
+    "analystRatingInfo.section5.text": "您将因邀请新的活跃用户加入平台而获得丰厚的评分奖励。",
+    "analystRating.pie.predictions": "来自预测",
+    "analystRating.pie.badges": "来自徽章",
+    "analystRating.pie.shares": "来自分享",
+    "analystRating.pie.ranks": "来自排名",
+    "analystRating.pie.referrals": "来自推荐",
+    "common.back": "返回"
 }

@@ -1016,8 +1016,12 @@
     "analystRatingInfo.section3.text": "Recibes una pequeña bonificación de rating cuando compartes tus rangos o insignias. Esto está limitado para prevenir el spam.",
     "analystRatingInfo.section4.title": "4. Rangos en la Clasificación (Próximamente)",
     "analystRatingInfo.section4.text": "Alcanzar una posición superior en las clasificaciones globales proporcionará una bonificación de rating diaria o semanal, recompensando el alto rendimiento constante.",
-    "terms_page.sections.analyst_rating.title": "6. Sistema de Rating de Analista",
-    "terms_page.sections.analyst_rating.content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictor y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo.",
-    "terms_page.sections.creator_pool.title": "7. Pagos del Fondo de Creadores",
-    "terms_page.sections.creator_pool.content": "[MARCADOR_LEGAL: Lo siguiente es una plantilla para su abogado y NO es asesoramiento legal.] Como recompensa a nuestros principales contribuyentes, StockPredictor asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictor se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
+    "analystRatingInfo.section5.title": "5. Referidos (Próximamente)",
+    "analystRatingInfo.section5.text": "Ganará una bonificación de rating significativa por invitar a usuarios nuevos y activos a la plataforma.",
+    "analystRating.pie.predictions": "De Predicciones",
+    "analystRating.pie.badges": "De Insignias",
+    "analystRating.pie.shares": "De Compartidos",
+    "analystRating.pie.ranks": "De Rangos",
+    "analystRating.pie.referrals": "De Referidos",
+    "common.back": "Volver"
 }

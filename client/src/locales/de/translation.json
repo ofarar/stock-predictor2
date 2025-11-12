@@ -1010,9 +1010,12 @@
     "analystRatingInfo.section3.title": "3. Inhalte Teilen (+5 Rating)",
     "analystRatingInfo.section3.text": "Sie erhalten einen kleinen Rating-Bonus, wenn Sie Ihre Ränge oder Abzeichen teilen. Dies ist ratenbegrenzt, um Spam zu verhindern.",
     "analystRatingInfo.section4.title": "4. Bestenlisten-Ränge (Bald Verfügbar)",
-    "analystRatingInfo.section4.text": "Das Erreichen einer Spitzenposition in den globalen Bestenlisten wird einen täglichen oder wöchentlichen Rating-Bonus gewähren, der konsistente Topleistungen belohnt.",
-    "terms_page.sections.analyst_rating.title": "6. Analysten-Rating-System",
-    "terms_page.sections.analyst_rating.content": "Der Dienst verfügt über ein 'Analysten-Rating'-System, um hochwertige Beiträge zu belohnen. Nutzer können Ratings für verschiedene Aktivitäten erhalten, einschließlich, aber nicht beschränkt auf: Erreichen hoher Punktzahlen bei Prognosen (z. B. >70% Genauigkeit), Verdienen von Plattform-Abzeichen, Erreichen hoher Bestenlisten-Ränge und Teilen von Plattform-Inhalten. Die spezifischen Aktivitäten und Rating-Beträge werden von StockPredictor festgelegt und können jederzeit geändert werden. Dieses Rating ist eine Werbemaßnahme und hat keinen direkten Geldwert.",
-    "terms_page.sections.creator_pool.title": "7. Creator-Pool-Auszahlungen",
-    "terms_page.sections.creator_pool.content": "[RECHTLICHER_PLATZHALTER: Das Folgende ist eine Vorlage für Ihren Anwalt und stellt KEINE Rechtsberatung dar.] Als Belohnung für unsere Top-Beitragenden weist StockPredictor fünfzig Prozent (50%) seines vierteljährlichen Nettogewinns (Einnahmen abzüglich aller Betriebskosten, Steuern und Gebühren) einem 'Creator Pool' zu. Dieser Pool wird an die Nutzer basierend auf ihrem 'Analysten-Rating' als Prozentsatz des gesamten Analysten-Ratings auf der Plattform verteilt. Auszahlungen werden vierteljährlich berechnet und auf einer Netto-30-Basis (30 Tage nach Quartalsende) verteilt. Um Anspruch auf eine Auszahlung zu haben, muss ein Nutzer ein Mindestauszahlungsguthaben von 100,00 USD angesammelt haben. Guthaben unter diesem Minimum werden auf das nächste Quartal übertragen. Alle Nutzer sind für ihre eigenen Steuerverbindlichkeiten verantwortlich, die sich aus etwaigen Auszahlungen ergeben. StockPredictor behält sich das Recht vor, das Creator-Pool-Programm jederzeit mit oder ohne Vorankündigung zu ändern, zu unterbrechen oder zu beenden."
+    "analystRatingInfo.section5.title": "5. Empfehlungen (Bald Verfügbar)",
+    "analystRatingInfo.section5.text": "Sie werden einen erheblichen Rating-Bonus für das Einladen neuer, aktiver Benutzer auf die Plattform erhalten.",
+    "analystRating.pie.predictions": "Aus Prognosen",
+    "analystRating.pie.badges": "Aus Abzeichen",
+    "analystRating.pie.shares": "Aus Teilungen",
+    "analystRating.pie.ranks": "Aus Rängen",
+    "analystRating.pie.referrals": "Aus Empfehlungen",
+    "common.back": "Zurück"
 }

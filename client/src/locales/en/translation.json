@@ -1017,5 +1017,13 @@
   "analystRatingInfo.section3.title": "3. Sharing Content (+5 Rating)",
   "analystRatingInfo.section3.text": "You receive a small rating bonus when you share your ranks or badges. This is rate-limited to prevent spam.",
   "analystRatingInfo.section4.title": "4. Leaderboard Ranks (Coming Soon)",
-  "analystRatingInfo.section4.text": "Achieving a top position on the global leaderboards will provide a daily or weekly rating bonus, rewarding consistent high performance."
+  "analystRatingInfo.section4.text": "Achieving a top position on the global leaderboards will provide a daily or weekly rating bonus, rewarding consistent high performance.",
+  "analystRatingInfo.section5.title": "5. Referrals (Coming Soon)",
+  "analystRatingInfo.section5.text": "You will earn a significant rating bonus for inviting new, active users to the platform.",
+  "analystRating.pie.predictions": "From Predictions",
+  "analystRating.pie.badges": "From Badges",
+  "analystRating.pie.shares": "From Shares",
+  "analystRating.pie.ranks": "From Ranks",
+  "analystRating.pie.referrals": "From Referrals",
+  "common.back": "Back"
 }

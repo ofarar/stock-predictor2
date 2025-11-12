@@ -105,10 +105,37 @@ router.post('/activity/share', actionLimiter, async (req, res) => {
     // Award a small, fixed amount of points for any share action.
     // The 'actionLimiter' we already have prevents a user from spamming this.
     try {
-        await User.findByIdAndUpdate(req.user._id, { $inc: { analystRating: 5 } });
+        // --- FIX: Use Read-Modify-Save to prevent crash on undefined object ---
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+
+        // --- FIX: On-the-fly migration from Number to Object ---
+        let currentRating = user.analystRating;
+        console.error("Error in /api/activity/share:", currentRating); // Add logging
+        if (typeof currentRating !== 'object' || currentRating === null) {
+            // 'currentRating' is a number (like 35) or undefined/null.
+            // We will assume all old points were from 'fromShares' as it's the only one that could have run.
+            const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
+
+            user.analystRating = {
+                total: oldPoints,
+                fromPredictions: 0,
+                fromBadges: 0,
+                fromShares: oldPoints, // Assume old points were from shares
+                fromReferrals: 0,
+                fromRanks: 0
+            };
+        }
+        // --- END FIX ---
+console.error("Error in /api/activity/share:", user.analystRating.total); // Add logging
+        user.analystRating.total = (user.analystRating.total || 0) + 5;
+        user.analystRating.fromShares = (user.analystRating.fromShares || 0) + 5;
+
+        await user.save();
+        // --- END FIX ---
         res.status(200).json({ message: 'Rating applied.' });
     } catch (err) {
-        res.status(500).json({ message: 'Server error.' });
+        console.error("Error in /api/activity/share:", err); // Add logging
     }
 });
 // --- END NEW ROUTE ---
@@ -1943,12 +1970,12 @@ router.get('/profile/:userId', async (req, res) => {
 
         // --- NEW: Get total analyst rating from all users ---
         const totalRatingResult = await User.aggregate([
-            { $group: { _id: null, total: { $sum: "$analystRating" } } }
+            { $group: { _id: null, total: { $sum: "$analystRating.total" } } }
         ]);
         const totalAnalystRating = totalRatingResult[0]?.total || 1; // Use 1 to prevent divide-by-zero
 
         const jsonResponse = {
-            user,
+            user, // user object now contains the full analystRating object
             watchlistQuotes,
             predictions,
             performance, // This now contains all performance data
@@ -2856,17 +2883,26 @@ router.post('/admin/recalculate-badges', async (req, res) => {
 // --- NEW LEADERBOARD ENDPOINT ---
 router.get('/leaderboard/rating', async (req, res) => {
     try {
-        const users = await User.find({ analystRating: { $gt: 0 } })
-            .sort({ analystRating: -1 })
+        const users = await User.find({ 'analystRating.total': { $gt: 0 } })
+            .sort({ 'analystRating.total': -1 })
             .limit(100)
-            .select('username avatar analystRating');
+            .select('username avatar analystRating'); // Select the whole object
 
         const totalRatingResult = await User.aggregate([
-            { $group: { _id: null, total: { $sum: "$analystRating" } } }
+            { $group: { _id: null, total: { $sum: "$analystRating.total" } } }
         ]);
         const totalAnalystRating = totalRatingResult[0]?.total || 1; // Use 1 to prevent divide-by-zero
 
-        res.json({ users, totalAnalystRating });
+        // We need to re-map the users to just send the total for the main list
+        const leaderboardUsers = users.map(u => ({
+            _id: u._id,
+            username: u.username,
+            avatar: u.avatar,
+            analystRating: u.analystRating.total, // Send only the total for the list
+            ratingBreakdown: u.analystRating // Send the full breakdown for the pie chart
+        }));
+
+        res.json({ users: leaderboardUsers, totalAnalystRating });
     } catch (err) {
         res.status(500).json({ message: "Error fetching rating leaderboard." });
     }

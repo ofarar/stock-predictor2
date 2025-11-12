@@ -181,19 +181,36 @@ const runAssessmentJob = async () => {
             // 5. Now, update all users in this group (Batch DB update)
             for (const [userId, updates] of userScoreUpdates.entries()) {
                 try {
-                    // Update user's total score AND new analyst rating
-                    await User.findByIdAndUpdate(userId, {
-                        $inc: {
-                            score: updates.score,
-                            analystRating: updates.rating
-                        }
-                    });
-
-                    // We must fetch the user *after* the score update to run badge check
+                    // --- FIX: Use Read-Modify-Save ---
+                    // --- FIX: Use Read-Modify-Save & Data Migration ---
                     const user = await User.findById(userId);
-                    if (user) {
-                        await awardBadges(user);
+                    if (!user) continue; // Skip if user was deleted
+
+                    let currentRating = user.analystRating;
+                    if (typeof currentRating !== 'object' || currentRating === null) {
+                        // This user has the old 'number' schema or no schema.
+                        // We'll assume old points were from predictions as a default.
+                        const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
+                        user.analystRating = {
+                            total: oldPoints,
+                            fromPredictions: oldPoints, // Assume old points came from here
+                            fromBadges: 0,
+                            fromShares: 0,
+                            fromReferrals: 0,
+                            fromRanks: 0
+                        };
                     }
+
+                    user.score = (user.score || 0) + updates.score;
+                    user.analystRating.total = (user.analystRating.total || 0) + updates.rating;
+                    user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.rating;
+
+                    await user.save();
+                    // --- END FIX ---
+
+                    // We already have the user object, so we can pass it directly
+                    await awardBadges(user);
+                    // --- END FIX ---
                 } catch (userUpdateError) {
                     console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
                 }

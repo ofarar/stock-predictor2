@@ -48,6 +48,22 @@ const awardBadges = async (user) => {
 
     console.log(`\n--- Checking badges for user: ${user.username} ---`);
 
+  // --- FIX: On-the-fly migration from Number to Object ---
+    let currentRating = user.analystRating;
+    if (typeof currentRating !== 'object' || currentRating === null) {
+        const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
+        // We'll assume old points were from predictions
+        user.analystRating = {
+            total: oldPoints,
+            fromPredictions: oldPoints,
+            fromBadges: 0,
+            fromShares: 0,
+            fromReferrals: 0,
+            fromRanks: 0
+        };
+    }
+    // --- END FIX ---
+
     const existingBadges = new Map(user.badges.map(b => [b.badgeId, b.tier]));
     const earnedBadges = [];
 
@@ -82,7 +98,9 @@ const awardBadges = async (user) => {
                     if (earnedTier === 'Bronze') ratingToAward = 100;
                     if (earnedTier === 'Silver') ratingToAward = 250;
                     if (earnedTier === 'Gold') ratingToAward = 500;
-                    user.analystRating = (user.analystRating || 0) + ratingToAward;
+                    // Update the object fields
+                    user.analystRating.total = (user.analystRating.total || 0) + ratingToAward;
+                    user.analystRating.fromBadges = (user.analystRating.fromBadges || 0) + ratingToAward;
                     console.log(`   ==> AWARDING new/upgraded badge: ${definition.name} (${earnedTier}) and +${ratingToAward} Rating`);
                     // --- END NEW LOGIC ---
                 }

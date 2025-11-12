@@ -34,7 +34,7 @@ const ProfileStats = ({ user, performance, predictionCount, totalAnalystRating, 
     const { t, i18n } = useTranslation();
 
     // Calculate share percentage, ensure it's a number
-    const userRating = user.analystRating || 0;
+    const userRating = user.analystRating?.total || 0; // <-- READ FROM .total
     const totalRating = totalAnalystRating || 1;
     const sharePercent = (userRating / totalRating) * 100;
 
@@ -44,7 +44,7 @@ const ProfileStats = ({ user, performance, predictionCount, totalAnalystRating, 
             {/* Replaced 'Total Points' with 'Analyst Rating' */}
             <StatCard
                 label={t('analyst_rating_label')}
-                value={userRating}
+                value={userRating.toLocaleString()} // <-- Use toLocaleString
                 onInfoClick={onRatingInfoClick} // <-- PASS PROP
             />
 
