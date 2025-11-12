@@ -64,9 +64,7 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                     {user.youtubeLink && (<a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z" /></svg></a>)}
                     {user.telegramLink && (
                         <a href={user.telegramLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" title="Telegram">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009.176 16.5l-3.328-1.026 5.99-2.825.002.002.002.002a1 1 0 00.86-.098l3-2a1 1 0 000-1.8l-3-2a1 1 0 00-.86-.098l-.002.002-.002.002-5.99-2.825L9.176 3.5a1 1 0 00.707-1.028l-5-1.429a1 1 0 00-1.17 1.41l7 14zM16 10a1 1 0 10-2 0 1 1 0 002 0z" />
-                            </svg>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" /></svg>
                         </a>
                     )}
                 </div>
