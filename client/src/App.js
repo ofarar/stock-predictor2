@@ -109,7 +109,7 @@ function App() {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/prediction/:predictionId" element={<PredictionDetailPage requestLogin={requestLogin} settings={settings} />} />
+            <Route path="/prediction/:predictionId" element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
             <Route path="/golden-feed" element={<GoldenFeedPage settings={settings} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/watchlist" element={<WatchlistPage settings={settings} />} />

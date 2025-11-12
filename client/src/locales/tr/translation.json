@@ -442,6 +442,14 @@
     "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} tarihine kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
     "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{score}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu."
   },
+  "editprofile_telegram_label": "Telegram Bağlantısı",
+  "editprofile_telegram_placeholder": "https://t.me/kullaniciadiniz",
+  "shareModal.title": "Paylaş",
+  "shareModal.shareOnX": "X'te (Twitter) Paylaş",
+  "shareModal.shareOnTelegram": "Telegram'da Paylaş",
+  "prediction.share_title": "Paylaş",
+  "badge.shareTitle": "Rozeti Paylaş",
+  "badge.shareButton": "Paylaş",
   "footer": {
     "about": "Hakkında",
     "contact": "İletişim",

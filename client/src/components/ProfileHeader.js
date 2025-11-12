@@ -62,6 +62,13 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                     <p className="text-gray-400">{user.about || t('no_bio_label')}</p>
                     {user.xLink && (<a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>)}
                     {user.youtubeLink && (<a href={user.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993z" /></svg></a>)}
+                    {user.telegramLink && (
+                        <a href={user.telegramLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" title="Telegram">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009.176 16.5l-3.328-1.026 5.99-2.825.002.002.002.002a1 1 0 00.86-.098l3-2a1 1 0 000-1.8l-3-2a1 1 0 00-.86-.098l-.002.002-.002.002-5.99-2.825L9.176 3.5a1 1 0 00.707-1.028l-5-1.429a1 1 0 00-1.17 1.41l7 14zM16 10a1 1 0 10-2 0 1 1 0 002 0z" />
+                            </svg>
+                        </a>
+                    )}
                 </div>
                 <div className="mt-4 grid grid-cols-2 sm:flex sm:flex-wrap justify-center sm:justify-start gap-x-4 gap-y-2">
                     <Link to={`/profile/${user._id}/followers`} className="text-sm text-gray-400 hover:underline">

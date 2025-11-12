@@ -11,6 +11,7 @@ const UserSchema = new Schema({
     about: { type: String, maxLength: 500 },
     youtubeLink: { type: String },
     xLink: { type: String },
+    telegramLink: { type: String },
     isAdmin: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     verifiedAt: { type: Date, default: null },

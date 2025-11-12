@@ -10,7 +10,7 @@ import AvatarSelectionModal from '../components/AvatarSelectionModal';
 const EditProfilePage = ({ onProfileUpdate }) => {
     const { t } = useTranslation();
     const [formData, setFormData] = useState({
-        username: '', about: '', youtubeLink: '', xLink: '', avatar: ''
+        username: '', about: '', youtubeLink: '', xLink: '', avatar: '', telegramLink: ''
     });
     const [user, setUser] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -28,6 +28,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                         about: res.data.about || '',
                         youtubeLink: res.data.youtubeLink || '',
                         xLink: res.data.xLink || '',
+                        telegramLink: res.data.telegramLink || '',
                         avatar: res.data.avatar || `https://api.dicebear.com/8.x/adventurer/svg?seed=${res.data.username}`
                     });
                 } else {
@@ -44,7 +45,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
         setFormData(prev => ({ ...prev, avatar: newAvatarUrl }));
     };
 
-// src/pages/EditProfilePage.js
+    // src/pages/EditProfilePage.js
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -121,6 +122,11 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                     <div>
                         <label htmlFor="youtubeLink" className="block text-sm font-medium text-gray-300">{t('editprofile_youtube_label')}</label>
                         <input type="url" name="youtubeLink" id="youtubeLink" placeholder={t('editprofile_youtube_placeholder')} value={formData.youtubeLink} onChange={handleChange} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
+                    </div>
+
+                    <div>
+                        <label htmlFor="telegramLink" className="block text-sm font-medium text-gray-300">{t('editprofile_telegram_label', 'Telegram Link')}</label>
+                        <input type="url" name="telegramLink" id="telegramLink" placeholder={t('editprofile_telegram_placeholder', 'https://t.me/yourusername')} value={formData.telegramLink} onChange={handleChange} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white" />
                     </div>
 
                     <div className="flex flex-col sm:flex-row-reverse gap-4 pt-4 border-t border-gray-700">

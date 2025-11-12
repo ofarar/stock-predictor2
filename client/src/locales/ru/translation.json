@@ -442,6 +442,14 @@
         "visitorActive": "Интересный прогноз: {{username}} считает, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. А вы что думаете?",
         "visitorAssessed": "Оцените результат: прогноз пользователя {{username}} по ${{ticker}} получил {{score}} очков! Он/она прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}."
     },
+    "editprofile_telegram_label": "Ссылка на Telegram",
+    "editprofile_telegram_placeholder": "https://t.me/vasheimya",
+    "shareModal.title": "Поделиться",
+    "shareModal.shareOnX": "Поделиться в X (Twitter)",
+    "shareModal.shareOnTelegram": "Поделиться в Telegram",
+    "prediction.share_title": "Поделиться",
+    "badge.shareTitle": "Поделиться значком",
+    "badge.shareButton": "Поделиться",
     "footer": {
         "about": "О нас",
         "contact": "Контакты",

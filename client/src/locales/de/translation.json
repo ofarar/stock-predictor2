@@ -442,6 +442,14 @@
         "visitorActive": "Interessante Prognose: {{username}} glaubt, dass ${{ticker}} bis zum {{deadline}} {{targetPrice}} erreichen wird. Was denkst du?",
         "visitorAssessed": "Schau dir dieses Ergebnis an: Die Prognose von {{username}} für ${{ticker}} erzielte {{score}} Punkte! Er/Sie hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}."
     },
+    "editprofile_telegram_label": "Telegram-Link",
+    "editprofile_telegram_placeholder": "https://t.me/deinbenutzername",
+    "shareModal.title": "Teilen",
+    "shareModal.shareOnX": "Auf X (Twitter) teilen",
+    "shareModal.shareOnTelegram": "Auf Telegram teilen",
+    "prediction.share_title": "Teilen",
+    "badge.shareTitle": "Abzeichen teilen",
+    "badge.shareButton": "Teilen",
     "footer": {
         "about": "Über uns",
         "contact": "Kontakt",

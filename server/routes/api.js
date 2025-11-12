@@ -2179,7 +2179,7 @@ router.put('/profile', async (req, res) => {
         return res.status(401).send('You must be logged in.');
     }
     try {
-        const { username, about, youtubeLink, xLink, avatar } = req.body;
+        const { username, about, youtubeLink, xLink, avatar, telegramLink } = req.body;
 
         // --- START FIX: Use xss() instead of purify.sanitize() ---
         const sanitizedUpdate = {
@@ -2187,6 +2187,7 @@ router.put('/profile', async (req, res) => {
             about: xss(about),
             youtubeLink: xss(youtubeLink),
             xLink: xss(xLink),
+            telegramLink: xss(telegramLink),
             avatar: xss(avatar)
         };
         // --- END FIX ---
