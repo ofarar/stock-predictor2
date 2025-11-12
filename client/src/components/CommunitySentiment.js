@@ -10,7 +10,7 @@ const SentimentCard = ({ type, data, ticker, currentPrice, isUpdating }) => {
 
     const percentageChange =
         currentPrice && averageTarget
-            ? ((averageTarget - currentPrice) / currentPrice)
+            ? ((averageTarget - currentPrice) / currentPrice) * 100
             : null;
 
     return (
@@ -24,7 +24,7 @@ const SentimentCard = ({ type, data, ticker, currentPrice, isUpdating }) => {
                 <div className="flex items-baseline justify-end gap-2">
                     {percentageChange !== null ? (
                         <p className={`text-sm font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            ({percentageChange >= 0 ? '' : ''}{formatPercentage(percentageChange, i18n.language)})
+                            {formatPercentage(percentageChange, i18n.language)}
                         </p>
                     ) : (
                         <p className="text-sm font-bold text-gray-500">
@@ -80,7 +80,7 @@ const CommunitySentiment = ({ ticker, currentPrice }) => {
                         changedTypes.add(type);
                     }
                 }
-                
+
                 if (changedTypes.size > 0) {
                     setUpdatedTypes(changedTypes);
                     // Remove the animation class after it has played

@@ -19,56 +19,6 @@ const { createOrUpdateStripePriceForUser } = require('./stripe');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { getCommunitySentiment } = require('../utils/sentimentHelper');
 
-const getFamousStocks = async () => {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    let famousStocks = await Prediction.aggregate([
-        { $match: { createdAt: { $gte: today }, status: 'Active' } },
-        { $group: { _id: '$stockTicker', count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
-        { $limit: 5 },
-        { $project: { _id: 0, ticker: '$_id', count: '$count' } }
-    ]);
-
-    let isHistorical = false;
-    if (famousStocks.length === 0) {
-        famousStocks = await Prediction.aggregate([
-            { $match: { status: 'Active' } },
-            { $group: { _id: '$stockTicker', count: { $sum: 1 } } },
-            { $sort: { count: -1 } },
-            { $limit: 5 },
-            { $project: { _id: 0, ticker: '$_id', count: '$count' } }
-        ]);
-        isHistorical = true;
-    }
-
-    const enrichedStocksPromises = famousStocks.map(async (stock) => {
-        try {
-            const [quote, sentiment] = await Promise.all([
-                financeAPI.getQuote(stock.ticker),
-                getCommunitySentiment(stock.ticker)
-            ]);
-            return {
-                ...stock,
-                quote: {
-                    longName: quote.longName,
-                    shortName: quote.shortName,
-                    regularMarketPrice: quote.regularMarketPrice,
-                    currency: quote.currency
-                },
-                sentiment: sentiment
-            };
-        } catch (error) {
-            console.error(`Failed to enrich data for ${stock.ticker}:`, error);
-            return { ...stock, quote: null, sentiment: null };
-        }
-    });
-
-    const enrichedStocks = await Promise.all(enrichedStocksPromises);
-    return { stocks: enrichedStocks, isHistorical };
-};
-
 // Rate limiter for the contact form
 const contactLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
@@ -1614,7 +1564,7 @@ router.post('/predict', predictLimiter, async (req, res) => {
         } else {
             dailyCountUpdate = { $set: { dailyPredictionCount: 1, lastPredictionDate: new Date() } };
         }
-        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true });
+        user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate('followers', 'notificationSettings');
         // --- End Daily Limit Check ---
 
         const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
@@ -2517,13 +2467,73 @@ router.post('/prediction/:id/view', viewLimiter, async (req, res) => {
     }
 });
 
+// GET Famous (Trending) Stocks
 router.get('/widgets/famous-stocks', async (req, res) => {
     try {
-        const famousStocksData = await getFamousStocks();
-        res.json(famousStocksData);
-    } catch (error) {
-        console.error('Error fetching famous stocks:', error);
-        res.status(500).json({ message: 'Failed to fetch famous stocks' });
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(0, 0, 0, 0); // Use UTC for consistency
+
+        let stocks = await Prediction.aggregate([
+            { $match: { createdAt: { $gte: startOfDay } } }, // Find predictions made today
+            { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
+            { $sort: { predictions: -1 } },
+            { $limit: 4 },
+            { $project: { ticker: '$_id', predictions: 1, _id: 0 } }
+        ]);
+
+        let isHistorical = false;
+
+        // If no stocks were predicted today, try the last 7 days
+        if (stocks.length === 0) {
+            isHistorical = true;
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7); // Use UTC
+            sevenDaysAgo.setUTCHours(0, 0, 0, 0);
+
+            stocks = await Prediction.aggregate([
+                { $match: { createdAt: { $gte: sevenDaysAgo } } }, // Find predictions in the last 7 days
+                { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
+                { $sort: { predictions: -1 } },
+                { $limit: 4 },
+                { $project: { ticker: '$_id', predictions: 1, _id: 0 } }
+            ]);
+        }
+
+        // --- NEW FIX: Enrich stocks with quote data ---
+        if (stocks.length > 0) {
+            const tickers = stocks.map(s => s.ticker);
+            try {
+                // Call the adapter to get all quotes at once
+                const quotes = await financeAPI.getQuote(tickers);
+
+                // Create a map for easy lookup
+                const quoteMap = new Map();
+                quotes.forEach(q => {
+                    if (q) quoteMap.set(q.symbol, q);
+                });
+
+                // Merge quote data into the stocks array
+                stocks = stocks.map(stock => ({
+                    ...stock,
+                    // Find the quote in the map
+                    quote: quoteMap.get(stock.ticker) || null
+                }));
+
+            } catch (quoteError) {
+                console.error("Failed to fetch quotes for famous stocks:", quoteError.message);
+                // If quotes fail, send stocks without quote data so frontend doesn't crash
+                stocks.forEach(s => s.quote = null);
+            }
+        }
+        // --- END FIX ---
+
+        // Send the stocks (now enriched with quote data) and the flag
+        res.json({ stocks, isHistorical });
+
+    } catch (err) {
+        console.error("Error fetching famous stocks:", err);
+        // Send empty on error to prevent frontend crash
+        res.json({ stocks: [], isHistorical: false });
     }
 });
 
