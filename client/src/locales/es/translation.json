@@ -534,6 +534,7 @@
         "makePrediction": "Hacer una Predicción",
         "userMenu": {
             "myProfile": "Mi Perfil",
+            "invite": "Invitar y Ganar",
             "settings": "Ajustes",
             "admin": "Admin",
             "logout": "Cerrar Sesión"
@@ -1016,8 +1017,14 @@
     "analystRatingInfo.section3.text": "Recibes una pequeña bonificación de rating cuando compartes tus rangos o insignias. Esto está limitado para prevenir el spam.",
     "analystRatingInfo.section4.title": "4. Rangos en la Clasificación",
     "analystRatingInfo.section4.text": "Ganas grandes bonificaciones periódicas por clasificarte en el Top 100 de cualquier tabla de clasificación. Los puntos se ponderan por la competencia: un rango Top 10 en una acción popular (como $AAPL) vale más que un rango Top 10 en una tranquila. Los rangos por hora/día se comprueban cada 15 minutos; los rangos a largo plazo (semanal, mensual) se comprueban en sus respectivos horarios.",
-    "analystRatingInfo.section5.title": "5. Referidos (Próximamente)",
+    "analystRatingInfo.section5.title": "5. Referidos",
     "analystRatingInfo.section5.text": "Ganará una bonificación de rating significativa por invitar a usuarios nuevos y activos a la plataforma.",
+    "referralModal.title": "Invitar y Ganar",
+    "referralModal.description": "Invita a amigos a StockPredictor. ¡Cuando se registren, ganarás 500 puntos de Rating de Analista!",
+    "referralModal.copied": "¡Enlace copiado al portapapeles!",
+    "referralModal.copy": "Copiar",
+    "referralModal.share": "Compartir en X",
+    "referralModal.shareTweet": "¡Únete a mí en StockPredictor y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.",
     "analystRating.pie.predictions": "De Predicciones",
     "analystRating.pie.badges": "De Insignias",
     "analystRating.pie.shares": "De Compartidos",

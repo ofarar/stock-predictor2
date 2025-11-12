@@ -534,6 +534,7 @@
     "makePrediction": "Make a Prediction",
     "userMenu": {
       "myProfile": "My Profile",
+      "invite": "Invite & Earn",
       "settings": "Settings",
       "admin": "Admin",
       "logout": "Logout"
@@ -1018,8 +1019,14 @@
   "analystRatingInfo.section3.text": "You receive a small rating bonus when you share your ranks or badges. This is rate-limited to prevent spam.",
   "analystRatingInfo.section4.title": "4. Leaderboard Ranks",
   "analystRatingInfo.section4.text": "You earn large, periodic bonuses for placing in the Top 100 on any leaderboard. Points are weighted by competition: a Top 10 rank on a popular stock (like $AAPL) is worth more than a Top 10 rank on a quiet one. Hourly/Daily ranks are checked every 15 minutes; longer-term ranks (Weekly, Monthly) are checked on their respective schedules.",
-  "analystRatingInfo.section5.title": "5. Referrals (Coming Soon)",
+  "analystRatingInfo.section5.title": "5. Referrals",
   "analystRatingInfo.section5.text": "You will earn a significant rating bonus for inviting new, active users to the platform.",
+  "referralModal.title": "Invite & Earn",
+  "referralModal.description": "Invite friends to StockPredictor. When they sign up, you’ll earn 500 Analyst Rating points!",
+  "referralModal.copied": "Link copied to clipboard!",
+  "referralModal.copy": "Copy",
+  "referralModal.share": "Share on X",
+  "referralModal.shareTweet": "Join me on StockPredictor and start making market predictions! We can earn a share of platform revenue just for being accurate.",
   "analystRating.pie.predictions": "From Predictions",
   "analystRating.pie.badges": "From Badges",
   "analystRating.pie.shares": "From Shares",

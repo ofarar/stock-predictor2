@@ -534,6 +534,7 @@
     "makePrediction": "Tahmin Yap",
     "userMenu": {
       "myProfile": "Profilim",
+      "invite": "Davet Et & Kazan",
       "settings": "Ayarlar",
       "admin": "Yönetici",
       "logout": "Çıkış Yap"
@@ -1019,6 +1020,12 @@
   "analystRatingInfo.section4.text": "Herhangi bir liderlik tablosunda İlk 100'e girmeniz durumunda büyük, dönemsel bonuslar kazanırsınız. Puanlar rekabete göre ağırlıklandırılır: popüler bir hissede (ör. $AAPL) İlk 10'a girmek, sakin bir hissede İlk 10'a girmekten daha değerlidir. Saatlik/Günlük sıralamalar her 15 dakikada bir kontrol edilir; uzun vadeli sıralamalar (Haftalık, Aylık) kendi programlarına göre kontrol edilir.",
   "analystRatingInfo.section5.title": "5. Davetler (Yakında)",
   "analystRatingInfo.section5.text": "Platforma yeni, aktif kullanıcılar davet ettiğinizde önemli bir puan bonusu kazanacaksınız.",
+  "referralModal.title": "Davet Et & Kazan",
+  "referralModal.description": "Arkadaşlarını StockPredictor'a davet et. Kaydolduklarında 500 Analist Puanı kazanacaksın!",
+  "referralModal.copied": "Link panoya kopyalandı!",
+  "referralModal.copy": "Kopyala",
+  "referralModal.share": "X'te Paylaş",
+  "referralModal.shareTweet": "StockPredictor'a katıl ve piyasa tahminleri yapmaya başla! Sadece doğru tahmin yaparak platform gelirinden pay alabiliriz.",
   "analystRating.pie.predictions": "Tahminlerden",
   "analystRating.pie.badges": "Rozetlerden",
   "analystRating.pie.shares": "Paylaşımlardan",

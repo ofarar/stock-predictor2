@@ -30,6 +30,7 @@ const AnalystRatingInfoModal = ({ isOpen, onClose }) => {
                     <InfoSection title={t('analystRatingInfo.section2.title')} text={t('analystRatingInfo.section2.text')} />
                     <InfoSection title={t('analystRatingInfo.section4.title')} text={t('analystRatingInfo.section4.text')} />
                     <InfoSection title={t('analystRatingInfo.section3.title')} text={t('analystRatingInfo.section3.text')} />
+                    <InfoSection title={t('analystRatingInfo.section4.title')} text={t('analystRatingInfo.section4.text')} />
                     <InfoSection title={t('analystRatingInfo.section5.title')} text={t('analystRatingInfo.section5.text')} />
                 </div>
 

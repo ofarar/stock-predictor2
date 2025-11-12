@@ -534,6 +534,7 @@
         "makePrediction": "Faire une Prédiction",
         "userMenu": {
             "myProfile": "Mon Profil",
+            "invite": "Inviter & Gagner",
             "settings": "Paramètres",
             "admin": "Admin",
             "logout": "Déconnexion"
@@ -1016,8 +1017,14 @@
     "analystRatingInfo.section3.text": "Vous recevez un petit bonus de note lorsque vous partagez vos rangs ou badges. Ceci est limité pour éviter le spam.",
     "analystRatingInfo.section4.title": "4. Rangs de Classement",
     "analystRatingInfo.section4.text": "Vous gagnez d'importants bonus périodiques pour vous classer dans le Top 100 de n'importe quel classement. Les points sont pondérés par la concurrence : un rang Top 10 sur une action populaire (comme $AAPL) vaut plus qu'un rang Top 10 sur une action calme. Les rangs horaires/journaliers sont vérifiés toutes les 15 minutes ; les rangs à plus long terme (hebdomadaire, mensuel) sont vérifiés selon leurs échéances respectives.",
-    "analystRatingInfo.section5.title": "5. Parrainages (Bientôt disponible)",
+    "analystRatingInfo.section5.title": "5. Parrainages",
     "analystRatingInfo.section5.text": "Vous gagnerez un bonus de note important pour avoir invité de nouveaux utilisateurs actifs sur la plateforme.",
+    "referralModal.title": "Inviter & Gagner",
+    "referralModal.description": "Invitez des amis sur StockPredictor. Lorsqu'ils s'inscrivent, vous gagnerez 500 points de Note d'Analyste !",
+    "referralModal.copied": "Lien copié dans le presse-papiers !",
+    "referralModal.copy": "Copier",
+    "referralModal.share": "Partager sur X",
+    "referralModal.shareTweet": "Rejoignez-moi sur StockPredictor et commencez à faire des prédictions de marché ! Nous pouvons gagner une part des revenus de la plateforme simplement en étant précis.",
     "analystRating.pie.predictions": "Des Prédictions",
     "analystRating.pie.badges": "Des Badges",
     "analystRating.pie.shares": "Des Partages",

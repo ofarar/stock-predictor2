@@ -64,6 +64,17 @@ function App() {
     fetchUser(); // Fetch user on initial load
     axios.get(`${process.env.REACT_APP_API_URL}/api/settings`, { withCredentials: true })
       .then(res => setSettings(res.data));
+
+    // --- NEW: CAPTURE REFERRAL CODE ---
+    // Check for 'ref' in the URL query parameters
+    const params = new URLSearchParams(window.location.search);
+    const refCode = params.get('ref');
+    if (refCode) {
+      // Store it in localStorage to persist it until the user logs in
+      localStorage.setItem('referralCode', refCode);
+    }
+    // --- END NEW ---
+
   }, []);
 
   // This function is now passed to more components

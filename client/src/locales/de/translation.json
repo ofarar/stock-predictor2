@@ -534,6 +534,7 @@
         "makePrediction": "Prognose erstellen",
         "userMenu": {
             "myProfile": "Mein Profil",
+            "invite": "Einladen & Verdienen",
             "settings": "Einstellungen",
             "admin": "Admin",
             "logout": "Abmelden"
@@ -1011,8 +1012,14 @@
     "analystRatingInfo.section3.text": "Sie erhalten einen kleinen Rating-Bonus, wenn Sie Ihre Ränge oder Abzeichen teilen. Dies ist ratenbegrenzt, um Spam zu verhindern.",
     "analystRatingInfo.section4.title": "4. Bestenlisten-Ränge (Bald Verfügbar)",
     "analystRatingInfo.section4.text": "Sie erhalten große, periodische Boni für eine Platzierung in den Top 100 einer beliebigen Bestenliste. Die Punkte werden nach Wettbewerb gewichtet: Ein Top-10-Rang bei einer beliebten Aktie (wie $AAPL) ist mehr wert als ein Top-10-Rang bei einer ruhigen. Stündliche/tägliche Ränge werden alle 15 Minuten überprüft; längerfristige Ränge (wöchentlich, monatlich) werden nach ihrem jeweiligen Zeitplan überprüft.",
-    "analystRatingInfo.section5.title": "5. Empfehlungen (Bald Verfügbar)",
+    "analystRatingInfo.section5.title": "5. Empfehlungen",
     "analystRatingInfo.section5.text": "Sie werden einen erheblichen Rating-Bonus für das Einladen neuer, aktiver Benutzer auf die Plattform erhalten.",
+    "referralModal.title": "Einladen & Verdienen",
+    "referralModal.description": "Laden Sie Freunde zu StockPredictor ein. Wenn sie sich anmelden, erhalten Sie 500 Analysten-Rating-Punkte!",
+    "referralModal.copied": "Link in die Zwischenablage kopiert!",
+    "referralModal.copy": "Kopieren",
+    "referralModal.share": "Auf X teilen",
+    "referralModal.shareTweet": "Komm zu StockPredictor und mach Marktprognosen! Wir können einen Anteil am Plattformumsatz verdienen, nur weil wir präzise sind.",
     "analystRating.pie.predictions": "Aus Prognosen",
     "analystRating.pie.badges": "Aus Abzeichen",
     "analystRating.pie.shares": "Aus Teilungen",

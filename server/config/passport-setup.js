@@ -18,8 +18,9 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL
-    }, async (accessToken, refreshToken, profile, done) => {
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
+        passReqToCallback: true // <-- 1. ENABLE THIS
+    }, async (req, accessToken, refreshToken, profile, done) => {
         try {
             const userEmail = profile.emails[0].value;
             const existingUser = await User.findOne({ googleId: profile.id });
@@ -36,8 +37,8 @@ passport.use(
                     // Username is taken. Signal to the frontend to ask for a new one.
                     // We pass 'false' for the user because they haven't been created yet.
                     // The profile info is passed in the 'info' object to be used by the frontend.
-                    return done(null, false, { 
-                        action: 'CHOOSE_USERNAME', 
+                    return done(null, false, {
+                        action: 'CHOOSE_USERNAME',
                         profile: {
                             googleId: profile.id,
                             email: userEmail,
@@ -48,12 +49,41 @@ passport.use(
                 } else {
                     // Username is available. Create the new user.
                     const defaultAvatar = `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
-                    const newUser = await new User({
+                    const newUserFields = {
                         googleId: profile.id,
                         username: newUsername,
                         email: userEmail,
                         avatar: defaultAvatar
-                    }).save();
+                    }
+
+                    // --- 3. NEW: CHECK FOR REFERRAL ---
+                    const referralCode = req.session.referralCode;
+                    if (referralCode) {
+                        try {
+                            const inviter = await User.findById(referralCode);
+                            if (inviter) {
+                                // Add points to the inviter
+                                const pointsToAward = 500; // 500 points for a successful referral
+                                if (!inviter.analystRating) { // Initialize if old user
+                                    inviter.analystRating = { total: 0, fromPredictions: 0, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0 };
+                                }
+                                inviter.analystRating.total += pointsToAward;
+                                inviter.analystRating.fromReferrals += pointsToAward;
+                                inviter.referrals.push(newUser._id); // Track who they invited
+                                await inviter.save();
+
+                                // Add reference to the new user
+                                newUserFields.invitedBy = inviter._id;
+                            }
+                        } catch (err) {
+                            console.error("Referral award error:", err);
+                        }
+                        // Clear the code from the session
+                        delete req.session.referralCode;
+                    }
+                    // --- END NEW ---
+
+                    const newUser = await new User(newUserFields).save();
 
                     console.log("New user created successfully:", newUser);
                     return done(null, newUser, { isNewUser: true });

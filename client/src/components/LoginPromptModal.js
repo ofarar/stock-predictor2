@@ -4,6 +4,16 @@ import { useTranslation } from 'react-i18next';
 const LoginPromptModal = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
 
+    const getLoginUrl = () => {
+        const refCode = localStorage.getItem('referralCode');
+        let url = `${process.env.REACT_APP_API_URL}/auth/google?redirect=${window.location.pathname}`;
+        if (refCode) {
+            url += `&ref=${refCode}`;
+        }
+        return url;
+    };
+    // --- END NEW ---
+
     if (!isOpen) return null;
 
     return (
@@ -15,7 +25,7 @@ const LoginPromptModal = ({ isOpen, onClose }) => {
                 <h2 className="text-2xl font-bold text-white mb-4">{t('loginPromptModal.title')}</h2>
                 <p className="text-gray-300 mb-6">{t('loginPromptModal.description')}</p>
                 <a
-                    href={`${process.env.REACT_APP_API_URL}/auth/google?redirect=${window.location.pathname}`}
+                    href={getLoginUrl()}
                     className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center space-x-3 hover:bg-blue-700 transition"
                 >
                     <span>{t('loginPromptModal.signUpWithGoogle')}</span>

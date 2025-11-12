@@ -534,6 +534,7 @@
         "makePrediction": "做出预测",
         "userMenu": {
             "myProfile": "我的个人资料",
+            "invite": "邀请并赚取",
             "settings": "设置",
             "admin": "管理员",
             "logout": "登出"
@@ -1016,8 +1017,14 @@
     "analystRatingInfo.section3.text": "当您分享您的排名或徽章时，您会收到少量评分奖励。此功能有频率限制以防止垃圾信息。",
     "analystRatingInfo.section4.title": "4. 排行榜排名",
     "analystRatingInfo.section4.text": "您在任何排行榜上进入前 100 名都会获得丰厚的定期奖金。积分按竞争程度加权：热门股票（如 $AAPL）的前 10 名比冷门股票的前 10 名更有价值。每小时/每日排名每 15 分钟检查一次；长期排名（每周、每月）按其各自的时间表检查。",
-    "analystRatingInfo.section5.title": "5. 推荐 (即将推出)",
+    "analystRatingInfo.section5.title": "5. 推荐",
     "analystRatingInfo.section5.text": "您将因邀请新的活跃用户加入平台而获得丰厚的评分奖励。",
+    "referralModal.title": "邀请并赚取",
+    "referralModal.description": "邀请朋友加入 StockPredictor。当他们注册时，您将获得 500 分析师评分积分！",
+    "referralModal.copied": "链接已复制到剪贴板！",
+    "referralModal.copy": "复制",
+    "referralModal.share": "分享到 X",
+    "referralModal.shareTweet": "快来加入 StockPredictor，开始您的市场预测！我们仅凭准确预测就能赚取平台收入分成。",
     "analystRating.pie.predictions": "来自预测",
     "analystRating.pie.badges": "来自徽章",
     "analystRating.pie.shares": "来自分享",

@@ -6,6 +6,12 @@ const { sendWelcomeEmail } = require('../services/email');
 // Auth with Google
 router.get('/google', (req, res, next) => {
   const redirectPath = req.query.redirect || '/';
+  const referralCode = req.query.ref;
+  // --- NEW: Save the referral code in the session ---
+  if (referralCode) {
+    req.session.referralCode = referralCode;
+  }
+  // --- END NEW ---
   const authenticator = passport.authenticate('google', {
     scope: ['profile', 'email'],
     state: redirectPath // Pass the path in the state parameter

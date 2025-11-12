@@ -36,6 +36,8 @@ const UserSchema = new Schema({
         fromRanks: { type: Number, default: 0 }      // For your new feature
     },
     language: { type: String, default: 'en' },
+    invitedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    referrals: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 
     // --- START: NEW FIELDS ---
     //watchlistTicker: { type: String, uppercase: true, default: null },
