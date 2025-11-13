@@ -57,8 +57,8 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                         <div><p className="text-xs text-gray-400">{t('explore_predicted')}</p><p className="font-semibold text-white">
                             {formatCurrency(prediction.targetPrice, i18n.language, prediction.currency)}
                         </p></div>
-                        <div><p className="text-xs text-gray-400">{t('explore_actual_price')}</p><p className="font-bold text-lg text-green-400">
-                            {formatCurrency(prediction.actualPrice || 0, i18n.language, prediction.currency)}
+                        <div className="col-span-2"><p className="text-xs text-gray-400">{t('Final Rating')}</p><p className={`font-bold text-lg ${prediction.rating > 60 ? 'text-green-400' : 'text-red-400'}`}>
+                            {prediction.rating.toFixed(1)}
                         </p></div>
                     </div>
                 ) : (

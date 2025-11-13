@@ -9,18 +9,18 @@ const defaultBadgeSettings = {
     "name": "Market Maven",
     "description": "Awarded for achieving a high overall average score across all predictions.",
     "tiers": {
-      "Gold": { "score": 90 },
-      "Silver": { "score": 80 },
-      "Bronze": { "score": 70 }
+      "Gold": { "rating": 90 },
+      "Silver": { "rating": 80 },
+      "Bronze": { "rating": 70 }
     }
   },
   "daily_oracle": {
     "name": "Daily Oracle",
     "description": "Awarded for high accuracy specifically on Daily predictions.",
     "tiers": {
-      "Gold": { "score": 90 },
-      "Silver": { "score": 80 },
-      "Bronze": { "score": 70 }
+      "Gold": { "rating": 90 },
+      "Silver": { "rating": 80 },
+      "Bronze": { "rating": 70 }
     }
   }
 };

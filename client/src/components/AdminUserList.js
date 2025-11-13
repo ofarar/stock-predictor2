@@ -58,8 +58,8 @@ const UserCard = ({ user, settings }) => {
                     <p className="font-bold text-white">{user.predictionCount}</p>
                 </div>
                 <div className="text-center">
-                    <p className="text-xs text-gray-400">Avg Score</p>
-                    <p className="font-bold text-green-400">{user.avgScore}</p>
+                    <p className="text-xs text-gray-400">Avg Rating</p>
+                    <p className="font-bold text-green-400">{user.avgRating}</p>
                 </div>
                 {user.isGoldenMember && (
                     <div className="text-center">
@@ -132,7 +132,7 @@ const AdminUserList = ({ settings }) => {
                         <select value={sort} onChange={(e) => setSort(e.target.value)} className="w-full bg-gray-900 text-white p-2 rounded-md h-full focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="username-asc">Sort by Username (A-Z)</option>
                             <option value="predictionCount-desc">Sort by Predictions</option>
-                            <option value="avgScore-desc">Sort by Avg Score</option>
+                            <option value="avgRating-desc">Sort by Avg Rating</option>
                             <option value="followersCount-desc">Sort by Followers</option>
                             <option value="goldenSubscribersCount-desc">Sort by Subscribers</option>
                         </select>

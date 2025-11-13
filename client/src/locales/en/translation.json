@@ -46,8 +46,7 @@
   "profile_following_button": "Following",
   "profile_unfollow_button": "Unfollow",
   "profile_overall_rank": "Overall Rank",
-  "profile_avg_score": "Average Score",
-  "profile_total_points": "Total Points",
+  "profile_avg_rating": "Average Rating",
   "profile_total_predictions": "Total Predictions",
   "profile_tab_profile": "Profile",
   "profile_tab_golden_feed": "Golden Feed",
@@ -73,9 +72,9 @@
   "verified_status_modal_text": "You have increased trust and visibility in the community.",
   "verified_status_modal_close": "Close",
   "verified_status_modal_remove": "Remove verification status",
-  "scoring_explained_title": "Scoring Explained",
-  "scoring_explained_text1": "Our platform uses a **Proximity Scoring System** to reward accuracy. Instead of a simple \"correct\" or \"incorrect,\" your score is based on how close your prediction was to the actual outcome.",
-  "scoring_explained_text2": "For example, if a stock is at $152 and you predict it will be $150, you will receive a much higher score than someone who predicted $180. This system is designed to reward thoughtful analysis over random guesses. The maximum score for a perfect prediction is 100 points, with points decreasing the further your prediction is from the final price.",
+  "rating_explained_title": "Rating Explained",
+  "rating_explained_text1": "Our platform uses a **Proximity Rating System** to reward accuracy. Instead of a simple \"correct\" or \"incorrect,\" your rating is based on how close your prediction was to the actual outcome.",
+  "rating_explained_text2": "For example, if a stock is at $152 and you predict it will be $150, you will receive a much higher rating than someone who predicted $180. This system is designed to reward thoughtful analysis over random guesses. The maximum rating for a perfect prediction is 100, with the rating decreasing the further your prediction is from the final price.",
   "aiwizard_coming_soon": "COMING SOON",
   "aiwizard_title": "AI Portfolio Assist",
   "aiwizard_description": "Get personalized stock recommendations based on the patterns of our top-performing predictors.",
@@ -192,14 +191,14 @@
   "Could not load prediction details.": "Could not load prediction details.",
   "Loading Prediction...": "Loading Prediction...",
   "Prediction not found.": "Prediction not found.",
-  "Live Score": "Live Score",
-  "Score at Close": "Score at Close",
+  "Live Rating": "Live Rating",
+  "Rating at Close": "Rating at Close",
   "Current": "Current",
   "Closing Price": "Closing Price",
   "(Price journey visual is not available for this older prediction)": "(Price journey visual is not available for this older prediction)",
   "Target Price": "Target Price",
   "View Rationale": "View Rationale",
-  "Final Score": "Final Score",
+  "Final Rating": "Final Rating",
   "Time Remaining": "Time Remaining",
   "DO YOU AGREE?": "DO YOU AGREE?",
   "Agree": "Agree",
@@ -284,7 +283,7 @@
   "title_top_performers": "🏆 Top Performers",
   "label_prediction_type": "Prediction Type",
   "label_filter_by_stock": "Filter by Stock",
-  "text_avg_score": "Avg Score",
+  "text_avg_rating": "Avg Rating",
   "msg_loading_scoreboard_error": "Could not load scoreboard data.",
   "msg_no_users_found": "No users found for these filters.",
   "msg_try_broaden_search": "Try broadening your search criteria.",
@@ -295,7 +294,7 @@
   "remove_from_watchlist": "Remove from Watchlist",
   "make_prediction": "Make a Prediction",
   "top_predictors_for": "Top Predictors for {{ticker}}",
-  "avg_score": "Avg Score",
+  "avg_rating": "Avg Rating",
   "no_top_predictors": "No top predictors for this filter yet.",
   "active_predictions_on": "Active Predictions on {{ticker}}",
   "prediction_type": "{{type}} Prediction",
@@ -412,7 +411,7 @@
   "badgeInfoModal": {
     "title": "How Achievements Work",
     "loadingText": "Loading details...",
-    "scoreLabel": "Score > {{score}}",
+    "ratingLabel": "Rating > {{rating}}",
     "minPredictions": "Requires at least {{count}} predictions.",
     "closeButton": "Close"
   },
@@ -576,7 +575,7 @@
     "goldenPost": "{{username}} has published a new Golden Post.",
     "badgeEarnedSelf": "Congratulations! You've earned the {{tier}} {{badgeName}} badge.",
     "badgeEarnedFollower": "{{username}} has earned the {{tier}} {{badgeName}} badge!",
-    "predictionAssessed": "Your {{predictionType}} prediction on {{stockTicker}} scored {{score}} points!",
+    "predictionAssessed": "Your {{predictionType}} prediction on {{stockTicker}} earned a {{rating}} rating!",
     "priceChange": "{{creatorName}}'s subscription price is changing from ${{oldPrice}} to ${{newPrice}} on {{effectiveDate}}."
   },
   "hourlyWinnersFeed": {
@@ -584,7 +583,7 @@
     "nextResults": "Next results in: {{timeLeft}}",
     "marketClosed": "Market Closed",
     "noPredictions": "No predictions assessed yet.",
-    "pointsSuffix": "+{{score}} pts"
+    "ratingSuffix": "+{{rating}} Rating"
   },
   "infoModal": {
     "title": "Time Bonus Explained",
@@ -641,8 +640,13 @@
       "quarterly": "Quarterly",
       "yearly": "Yearly"
     },
+    "tooltip": {
+      "avgRating": "Avg Rating: {{rating}}",
+      "predictions": "{{count}} Predictions",
+      "stocks": "Stocks: {{tickers}}"
+    },
     "noData": "No performance data for this filter.",
-    "tooltipLabel": "Score: {{score}}"
+    "avgRatingLabel": "Avg Rating"
   },
   "performanceTabs": {
     "shareOnX": "Share on X",
@@ -655,7 +659,7 @@
       "byStock": "By Stock"
     },
     "statCard": {
-      "averageScore": "Average Score",
+      "averageRating": "Average Rating",
       "rank": "RANK",
       "topRankTitle": "Top {{rank}} Rank"
     },
@@ -692,7 +696,7 @@
   },
   "common": {
     "close": "Close",
-    "score": "Score",
+    "rating": "Rating",
     "dataDelayed": "Data delayed up to 15 minutes"
   },
   "prediction": {
@@ -1036,5 +1040,13 @@
   "analystRating.pie.referrals": "From Referrals",
   "common.back": "Back",
   "sentiment.question": "What is the community's {{type}} price target for {{ticker}}?",
-  "sentiment.based_on_count": "Based on {{count}} predictions"
+  "sentiment.based_on_count": "Based on {{count}} predictions",
+  "prediction_timeframes": {
+    "hourly": "the end of the hour",
+    "daily": "the end of the day",
+    "weekly": "the end of the week",
+    "monthly": "the end of the month",
+    "quarterly": "the end of the quarter",
+    "yearly": "the end of the year"
+  }
 }

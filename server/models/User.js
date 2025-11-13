@@ -26,7 +26,7 @@ const UserSchema = new Schema({
     stripeConnectOnboardingComplete: { type: Boolean, default: false }, // Has Stripe onboarding finished?
     goldenMemberPriceId: { type: String }, // Stripe Price ID specific to this member
     // --- END STRIPE FIELDS ---
-    score: { type: Number, default: 0, index: true },
+    totalRating: { type: Number, default: 0, index: true },
     analystRating: {
         total: { type: Number, default: 0, index: true },
         fromPredictions: { type: Number, default: 0 },

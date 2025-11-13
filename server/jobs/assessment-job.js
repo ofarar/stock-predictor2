@@ -1,4 +1,5 @@
 // server/jobs/assessment-job.js
+// --- ENTIRE FILE REPLACEMENT ---
 
 const Prediction = require('../models/Prediction');
 const User = require('../models/User');
@@ -9,10 +10,10 @@ const { awardBadges } = require('../services/badgeService');
 const financeAPI = require('../services/financeAPI');
 
 /**
- * Calculates a score based on how close a prediction was to the actual price.
+ * Calculates a rating based on how close a prediction was to the actual price.
  */
-function calculateProximityScore(predictedPrice, actualPrice) {
-    const MAX_SCORE = 100;
+function calculateProximityRating(predictedPrice, actualPrice) {
+    const MAX_RATING = 100;
     const MAX_ERROR_PERCENTAGE = 0.20;
     if (actualPrice === 0) return 0;
     const error = Math.abs(predictedPrice - actualPrice);
@@ -20,8 +21,8 @@ function calculateProximityScore(predictedPrice, actualPrice) {
     if (errorPercentage > MAX_ERROR_PERCENTAGE) {
         return 0;
     }
-    const score = MAX_SCORE * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
-    return parseFloat(score.toFixed(1));
+    const rating = MAX_RATING * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
+    return parseFloat(rating.toFixed(1));
 }
 
 /**
@@ -143,35 +144,35 @@ const runAssessmentJob = async () => {
 
             for (const prediction of predictions) {
                 try {
-                    const score = calculateProximityScore(prediction.targetPrice, actualPrice);
+                    const rating = calculateProximityRating(prediction.targetPrice, actualPrice);
 
-                    let ratingToAward = 0;
-                    if (score > 90) ratingToAward = 10;
-                    else if (score > 80) ratingToAward = 5;
-                    else if (score > 70) ratingToAward = 2;
+                    let analystRatingToAward = 0;
+                    if (rating > 90) analystRatingToAward = 10;
+                    else if (rating > 80) analystRatingToAward = 5;
+                    else if (rating > 70) analystRatingToAward = 2;
 
                     prediction.status = 'Assessed';
-                    prediction.score = score;
+                    prediction.rating = rating;
                     prediction.actualPrice = actualPrice;
                     await prediction.save();
 
                     const userId = prediction.userId._id.toString();
                     if (!userUpdates.has(userId)) {
                         // Store the populated user object from the prediction
-                        userUpdates.set(userId, { score: 0, rating: 0, user: prediction.userId });
+                        userUpdates.set(userId, { rating: 0, analystRating: 0, user: prediction.userId });
                     }
                     const currentUpdate = userUpdates.get(userId);
-                    currentUpdate.score += score;
-                    currentUpdate.rating += ratingToAward;
+                    currentUpdate.rating += rating; // This is for user.totalRating
+                    currentUpdate.analystRating += analystRatingToAward; // This is for user.analystRating.total
 
                     await new Notification({
                         recipient: prediction.userId._id,
-                        type: 'PredictionAssessed', // This is now a valid type
+                        type: 'PredictionAssessed', 
                         messageKey: 'notifications.predictionAssessed',
                         metadata: {
                             stockTicker: prediction.stockTicker,
                             predictionType: prediction.predictionType,
-                            score: score
+                            rating: rating // <-- Changed from 'score'
                         },
                         link: `/prediction/${prediction._id}`
                     }).save();
@@ -184,10 +185,10 @@ const runAssessmentJob = async () => {
                         predictionType: prediction.predictionType,
                         predictedPrice: prediction.targetPrice,
                         actualPrice: actualPrice,
-                        score: score,
+                        rating: rating, // <-- Changed from 'score'
                     }).save();
 
-                    console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} scored ${score} points.`);
+                    console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} earned a ${rating} rating.`);
                 
                 } catch (innerError) {
                     console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
@@ -213,9 +214,9 @@ const runAssessmentJob = async () => {
                     }
                     
                     // Apply updates
-                    user.score = (user.score || 0) + updates.score;
-                    user.analystRating.total = (user.analystRating.total || 0) + updates.rating;
-                    user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.rating;
+                    user.totalRating = (user.totalRating || 0) + updates.rating; // <-- Use totalRating
+                    user.analystRating.total = (user.analystRating.total || 0) + updates.analystRating;
+                    user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.analystRating;
 
                     await user.save();
                     

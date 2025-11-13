@@ -641,6 +641,11 @@
       "quarterly": "Üç Aylık",
       "yearly": "Yıllık"
     },
+    "tooltip": {
+      "avgRating": "Ort. Puan: {{rating}}",
+      "predictions": "{{count}} Tahmin",
+      "stocks": "Hisseler: {{tickers}}"
+    },
     "noData": "Bu filtre için performans verisi yok.",
     "tooltipLabel": "Puan: {{score}}"
   },
@@ -1035,5 +1040,13 @@
   "analystRating.pie.referrals": "Davetlerden",
   "common.back": "Geri",
   "sentiment.question": "Topluluğun {{ticker}} için {{type}} fiyat hedefi nedir?",
-  "sentiment.based_on_count": "{{count}} tahmine göre"
+  "sentiment.based_on_count": "{{count}} tahmine göre",
+  "prediction_timeframes": {
+    "hourly": "saat sonuna kadar",
+    "daily": "gün sonuna kadar",
+    "weekly": "hafta sonuna kadar",
+    "monthly": "ay sonuna kadar",
+    "quarterly": "çeyrek sonuna kadar",
+    "yearly": "yıl sonuna kadar"
+  }
 }

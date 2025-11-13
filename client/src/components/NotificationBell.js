@@ -116,8 +116,8 @@ const NotificationBell = ({ user }) => {
                                 const badgeKey = n.metadata.badgeName.toLowerCase().replace(/ /g, '_');
                                 interpolation.badgeName = t(`badges.${badgeKey}.name`, n.metadata.badgeName);
                             }
-                            if (n.metadata?.predictionType) {
-                                interpolation.predictionType = t(`predictionTypes.${n.metadata.predictionType.toLowerCase()}`);
+                            if (n.metadata?.rating != null) {
+                                interpolation.rating = n.metadata.rating.toFixed(1);
                             }
 
                             return (

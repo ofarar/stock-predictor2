@@ -641,6 +641,11 @@
             "quarterly": "Trimestriel",
             "yearly": "Annuel"
         },
+        "tooltip": {
+            "avgRating": "Note Moy.: {{rating}}",
+            "predictions": "{{count}} Prédictions",
+            "stocks": "Actions: {{tickers}}"
+        },
         "noData": "Aucune donnée de performance pour ce filtre.",
         "tooltipLabel": "Score : {{score}}"
     },
@@ -1034,5 +1039,13 @@
     "analystRating.pie.referrals": "Des Parrainages",
     "common.back": "Retour",
     "sentiment.question": "Quel est l'objectif de prix {{type}} de la communauté pour {{ticker}} ?",
-    "sentiment.based_on_count": "Basé sur {{count}} prédictions"
+    "sentiment.based_on_count": "Basé sur {{count}} prédictions",
+    "prediction_timeframes": {
+        "hourly": "la fin de l'heure",
+        "daily": "la fin de la journée",
+        "weekly": "la fin de la semaine",
+        "monthly": "la fin du mois",
+        "quarterly": "la fin du trimestre",
+        "yearly": "la fin de l'année"
+    }
 }

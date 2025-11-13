@@ -192,8 +192,8 @@ const StockPage = ({ onPredictClick, settings }) => {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <span className="font-bold text-green-400 text-lg">{user.avgScore.toFixed(1)}</span>
-                                        <p className="text-xs text-gray-400">{t('avg_score')}</p>
+                                        <span className="font-bold text-green-400 text-lg">{user.avgRating.toFixed(1)}</span>
+                                        <p className="text-xs text-gray-400">{t('text_avg_rating')}</p>
                                     </div>
                                 </div>
                             )) : (

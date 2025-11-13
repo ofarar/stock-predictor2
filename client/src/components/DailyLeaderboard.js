@@ -34,7 +34,7 @@ const DailyLeaderboard = ({ leaders = [], settings }) => {
                             )}
                         </div>
                         <span className="ml-auto font-bold text-green-400">
-                            {leader.avgScore.toFixed(1)} {t('dailyLeaderboard.averageScoreSuffix')}
+                            {leader.avgRating.toFixed(1)} {t('dailyLeaderboard.averageScoreSuffix')}
                         </span>
                     </div>
                 )) : <p className="text-gray-500 text-center py-4">{t('dailyLeaderboard.noData')}</p>}

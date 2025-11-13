@@ -63,9 +63,9 @@ const AboutPage = () => {
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-semibold text-green-400 mb-3">{t('scoring_explained_title')}</h2>
-                    <p>{t('scoring_explained_text1')}</p>
-                    <p className="mt-2">{t('scoring_explained_text2')}</p>
+                    <h2 className="text-2xl font-semibold text-green-400 mb-3">{t('rating_explained_title')}</h2>
+                    <p>{t('rating_explained_text1')}</p>
+                    <p className="mt-2">{t('rating_explained_text2')}</p>
                 </section>
             </div>
         </div>

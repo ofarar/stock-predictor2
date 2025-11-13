@@ -52,7 +52,7 @@ const BadgeInfoModal = ({ isOpen, onClose }) => {
                                             <div key={tier} className="text-center text-xs p-2 bg-gray-800 rounded">
                                                 <p className="font-bold">{t(`badges.tiers.${tier}`, tier)}</p>
                                                 <p className="text-gray-300">
-                                                    {t('badgeInfoModal.scoreLabel', { score: criteria.score })}
+                                                    {t('badgeInfoModal.ratingLabel', { rating: criteria.rating })}
                                                 </p>
                                             </div>
                                         ))}

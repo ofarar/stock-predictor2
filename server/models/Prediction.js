@@ -9,7 +9,7 @@ const PredictionSchema = new Schema({
     predictionType: { type: String, enum: ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'], required: true },
     deadline: { type: Date, required: true },
     status: { type: String, enum: ['Active', 'Assessed'], default: 'Active' },
-    score: { type: Number, default: 0 },
+    rating: { type: Number, default: 0 },
     actualPrice: { type: Number },
     priceAtCreation: { type: Number },
     currency: { type: String, default: 'USD' },

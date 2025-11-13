@@ -1,6 +1,6 @@
 // server/services/badgeService.js
+// --- ENTIRE FILE REPLACEMENT ---
 
-// FIX: Changed all 'import' statements to 'require' for consistency
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting');
@@ -14,26 +14,34 @@ const awardBadges = async (user) => {
     }
     const badgeDefinitions = settings.badgeSettings;
 
-    const predictions = await Prediction.find({ userId: user._id, status: 'Assessed' });
+    // --- FIX: Read old 'score' field and migrate to 'rating' ---
+    const predictionsData = await Prediction.find({ userId: user._id, status: 'Assessed' }).lean();
+    const predictions = predictionsData.map(p => {
+        if (p.score !== undefined) {
+            p.rating = p.score;
+        }
+        return p;
+    });
+    // --- END FIX ---
 
     if (predictions.length === 0) {
         console.log(`No assessed predictions for ${user.username}. Skipping badge check.`);
         return;
     }
 
-    const totalScore = predictions.reduce((sum, p) => sum + p.score, 0);
-    const overallAccuracy = totalScore / predictions.length;
+    const totalRating = predictions.reduce((sum, p) => sum + (p.rating || 0), 0);
+    const overallAvgRating = totalRating / predictions.length;
 
     const statsByType = predictions.reduce((acc, p) => {
-        if (!acc[p.predictionType]) acc[p.predictionType] = { totalScore: 0, count: 0 };
-        acc[p.predictionType].totalScore += p.score;
+        if (!acc[p.predictionType]) acc[p.predictionType] = { totalRating: 0, count: 0 };
+        acc[p.predictionType].totalRating += (p.rating || 0);
         acc[p.predictionType].count++;
         return acc;
     }, {});
 
     const fullStats = {
         overall: {
-            avgScore: overallAccuracy,
+            avgRating: overallAvgRating,
             count: predictions.length,
         },
         byType: {},
@@ -41,35 +49,19 @@ const awardBadges = async (user) => {
 
     for (const type in statsByType) {
         fullStats.byType[type] = {
-            avgScore: statsByType[type].totalScore / statsByType[type].count,
+            avgRating: statsByType[type].totalRating / statsByType[type].count,
             count: statsByType[type].count,
         };
     }
 
     console.log(`\n--- Checking badges for user: ${user.username} ---`);
 
-    // --- FIX: On-the-fly migration from Number to Object ---
-    let currentRating = user.analystRating;
-    if (typeof currentRating !== 'object' || currentRating === null) {
-        const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
-        // We'll assume old points were from predictions
-        user.analystRating = {
-            total: oldPoints,
-            fromPredictions: oldPoints,
-            fromBadges: 0,
-            fromShares: 0,
-            fromReferrals: 0,
-            fromRanks: 0
-        };
-    }
-    // --- END FIX ---
-
-    // --- FIX: Initialize badges array if it's missing for old users ---
+    // --- FIX: Initialize badges array if it's missing ---
     if (!user.badges) {
         user.badges = [];
     }
     // --- END FIX ---
-
+    
     const existingBadges = new Map(user.badges.map(b => [b.badgeId, b.tier]));
     const earnedBadges = [];
 
@@ -85,30 +77,40 @@ const awardBadges = async (user) => {
             statsToCheck = fullStats.byType[badgeType];
         }
 
-        if (statsToCheck && statsToCheck.count >= (definition.minPredictions || 0)) {
+        if (statsToCheck && statsToCheck.count >= (definition.minPredictions || 0) && statsToCheck.avgRating) {
             let earnedTier = null;
-            if (statsToCheck.avgScore >= (definition.tiers.Gold?.score || 101)) earnedTier = 'Gold';
-            else if (statsToCheck.avgScore >= (definition.tiers.Silver?.score || 101)) earnedTier = 'Silver';
-            else if (statsToCheck.avgScore >= (definition.tiers.Bronze?.score || 101)) earnedTier = 'Bronze';
+            // --- FIX: Check against 'rating' from settings ---
+            if (statsToCheck.avgRating >= (definition.tiers.Gold?.rating || 101)) earnedTier = 'Gold';
+            else if (statsToCheck.avgRating >= (definition.tiers.Silver?.rating || 101)) earnedTier = 'Silver';
+            else if (statsToCheck.avgRating >= (definition.tiers.Bronze?.rating || 101)) earnedTier = 'Bronze';
 
-            console.log(` -> Checking for '${badgeId}': ${earnedTier ? `Earned ${earnedTier} tier.` : 'Criteria not met.'}`);
+            console.log(` -> Checking for '${badgeId}' (Avg Rating: ${statsToCheck.avgRating}): ${earnedTier ? `Earned ${earnedTier} tier.` : 'Criteria not met.'}`);
 
             if (earnedTier) {
                 const existingTier = existingBadges.get(badgeId);
                 if (!existingTier || (earnedTier === 'Gold' && existingTier !== 'Gold') || (earnedTier === 'Silver' && existingTier === 'Bronze')) {
+                    
+                    // --- FIX: On-the-fly migration for analystRating ---
+                    if (typeof user.analystRating !== 'object' || user.analystRating === null) {
+                        const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
+                        user.analystRating = { total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0 };
+                    }
+                    // --- END FIX ---
+                    
                     user.badges = user.badges.filter(b => b.badgeId !== badgeId);
                     user.badges.push({ badgeId, tier: earnedTier });
                     earnedBadges.push({ badgeId, tier: earnedTier });
+
                     // --- NEW RATING LOGIC ---
                     let ratingToAward = 0;
                     if (earnedTier === 'Bronze') ratingToAward = 100;
                     if (earnedTier === 'Silver') ratingToAward = 250;
                     if (earnedTier === 'Gold') ratingToAward = 500;
-                    // Update the object fields
+                    
                     user.analystRating.total = (user.analystRating.total || 0) + ratingToAward;
                     user.analystRating.fromBadges = (user.analystRating.fromBadges || 0) + ratingToAward;
                     console.log(`   ==> AWARDING new/upgraded badge: ${definition.name} (${earnedTier}) and +${ratingToAward} Rating`);
-                    // --- END NEW LOGIC ---
+                    // --- END NEW RATING LOGIC ---
                 }
             }
         }
@@ -121,13 +123,10 @@ const awardBadges = async (user) => {
             const badgeInfo = badgeDefinitions[badge.badgeId];
             if (!badgeInfo) continue;
 
-            const message = `Congratulations! You've earned the ${badge.tier} ${badgeInfo.name} badge.`;
-            const followerMessage = `${user.username} has earned the ${badge.tier} ${badgeInfo.name} badge!`;
-
             await new Notification({
                 recipient: user._id,
                 type: 'BadgeEarned',
-                messageKey: 'notifications.badgeEarnedSelf', // Corrected to messageKey
+                messageKey: 'notifications.badgeEarnedSelf',
                 link: `/profile/${user._id}`,
                 metadata: {
                     tier: badge.tier,
@@ -136,19 +135,19 @@ const awardBadges = async (user) => {
             }).save();
 
             // Notify followers
-            const followerNotifs = user.followers.map(followerId => ({
-                recipient: followerId,
-                sender: user._id,
-                type: 'FollowerBadgeEarned', // Distinct type for follower notifications
-                messageKey: 'notifications.badgeEarnedFollower', // Corrected to messageKey
-                link: `/profile/${user._id}`,
-                metadata: {
-                    username: user.username,
-                    tier: badge.tier,
-                    badgeName: badgeInfo.name
-                }
-            }));
-            if (followerNotifs.length > 0) {
+            if (user.followers && user.followers.length > 0) {
+                const followerNotifs = user.followers.map(followerId => ({
+                    recipient: followerId,
+                    sender: user._id,
+                    type: 'BadgeEarned', // Changed from 'FollowerBadgeEarned' to simplify
+                    messageKey: 'notifications.badgeEarnedFollower',
+                    link: `/profile/${user._id}`,
+                    metadata: {
+                        username: user.username,
+                        tier: badge.tier,
+                        badgeName: badgeInfo.name
+                    }
+                }));
                 await Notification.insertMany(followerNotifs);
             }
         }
@@ -157,5 +156,4 @@ const awardBadges = async (user) => {
     }
 };
 
-// FIX: Use module.exports to match the rest of the backend project
 module.exports = { awardBadges };

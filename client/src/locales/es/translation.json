@@ -641,6 +641,11 @@
             "quarterly": "Trimestral",
             "yearly": "Anual"
         },
+        "tooltip": {
+            "avgRating": "Rating Prom.: {{rating}}",
+            "predictions": "{{count}} Predicciones",
+            "stocks": "Acciones: {{tickers}}"
+        },
         "noData": "No hay datos de rendimiento para este filtro.",
         "tooltipLabel": "Puntuación: {{score}}"
     },
@@ -1034,5 +1039,13 @@
     "analystRating.pie.referrals": "De Referidos",
     "common.back": "Volver",
     "sentiment.question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
-    "sentiment.based_on_count": "Basado en {{count}} predicciones"
+    "sentiment.based_on_count": "Basado en {{count}} predicciones",
+    "prediction_timeframes": {
+        "hourly": "final de la hora",
+        "daily": "final del día",
+        "weekly": "final de la semana",
+        "monthly": "final de mes",
+        "quarterly": "final de trimestre",
+        "yearly": "final de año"
+    }
 }

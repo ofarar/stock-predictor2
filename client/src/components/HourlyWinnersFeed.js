@@ -63,7 +63,7 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
                             )}
                         </div>
                         <span className="font-bold text-green-400">
-                            {t('hourlyWinnersFeed.pointsSuffix', { score: winner.score })}
+                            {t('hourlyWinnersFeed.ratingSuffix', { rating: winner.rating })}
                         </span>
                     </div>
                 )) : <p className="text-center text-gray-500 py-4">{t('hourlyWinnersFeed.noPredictions')}</p>}

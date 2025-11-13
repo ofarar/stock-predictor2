@@ -28,8 +28,8 @@ const calculateLiveScore = (predictedPrice, actualPrice) => {
     const error = Math.abs(predictedPrice - actualPrice);
     const errorPercentage = error / actualPrice;
     if (errorPercentage > MAX_ERROR_PERCENTAGE) return 0;
-    const score = MAX_SCORE * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
-    return parseFloat(score.toFixed(1));
+    const rating = MAX_SCORE * (1 - (errorPercentage / MAX_ERROR_PERCENTAGE));
+    return parseFloat(rating.toFixed(1));
 };
 
 const isMarketOpen = () => {
@@ -177,9 +177,12 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         const params = {
             ticker: prediction.stockTicker,
             targetPrice: formatCurrency(prediction.targetPrice, i18n.language, prediction.currency),
-            deadline: formatNumericDate(prediction.deadline, i18n.language),
+            // --- THIS IS THE FIX ---
+            // We now pass the translated timeframe instead of the date.
+            deadline: t(`prediction_timeframes.${prediction.predictionType.toLowerCase()}`),
+            // --- END FIX ---
             username: prediction.userId.username,
-            score: prediction.score?.toFixed(1),
+            rating: (prediction.rating || prediction.score)?.toFixed(1), // Use 'rating' or 'score'
             actualPrice: formatCurrency(prediction.actualPrice, i18n.language, prediction.currency),
         };
 
@@ -209,11 +212,11 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const marketIsOpenNow = isMarketOpen();
     // Use `currentQuote.displayPrice` as it's the standardized field
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
-    const scoreLabel = isAssessed ? t("Final Score") : (marketIsOpenNow ? t("Live Score") : t("Score at Close"));
+    const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close")); // <-- Renamed
     const priceLabel = isAssessed ? t("prediction.actualPrice") : (marketIsOpenNow ? t("Current") : t("Closing Price"));
 
-    let score = isAssessed ? prediction.score : calculateLiveScore(prediction.targetPrice, currentPrice);
-    const formattedScore = typeof score === 'number' ? score.toFixed(1) : score;
+    let rating = isAssessed ? prediction.rating : calculateLiveScore(prediction.targetPrice, currentPrice); // <-- Renamed
+    const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating; // <-- Renamed
     const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
     const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
     const hasInitialPrice = typeof prediction.priceAtCreation === 'number';
@@ -303,9 +306,9 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
 
                         <div className="bg-gray-700 p-4 rounded-lg flex flex-col justify-center">
                             <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
-                                {isAssessed ? t("Final Score") : scoreLabel}
+                                {isAssessed ? t("Final Rating") : ratingLabel}
                             </p>
-                            <p className={`text-3xl font-bold ${typeof score === 'number' && score > 60 ? 'text-green-400' : 'text-red-400'}`}>{formattedScore}</p>
+                            <p className={`text-3xl font-bold ${typeof rating === 'number' && rating > 60 ? 'text-green-400' : 'text-red-400'}`}>{formattedRating}</p>
                         </div>
                     </div>
 

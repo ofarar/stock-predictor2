@@ -641,6 +641,11 @@
             "quarterly": "季度",
             "yearly": "每年"
         },
+        "tooltip": {
+            "avgRating": "平均评级: {{rating}}",
+            "predictions": "{{count}} 条预测",
+            "stocks": "股票: {{tickers}}"
+        },
         "noData": "此筛选条件下没有表现数据。",
         "tooltipLabel": "分数: {{score}}"
     },
@@ -1034,5 +1039,13 @@
     "analystRating.pie.referrals": "来自推荐",
     "common.back": "返回",
     "sentiment.question": "社区对 {{ticker}} 的 {{type}} 目标价是多少？",
-    "sentiment.based_on_count": "基于 {{count}} 条预测"
+    "sentiment.based_on_count": "基于 {{count}} 条预测",
+    "prediction_timeframes": {
+        "hourly": "小时末",
+        "daily": "当天结束",
+        "weekly": "周末",
+        "monthly": "月末",
+        "quarterly": "季度末",
+        "yearly": "年末"
+    }
 }

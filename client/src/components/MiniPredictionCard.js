@@ -24,8 +24,8 @@ const MiniPredictionCard = ({ prediction, currentPrice, isOwnProfile, onEditClic
                     </div>
                     {isAssessed ? (
                         <div className="text-right">
-                            <p className={`font-bold text-xl ${prediction.score > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.score.toFixed(1)}</p>
-                            <p className="text-xs text-gray-500 -mt-1">{t('common.score')}</p>
+                            <p className={`font-bold text-xl ${prediction.rating > 60 ? 'text-green-400' : 'text-red-400'}`}>{prediction.rating.toFixed(1)}</p>
+                            <p className="text-xs text-gray-500 -mt-1">{t('common.rating')}</p>
                         </div>
                     ) : (
                         <div className="text-right">

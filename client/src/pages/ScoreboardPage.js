@@ -118,8 +118,8 @@ const ScoreboardPage = ({ settings }) => {
 
                                 </div>
                                 <div className="text-right">
-                                    <span className="font-bold text-green-400 text-xl">{user.avgScore}</span>
-                                    <p className="text-xs text-gray-400">{t('text_avg_score')}</p>
+                                    <span className="font-bold text-green-400 text-xl">{user.avgRating}</span>
+                                    <p className="text-xs text-gray-400">{t('text_avg_rating')}</p>
                                 </div>
                             </div>
                         )) : (

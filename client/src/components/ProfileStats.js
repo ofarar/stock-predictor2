@@ -55,7 +55,7 @@ const ProfileStats = ({ user, performance, predictionCount, totalAnalystRating, 
                 onClick={onCreatorPoolClick}
             />
 
-            <StatCard label={t('average_score_label')} value={performance.overallAccuracy.toFixed(1)} />
+            <StatCard label={t('profile_avg_rating')} value={performance.overallAvgRating.toFixed(1)} />
             {performance.aggressiveness && (
                 <AggressivenessProgressBar
                     data={performance.aggressiveness.distribution}

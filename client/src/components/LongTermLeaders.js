@@ -34,7 +34,7 @@ const LongTermLeaders = ({ leaders = [], settings }) => { // Accept settings pro
                             {/* Add the VerifiedTick here */}
                             {settings?.isVerificationEnabled && leader.isVerified && <VerifiedTick />}
                         </div>
-                        <span className="font-bold text-green-400">{leader.accuracy}% {t('longTermLeaders.accuracyLabel')}</span>
+                        <span className="font-bold text-green-400">{leader.avgRating.toFixed(1)} {t('longTermLeaders.accuracyLabel')}</span>
                     </Link>
                 )) : (
                     <p className="text-gray-500 text-center py-4">{t('longTermLeaders.noData')}</p>

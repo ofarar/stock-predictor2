@@ -146,7 +146,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                             </Link>
                             {/* --- END FIX 2 --- */}
 
-                            <p className="text-gray-400">{t('analyst_rating_label')}: {selectedUser.analystRating.toLocaleString()}</p>
+                            <p className="text-gray-400">{t('analyst_rating_label')}: {selectedUser.analystRating.total.toLocaleString()}</p>
                         </div>
                         <div className="w-full max-w-xs mx-auto">
                             <Pie data={pieChartData} options={pieChartOptions} />
@@ -184,9 +184,9 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                                         <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2"/>
                                         <span className="text-white font-semibold flex-grow text-left">{user.username}</span>
                                         <div className="text-right">
-                                            <p className="font-bold text-green-400">{user.analystRating.toLocaleString()}</p>
+                                            <p className="font-bold text-green-400">{user.analystRating.total.toLocaleString()}</p>
                                             <p className="text-xs text-gray-400">
-                                                {formatSharePercentage(((user.analystRating / totalRating) * 100), i18n.language)}
+                                                {formatSharePercentage(((user.analystRating.total / totalRating) * 100), i18n.language)}
                                             </p>
                                         </div>
                                     </button>

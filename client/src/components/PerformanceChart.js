@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+// src/components/PerformanceChart.js
+import React, { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { format } from 'date-fns';
@@ -7,35 +8,54 @@ import { formatDate } from '../utils/formatters';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const PerformanceChart = ({ chartData = [] }) => {
+const PerformanceChart = ({ chartData = [], activeFilter }) => {
     const { t, i18n } = useTranslation();
-    const [filter, setFilter] = useState('Overall');
-    const types = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
+    
+    // The filter type is now derived from the prop passed by ProfilePage.js
+    const activeFilterType = activeFilter?.type || 'Overall';
 
     const filteredAndFormattedData = useMemo(() => {
         let dataPoints = chartData;
 
-        if (filter !== 'Overall') {
-            dataPoints = chartData.filter(p => p.predictionType === filter);
+        // Filter data based on the activeFilter prop
+        if (activeFilterType !== 'Overall') {
+            dataPoints = chartData.filter(p => p.predictionType === activeFilterType);
         }
 
-        const dailyScores = dataPoints.reduce((acc, p) => {
+        const dailyRatings = dataPoints.reduce((acc, p) => {
             const day = format(new Date(p.createdAt), 'yyyy-MM-dd');
             if (!acc[day]) {
-                acc[day] = { totalScore: 0, count: 0, predictions: [] };
+                acc[day] = { totalRating: 0, count: 0, predictions: [] };
             }
-            acc[day].totalScore += p.score;
+            // Use 'rating' (new) or 'score' (old) for data migration
+            acc[day].totalRating += (p.rating || p.score || 0); 
             acc[day].count++;
-            acc[day].predictions.push(p.id);
+            // Store the stock ticker for the tooltip
+            if (p.stockTicker) {
+                acc[day].predictions.push(p.stockTicker);
+            }
             return acc;
         }, {});
 
-        const labels = Object.keys(dailyScores).sort();
-        const data = labels.map(label => dailyScores[label].totalScore / dailyScores[label].count);
-        const predictionIds = labels.map(label => dailyScores[label].predictions);
+        const sortedDays = Object.keys(dailyRatings).sort((a, b) => new Date(a) - new Date(b));
 
-        return { labels, datasets: [{ data, predictionIds }] };
-    }, [chartData, filter]);
+        return {
+            labels: sortedDays,
+            datasets: [{
+                label: t('performanceChart.avgRatingLabel', 'Avg Rating'),
+                // Calculate average using totalRating
+                data: sortedDays.map(day => dailyRatings[day].totalRating / dailyRatings[day].count),
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                fill: true,
+                tension: 0.1,
+                pointRadius: 2,
+                pointHoverRadius: 6,
+            }],
+            // Pass this for the tooltip
+            dailyData: dailyRatings
+        };
+    }, [chartData, activeFilterType, t]);
 
     const options = {
         responsive: true,
@@ -43,46 +63,54 @@ const PerformanceChart = ({ chartData = [] }) => {
         plugins: {
             legend: { display: false },
             tooltip: {
+                mode: 'index',
+                intersect: false,
+                backgroundColor: '#1F2937',
+                titleColor: '#E5E7EB',
+                bodyColor: '#D1D5DB',
+                borderColor: '#4B5563',
+                borderWidth: 1,
+                padding: 10,
                 callbacks: {
-                    // This will format the title (the date) of the tooltip
-                    title: function (context) {
-                        const label = context[0].label;
-                        return formatDate(new Date(label), i18n.language);
+                    title: (context) => {
+                        const day = context[0].label;
+                        return formatDate(new Date(day), i18n.language);
                     },
-                    // This will format the body of the tooltip
-                    label: function (context) {
-                        return t('performanceChart.tooltipLabel', { score: context.formattedValue });
+                    label: (context) => {
+                        // Use the correct "Rating" translation key
+                        return t('performanceChart.tooltip.avgRating', { rating: context.parsed.y.toFixed(1) });
+                    },
+                    afterBody: (context) => {
+                        // Add the "predictions" and "stocks" info
+                        const dayData = filteredAndFormattedData.dailyData[context[0].label];
+                        if (!dayData) return '';
+                        
+                        const tickers = [...new Set(dayData.predictions)]; // Get unique tickers
+                        const predictionsLabel = t('performanceChart.tooltip.predictions', { count: dayData.count });
+                        const tickersLabel = t('performanceChart.tooltip.stocks', { tickers: tickers.slice(0, 3).join(', ') });
+                        
+                        return `\n${predictionsLabel}\n${tickersLabel}${tickers.length > 3 ? '...' : ''}`;
                     }
                 }
-            }
+            },
         },
         scales: {
             x: {
                 ticks: {
                     color: '#9ca3af',
-                    maxTicksLimit: 10,
-                    // Add this callback to format the date
-                    callback: function (value, index, ticks) {
+                    maxTicksLimit: 8,
+                    callback: function (value) {
                         const label = this.getLabelForValue(value);
-                        // Convert the string label into a Date object before formatting
-                        return formatDate(new Date(label), i18n.language);
+                        return format(new Date(label), 'MMM d');
                     }
                 },
                 grid: { color: 'rgba(255, 255, 255, 0.1)' }
             },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, min: 0, max: 100 }
-        },
-        elements: {
-            line: {
-                borderColor: '#22c55e',
-                backgroundColor: 'rgba(34, 197, 94, 0.2)',
-                fill: true,
-                tension: 0.3,
-            },
-            point: {
-                radius: 4,
-                hoverRadius: 6,
-                backgroundColor: '#22c55e',
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { color: '#9ca3af' },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' }
             }
         },
         onHover: (event, chartElement) => {
@@ -93,18 +121,8 @@ const PerformanceChart = ({ chartData = [] }) => {
     return (
         <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                <h3 className="text-xl font-bold text-white mb-3 sm:mb-0">{t('performanceChart.title')}</h3>
-                <div className="flex flex-wrap gap-1 bg-gray-700 p-1 rounded-md">
-                    {types.map(type => (
-                        <button
-                            key={type}
-                            onClick={() => setFilter(type)}
-                            className={`px-3 py-1 text-xs font-bold rounded transition-colors ${filter === type ? 'bg-green-500 text-white' : 'hover:bg-gray-600 text-gray-300'}`}
-                        >
-                            {t(`performanceChart.filters.${type.toLowerCase()}`)}
-                        </button>
-                    ))}
-                </div>
+                {/* Header is clean, filters are removed */}
+                <h3 className="text-xl font-bold text-white">{t('performanceChart.title')}</h3>
             </div>
             <div className="h-64">
                 {filteredAndFormattedData.labels.length > 0 ? (

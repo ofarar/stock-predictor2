@@ -14,11 +14,11 @@ const MiniAggressivenessBar = ({ score }) => (
     </div>
 );
 
-const StatCard = ({ label, avgScore, rank, aggressivenessScore, isSelected, onClick, onShareClick }) => {
+const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSelected, onClick, onShareClick }) => { // <-- Renamed
     const { t } = useTranslation();
     const circumference = 2 * Math.PI * 20;
-    const validAvgScore = avgScore || 0;
-    const offset = circumference - (avgScore / 100) * circumference;
+    const validAvgRating = avgRating || 0;
+    const offset = circumference - (avgRating / 100) * circumference;
 
     const handleShare = (e) => {
         e.stopPropagation();
@@ -37,16 +37,16 @@ const StatCard = ({ label, avgScore, rank, aggressivenessScore, isSelected, onCl
                         <circle className="text-green-400" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" stroke="currentColor" fill="transparent" r="20" cx="22" cy="22" transform="rotate(-90 22 22)" />
                     </svg>
                     <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">
-                        {validAvgScore.toFixed(1)}
+                        {validAvgRating.toFixed(1)}
                     </span>
                 </div>
                 <div className="ml-4 flex-grow">
-                    {onClick ? (
+                    {isStock ? (
                         <Link to={`/stock/${label}`} className="font-bold text-white text-lg hover:underline" onClick={e => e.stopPropagation()}>{label}</Link>
                     ) : (
                         <p className="font-bold text-white text-lg">{label}</p>
                     )}
-                    <p className="text-sm text-gray-400">{t('performanceTabs.statCard.averageScore')}</p>
+                    <p className="text-sm text-gray-400">{t('performanceTabs.statCard.averageRating')}</p>
                 </div>
                 <div className="relative flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2 text-center w-20">
                     {rank <= 3 && (<span className="absolute -top-2 -right-2 text-2xl" title={t('performanceTabs.statCard.topRankTitle', { rank })}>⭐</span>)}
@@ -131,7 +131,7 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                             <StatCard
                                 key={p.type}
                                 label={t(`predictionTypes.${p.type.toLowerCase()}`)}
-                                avgScore={p.accuracy}
+                                avgRating={p.avgRating}
                                 rank={p.rank}
                                 aggressivenessScore={p.aggressivenessScore}
                                 isSelected={selectedFilter === p.type}
@@ -147,7 +147,8 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                             <StatCard
                                 key={s.ticker}
                                 label={s.ticker}
-                                avgScore={s.accuracy}
+                                avgRating={s.avgRating}
+                                isStock={true} // <-- You set it to 'true' here
                                 rank={s.rank}
                                 aggressivenessScore={s.aggressivenessScore}
                                 isSelected={selectedFilter === s.ticker}

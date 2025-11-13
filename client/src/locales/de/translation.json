@@ -641,6 +641,11 @@
             "quarterly": "Vierteljährlich",
             "yearly": "Jährlich"
         },
+        "tooltip": {
+            "avgRating": "Durchschn. Rating: {{rating}}",
+            "predictions": "{{count}} Prognosen",
+            "stocks": "Aktien: {{tickers}}"
+        },
         "noData": "Keine Leistungsdaten für diesen Filter.",
         "tooltipLabel": "Punktzahl: {{score}}"
     },
@@ -1029,5 +1034,13 @@
     "analystRating.pie.referrals": "Aus Empfehlungen",
     "common.back": "Zurück",
     "sentiment.question": "Was ist das {{type}}-Kursziel der Community für {{ticker}}?",
-    "sentiment.based_on_count": "Basierend auf {{count}} Prognosen"
+    "sentiment.based_on_count": "Basierend auf {{count}} Prognosen",
+    "prediction_timeframes": {
+        "hourly": "zum Ende der Stunde",
+        "daily": "zum Ende des Tages",
+        "weekly": "zum Ende der Woche",
+        "monthly": "zum Ende des Monats",
+        "quarterly": "zum Ende des Quartals",
+        "yearly": "zum Ende des Jahres"
+    }
 }

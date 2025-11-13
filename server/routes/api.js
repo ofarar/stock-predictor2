@@ -130,8 +130,8 @@ router.get('/stock/:ticker/top-predictors', async (req, res) => {
 
         const predictors = await Prediction.aggregate([
             { $match: matchQuery },
-            { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
-            { $sort: { avgScore: -1 } },
+            { $group: { _id: '$userId', avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }, // <-- MIGRATE
+            { $sort: { avgRating: -1 } },
             { $skip: skip },
             { $limit: limitNum },
             { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'userDetails' } },
@@ -143,7 +143,7 @@ router.get('/stock/:ticker/top-predictors', async (req, res) => {
                     avatar: '$userDetails.avatar',
                     isGoldenMember: '$userDetails.isGoldenMember',
                     isVerified: '$userDetails.isVerified',
-                    avgScore: { $round: ['$avgScore', 1] }
+                    avgRating: { $round: ['$avgRating', 1] } // <-- Renamed
                 }
             }
         ]);
@@ -869,12 +869,17 @@ router.get('/admin/all-users', async (req, res) => {
 
         // Whitelist valid sort fields to prevent injection
         const validSortKeys = [
-            'username', 'followersCount', 'predictionCount',
+            'avgScore', 'avgRating', 'goldenSubscribersCount', 'followingCount', // <-- 'avgScore' is valid
             'avgScore', 'goldenSubscribersCount', 'followingCount',
             'goldenSubscriptionsCount'
         ];
 
-        const sortKey = validSortKeys.includes(sortBy) ? sortBy : 'username';
+        // --- FIX: Remap old 'avgScore' to new 'avgRating' for sorting ---
+        let sortKey = validSortKeys.includes(sortBy) ? sortBy : 'username';
+        if (sortKey === 'avgScore') {
+            sortKey = 'avgRating';
+        }
+        // --- END FIX ---
         const sortOrder = order === 'asc' ? 1 : -1;
         const sortQuery = { [sortKey]: sortOrder, username: 1 }; // Add username as a secondary sort
 
@@ -901,10 +906,10 @@ router.get('/admin/all-users', async (req, res) => {
             {
                 $addFields: {
                     predictionCount: { $size: "$predictions" },
-                    avgScore: {
+                    avgRating: {
                         $cond: {
                             if: { $gt: [{ $size: "$predictions" }, 0] },
-                            then: { $avg: "$predictions.score" },
+                            then: { $avg: { $ifNull: ["$predictions.rating", "$predictions.score"] } }, // <-- MIGRATE
                             else: 0
                         }
                     }
@@ -917,7 +922,7 @@ router.get('/admin/all-users', async (req, res) => {
                     followersCount: 1, followingCount: 1,
                     goldenSubscribersCount: 1, goldenSubscriptionsCount: 1,
                     predictionCount: 1,
-                    avgScore: { $round: ["$avgScore", 1] }
+                    avgRating: { $round: ["$avgRating", 1] } // <-- Renamed
                 }
             },
             { $sort: sortQuery }
@@ -968,7 +973,7 @@ router.get('/watchlist/:ticker/predictions', async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limitNum)
-            .populate('userId', 'username avatar isGoldenMember score isVerified')
+            .populate('userId', 'username avatar isGoldenMember totalRating isVerified')
             .lean();
 
         res.json({ predictions, totalPages, currentPage: pageNum });
@@ -1017,7 +1022,7 @@ router.get('/watchlist', async (req, res) => {
                     { $limit: 3 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice' } }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgRating: { $round: ['$avgRating', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice' } }
                 ]),
                 // 3. Get the single top verified predictor for this ticker
                 Prediction.aggregate([
@@ -1029,7 +1034,7 @@ router.get('/watchlist', async (req, res) => {
                     { $limit: 1 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgScore: { $round: ['$avgScore', 1] } } }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgRating: { $round: ['$avgRating', 1] } } }
                 ])
             ]);
 
@@ -1477,7 +1482,7 @@ router.get('/scoreboard', async (req, res) => {
             {
                 $group: {
                     _id: '$userId',
-                    avgScore: { $avg: '$score' },
+                    avgRating: { $avg: { $ifNull: ["$rating", "$score"] } }, // <-- MIGRATE
                     predictionCount: { $sum: 1 }
                 }
             },
@@ -1493,7 +1498,7 @@ router.get('/scoreboard', async (req, res) => {
         // Pipeline to get the actual data
         const dataPipeline = [
             ...basePipeline,
-            { $sort: { avgScore: -1 } },
+            { $sort: { avgRating: -1 } }, // <-- Renamed
             { $skip: skip },
             { $limit: limitNum },
             {
@@ -1512,7 +1517,7 @@ router.get('/scoreboard', async (req, res) => {
                     avatar: '$userDetails.avatar',
                     isGoldenMember: '$userDetails.isGoldenMember',
                     isVerified: '$userDetails.isVerified',
-                    avgScore: { $round: ['$avgScore', 1] },
+                    avgRating: { $round: ['$avgRating', 1] }, // <-- Renamed
                     predictionCount: 1,
                     acceptingNewSubscribers: '$user.acceptingNewSubscribers',
                     goldenMemberPrice: '$user.goldenMemberPrice'
@@ -1760,31 +1765,41 @@ router.get('/profile/:userId', async (req, res) => {
 
         await user.populate(['goldenSubscriptions.user', 'goldenSubscribers.user']);
 
-        const predictions = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+        // --- FIX: Manually migrate 'score' to 'rating' ---
+        const predictionsData = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 }).lean();
+        const predictions = predictionsData.map(p => {
+            if (p.score !== undefined) {
+                p.rating = p.score;
+                delete p.score;
+            }
+            return p;
+        });
+        // --- END FIX ---
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
 
-        const overallRank = (await User.countDocuments({ score: { $gt: user.score } })) + 1;
-        const totalScore = assessedPredictions.reduce((sum, p) => sum + p.score, 0);
-        let overallAccuracy = assessedPredictions.length > 0 ? Math.round((totalScore / assessedPredictions.length) * 10) / 10 : 0;
+        // This logic will now work because 'predictions' has the 'rating' field
+        const overallRank = (await User.countDocuments({ totalRating: { $gt: user.totalRating } })) + 1;
+        const totalRating = assessedPredictions.reduce((sum, p) => sum + p.rating, 0);
+        let overallAvgRating = assessedPredictions.length > 0 ? Math.round((totalRating / assessedPredictions.length) * 10) / 10 : 0;
 
         // --- Start of Corrected Logic ---
 
         // 1. Initialize the performance object early
         const performance = {
             overallRank: overallRank,
-            overallAccuracy,
+            overallAvgRating,
         };
 
         // --- Helper function to calculate global rank for a specific category ---
-        const getGlobalRank = async (field, value, userScore) => {
+        const getGlobalRank = async (field, value, userRating) => { // <-- Renamed
             const matchStage = { status: 'Assessed' };
             if (field && value) {
                 matchStage[field] = value;
             }
             const rankData = await Prediction.aggregate([
                 { $match: matchStage },
-                { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
-                { $match: { avgScore: { $gt: userScore } } },
+                { $group: { _id: '$userId', avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }, // <-- MIGRATE
+                { $match: { avgRating: { $gt: userRating } } }, // <-- Renamed
                 { $count: 'higherRankedUsers' }
             ]);
             return (rankData[0]?.higherRankedUsers || 0) + 1;
@@ -1803,9 +1818,9 @@ router.get('/profile/:userId', async (req, res) => {
 
         const perfByType = assessedPredictions.reduce((acc, p) => {
             if (!acc[p.predictionType]) {
-                acc[p.predictionType] = { totalScore: 0, count: 0, defensive: 0, neutral: 0, offensive: 0 };
+                acc[p.predictionType] = { totalRating: 0, count: 0, defensive: 0, neutral: 0, offensive: 0 }; // <-- Renamed
             }
-            acc[p.predictionType].totalScore += p.score;
+            acc[p.predictionType].totalRating += p.rating; // <-- Renamed
             acc[p.predictionType].count++;
 
             if (p.priceAtCreation > 0) {
@@ -1824,17 +1839,17 @@ router.get('/profile/:userId', async (req, res) => {
             const aggressivenessScore = total > 0 ? weightedTotal / total : 0;
             return {
                 type,
-                accuracy: data.totalScore / data.count,
+                avgRating: data.totalRating / data.count, // <-- Renamed
                 count: data.count,
                 aggressivenessScore
             };
-        }).sort((a, b) => b.accuracy - a.accuracy);
+        }).sort((a, b) => b.avgRating - a.avgRating);
 
         const perfByStock = assessedPredictions.reduce((acc, p) => {
             if (!acc[p.stockTicker]) {
-                acc[p.stockTicker] = { totalScore: 0, count: 0, defensive: 0, neutral: 0, offensive: 0 };
+                acc[p.stockTicker] = { totalRating: 0, count: 0, defensive: 0, neutral: 0, offensive: 0 }; // <-- Renamed
             }
-            acc[p.stockTicker].totalScore += p.score;
+            acc[p.stockTicker].totalRating += p.rating; // <-- Renamed
             acc[p.stockTicker].count++;
 
             if (p.priceAtCreation > 0) {
@@ -1854,11 +1869,11 @@ router.get('/profile/:userId', async (req, res) => {
             const aggressivenessScore = total > 0 ? weightedTotal / total : 0;
             return {
                 ticker,
-                accuracy: data.totalScore / data.count,
+                avgRating: data.totalRating / data.count, // <-- Renamed
                 count: data.count,
                 aggressivenessScore
             };
-        }).sort((a, b) => b.accuracy - a.accuracy);
+        }).sort((a, b) => b.avgRating - a.avgRating);
 
         // 2. Now calculate aggressiveness
         const aggressivenessData = { defensive: 0, neutral: 0, offensive: 0 };
@@ -1893,8 +1908,8 @@ router.get('/profile/:userId', async (req, res) => {
         };
 
         // 4. Run all global rank calculations in parallel
-        const rankPromisesByType = formattedPerfByType.map(p => getGlobalRank('predictionType', p.type, p.accuracy));
-        const rankPromisesByStock = formattedPerfByStock.map(s => getGlobalRank('stockTicker', s.ticker, s.accuracy));
+        const rankPromisesByType = formattedPerfByType.map(p => getGlobalRank('predictionType', p.type, p.avgRating)); // <-- Renamed
+        const rankPromisesByStock = formattedPerfByStock.map(s => getGlobalRank('stockTicker', s.ticker, s.avgRating)); // <-- Renamed
         const [resolvedRanksByType, resolvedRanksByStock] = await Promise.all([
             Promise.all(rankPromisesByType),
             Promise.all(rankPromisesByStock)
@@ -1903,19 +1918,19 @@ router.get('/profile/:userId', async (req, res) => {
         // 5. Combine personal stats with global ranks and add to performance object
         performance.byType = formattedPerfByType.map((p, index) => ({
             ...p,
-            accuracy: Math.round(p.accuracy * 10) / 10,
+            avgRating: Math.round(p.avgRating * 10) / 10, // <-- Renamed
             rank: resolvedRanksByType[index]
         }));
         performance.byStock = formattedPerfByStock.map((s, index) => ({
             ...s,
-            accuracy: Math.round(s.accuracy * 10) / 10,
+            avgRating: Math.round(s.avgRating * 10) / 10, // <-- Renamed
             rank: resolvedRanksByStock[index]
         }));
 
         // --- End of Corrected Logic ---
 
         const chartData = assessedPredictions.map(p => ({
-            id: p._id, score: p.score, createdAt: p.createdAt, predictionType: p.predictionType
+            id: p._id, rating: p.rating, createdAt: p.createdAt, predictionType: p.predictionType, stockTicker: p.stockTicker // <-- ADD THIS LINE
         }));
 
         // --- NEW: Get total analyst rating from all users ---
@@ -2353,8 +2368,8 @@ router.get('/widgets/daily-leaders', async (req, res) => {
 
         const leaders = await Prediction.aggregate([
             { $match: { createdAt: { $gte: startOfDay }, status: 'Assessed' } },
-            { $group: { _id: '$userId', avgScore: { $avg: '$score' } } },
-            { $sort: { avgScore: -1 } },
+            { $group: { _id: '$userId', avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }, // <-- MIGRATE
+            { $sort: { avgRating: -1 } }, // <-- RENAME
             { $limit: 3 },
             { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
             { $unwind: '$user' },
@@ -2362,7 +2377,7 @@ router.get('/widgets/daily-leaders', async (req, res) => {
                 $project: {
                     userId: '$_id',
                     username: '$user.username',
-                    avgScore: 1,
+                    avgRating: { $round: ['$avgRating', 1] }, // <-- Renamed
                     avatar: '$user.avatar',                 // Add avatar
                     isGoldenMember: '$user.isGoldenMember', // Add golden status
                     isVerified: '$user.isVerified',
@@ -2379,8 +2394,8 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
     try {
         const leaders = await Prediction.aggregate([
             { $match: { predictionType: { $in: ['Yearly', 'Quarterly'] }, status: 'Assessed' } },
-            { $group: { _id: '$userId', accuracy: { $avg: '$score' } } },
-            { $sort: { accuracy: -1 } },
+            { $group: { _id: '$userId', avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }, // <-- MIGRATE
+            { $sort: { avgRating: -1 } }, // <-- RENAME
             { $limit: 3 },
             { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
             { $unwind: '$user' },
@@ -2388,7 +2403,7 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
                 $project: {
                     userId: '$_id',
                     username: '$user.username',
-                    accuracy: { $round: ['$accuracy', 0] },
+                    avgRating: { $round: ['$avgRating', 1] }, // <-- Renamed
                     avatar: '$user.avatar',
                     isGoldenMember: '$user.isGoldenMember',
                     isVerified: '$user.isVerified',
@@ -2617,10 +2632,10 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
             if (userIds.length === 0) return new Map();
             const results = await Prediction.aggregate([
                 { $match: { userId: { $in: userIds }, status: 'Assessed' } },
-                { $group: { _id: '$userId', avgScore: { $avg: '$score' } } }
+                { $group: { _id: '$userId', avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } } // <-- MIGRATE
             ]);
             // MODIFIED: Removed Math.round() to keep decimal precision
-            return new Map(results.map(r => [r._id.toString(), r.avgScore]));
+            return new Map(results.map(r => [r._id.toString(), r.avgRating])); // <-- Renamed
         };
 
         // 4. Gather all unique IDs from the lists
@@ -2636,7 +2651,7 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
         // 5. Helper function to combine user data with their calculated score
         const combineUserDataWithScore = (userData) => ({
             ...userData.toObject(),
-            score: scoresMap.get(userData._id.toString()) || 0 // MODIFIED: Changed 'avgScore' to 'score'
+            avgRating: scoresMap.get(userData._id.toString()) || 0 // <-- Renamed
         });
 
         // 6. Build and send the final response
@@ -2647,7 +2662,7 @@ router.get('/users/:userId/follow-data-extended', async (req, res) => {
             goldenSubscribers: isOwnProfile ? user.goldenSubscribers
                 .filter(sub => sub.user)
                 .map(sub => ({
-                    ...combineUserDataWithScore(sub.user),
+                    ...combineUserDataWithScore(sub.user), // This now returns avgRating
                     subscribedAt: sub.subscribedAt
                 })) : [],
             goldenSubscriptions: isOwnProfile ? user.goldenSubscriptions
@@ -2783,7 +2798,7 @@ router.get('/explore/feed', async (req, res) => {
         if (sortBy === 'performance' || sortBy === 'votes') {
             let sortStage = {};
             if (sortBy === 'performance') {
-                sortStage = { 'userDetails.score': -1, createdAt: -1 };
+                sortStage = { 'userDetails.totalRating': -1, createdAt: -1 }; // <-- Use totalRating
             } else { // sortBy === 'votes'
                 sortStage = { voteScore: -1, createdAt: -1 };
             }
@@ -2800,11 +2815,12 @@ router.get('/explore/feed', async (req, res) => {
                 { $limit: limitNum },
                 {
                     $project: {
-                        _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1, score: 1,
+                        _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1,
+                        rating: { $ifNull: ["$rating", "$score"] }, // <-- MIGRATE
                         actualPrice: 1, createdAt: 1, description: 1, priceAtCreation: 1, likes: 1, dislikes: 1,
                         userId: {
                             _id: '$userDetails._id', username: '$userDetails.username', avatar: '$userDetails.avatar',
-                            isGoldenMember: '$userDetails.isGoldenMember', score: '$userDetails.score', isVerified: '$userDetails.isVerified'
+                            isGoldenMember: '$userDetails.isGoldenMember', totalRating: '$userDetails.totalRating', isVerified: '$userDetails.isVerified'
                         }
                     }
                 }
@@ -2820,13 +2836,23 @@ router.get('/explore/feed', async (req, res) => {
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limitNum)
-                .populate('userId', 'username avatar isGoldenMember score isVerified')
+                .populate('userId', 'username avatar isGoldenMember totalRating isVerified') // <-- Renamed
                 .lean();
 
+            // --- FIX: Manually migrate 'score' to 'rating' ---
+            const migratedPredictions = predictions.map(p => {
+                if (p.score !== undefined) {
+                    p.rating = p.score;
+                    delete p.score;
+                }
+                return p;
+            });
+            // --- END FIX --
+
             // --- START: MODIFY THIS BLOCK ---
-            if (status === 'Active' && predictions.length > 0) {
+            if (status === 'Active' && migratedPredictions.length > 0) {
                 // 1. Find unique tickers from the prediction list
-                const tickers = [...new Set(predictions.map(p => p.stockTicker))];
+                const tickers = [...new Set(migratedPredictions.map(p => p.stockTicker))];
 
                 try {
                     if (tickers.length > 0) {
@@ -2837,7 +2863,7 @@ router.get('/explore/feed', async (req, res) => {
                         const priceMap = new Map(quotes.map(q => [q.symbol, q.price]));
 
                         // 4. Attach the currentPrice to each prediction
-                        predictions.forEach(p => {
+                        migratedPredictions.forEach(p => {
                             p.currentPrice = priceMap.get(p.stockTicker) || 0;
                         });
                     }
@@ -2847,7 +2873,7 @@ router.get('/explore/feed', async (req, res) => {
                 }
             }
             // --- END: MODIFY THIS BLOCK ---
-            return res.json({ predictions, totalPages, currentPage: pageNum });
+            return res.json({ predictions: migratedPredictions, totalPages, currentPage: pageNum });
         }
     } catch (err) {
         console.error(`CRITICAL Error fetching explore feed:`, err);
@@ -2878,10 +2904,12 @@ router.post('/admin/recalculate-badges', async (req, res) => {
             const userPredictions = await Prediction.find({ userId: user._id, status: 'Assessed' });
 
             if (userPredictions.length > 0) {
-                const totalScore = userPredictions.reduce((sum, p) => sum + p.score, 0);
-                const overallAccuracy = totalScore / userPredictions.length;
+                // --- FIX: Use migration logic to read 'rating' or 'score' ---
+                const totalRating = userPredictions.reduce((sum, p) => sum + (p.rating || p.score || 0), 0);
+                const overallAvgRating = totalRating / userPredictions.length;
+                // --- END FIX ---
 
-                await awardBadges(user, { overallAccuracy });
+                await awardBadges(user, { overallAvgRating });
             }
         }
 
@@ -2912,7 +2940,7 @@ router.get('/leaderboard/rating', async (req, res) => {
             _id: u._id,
             username: u.username,
             avatar: u.avatar,
-            analystRating: u.analystRating.total, // Send only the total for the list
+            analystRating: u.analystRating, // Send only the total for the list
             ratingBreakdown: u.analystRating // Send the full breakdown for the pie chart
         }));
 

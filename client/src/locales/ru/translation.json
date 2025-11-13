@@ -641,6 +641,11 @@
             "yearly": "Годовой",
             "quarterly": "Квартальные"
         },
+        "tooltip": {
+            "avgRating": "Сред. Рейтинг: {{rating}}",
+            "predictions": "{{count}} Прогнозы",
+            "stocks": "Акции: {{tickers}}"
+        },
         "noData": "Нет данных о производительности для этого фильтра.",
         "tooltipLabel": "Счёт: {{score}}"
     },
@@ -1034,5 +1039,13 @@
     "analystRating.pie.referrals": "От Рефералов",
     "common.back": "Назад",
     "sentiment.question": "Какова {{type}} целевая цена сообщества для {{ticker}}?",
-    "sentiment.based_on_count": "На основе {{count}} прогнозов"
+    "sentiment.based_on_count": "На основе {{count}} прогнозов",
+    "prediction_timeframes": {
+        "hourly": "конца часа",
+        "daily": "конца дня",
+        "weekly": "конца недели",
+        "monthly": "конца месяца",
+        "quarterly": "конца квартала",
+        "yearly": "конца года"
+    }
 }

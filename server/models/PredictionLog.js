@@ -9,7 +9,7 @@ const PredictionLogSchema = new Schema({
     predictionType: { type: String, required: true },
     predictedPrice: { type: Number, required: true },
     actualPrice: { type: Number, required: true },
-    score: { type: Number, required: true },
+    rating: { type: Number, required: true },
     assessedAt: { type: Date, default: Date.now }
 });
 
