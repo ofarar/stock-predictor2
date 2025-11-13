@@ -1082,5 +1082,7 @@
     "analystRating.pie.labels.monthly": "Monatlicher Rang",
     "analystRating.pie.labels.quarterly": "Quartalsrang",
     "analystRating.pie.labels.yearly": "Jährlicher Rang",
-    "creatorPoolModal.breakdownTitle": "Aufschlüsselungsdetails"
+    "creatorPoolModal.breakdownTitle": "Aufschlüsselungsdetails",
+    "notifications.newReferral": "{{username}} hat sich über deinen Empfehlungslink angemeldet! +{{points}} Analysten-Rating.",
+    "notifications.types.NewReferral": "Neue Empfehlung"
 }

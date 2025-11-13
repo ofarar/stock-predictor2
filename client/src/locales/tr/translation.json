@@ -1088,5 +1088,7 @@
   "analystRating.pie.labels.monthly": "Aylık Sıralama",
   "analystRating.pie.labels.quarterly": "Çeyreklik Sıralama",
   "analystRating.pie.labels.yearly": "Yıllık Sıralama",
-  "creatorPoolModal.breakdownTitle": "Döküm Detayları"
+  "creatorPoolModal.breakdownTitle": "Döküm Detayları",
+  "notifications.newReferral": "{{username}} davet linkini kullanarak kaydoldu! +{{points}} Analist Puanı.",
+  "notifications.types.NewReferral": "Yeni Davet"
 }

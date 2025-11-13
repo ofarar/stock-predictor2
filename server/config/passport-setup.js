@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 
 const { sendWelcomeEmail } = require('../services/email');
 
@@ -49,12 +50,12 @@ passport.use(
                 } else {
                     // Username is available. Create the new user.
                     const defaultAvatar = `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
-                    const newUserFields = {
+                    const newUser = await new User({
                         googleId: profile.id,
                         username: newUsername,
                         email: userEmail,
                         avatar: defaultAvatar
-                    }
+                    }).save()
 
                     // --- 3. NEW: CHECK FOR REFERRAL ---
                     const referralCode = req.session.referralCode;
@@ -64,16 +65,34 @@ passport.use(
                             if (inviter) {
                                 // Add points to the inviter
                                 const pointsToAward = 500; // 500 points for a successful referral
-                                if (!inviter.analystRating) { // Initialize if old user
-                                    inviter.analystRating = { total: 0, fromPredictions: 0, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0 };
+                                // On-the-fly migration for inviter's rating object
+                                if (typeof inviter.analystRating !== 'object' || inviter.analystRating === null) {
+                                    const oldPoints = typeof inviter.analystRating === 'number' ? inviter.analystRating : 0;
+                                    inviter.analystRating = { total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
                                 }
                                 inviter.analystRating.total += pointsToAward;
                                 inviter.analystRating.fromReferrals += pointsToAward;
-                                inviter.referrals.push(newUser._id); // Track who they invited
+                                inviter.referrals.push(newUser._id);
                                 await inviter.save();
 
                                 // Add reference to the new user
-                                newUserFields.invitedBy = inviter._id;
+                                // Add reference to the new user and save again
+                                newUser.invitedBy = inviter._id;
+                                await newUser.save();
+
+                                // --- 4. CREATE NOTIFICATION FOR INVITER ---
+                                await new Notification({
+                                    recipient: inviter._id,
+                                    sender: newUser._id,
+                                    type: 'NewReferral',
+                                    messageKey: 'notifications.newReferral',
+                                    link: `/profile/${newUser._id}`,
+                                    metadata: {
+                                        username: newUser.username,
+                                        points: pointsToAward
+                                    }
+                                }).save();
+                                // --- END NOTIFICATION ---
                             }
                         } catch (err) {
                             console.error("Referral award error:", err);
@@ -82,8 +101,6 @@ passport.use(
                         delete req.session.referralCode;
                     }
                     // --- END NEW ---
-
-                    const newUser = await new User(newUserFields).save();
 
                     console.log("New user created successfully:", newUser);
                     return done(null, newUser, { isNewUser: true });

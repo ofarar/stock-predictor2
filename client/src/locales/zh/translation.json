@@ -1087,5 +1087,7 @@
     "analystRating.pie.labels.monthly": "每月排名",
     "analystRating.pie.labels.quarterly": "季度排名",
     "analystRating.pie.labels.yearly": "年度排名",
-    "creatorPoolModal.breakdownTitle": "明细详情"
+    "creatorPoolModal.breakdownTitle": "明细详情",
+    "notifications.newReferral": "{{username}} 使用您的推荐链接注册了！+{{points}} 分析师评分。",
+    "notifications.types.NewReferral": "新推荐"
 }
