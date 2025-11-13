@@ -1,5 +1,6 @@
 // src/components/CreatorPoolModal.js
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // <-- 1. IMPORT LINK
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { formatSharePercentage } from '../utils/formatters';
@@ -29,7 +30,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         }
     }, [isOpen]);
 
-    // --- NEW useEffect to handle scrolling ---
+    // --- useEffect to handle scrolling ---
     useEffect(() => {
         if (!isOpen || loading || selectedUser || !currentProfileId) {
             return; // Don't run if modal is closed, loading, in pie view, or no ID provided
@@ -134,7 +135,17 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                     <div className="animate-fade-in-fast space-y-4">
                         <div className="flex flex-col items-center">
                             <img src={selectedUser.avatar} alt="avatar" className="w-16 h-16 rounded-full"/>
-                            <h3 className="text-xl font-bold text-white mt-2">{selectedUser.username}</h3>
+                            
+                            {/* --- FIX 2: Add Link to Profile --- */}
+                            <Link 
+                                to={`/profile/${selectedUser._id}`} 
+                                onClick={onClose} // Close modal on click
+                                className="text-xl font-bold text-white mt-2 hover:underline"
+                            >
+                                {selectedUser.username}
+                            </Link>
+                            {/* --- END FIX 2 --- */}
+
                             <p className="text-gray-400">{t('analyst_rating_label')}: {selectedUser.analystRating.toLocaleString()}</p>
                         </div>
                         <div className="w-full max-w-xs mx-auto">
@@ -153,7 +164,8 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                             <p className="text-2xl font-bold text-white">{totalRating.toLocaleString()}</p>
                         </div>
 
-                        <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2 modern-scrollbar">
+                        {/* --- FIX 1: Add py-1 for highlight padding --- */}
+                        <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2 py-1 modern-scrollbar">
                             {loading ? (
                                 <p className="text-gray-400 text-center">{t('explore_loading')}</p>
                             ) : (
