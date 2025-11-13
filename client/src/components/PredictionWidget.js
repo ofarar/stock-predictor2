@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import TimePenaltyBar from './TimePenaltyBar';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
-import { getPredictionDetails } from '../utils/timeHelpers'; // isMarketOpen/PreMarket handled inside getPredictionDetails now
+import { getPredictionDetails } from '../utils/timeHelpers';
 import Tooltip from '../components/Tooltip';
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
@@ -32,8 +32,9 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
             setSelectedStock(initialStock);
 
             // If the price exists and is valid, pre-fill the target
-            if (initialStock.regularMarketPrice != null && typeof initialStock.regularMarketPrice === 'number') {
-                setTarget(initialStock.regularMarketPrice.toFixed(2));
+            // Use the v3 field name
+            if (initialStock.price != null && typeof initialStock.price === 'number') {
+                setTarget(initialStock.price.toFixed(2));
             } else {
                 // Price is missing, show the warning toast but keep the stock selected
                 setTarget(''); // Clear target price
@@ -62,12 +63,13 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
     // Update time penalty bar
     useEffect(() => {
         if (!selectedStock) return;
-        const details = getPredictionDetails(predictionType, t, i18n, selectedStock.symbol);
+        // --- FIX: Pass the entire stock object ---
+        const details = getPredictionDetails(predictionType, t, i18n, selectedStock);
         setFormState(details);
         // We can simplify the interval check because getPredictionDetails now handles the logic
         if (predictionType === 'Hourly' || predictionType === 'Daily') {
             const timer = setInterval(() => {
-                const updatedDetails = getPredictionDetails(predictionType, t, i18n, selectedStock.symbol);
+                const updatedDetails = getPredictionDetails(predictionType, t, i18n, selectedStock);
                 setFormState(updatedDetails);
             }, 1000);
             return () => clearInterval(timer);
@@ -82,16 +84,17 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         axios.get(`${process.env.REACT_APP_API_URL}/api/quote/${symbol}`)
             .then(res => {
                 // Backend sends null on failure
-                if (res.data && res.data.regularMarketPrice != null && typeof res.data.regularMarketPrice === 'number') {
+                if (res.data && res.data.price != null && typeof res.data.price === 'number') {
                     setSelectedStock(res.data);
-                    setTarget(res.data.regularMarketPrice.toFixed(2));
+                    setTarget(res.data.price.toFixed(2));
                 } else {
                     // Price is missing or invalid
                     setSelectedStock({
                         symbol: symbol,
-                        regularMarketPrice: null, // Explicitly set price to null
+                        price: null, // <-- Use v3 field
                         longName: res.data?.longName, // Still try to get name
-                        currency: res.data?.currency || 'USD' // Use default currency
+                        currency: res.data?.currency || 'USD', // Use default currency
+                        marketState: res.data?.marketState || 'CLOSED'
                     });
                     setTarget('');
                     // Show the warning toast
@@ -115,7 +118,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
             return toast.error(t('prediction.windowClosed', "Prediction window is closed."));
         }
 
-        const currentPrice = selectedStock?.regularMarketPrice;
+        const currentPrice = selectedStock?.price; // <-- Use v3 field
         let percentChange = null;
 
         // Only calculate percentage if current price is a valid number
@@ -174,7 +177,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
 
     // Resilient percentage calculation for display only
     let displayPercentageChange = null;
-    const currentPriceForDisplay = selectedStock?.regularMarketPrice;
+    const currentPriceForDisplay = selectedStock?.price; // <-- Use v3 field
     if (typeof currentPriceForDisplay === 'number' && currentPriceForDisplay > 0 && target) {
         const targetValue = parseFloat(target);
         if (!isNaN(targetValue)) {
@@ -225,7 +228,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                         <span className="font-semibold text-white">
                             <Tooltip text={t('prediction.priceDelayInfo')}>
                                 {/* Use formatCurrency which handles null gracefully */}
-                                {formatCurrency(selectedStock.regularMarketPrice, i18n.language, selectedStock.currency)}
+                                {formatCurrency(selectedStock.price, i18n.language, selectedStock.currency)}
                             </Tooltip>
                         </span>
                     </div>
@@ -269,7 +272,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                                     onChange={(e) => setTarget(e.target.value)}
                                     disabled={!formState.isOpen}
                                     className="w-full bg-transparent p-2 text-white disabled:opacity-50 focus:outline-none"
-                                    placeholder={selectedStock.regularMarketPrice === null ? t('prediction.enterTargetManually', 'Enter Target') : ''}
+                                    placeholder={selectedStock.price === null ? t('prediction.enterTargetManually', 'Enter Target') : ''}
                                 />
                                 {/* Resilient percentage display */}
                                 {typeof displayPercentageChange === 'number' ? (

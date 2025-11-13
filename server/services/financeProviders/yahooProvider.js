@@ -46,6 +46,7 @@ const mapYahooQuote = (yfQuote) => {
         regularMarketChange: yfQuote.regularMarketChange ?? null,
         regularMarketChangePercent: yfQuote.regularMarketChangePercent ?? null,
         regularMarketPreviousClose: yfQuote.regularMarketPreviousClose ?? null,
+        marketState: yfQuote.marketState ?? null // <-- ADD THIS FIELD
     };
 };
 
