@@ -5,29 +5,25 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
 import { formatTimeLeft } from '../utils/formatters';
-import { isMarketOpen } from '../utils/timeHelpers';
+// import { isMarketOpen } from '../utils/timeHelpers'; // <-- No longer needed
 
 const HourlyWinnersFeed = ({ winners = [], settings }) => {
     const { t } = useTranslation();
     const [timeLeft, setTimeLeft] = useState('');
-    const [marketIsOpen, setMarketIsOpen] = useState(isMarketOpen());
+    // const [marketIsOpen, setMarketIsOpen] = useState(isMarketOpen()); // <-- No longer needed
 
     useEffect(() => {
         const timer = setInterval(() => {
-            const currentlyOpen = isMarketOpen();
-            setMarketIsOpen(currentlyOpen);
-
-            if (currentlyOpen) {
-                const now = new Date();
-                const minutes = now.getMinutes();
-                const seconds = now.getSeconds();
-                const msPastHour = (minutes * 60 + seconds) * 1000 + now.getMilliseconds();
-                const msToNextHour = 3600000 - msPastHour;
-                setTimeLeft(formatTimeLeft(msToNextHour, t));
-            }
+            // This logic will now run 24/7, regardless of market status
+            const now = new Date();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const msPastHour = (minutes * 60 + seconds) * 1000 + now.getMilliseconds();
+            const msToNextHour = 3600000 - msPastHour;
+            setTimeLeft(formatTimeLeft(msToNextHour, t));
         }, 1000);
         return () => clearInterval(timer);
-    }, [t]);
+    }, [t]); // The 't' dependency is correct
 
     return (
         <div className="bg-gray-800 p-6 rounded-xl shadow-2xl">
@@ -38,10 +34,9 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
                     </svg>
                     <h3 className="text-xl font-bold text-white">{t('hourlyWinnersFeed.title')}</h3>
                 </div>
+                {/* This text now just shows the countdown, 24/7 */}
                 <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-md whitespace-nowrap">
-                    {marketIsOpen
-                        ? t('hourlyWinnersFeed.nextResults', { timeLeft })
-                        : t('hourlyWinnersFeed.marketClosed')}
+                    {t('hourlyWinnersFeed.nextResults', { timeLeft })}
                 </span>
             </div>
             <div className="space-y-3">
@@ -63,6 +58,7 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
                             )}
                         </div>
                         <span className="font-bold text-green-400">
+                            {/* This part is already correct from our 'score' to 'rating' refactor */}
                             {t('hourlyWinnersFeed.ratingSuffix', { rating: winner.rating })}
                         </span>
                     </div>

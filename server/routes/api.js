@@ -2373,11 +2373,11 @@ router.get('/widgets/hourly-winners', async (req, res) => {
 // GET Today's Top Performers - UPDATED
 router.get('/widgets/daily-leaders', async (req, res) => {
     try {
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
+        // --- FIX: Use Rolling 24-Hour Window for Global Support ---
+        const startOfRollingDay = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
         const leaders = await Prediction.aggregate([
-            { $match: { createdAt: { $gte: startOfDay }, status: 'Assessed' } },
+            { $match: { createdAt: { $gte: startOfRollingDay }, status: 'Assessed' } },
             { $group: { _id: '$userId', avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }, // <-- MIGRATE
             { $sort: { avgRating: -1 } }, // <-- RENAME
             { $limit: 3 },

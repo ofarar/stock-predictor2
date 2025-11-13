@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import TimePenaltyBar from './TimePenaltyBar';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
-import { getPredictionDetails, isMarketOpen, isPreMarketWindow } from '../utils/timeHelpers';
+import { getPredictionDetails } from '../utils/timeHelpers'; // isMarketOpen/PreMarket handled inside getPredictionDetails now
 import Tooltip from '../components/Tooltip';
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
@@ -62,11 +62,12 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
     // Update time penalty bar
     useEffect(() => {
         if (!selectedStock) return;
-        const details = getPredictionDetails(predictionType, t, i18n);
+        const details = getPredictionDetails(predictionType, t, i18n, selectedStock.symbol);
         setFormState(details);
-        if ((predictionType === 'Hourly' || predictionType === 'Daily') && (isMarketOpen() || isPreMarketWindow())) {
+        // We can simplify the interval check because getPredictionDetails now handles the logic
+        if (predictionType === 'Hourly' || predictionType === 'Daily') {
             const timer = setInterval(() => {
-                const updatedDetails = getPredictionDetails(predictionType, t, i18n);
+                const updatedDetails = getPredictionDetails(predictionType, t, i18n, selectedStock.symbol);
                 setFormState(updatedDetails);
             }, 1000);
             return () => clearInterval(timer);

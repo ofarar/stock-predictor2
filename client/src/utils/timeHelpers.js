@@ -1,46 +1,81 @@
 // src/utils/timeHelpers.js
-
+import { DateTime } from 'luxon';
+import { getExchangeConfig } from './marketConfig';
 import { formatDate } from './formatters';
 
-export const isMarketOpen = () => {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const day = now.getUTCDay();
-    const isWeekday = day >= 1 && day <= 5;
-    const isAfterOpen = utcHour > 13 || (utcHour === 13 && now.getUTCMinutes() >= 30);
-    const isBeforeClose = utcHour < 20;
-    return isWeekday && isAfterOpen && isBeforeClose;
+/**
+ * Checks if the market for a specific ticker is currently open.
+ * Handles Timezones, Weekends, and 24/7 assets automatically.
+ */
+export const isMarketOpen = (ticker) => {
+    const config = getExchangeConfig(ticker);
+
+    if (config.is247) return true; // Crypto is always open
+
+    // Get current time in the target market's timezone
+    const now = DateTime.now().setZone(config.timezone);
+
+    // 1. Check Weekend
+    // Luxon: 1=Mon...6=Sat, 7=Sun
+    if (now.weekday > 5) return false;
+
+    // Special case for Forex (Closed Fri 5PM to Sun 5PM EST)
+    if (config.is245) {
+        if (now.weekday === 5 && now.hour >= 17) return false; // Friday after 5PM
+        if (now.weekday === 6) return false; // Saturday
+        if (now.weekday === 7 && now.hour < 17) return false; // Sunday before 5PM
+        return true;
+    }
+
+    // 2. Check Hours
+    const openTime = now.set(config.open);
+    const closeTime = now.set(config.close);
+
+    return now >= openTime && now <= closeTime;
 };
 
-export const isPreMarketWindow = () => {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const day = now.getUTCDay();
-    const isWeekday = day >= 1 && day <= 5;
-    const isInWindow = utcHour === 13 && now.getUTCMinutes() < 30;
-    return isWeekday && isInWindow;
+export const isPreMarketWindow = (ticker) => {
+    const config = getExchangeConfig(ticker);
+    if (config.is247 || config.is245) return false; // No pre-market for crypto/forex
+
+    const now = DateTime.now().setZone(config.timezone);
+    const openTime = now.set(config.open);
+
+    // Define Pre-market as 30 mins before open
+    const preMarketStart = openTime.minus({ minutes: 30 });
+
+    return now >= preMarketStart && now < openTime && now.weekday <= 5;
 };
 
-export const getPredictionDetails = (predictionType, t, i18n) => {
-    const now = new Date();
-    let deadline = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+export const getPredictionDetails = (predictionType, t, i18n, ticker) => {
+    const config = getExchangeConfig(ticker);
+    const now = DateTime.now().setZone(config.timezone);
+
+    let deadline = now;
     let message = '';
     let barWidth = 100;
     let maxScore = 100;
     let isOpen = true;
 
+    // Check market status first
+    const marketOpen = isMarketOpen(ticker);
+
     switch (predictionType) {
         case 'Hourly': {
-            if (isPreMarketWindow()) {
-                deadline.setUTCHours(14, 0, 0, 0);
+            if (isPreMarketWindow(ticker)) {
+                // If pre-market, deadline is 1 hour after open
+                const openTime = now.set(config.open);
+                deadline = openTime.plus({ hours: 1 });
                 message = t('predictionWidgetMessages.openingHourPrediction');
                 isOpen = true;
-            } else if (isMarketOpen()) {
-                const elapsedMinutes = now.getMinutes();
+            } else if (marketOpen) {
+                const elapsedMinutes = now.minute;
                 const penalty = elapsedMinutes > 10 ? Math.floor(((elapsedMinutes - 10) / 50) * 20) : 0;
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / 60 * 100);
-                deadline.setUTCHours(now.getUTCHours() + 1, 0, 0, 0);
+
+                // Deadline is start of next hour
+                deadline = now.plus({ hours: 1 }).startOf('hour');
                 isOpen = true;
             } else {
                 isOpen = false;
@@ -50,49 +85,53 @@ export const getPredictionDetails = (predictionType, t, i18n) => {
             break;
         }
         case 'Daily': {
-            const marketCloseToday = new Date(now.getTime());
-            marketCloseToday.setUTCHours(20, 0, 0, 0);
-            const day = now.getUTCDay();
-            const isAfterHours = now.getTime() > marketCloseToday.getTime();
-            if (day === 6) { deadline.setUTCDate(now.getUTCDate() + 2); }
-            else if (day === 0) { deadline.setUTCDate(now.getUTCDate() + 1); }
-            else if (day === 5 && isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 3); }
-            else if (isAfterHours) { deadline.setUTCDate(now.getUTCDate() + 1); }
-            deadline.setUTCHours(20, 0, 0, 0);
+            const closeTime = now.set(config.close);
 
-            if (deadline.getUTCDate() !== now.getUTCDate() || deadline.getUTCMonth() !== now.getUTCMonth()) {
-                message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline, i18n.language) });
-            } else {
-                const marketOpen = new Date().setUTCHours(13, 30, 0, 0);
-                const elapsedMinutes = Math.max(0, (now.getTime() - marketOpen) / 60000);
-                const totalMinutes = 390;
+            // If it's after close (or weekend), move to next trading day
+            if (now > closeTime || now.weekday > 5) {
+                deadline = deadline.plus({ days: 1 });
+                while (deadline.weekday > 5) { // Skip weekends
+                    deadline = deadline.plus({ days: 1 });
+                }
+            }
+
+            // Set deadline to market close
+            deadline = deadline.set(config.close);
+
+            // Calculate Score Penalty
+            if (deadline.hasSame(now, 'day')) {
+                const openTime = now.set(config.open);
+                const totalMinutes = closeTime.diff(openTime, 'minutes').minutes;
+                const elapsedMinutes = Math.max(0, now.diff(openTime, 'minutes').minutes);
+
                 const penalty = Math.floor(elapsedMinutes / (totalMinutes / 20));
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / totalMinutes * 100);
                 message = t('predictionWidgetMessages.maxScore', { score: maxScore });
+            } else {
+                message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline.toJSDate(), i18n.language) });
             }
             break;
         }
         case 'Weekly': {
-            let weeklyDeadline = new Date(now.getTime());
-            const dayOfWeek = now.getUTCDay();
-            const daysUntilFriday = dayOfWeek <= 5 ? 5 - dayOfWeek : 6;
-            weeklyDeadline.setUTCDate(now.getUTCDate() + daysUntilFriday);
-            weeklyDeadline.setUTCHours(20, 0, 0, 0);
-            if (now.getTime() > weeklyDeadline.getTime()) {
-                weeklyDeadline.setUTCDate(weeklyDeadline.getUTCDate() + 7);
+            // Find next Friday
+            const daysUntilFriday = (5 - now.weekday + 7) % 7;
+            deadline = now.plus({ days: daysUntilFriday }).set(config.close);
+
+            // If today is Friday and market is closed/closing, move to next week
+            if (now.weekday === 5 && now > now.set(config.close)) {
+                deadline = deadline.plus({ weeks: 1 });
             }
-            deadline = weeklyDeadline;
-            const startOfWeek = new Date(deadline.getTime());
-            startOfWeek.setUTCDate(startOfWeek.getUTCDate() - 4);
-            startOfWeek.setUTCHours(13, 30, 0, 0);
-            const elapsedMillis = Math.max(0, now.getTime() - startOfWeek.getTime());
-            const totalMillis = deadline.getTime() - startOfWeek.getTime();
+
+            const startOfWeek = deadline.minus({ days: 4 }).set(config.open);
+            const totalMillis = deadline.diff(startOfWeek).milliseconds;
+            const elapsedMillis = Math.max(0, now.diff(startOfWeek).milliseconds);
+
             const percentElapsed = (elapsedMillis / totalMillis) * 100;
             const penalty = Math.floor(percentElapsed / (100 / 20));
-            maxScore = 100 - penalty;
+            maxScore = Math.max(80, 100 - penalty); // Cap min score at 80 for weekly
             barWidth = 100 - percentElapsed;
-            message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline, i18n.language) });
+            message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline.toJSDate(), i18n.language) });
             break;
         }
         case 'Monthly': {
@@ -124,11 +163,20 @@ export const getPredictionDetails = (predictionType, t, i18n) => {
             break;
         }
         default:
-            isOpen = false;
-            message = t('predictionWidgetMessages.invalidType');
+            // Fallback for long term using standard JS dates
+            const jsDeadline = new Date();
+            if (predictionType === 'Monthly') jsDeadline.setMonth(jsDeadline.getMonth() + 1, 0);
+            if (predictionType === 'Quarterly') jsDeadline.setMonth(jsDeadline.getMonth() + 3);
+            if (predictionType === 'Yearly') jsDeadline.setFullYear(jsDeadline.getFullYear() + 1, 0, 1); // End of year
+            deadline = DateTime.fromJSDate(jsDeadline);
             break;
     }
 
     message = message || t('predictionWidgetMessages.maxScore', { score: maxScore });
-    return { isOpen, message, deadline, barWidth: `${Math.max(0, barWidth)}%` };
+    return {
+        isOpen,
+        message,
+        deadline: deadline.toJSDate(),
+        barWidth: `${Math.max(0, barWidth)}%`
+    };
 };
