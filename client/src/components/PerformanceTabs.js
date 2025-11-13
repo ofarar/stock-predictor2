@@ -97,14 +97,17 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
         // --- Reverted to use the current page's URL ---
         const shareUrl = window.location.href;
         let shareText = '';
+        let shareContext = {};
 
         if (type === 'ByStock') {
             shareText = t('performanceTabs.shareText.byStock', { rank: item.rank, ticker: item.ticker });
+            shareContext = { context: 'stockRank', ticker: item.ticker };
         } else { // 'ByType'
             shareText = t('performanceTabs.shareText.byType', { rank: item.rank, type: t(`predictionTypes.${item.type.toLowerCase()}`) });
+            shareContext = { context: 'typeRank', rankType: item.type };
         }
 
-        setShareData({ text: shareText, url: shareUrl });
+        setShareData({ text: shareText, url: shareUrl, context: shareContext }); // <-- 4. Save context
         setIsShareModalOpen(true);
     };
 
@@ -115,6 +118,7 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                 onClose={() => setIsShareModalOpen(false)}
                 text={shareData.text}
                 url={shareData.url}
+                shareContext={shareData.context}
             />
             <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
                 <div className="flex border-b border-gray-700 mb-4">

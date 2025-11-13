@@ -47,6 +47,7 @@ const BadgeDetailModal = ({ badge, onClose }) => {
                 title={t('badgeDetailModal.shareTitle', 'Share Badge')}
                 text={shareText}
                 url={url}
+                shareContext={{ context: 'badge', name: badge.name }}
             />
 
             <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={onClose}>

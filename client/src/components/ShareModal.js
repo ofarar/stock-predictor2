@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const ShareModal = ({ isOpen, onClose, title, text, url }) => {
+const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
     const { t } = useTranslation();
 
     if (!isOpen) return null;
@@ -22,7 +22,7 @@ const ShareModal = ({ isOpen, onClose, title, text, url }) => {
         window.open(shareUrl, '_blank', 'noopener,noreferrer');
 
         // 2. Award points
-        axios.post(`${process.env.REACT_APP_API_URL}/api/activity/share`, {}, { withCredentials: true })
+        axios.post(`${process.env.REACT_APP_API_URL}/api/activity/share`, {}, { shareContext }, { withCredentials: true })
              .then(() => {
                  toast.success(t('analystRating.pointsAwarded', '+5 Analyst Rating!'), { duration: 2000 });
              })

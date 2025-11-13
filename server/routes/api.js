@@ -52,6 +52,8 @@ const viewLimiter = rateLimit({
 router.post('/activity/share', actionLimiter, async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');
 
+    const { shareContext } = req.body; // <-- 1. Get the context
+
     // Award a small, fixed amount of points for any share action.
     // The 'actionLimiter' we already have prevents a user from spamming this.
     try {
@@ -68,18 +70,26 @@ router.post('/activity/share', actionLimiter, async (req, res) => {
             const oldPoints = typeof currentRating === 'number' ? currentRating : 0;
 
             user.analystRating = {
-                total: oldPoints,
-                fromPredictions: 0,
-                fromBadges: 0,
-                fromShares: oldPoints, // Assume old points were from shares
-                fromReferrals: 0,
-                fromRanks: 0
+                total: oldPoints, fromPredictions: 0, fromBadges: 0, fromShares: oldPoints, fromReferrals: 0, fromRanks: 0,
+                predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {} // <-- New
             };
         }
         // --- END FIX ---
         console.error("Error in /api/activity/share:", user.analystRating.total); // Add logging
         user.analystRating.total = (user.analystRating.total || 0) + 5;
         user.analystRating.fromShares = (user.analystRating.fromShares || 0) + 5;
+
+        // --- 2. NEW LOGIC: Increment per-stock count ---
+        let shareCategory = 'Other';
+        if (shareContext?.context === 'prediction') shareCategory = 'Prediction';
+        else if (shareContext?.context === 'badge') shareCategory = 'Badge';
+        else if (shareContext?.context === 'stockRank' || shareContext?.context === 'typeRank') shareCategory = 'Rank';
+
+        const key = shareCategory.replace(/\./g, '_');
+        if (!user.analystRating.shareBreakdown) user.analystRating.shareBreakdown = new Map();
+        const currentCategoryShares = user.analystRating.shareBreakdown.get(key) || 0;
+        user.analystRating.shareBreakdown.set(key, currentCategoryShares + 5);
+        // --- END NEW LOGIC ---
 
         await user.save();
         // --- END FIX ---
@@ -2882,13 +2892,14 @@ router.get('/explore/feed', async (req, res) => {
 });
 
 // --- ADD THIS NEW ADMIN ROUTE ---
-router.post('/admin/recalculate-badges', async (req, res) => {
+// --- NEW/UPDATED ADMIN ROUTE for backfilling all data ---
+router.post('/admin/recalculate-analytics', async (req, res) => {
     if (!req.user || !req.user.isAdmin) {
         return res.status(403).send('Forbidden: Admins only.');
     }
 
     try {
-        console.log('--- Admin triggered badge recalculation for all users ---');
+        console.log('--- Admin triggered ANALYTICS recalculation for all users ---');
 
         const allUsers = await User.find({}).populate('followers');
 
@@ -2899,22 +2910,71 @@ router.post('/admin/recalculate-badges', async (req, res) => {
                 continue; // This jumps to the next user in the loop.
             }
 
+            // 1. Reset Badges and Prediction/Badge-based Ratings
             user.badges = []; // Clear existing badges for a fresh calculation
+            // On-the-fly migration for the main object
+            if (typeof user.analystRating !== 'object' || user.analystRating === null) {
+                user.analystRating = { total: 0, fromPredictions: 0, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
+            }
 
-            const userPredictions = await Prediction.find({ userId: user._id, status: 'Assessed' });
+            // Keep points from real-time actions (Shares, Referrals)
+            const sharesPoints = user.analystRating.fromShares || 0;
+            const referralPoints = user.analystRating.fromReferrals || 0;
+            // Ranks will be repopulated by the cron job, so we reset them here.
+
+            user.analystRating.total = sharesPoints + referralPoints;
+            user.analystRating.fromPredictions = 0;
+            user.analystRating.fromBadges = 0;
+            user.analystRating.fromRanks = 0;
+            user.analystRating.predictionBreakdownByStock = new Map();
+            user.analystRating.badgeBreakdown = new Map();
+            user.analystRating.rankBreakdown = new Map(); // Ranks will be repopulated by the cron job
+
+            // 2. Fetch all assessed predictions (migrating old 'score' field)
+            const userPredictionsData = await Prediction.find({ userId: user._id, status: 'Assessed' }).lean();
+            const userPredictions = userPredictionsData.map(p => {
+                if (p.score !== undefined) p.rating = p.score;
+                return p;
+            });
+
 
             if (userPredictions.length > 0) {
                 // --- FIX: Use migration logic to read 'rating' or 'score' ---
-                const totalRating = userPredictions.reduce((sum, p) => sum + (p.rating || p.score || 0), 0);
-                const overallAvgRating = totalRating / userPredictions.length;
-                // --- END FIX ---
+                // 3. Recalculate Prediction-based Analyst Rating
+                for (const p of userPredictions) {
+                    let ratingToAward = 0;
+                    if (p.rating > 90) ratingToAward = 10;
+                    else if (p.rating > 80) ratingToAward = 5;
+                    else if (p.rating > 70) ratingToAward = 2;
+                    // --- END FIX ---
 
-                await awardBadges(user, { overallAvgRating });
+                    if (ratingToAward > 0) {
+                        user.analystRating.fromPredictions += ratingToAward;
+                        const stockKey = p.stockTicker.replace(/\./g, '_');
+                        const currentStockRating = user.analystRating.predictionBreakdownByStock.get(stockKey) || 0;
+                        user.analystRating.predictionBreakdownByStock.set(stockKey, currentStockRating + ratingToAward);
+                    }
+                }
+
+                // 4. Recalculate Badges (which also adds Badge-based Analyst Rating)
+                // This function will read the predictions and add points to fromBadges and badgeBreakdown
+                await awardBadges(user);
+
             }
-        }
 
-        console.log(`--- Badge recalculation completed for ${allUsers.length} users. ---`);
-        res.status(200).send('Successfully recalculated badges for all users.');
+
+            // 5. Sum total (Ranks will be added later by the cron job)
+            user.analystRating.total =
+                (user.analystRating.fromPredictions || 0) +
+                (user.analystRating.fromBadges || 0) +
+                (user.analystRating.fromShares || 0) +
+                (user.analystRating.fromReferrals || 0) +
+                (user.analystRating.fromRanks || 0); // fromRanks is 0 for now
+
+            await user.save();
+        }
+        console.log(`--- Analytics recalculation completed for ${allUsers.length} users. ---`);
+        res.status(200).send('Successfully recalculated analytics for all users.');
 
     } catch (error) {
         console.error("Error during badge recalculation:", error);

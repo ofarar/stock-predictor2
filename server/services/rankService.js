@@ -19,7 +19,7 @@ const getBaseRankBonus = (rank) => {
 
 const getLeaderboard = async (categoryQuery = {}) => {
     const matchQuery = { status: 'Assessed', ...categoryQuery };
-    
+
     // --- FIX: Use $avg: '$rating' and $avg: '$score' to handle old data ---
     return await Prediction.aggregate([
         { $match: matchQuery },
@@ -67,37 +67,48 @@ const awardPointsForCategory = async (categoryName, categoryQuery) => {
 
         const bulkOps = [];
         for (const [userId, points] of updates.entries()) {
+            const rankKey = categoryName.replace(/\./g, '_'); // Sanitize category name
             bulkOps.push({
                 updateOne: {
                     filter: { _id: new mongoose.Types.ObjectId(userId) },
                     // --- FIX: Use aggregate pipeline for safe, on-the-fly migration ---
                     update: [
-                        { $set: {
-                            analystRating: {
-                                $cond: {
-                                    if: { $or: [ { $not: ["$analystRating"] }, { $ne: [{$type: "$analystRating"}, "object"] } ] },
-                                    then: { 
-                                        total: { $ifNull: ["$analystRating", 0] }, // Use old number if it exists
-                                        fromPredictions: { $ifNull: ["$analystRating", 0] }, // Assume old points were from predictions
-                                        fromBadges: 0, 
-                                        fromShares: 0, 
-                                        fromReferrals: 0, 
-                                        fromRanks: 0 
-                                    },
-                                    else: "$analystRating"
+                        {
+                            $set: {
+                                analystRating: {
+                                    $cond: {
+                                        if: { $or: [{ $not: ["$analystRating"] }, { $ne: [{ $type: "$analystRating" }, "object"] }] },
+                                        then: {
+                                            total: { $ifNull: ["$analystRating", 0] }, // Use old number if it exists
+                                            fromPredictions: { $ifNull: ["$analystRating", 0] }, // Assume old points were from predictions
+                                            fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
+                                            predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
+                                        },
+                                        else: "$analystRating"
+                                    }
                                 }
                             }
-                        }},
-                        { $set: {
-                            "analystRating.total": { $add: [ "$analystRating.total", points ] },
-                            "analystRating.fromRanks": { $add: [ "$analystRating.fromRanks", points ] }
-                        }}
+                        },
+                        {
+                            $set: {
+                                "analystRating.total": { $add: ["$analystRating.total", points] },
+                                "analystRating.fromRanks": { $add: ["$analystRating.fromRanks", points] },
+                                // --- NEW: Update rankBreakdown ---
+                                "analystRating.rankBreakdown": {
+                                    $mergeObjects: [ // Use $mergeObjects to safely add/update keys in the map
+                                        { $ifNull: ["$analystRating.rankBreakdown", {}] }, // Default to empty object if map doesn't exist
+                                        { [rankKey]: { $add: [{ $ifNull: [`$analystRating.rankBreakdown.${rankKey}`, 0] }, points] } }
+                                    ]
+                                }
+                                // --- END NEW ---
+                            }
+                        }
                     ]
                 }
             });
             // --- END FIX ---
         }
-        
+
         if (bulkOps.length > 0) {
             await User.bulkWrite(bulkOps);
         }

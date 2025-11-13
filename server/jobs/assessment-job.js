@@ -37,11 +37,11 @@ async function getActualStockPrice(ticker, deadline) {
         // Helper function to make the API call (uses v3-compatible period1/period2)
         const fetchPrice = async (date) => {
             const period1 = toYYYYMMDD(date);
-            
+
             const nextDay = new Date(date);
             nextDay.setDate(nextDay.getDate() + 1);
             const period2 = toYYYYMMDD(nextDay);
-            
+
             const result = await financeAPI.getHistorical(ticker, {
                 period1: period1,
                 period2: period2,
@@ -70,7 +70,7 @@ async function getActualStockPrice(ticker, deadline) {
         tMinus2.setDate(tMinus2.getDate() - 2);
         price = await fetchPrice(tMinus2);
         if (price !== null) return price;
-        
+
         // 3rd Retry (T-3) - Final attempt (for long weekends)
         console.warn(`No price data for ${ticker} on ${toYYYYMMDD(tMinus2)}. Retrying for T-3.`);
         const tMinus3 = new Date(deadline);
@@ -99,14 +99,14 @@ const runAssessmentJob = async () => {
     } catch (err) {
         console.error("CRITICAL: Could not update cron job heartbeat.", err);
     }
-    
+
     console.log('Starting assessment job...');
 
     // Populate the full user object, including new fields
     const predictionsToAssess = await Prediction.find({
         status: 'Active',
         deadline: { $lte: new Date() }
-    }).populate('userId'); 
+    }).populate('userId');
 
     if (predictionsToAssess.length === 0) {
         console.log('No predictions to assess.');
@@ -130,14 +130,14 @@ const runAssessmentJob = async () => {
 
     for (const [key, predictions] of predictionGroups.entries()) {
         const [ticker, dateKey] = key.split('-');
-        const deadline = new Date(dateKey); 
+        const deadline = new Date(dateKey);
 
         try {
             const actualPrice = await getActualStockPrice(ticker, deadline);
 
             if (actualPrice === null) {
                 console.error(`Could not get price for ${ticker} on ${dateKey} after retries. Skipping ${predictions.length} predictions.`);
-                continue; 
+                continue;
             }
 
             const userUpdates = new Map();
@@ -159,15 +159,15 @@ const runAssessmentJob = async () => {
                     const userId = prediction.userId._id.toString();
                     if (!userUpdates.has(userId)) {
                         // Store the populated user object from the prediction
-                        userUpdates.set(userId, { rating: 0, analystRating: 0, user: prediction.userId });
+                        userUpdates.set(userId, { rating: 0, analystRating: 0, user: prediction.userId, stockTicker: prediction.stockTicker });
                     }
                     const currentUpdate = userUpdates.get(userId);
                     currentUpdate.rating += rating; // This is for user.totalRating
-                    currentUpdate.analystRating += analystRatingToAward; // This is for user.analystRating.total
+                    currentUpdate.stockTicker = prediction.stockTicker; // Store ticker
 
                     await new Notification({
                         recipient: prediction.userId._id,
-                        type: 'PredictionAssessed', 
+                        type: 'PredictionAssessed',
                         messageKey: 'notifications.predictionAssessed',
                         metadata: {
                             stockTicker: prediction.stockTicker,
@@ -189,37 +189,44 @@ const runAssessmentJob = async () => {
                     }).save();
 
                     console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} earned a ${rating} rating.`);
-                
+
                 } catch (innerError) {
                     console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
                 }
-            } 
+            }
 
             // 5. Now, update all users in this group (Batch DB update)
             for (const [userId, updates] of userUpdates.entries()) {
                 try {
                     const user = updates.user; // Get the populated user object
-                    
+
                     // --- FIX: On-the-fly migration for old users ---
                     if (typeof user.analystRating !== 'object' || user.analystRating === null) {
                         const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
                         user.analystRating = {
-                            total: oldPoints,
-                            fromPredictions: oldPoints,
-                            fromBadges: 0,
-                            fromShares: 0,
-                            fromReferrals: 0,
-                            fromRanks: 0
+                            total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
+                            predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
                         };
                     }
-                    
+
                     // Apply updates
                     user.totalRating = (user.totalRating || 0) + updates.rating; // <-- Use totalRating
                     user.analystRating.total = (user.analystRating.total || 0) + updates.analystRating;
                     user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.analystRating;
 
+                    // --- NEW: Update predictionBreakdownByStock ---
+                    if (updates.analystRating > 0 && updates.stockTicker) {
+                        const stockKey = updates.stockTicker.replace(/\./g, '_'); // Sanitize for Map keys
+                        if (!user.analystRating.predictionBreakdownByStock) {
+                            user.analystRating.predictionBreakdownByStock = new Map();
+                        }
+                        const currentStockRating = user.analystRating.predictionBreakdownByStock.get(stockKey) || 0;
+                        user.analystRating.predictionBreakdownByStock.set(stockKey, currentStockRating + updates.analystRating);
+                    }
+                    // --- END NEW ---
+
                     await user.save();
-                    
+
                     // Award badges with the now-updated user object
                     await awardBadges(user);
 
@@ -227,11 +234,11 @@ const runAssessmentJob = async () => {
                     console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
                 }
             }
-            
+
         } catch (outerError) {
             console.error(`Failed to process group ${key}:`, outerError);
         }
-    } 
+    }
 
     console.log('Assessment job finished.');
 };

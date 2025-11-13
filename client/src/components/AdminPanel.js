@@ -14,14 +14,14 @@ const AdminPanel = () => {
     };
 
     // Function for the new button
-    const handleRecalculateBadges = () => {
-        if (window.confirm("Are you sure you want to recalculate badges for ALL existing users? This may take some time.")) {
-            const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/admin/recalculate-badges`, {}, { withCredentials: true });
+    const handleRecalculateAnalytics = () => {
+        if (window.confirm("Are you sure you want to recalculate ALL analyst ratings, breakdowns, and badges for ALL users? This is a heavy operation and will reset badge/prediction points.")) {
+            const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/admin/recalculate-analytics`, {}, { withCredentials: true });
 
             toast.promise(promise, {
-                loading: 'Recalculating all badges...',
-                success: 'Badges recalculated successfully!',
-                error: 'Failed to recalculate badges.'
+                loading: 'Recalculating all analytics...',
+                success: 'Analytics recalculated successfully!',
+                error: 'Failed to recalculate analytics.'
             });
         }
     };
@@ -31,18 +31,18 @@ const AdminPanel = () => {
             <h3 className="text-xl font-bold text-yellow-300">Admin Panel</h3>
             <p className="text-yellow-400 text-sm my-2">These actions are for testing and maintenance purposes.</p>
             <div className="flex flex-wrap gap-4 mt-4">
-                <button 
+                <button
                     onClick={handleEvaluate}
                     className="bg-yellow-500 text-black font-bold py-2 px-4 rounded hover:bg-yellow-400"
                 >
                     Evaluate Predictions Now
                 </button>
                 {/* New Button */}
-                <button 
-                    onClick={handleRecalculateBadges}
+                <button
+                    onClick={handleRecalculateAnalytics}
                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-400"
                 >
-                    Recalculate All Badges
+                    Recalculate All Analytics
                 </button>
             </div>
         </div>

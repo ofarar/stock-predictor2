@@ -236,6 +236,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                 title={t('prediction.shareTitle', 'Share Prediction')}
                 text={shareContent.text}
                 url={shareContent.url}
+                shareContext={{ context: 'prediction', ticker: prediction.stockTicker }}
             />
 
             <DescriptionModal isOpen={isDescModalOpen} onClose={() => setIsDescModalOpen(false)} description={prediction.description} />
