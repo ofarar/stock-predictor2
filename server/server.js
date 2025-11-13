@@ -10,7 +10,7 @@ const helmet = require('helmet');
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
-const { runWeeklyRankJob, runMonthlyRankJob, runRealtimeRankJob } = require('./jobs/long-term-rank-job'); // Import the new rank jobs
+const { runHourlyRankJob, runDailyRankJob, runWeeklyRankJob, runMonthlyRankJob } = require('./jobs/long-term-rank-job');
 const http = require('http');
 const { Server } = require("socket.io");
 
@@ -111,20 +111,26 @@ cron.schedule('*/5 * * * *', () => {
 
 // --- NEW RANKING JOBS ---
 
-// Run the "real-time" rank checks every 15 minutes
-cron.schedule('*/15 * * * *', () => {
-    console.log('Running the scheduled Realtime Rank Job...');
-    runRealtimeRankJob();
+// Run the "Hourly" rank job at the start of every hour (e.g., 1:00, 2:00)
+cron.schedule('0 * * * *', () => {
+    console.log('Running the scheduled Hourly Rank Job...');
+    runHourlyRankJob();
+});
+
+// Run the "Daily" and "Overall" rank jobs once per day (e.g., at midnight UTC)
+cron.schedule('0 0 * * *', () => {
+    console.log('Running the scheduled Daily & Overall Rank Job...');
+    runDailyRankJob();
 });
 
 // Run the "weekly" rank check at 1 AM on Sunday
-cron.schedule('0 1 * * 0', () => {
+cron.schedule('0 1 * * 0', () => { // 1:00 AM on Sunday
     console.log('Running the scheduled Weekly Rank Job...');
     runWeeklyRankJob();
 });
 
 // Run the "long-term" rank checks at 2 AM on the 1st of every month
-cron.schedule('0 2 1 * *', () => {
+cron.schedule('0 2 1 * *', () => { // 2:00 AM on the 1st
     console.log('Running the scheduled Monthly Rank Job...');
     runMonthlyRankJob();
 });

@@ -1,6 +1,19 @@
 // server/jobs/long-term-rank-job.js
 const { awardPointsForCategory } = require('../services/rankService');
 
+const runHourlyRankJob = async () => {
+    console.log('--- Running Hourly Rank Job ---');
+    await awardPointsForCategory('Hourly', { predictionType: 'Hourly' });
+    console.log('--- Finished Hourly Rank Job ---');
+};
+
+const runDailyRankJob = async () => {
+    console.log('--- Running Daily & Overall Rank Job ---');
+    await awardPointsForCategory('Daily', { predictionType: 'Daily' });
+    await awardPointsForCategory('Overall', {}); // Overall rank is best run daily
+    console.log('--- Finished Daily & Overall Rank Job ---');
+};
+
 const runWeeklyRankJob = async () => {
     console.log('--- Running Weekly Rank Job (Weekly) ---');
     await awardPointsForCategory('Weekly', { predictionType: 'Weekly' });
@@ -15,27 +28,11 @@ const runMonthlyRankJob = async () => {
     console.log('--- Finished Monthly Rank Job ---');
 };
 
-// --- NEW REAL-TIME JOB ---
-// This job will run frequently for the fast-moving leaderboards.
-const runRealtimeRankJob = async () => {
-    console.log('--- Running Realtime Rank Job (Overall, Hourly, Daily, Top Stocks) ---');
-    
-    // 1. Overall
-    await awardPointsForCategory('Overall', {});
-    
-    // 2. Hourly & Daily
-    await awardPointsForCategory('Hourly', { predictionType: 'Hourly' });
-    await awardPointsForCategory('Daily', { predictionType: 'Daily' });
 
-    // 3. Top Stocks (e.g., Top 20 most-predicted stocks)
-    // This part is complex. For now, let's skip it to keep the implementation clean.
-    // We can add "Top Stocks" in a future iteration.
-    
-    console.log('--- Finished Realtime Rank Job ---');
-};
 
 module.exports = {
+    runHourlyRankJob,
+    runDailyRankJob,
     runWeeklyRankJob,
     runMonthlyRankJob,
-    runRealtimeRankJob // <-- Export the new job
 };
