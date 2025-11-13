@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import StockFilterSearch from '../components/StockFilterSearch';
 import DescriptionModal from '../components/DescriptionModal';
 import toast from 'react-hot-toast';
@@ -103,9 +103,11 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
 const ExplorePage = ({ requestLogin, settings }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('Active');
+    // 3. Read the 'status' from the URL, or default to 'Active'
+    const [activeTab, setActiveTab] = useState(searchParams.get('status') || 'Active');
     const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date', verifiedOnly: false });
     const [descModal, setDescModal] = useState({ isOpen: false, description: '' });
     const [currentUser, setCurrentUser] = useState(null);
@@ -145,7 +147,7 @@ const ExplorePage = ({ requestLogin, settings }) => {
     useEffect(() => {
         setPage(1);
         fetchPredictions(1, true);
-    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, fetchPredictions]);
+    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, fetchPredictions]); // This is correct
 
     useEffect(() => {
         if (page > 1) {
@@ -240,8 +242,18 @@ const ExplorePage = ({ requestLogin, settings }) => {
                     </div>
                 </div>
                 <div className="flex border-b border-gray-700 mb-6">
-                    <button onClick={() => { setActiveTab('Active'); setPage(1); }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Active' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_active')}</button>
-                    <button onClick={() => { setActiveTab('Assessed'); setPage(1); }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Assessed' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_assessed')}</button>
+                    <button onClick={() => {
+                        setActiveTab('Active');
+                        setPage(1);
+                        searchParams.set('status', 'Active');
+                        setSearchParams(searchParams);
+                    }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Active' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_active')}</button>
+                    <button onClick={() => {
+                        setActiveTab('Assessed');
+                        setPage(1);
+                        searchParams.set('status', 'Assessed');
+                        setSearchParams(searchParams);
+                    }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Assessed' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('explore_tab_assessed')}</button>
                 </div>
                 {loading && page === 1 ? (<p className="text-center text-gray-400 py-10">{t('explore_loading')}</p>) : (
                     <>
