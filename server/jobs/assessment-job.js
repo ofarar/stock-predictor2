@@ -118,7 +118,7 @@ const runAssessmentJob = async () => {
     const predictionGroups = new Map();
     for (const prediction of predictionsToAssess) {
         const dateKey = prediction.deadline.toISOString().split('T')[0];
-        const key = `${prediction.stockTicker}-${dateKey}`;
+        const key = `${prediction.stockTicker}::${dateKey}`;
 
         if (!predictionGroups.has(key)) {
             predictionGroups.set(key, []);
@@ -129,7 +129,7 @@ const runAssessmentJob = async () => {
     console.log(`Grouped into ${predictionGroups.size} unique API calls.`);
 
     for (const [key, predictions] of predictionGroups.entries()) {
-        const [ticker, dateKey] = key.split('-');
+        const [ticker, dateKey] = key.split('::');
         const deadline = new Date(dateKey);
 
         try {
