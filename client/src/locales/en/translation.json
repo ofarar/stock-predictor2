@@ -590,11 +590,11 @@
     "description": "To reward early analysis, a time-based penalty is applied to predictions. The maximum score you can achieve from a prediction decreases as the deadline approaches.",
     "hourlyPredictions": {
       "title": "Hourly Predictions:",
-      "description": "The penalty is applied minute-by-minute. The first 10 minutes have no penalty (Max Score: 100). The penalty increases linearly until the last 10 minutes of the hour, where the Max Score is 80."
+      "description": "The penalty is applied minute-by-minute. The first 10 minutes have no penalty (Max Rating: 100). The penalty increases linearly until the last 10 minutes of the hour, where the Max Rating is 80."
     },
     "dailyPredictions": {
       "title": "Daily Predictions:",
-      "description": "The penalty is applied throughout the trading day. Predictions made right at market open have the highest potential score."
+      "description": "The penalty is applied throughout the trading day. Predictions made right at market open have the highest potential rating."
     },
     "longerTermPredictions": {
       "title": "Longer-Term Predictions:",
@@ -711,7 +711,7 @@
     "rationale": "Rationale (Optional)",
     "rationalePlaceholder": "What is your rationale for this prediction?",
     "placePrediction": "Place Prediction",
-    "maxScore": "Max Score: {{score}}",
+    "maxScore": "Max Rating: {{score}}",
     "confirmationMessage": "Your prediction of {{price}} is a {{percent}} change, which is more than the typical {{limit}}% range. Are you sure?",
     "limitReached": "You have reached the daily prediction limit of {{limit}}.",
     "submitFailed": "Failed to submit prediction.",
@@ -837,7 +837,7 @@
     "openingHourPrediction": "Opening Hour Prediction",
     "marketClosed": "Market is currently closed",
     "forDate": "For {{date}}",
-    "maxScore": "Max Score: {{score}}",
+    "maxScore": "Max Rating: {{score}}",
     "invalidType": "Select a valid prediction type."
   },
   "profile": {

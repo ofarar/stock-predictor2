@@ -20,7 +20,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
     const [predictionType, setPredictionType] = useState('Weekly');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formState, setFormState] = useState({
-        isOpen: true, message: 'Max Score: 100', deadline: null, barWidth: '100%'
+        isOpen: true, message: 'Max Rating: 100', deadline: null, barWidth: '100%'
     });
     const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
