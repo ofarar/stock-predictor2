@@ -2348,7 +2348,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
             status: 'Assessed',
             updatedAt: { $gte: oneHourAgo }
         })
-            .sort({ score: -1 })
+            .sort({ rating: -1 })
             .limit(3)
             // UPDATED: Populate more user fields
             .populate('userId', 'username avatar isGoldenMember isVerified');
@@ -2361,7 +2361,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
             isGoldenMember: p.userId.isGoldenMember, // Add golden status
             isVerified: p.userId.isVerified,
             ticker: p.stockTicker,
-            score: p.score
+            rating: p.rating || p.score
         }));
 
         res.json(formattedWinners);
