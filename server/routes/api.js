@@ -2524,40 +2524,78 @@ router.get('/widgets/famous-stocks', async (req, res) => {
             ]);
         }
 
-        // --- NEW FIX: Enrich stocks with quote data ---
+        // --- NEW FIX: Enrich stocks with quote AND sentiment data ---
         if (stocks.length > 0) {
             const tickers = stocks.map(s => s.ticker);
             try {
-                // Call the adapter to get all quotes at once
-                const quotes = await financeAPI.getQuote(tickers);
+                // Fetch quotes and sentiment data in parallel
+                const [quotes, sentimentsResults] = await Promise.all([
+                    financeAPI.getQuote(tickers).catch(e => {
+                        console.error("Finance API error in famous-stocks (quotes):", e.message);
+                        return []; // Return empty array on failure
+                    }),
+                    // This is the logic from your working /api/stock/:ticker/community-sentiment route
+                    Promise.all(tickers.map(ticker =>
+                        Prediction.aggregate([
+                            { $match: { stockTicker: ticker, status: 'Active', deadline: { $gt: new Date() } } },
+                            { $group: { _id: "$predictionType", avgTargetPrice: { $avg: "$targetPrice" }, count: { $sum: 1 } } },
+                            { $project: { _id: 0, type: "$_id", avgTargetPrice: "$avgTargetPrice", count: 1 } }
+                        ]).catch(e => {
+                            console.error(`Sentiment aggregation error for ${ticker}:`, e.message);
+                            return []; // Return empty array on failure
+                        })
+                    ))
+                ]);
+                // --- END NEW FETCH ---
 
-                // Create a map for easy lookup
+                // Create maps for easy lookup
                 const quoteMap = new Map();
-                quotes.forEach(q => {
-                    if (q) quoteMap.set(q.symbol, q);
-                });
+                if (quotes && Array.isArray(quotes)) {
+                    quotes.forEach(q => { if (q) quoteMap.set(q.symbol, q); });
+                }
 
-                // Merge quote data into the stocks array
+                // --- NEW: Map sentiment results correctly ---
+                const sentimentMap = new Map();
+                if (sentimentsResults && Array.isArray(sentimentsResults)) {
+                    sentimentsResults.forEach((sentimentsArray, index) => {
+                        const ticker = tickers[index];
+                        if (sentimentsArray && sentimentsArray.length > 0) {
+                            const mappedSentiment = {};
+                            // Map the array [ { type: "Daily", ... } ] to an object { Daily: {...} }
+                            sentimentsArray.forEach(sent => {
+                                mappedSentiment[sent.type] = {
+                                    averageTarget: sent.avgTargetPrice,
+                                    predictionCount: sent.count
+                                };
+                            });
+                            sentimentMap.set(ticker, mappedSentiment);
+                        }
+                    });
+                }
+                // --- END NEW MAP ---
+
+                // Merge quote data and sentiment data into the stocks array
                 stocks = stocks.map(stock => ({
                     ...stock,
-                    // Find the quote in the map
-                    quote: quoteMap.get(stock.ticker) || null
+                    quote: quoteMap.get(stock.ticker) || null,
+                    sentiment: sentimentMap.get(stock.ticker) || null // <-- ADD THE SENTIMENT
                 }));
 
-            } catch (quoteError) {
-                console.error("Failed to fetch quotes for famous stocks:", quoteError.message);
-                // If quotes fail, send stocks without quote data so frontend doesn't crash
-                stocks.forEach(s => s.quote = null);
+            } catch (enrichError) {
+                console.error("Failed to enrich famous stocks data:", enrichError.message);
+                stocks.forEach(s => {
+                    s.quote = null;
+                    s.sentiment = null;
+                });
             }
         }
         // --- END FIX ---
 
-        // Send the stocks (now enriched with quote data) and the flag
+        // Send the stocks (now enriched with both quote and sentiment data)
         res.json({ stocks, isHistorical });
 
     } catch (err) {
         console.error("Error fetching famous stocks:", err);
-        // Send empty on error to prevent frontend crash
         res.json({ stocks: [], isHistorical: false });
     }
 });
