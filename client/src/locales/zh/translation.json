@@ -1086,5 +1086,6 @@
     "analystRating.pie.labels.weekly": "每周排名",
     "analystRating.pie.labels.monthly": "每月排名",
     "analystRating.pie.labels.quarterly": "季度排名",
-    "analystRating.pie.labels.yearly": "年度排名"
+    "analystRating.pie.labels.yearly": "年度排名",
+    "creatorPoolModal.breakdownTitle": "明细详情"
 }

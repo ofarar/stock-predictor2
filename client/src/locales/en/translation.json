@@ -1072,5 +1072,6 @@
   "analystRating.pie.labels.weekly": "Weekly Rank",
   "analystRating.pie.labels.monthly": "Monthly Rank",
   "analystRating.pie.labels.quarterly": "Quarterly Rank",
-  "analystRating.pie.labels.yearly": "Yearly Rank"
+  "analystRating.pie.labels.yearly": "Yearly Rank",
+  "creatorPoolModal.breakdownTitle": "Breakdown Details"
 }

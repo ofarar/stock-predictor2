@@ -1081,5 +1081,6 @@
     "analystRating.pie.labels.weekly": "Wöchentlicher Rang",
     "analystRating.pie.labels.monthly": "Monatlicher Rang",
     "analystRating.pie.labels.quarterly": "Quartalsrang",
-    "analystRating.pie.labels.yearly": "Jährlicher Rang"
+    "analystRating.pie.labels.yearly": "Jährlicher Rang",
+    "creatorPoolModal.breakdownTitle": "Aufschlüsselungsdetails"
 }

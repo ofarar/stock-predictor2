@@ -1086,5 +1086,6 @@
     "analystRating.pie.labels.weekly": "Недельный Ранг",
     "analystRating.pie.labels.monthly": "Месячный Ранг",
     "analystRating.pie.labels.quarterly": "Квартальный Ранг",
-    "analystRating.pie.labels.yearly": "Годовой Ранг"
+    "analystRating.pie.labels.yearly": "Годовой Ранг",
+    "creatorPoolModal.breakdownTitle": "Подробная разбивка"
 }

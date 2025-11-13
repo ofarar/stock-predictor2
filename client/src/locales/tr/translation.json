@@ -1087,5 +1087,6 @@
   "analystRating.pie.labels.weekly": "Haftalık Sıralama",
   "analystRating.pie.labels.monthly": "Aylık Sıralama",
   "analystRating.pie.labels.quarterly": "Çeyreklik Sıralama",
-  "analystRating.pie.labels.yearly": "Yıllık Sıralama"
+  "analystRating.pie.labels.yearly": "Yıllık Sıralama",
+  "creatorPoolModal.breakdownTitle": "Döküm Detayları"
 }

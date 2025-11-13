@@ -1086,5 +1086,6 @@
     "analystRating.pie.labels.weekly": "Rang Hebdomadaire",
     "analystRating.pie.labels.monthly": "Rang Mensuel",
     "analystRating.pie.labels.quarterly": "Rang Trimestriel",
-    "analystRating.pie.labels.yearly": "Rang Annuel"
+    "analystRating.pie.labels.yearly": "Rang Annuel",
+    "creatorPoolModal.breakdownTitle": "Détails de la Répartition"
 }

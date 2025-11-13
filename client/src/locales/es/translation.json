@@ -1086,5 +1086,6 @@
     "analystRating.pie.labels.weekly": "Rango Semanal",
     "analystRating.pie.labels.monthly": "Rango Mensual",
     "analystRating.pie.labels.quarterly": "Rango Trimestral",
-    "analystRating.pie.labels.yearly": "Rango Anual"
+    "analystRating.pie.labels.yearly": "Rango Anual",
+    "creatorPoolModal.breakdownTitle": "Detalles del Desglose"
 }
