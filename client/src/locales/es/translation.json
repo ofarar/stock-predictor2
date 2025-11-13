@@ -576,7 +576,7 @@
         "goldenPost": "{{username}} ha publicado un nuevo Post Dorado.",
         "badgeEarnedSelf": "¡Felicidades! Has ganado la insignia {{tier}} {{badgeName}}.",
         "badgeEarnedFollower": "¡{{username}} ha ganado la insignia {{tier}} {{badgeName}}!",
-        "predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo {{score}} puntos!",
+        "predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo {{rating}} puntos!",
         "priceChange": "El precio de la suscripción de {{creatorName}} cambiará de ${{oldPrice}} a ${{newPrice}} el {{effectiveDate}}."
     },
     "hourlyWinnersFeed": {

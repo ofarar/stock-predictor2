@@ -576,7 +576,7 @@
         "goldenPost": "{{username}} 发布了新的黄金帖子。",
         "badgeEarnedSelf": "恭喜！您已获得 {{tier}} {{badgeName}} 徽章。",
         "badgeEarnedFollower": "{{username}} 获得了 {{tier}} {{badgeName}} 徽章！",
-        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{score}} 分！",
+        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{rating}} 分！",
         "priceChange": "{{creatorName}} 的订阅价格将于 {{effectiveDate}} 从 ${{oldPrice}} 更改为 ${{newPrice}}。"
     },
     "hourlyWinnersFeed": {

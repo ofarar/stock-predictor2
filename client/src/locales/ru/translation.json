@@ -576,7 +576,7 @@
         "goldenPost": "{{username}} опубликовал(а) новый Золотой Пост.",
         "badgeEarnedSelf": "Поздравляем! Вы заработали значок «{{badgeName}}» уровня {{tier}}.",
         "badgeEarnedFollower": "{{username}} получил(а) значок {{tier}} {{badgeName}}.",
-        "predictionAssessed": "Ваш прогноз {{predictionType}} на {{stockTicker}} набрал {{score}} очков!",
+        "predictionAssessed": "Ваш прогноз {{predictionType}} на {{stockTicker}} набрал {{rating}} очков!",
         "priceChange": "Цена подписки {{creatorName}} изменяется с ${{oldPrice}} на ${{newPrice}} {{effectiveDate}}."
     },
     "hourlyWinnersFeed": {

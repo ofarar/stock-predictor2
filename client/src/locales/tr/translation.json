@@ -576,7 +576,7 @@
     "goldenPost": "{{username}} yeni bir Altın Gönderi yayınladı.",
     "badgeEarnedSelf": "Tebrikler! {{tier}} {{badgeName}} rozetini kazandınız.",
     "badgeEarnedFollower": "{{username}}, {{tier}} {{badgeName}} rozetini kazandı!",
-    "predictionAssessed": "{{stockTicker}} üzerine yaptığınız {{predictionType}} tahmininiz {{score}} puan kazandı!",
+    "predictionAssessed": "{{stockTicker}} üzerine yaptığınız {{predictionType}} tahmininiz {{rating}} puan kazandı!",
     "priceChange": "{{creatorName}} adlı kullanıcının abonelik fiyatı {{effectiveDate}} tarihinde ${{oldPrice}} seviyesinden ${{newPrice}} seviyesine değişiyor."
   },
   "hourlyWinnersFeed": {
