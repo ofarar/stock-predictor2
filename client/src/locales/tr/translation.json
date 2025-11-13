@@ -450,9 +450,9 @@
   },
   "share": {
     "shareOnX": "X'te Paylaş",
-    "ownerActive": "${{ticker}} fiyatının {{deadline}} tarihine kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve Stock-Predictor'da oy ver!",
+    "ownerActive": "${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve Stock-Predictor'da oy ver!",
     "ownerAssessed": "${{ticker}} için yaptığım tahmin {{score}} puanla sonuçlandı! Tahminim {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu. Sonucu gör!",
-    "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} tarihine kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
+    "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
     "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{score}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu."
   },
   "editprofile_telegram_label": "Telegram Bağlantısı",
@@ -1048,5 +1048,20 @@
     "monthly": "ay sonuna kadar",
     "quarterly": "çeyrek sonuna kadar",
     "yearly": "yıl sonuna kadar"
-  }
+  },
+  "profile_avg_rating": "Ort. Puan",
+  "rating_explained_title": "Puanlama Açıklaması",
+  "rating_explained_text1": "Platformumuz, doğruluğu ödüllendirmek için bir **Yakınlık Puanlama Sistemi** kullanır. \"Doğru\" veya \"yanlış\" yerine puanınız, tahmininizin gerçek sonuca ne kadar yakın olduğuna bağlıdır.",
+  "rating_explained_text2": "Örneğin, bir hisse senedi 152$ ise ve siz 150$ olacağını tahmin ederseniz, 180$ tahmin eden birinden çok daha yüksek bir puan alırsınız. Bu sistem, rastgele tahminler yerine düşünceli analizleri ödüllendirmek için tasarlanmıştır. Mükemmel bir tahmin için maksimum puan 100'dür ve tahmininiz nihai fiyattan uzaklaştıkça puan azalır.",
+  "notifications.predictionAssessed": "{{stockTicker}} için yaptığınız {{predictionType}} tahmininiz {{rating}} puan kazandı!",
+  "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Puan",
+  "performanceChart.avgRatingLabel": "Ort. Puan",
+  "performanceChart.tooltip.avgRating": "Ort. Puan: {{rating}}",
+  "performanceTabs.statCard.averageRating": "Ortalama Puan",
+  "badgeInfoModal.ratingLabel": "Puan > {{rating}}",
+  "common.rating": "Puan",
+  "text_avg_rating": "Ort. Puan",
+  "Final Rating": "Nihai Puan",
+  "Live Rating": "Canlı Puan",
+  "Rating at Close": "Kapanış Puanı"
 }

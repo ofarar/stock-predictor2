@@ -1047,5 +1047,20 @@
         "monthly": "la fin du mois",
         "quarterly": "la fin du trimestre",
         "yearly": "la fin de l'année"
-    }
+    },
+    "profile_avg_rating": "Note Moy.",
+    "rating_explained_title": "Explication de la Notation",
+    "rating_explained_text1": "Notre plateforme utilise un **Système de Notation par Proximité** pour récompenser la précision. Au lieu d'un simple \"correct\" ou \"incorrect\", votre note est basée sur la proximité de votre prédiction par rapport au résultat réel.",
+    "rating_explained_text2": "Par exemple, si une action est à 152 $ et que vous prédisez 150 $, vous recevrez une note beaucoup plus élevée que quelqu'un qui a prédit 180 $. Ce système est conçu pour récompenser l'analyse réfléchie plutôt que les suppositions aléatoires. La note maximale pour une prédiction parfaite est de 100, et la note diminue à mesure que votre prédiction s'éloigne du prix final.",
+    "notifications.predictionAssessed": "Votre prédiction {{predictionType}} sur {{stockTicker}} a obtenu une note de {{rating}} !",
+    "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Note",
+    "performanceChart.avgRatingLabel": "Note Moy.",
+    "performanceChart.tooltip.avgRating": "Note Moy.: {{rating}}",
+    "performanceTabs.statCard.averageRating": "Note Moyenne",
+    "badgeInfoModal.ratingLabel": "Note > {{rating}}",
+    "common.rating": "Note",
+    "text_avg_rating": "Note Moy.",
+    "Final Rating": "Note Finale",
+    "Live Rating": "Note en Direct",
+    "Rating at Close": "Note à la Clôture"
 }

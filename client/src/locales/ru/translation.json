@@ -1047,5 +1047,20 @@
         "monthly": "конца месяца",
         "quarterly": "конца квартала",
         "yearly": "конца года"
-    }
+    },
+    "profile_avg_rating": "Сред. Рейтинг",
+    "rating_explained_title": "Объяснение Рейтинга",
+    "rating_explained_text1": "Наша платформа использует **Систему Рейтинга по Близости** для вознаграждения за точность. Вместо простого \"правильно\" или \"неправильно\", ваш рейтинг основан на том, насколько близко ваш прогноз был к фактическому результату.",
+    "rating_explained_text2": "Например, если акция стоит 152 $, и вы прогнозируете 150 $, вы получите гораздо более высокий рейтинг, чем тот, кто прогнозировал 180 $. Эта система предназначена для вознаграждения вдумчивого анализа, а не случайных догадок. Максимальный рейтинг за идеальный прогноз - 100, и он снижается по мере удаления вашего прогноза от конечной цены.",
+    "notifications.predictionAssessed": "Ваш {{predictionType}} прогноз по {{stockTicker}} получил рейтинг {{rating}}!",
+    "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Рейтинг",
+    "performanceChart.avgRatingLabel": "Сред. Рейтинг",
+    "performanceChart.tooltip.avgRating": "Сред. Рейтинг: {{rating}}",
+    "performanceTabs.statCard.averageRating": "Средний Рейтинг",
+    "badgeInfoModal.ratingLabel": "Рейтинг > {{rating}}",
+    "common.rating": "Рейтинг",
+    "text_avg_rating": "Сред. Рейтинг",
+    "Final Rating": "Итоговый Рейтинг",
+    "Live Rating": "Текущий Рейтинг",
+    "Rating at Close": "Рейтинг на Закрытии"
 }

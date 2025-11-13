@@ -1047,5 +1047,20 @@
         "monthly": "final de mes",
         "quarterly": "final de trimestre",
         "yearly": "final de año"
-    }
+    },
+    "profile_avg_rating": "Rating Prom.",
+    "rating_explained_title": "Explicación del Rating",
+    "rating_explained_text1": "Nuestra plataforma utiliza un **Sistema de Rating por Proximidad** para recompensar la precisión. En lugar de un simple \"correcto\" o \"incorrecto\", su rating se basa en qué tan cerca estuvo su predicción del resultado real.",
+    "rating_explained_text2": "Por ejemplo, si una acción está a 152 $ y predice 150 $, recibirá un rating mucho más alto que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo sobre las conjeturas aleatorias. El rating máximo para una predicción perfecta es 100, y disminuye cuanto más se aleja su predicción del precio final.",
+    "notifications.predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo un rating de {{rating}}!",
+    "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Rating",
+    "performanceChart.avgRatingLabel": "Rating Prom.",
+    "performanceChart.tooltip.avgRating": "Rating Prom.: {{rating}}",
+    "performanceTabs.statCard.averageRating": "Rating Promedio",
+    "badgeInfoModal.ratingLabel": "Rating > {{rating}}",
+    "common.rating": "Rating",
+    "text_avg_rating": "Rating Prom.",
+    "Final Rating": "Rating Final",
+    "Live Rating": "Rating en Vivo",
+    "Rating at Close": "Rating al Cierre"
 }

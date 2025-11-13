@@ -1042,5 +1042,20 @@
         "monthly": "zum Ende des Monats",
         "quarterly": "zum Ende des Quartals",
         "yearly": "zum Ende des Jahres"
-    }
+    },
+    "profile_avg_rating": "Durchschn. Rating",
+    "rating_explained_title": "Rating Erklärt",
+    "rating_explained_text1": "Unsere Plattform verwendet ein **Näherungs-Rating-System**, um Genauigkeit zu belohnen. Anstelle von \"richtig\" oder \"falsch\" basiert Ihr Rating darauf, wie nah Ihre Prognose am tatsächlichen Ergebnis lag.",
+    "rating_explained_text2": "Wenn eine Aktie beispielsweise bei 152 $steht und Sie 150$ vorhersagen, erhalten Sie ein viel höheres Rating als jemand, der 180 $ vorhersagte. Dieses System belohnt durchdachte Analysen statt zufälliger Vermutungen. Das maximale Rating für eine perfekte Prognose ist 100, wobei das Rating sinkt, je weiter Ihre Prognose vom Endpreis entfernt ist.",
+    "notifications.predictionAssessed": "Ihre {{predictionType}}-Prognose für {{stockTicker}} erhielt ein Rating von {{rating}}!",
+    "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Rating",
+    "performanceChart.avgRatingLabel": "Durchschn. Rating",
+    "performanceChart.tooltip.avgRating": "Durchschn. Rating: {{rating}}",
+    "performanceTabs.statCard.averageRating": "Durchschn. Rating",
+    "badgeInfoModal.ratingLabel": "Rating > {{rating}}",
+    "common.rating": "Rating",
+    "text_avg_rating": "Durchschn. Rating",
+    "Final Rating": "Endgültiges Rating",
+    "Live Rating": "Live-Rating",
+    "Rating at Close": "Rating bei Schluss"
 }

@@ -1047,5 +1047,20 @@
         "monthly": "月末",
         "quarterly": "季度末",
         "yearly": "年末"
-    }
+    },
+    "profile_avg_rating": "平均评级",
+    "rating_explained_title": "评级说明",
+    "rating_explained_text1": "我们的平台使用**接近度评级系统**来奖励准确性。您的评级不是简单的“正确”或“错误”，而是基于您的预测与实际结果的接近程度。",
+    "rating_explained_text2": "例如，如果一只股票的价格是 152 美元，您预测 150 美元，您将获得比预测 180 美元的人高得多的评级。该系统旨在奖励深思熟虑的分析，而不是随机猜测。完美预测的最高评级为 100，您的预测离最终价格越远，评级就越低。",
+    "notifications.predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{rating}} 评级！",
+    "hourlyWinnersFeed.ratingSuffix": "+{{rating}} 评级",
+    "performanceChart.avgRatingLabel": "平均评级",
+    "performanceChart.tooltip.avgRating": "平均评级: {{rating}}",
+    "performanceTabs.statCard.averageRating": "平均评级",
+    "badgeInfoModal.ratingLabel": "评级 > {{rating}}",
+    "common.rating": "评级",
+    "text_avg_rating": "平均评级",
+    "Final Rating": "最终评级",
+    "Live Rating": "实时评级",
+    "Rating at Close": "收盘评级"
 }
