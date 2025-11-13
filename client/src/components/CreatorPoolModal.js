@@ -9,7 +9,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// --- 1. Reusable Pie Chart Component ---
+// --- Reusable Pie Chart Component ---
 const BreakdownPieChart = ({ title, data, t }) => {
     // Sanitize keys for translation (e.g., "AAPL.US" -> "AAPL_US")
     const sanitizedData = {};
@@ -17,8 +17,7 @@ const BreakdownPieChart = ({ title, data, t }) => {
         const sanitizedKey = key.replace(/\./g, '_');
         sanitizedData[sanitizedKey] = data[key];
     }
-    
-    // Use the sanitized keys for labels, but original keys for data
+
     const labels = Object.keys(sanitizedData);
     const chartData = {
         labels: labels.map(label => t(`analystRating.pie.labels.${label.toLowerCase()}`, label)),
@@ -29,14 +28,14 @@ const BreakdownPieChart = ({ title, data, t }) => {
             borderWidth: 1,
         }]
     };
-    
+
     const pieOptions = {
         responsive: true,
         plugins: {
             legend: { position: 'top', labels: { color: '#e5e7eb' } },
             tooltip: {
                 callbacks: {
-                    label: function(context) {
+                    label: function (context) {
                         const label = context.label || '';
                         const value = context.parsed || 0;
                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -69,7 +68,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         if (isOpen) {
             setLoading(true);
             setSelectedUser(null);
-            setDrilldownView(null); 
+            setDrilldownView(null);
             axios.get(`${process.env.REACT_APP_API_URL}/api/leaderboard/rating`, { withCredentials: true })
                 .then(res => {
                     setLeaderboard(res.data.users);
@@ -121,23 +120,58 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
             }]
         };
     }
-    
+
+    const handlePieClick = (evt, elements) => {
+        if (elements.length > 0) {
+            const clickedElement = elements[0];
+            const label = totalPieData.labels[clickedElement.index];
+            const breakdown = selectedUser.analystRating; // Use full object
+
+            if (label === t('analystRating.pie.predictions', 'Predictions') && breakdown.predictionBreakdownByStock && Object.keys(breakdown.predictionBreakdownByStock).length > 0) {
+                setDrilldownView('predictions');
+            } else if (label === t('analystRating.pie.shares', 'Shares') && breakdown.shareBreakdown && Object.keys(breakdown.shareBreakdown).length > 0) {
+                setDrilldownView('shares');
+            } else if (label === t('analystRating.pie.badges', 'Badges') && breakdown.badgeBreakdown && Object.keys(breakdown.badgeBreakdown).length > 0) {
+                setDrilldownView('badges');
+            } else if (label === t('analystRating.pie.ranks', 'Ranks') && breakdown.rankBreakdown && Object.keys(breakdown.rankBreakdown).length > 0) {
+                setDrilldownView('ranks');
+            }
+        }
+    };
+
     const totalPieOptions = {
         responsive: true,
         plugins: {
             legend: { position: 'top', labels: { color: '#e5e7eb' } },
-            tooltip: { /* (tooltip callbacks are unchanged) */ }
-        }
+            // --- THIS IS THE FIX ---
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return `${label}: ${value.toLocaleString()} (${percentage}%)`;
+                    }
+                }
+            }
+            // --- END FIX ---
+        },
+        onClick: handlePieClick
     };
-    
+
     const handleSelectUser = (user) => {
         setSelectedUser(user);
-        setDrilldownView(null); 
+        setDrilldownView(null);
     };
 
     const handleBackClick = () => {
-        setSelectedUser(null);
-        setDrilldownView(null);
+        // If on a drilldown, go back to total. If on total, go back to list.
+        if (drilldownView) {
+            setDrilldownView(null);
+        } else {
+            setSelectedUser(null);
+        }
     };
 
     // Helper function to check if breakdown data exists
@@ -154,6 +188,23 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
     const shareBreakdownData = getBreakdownData('shareBreakdown');
     const badgeBreakdownData = getBreakdownData('badgeBreakdown');
     const rankBreakdownData = getBreakdownData('rankBreakdown');
+
+    // Determine the title for the drilldown pie
+    let drilldownTitle = '';
+    let drilldownData = null;
+    if (drilldownView === 'predictions') {
+        drilldownTitle = t('creatorPoolModal.predictionsBreakdownTitle');
+        drilldownData = predictionBreakdownData;
+    } else if (drilldownView === 'shares') {
+        drilldownTitle = t('creatorPoolModal.sharesBreakdownTitle');
+        drilldownData = shareBreakdownData;
+    } else if (drilldownView === 'badges') {
+        drilldownTitle = t('creatorPoolModal.badgesBreakdownTitle');
+        drilldownData = badgeBreakdownData;
+    } else if (drilldownView === 'ranks') {
+        drilldownTitle = t('creatorPoolModal.ranksBreakdownTitle');
+        drilldownData = rankBreakdownData;
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
@@ -172,9 +223,9 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                
+
                 {/* --- BODY (Conditional) --- */}
-                
+
                 {/* --- VIEW 1: Leaderboard List --- */}
                 {!selectedUser && (
                     <div className="animate-fade-in-fast">
@@ -192,23 +243,22 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                                 leaderboard.map((user, index) => {
                                     const isCurrentUser = user._id === currentProfileId;
                                     return (
-                                    <button 
-                                        key={user._id} 
-                                        id={isCurrentUser ? `leaderboard-user-${user._id}` : undefined}
-                                        onClick={() => handleSelectUser(user)}
-                                        className={`w-full flex items-center bg-gray-700 p-2 rounded-md hover:bg-gray-600 transition-all ${isCurrentUser ? 'ring-2 ring-green-400' : ''}`}
-                                    >
-                                        <span className="font-bold text-gray-400 w-8 text-center">{index + 1}</span>
-                                        <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2"/>
-                                        <span className="text-white font-semibold flex-grow text-left">{user.username}</span>
-                                        <div className="text-right">
-                                            {/* This is correct: 'analystRating' is the full object */}
-                                            <p className="font-bold text-green-400">{user.analystRating.total.toLocaleString()}</p>
-                                            <p className="text-xs text-gray-400">
-                                                {formatSharePercentage(((user.analystRating.total / totalRating) * 100), i18n.language)}
-                                            </p>
-                                        </div>
-                                    </button>
+                                        <button
+                                            key={user._id}
+                                            id={isCurrentUser ? `leaderboard-user-${user._id}` : undefined}
+                                            onClick={() => handleSelectUser(user)}
+                                            className={`w-full flex items-center bg-gray-700 p-2 rounded-md hover:bg-gray-600 transition-all ${isCurrentUser ? 'ring-2 ring-green-400' : ''}`}
+                                        >
+                                            <span className="font-bold text-gray-400 w-8 text-center">{index + 1}</span>
+                                            <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2" />
+                                            <span className="text-white font-semibold flex-grow text-left">{user.username}</span>
+                                            <div className="text-right">
+                                                <p className="font-bold text-green-400">{user.analystRating.total.toLocaleString()}</p>
+                                                <p className="text-xs text-gray-400">
+                                                    {formatSharePercentage(((user.analystRating.total / totalRating) * 100), i18n.language)}
+                                                </p>
+                                            </div>
+                                        </button>
                                     );
                                 })
                             )}
@@ -222,9 +272,9 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                         <div className="space-y-4">
                             {/* User Info */}
                             <div className="flex flex-col items-center">
-                                <img src={selectedUser.avatar} alt="avatar" className="w-16 h-16 rounded-full"/>
-                                <Link 
-                                    to={`/profile/${selectedUser._id}`} 
+                                <img src={selectedUser.avatar} alt="avatar" className="w-16 h-16 rounded-full" />
+                                <Link
+                                    to={`/profile/${selectedUser._id}`}
                                     onClick={onClose}
                                     className="text-xl font-bold text-white mt-2 hover:underline"
                                 >
@@ -232,7 +282,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                                 </Link>
                                 <p className="text-gray-400">{t('analyst_rating_label')}: {selectedUser.analystRating.total.toLocaleString()}</p>
                             </div>
-                            
+
                             {/* Main Pie Chart */}
                             <div className="w-full max-w-xs mx-auto">
                                 <Pie data={totalPieData} options={totalPieOptions} />
@@ -264,19 +314,10 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                                     )}
                                 </div>
                             </div>
-                            
+
                             {/* Drilldown Chart Container */}
-                            {drilldownView === 'predictions' && (
-                                <BreakdownPieChart title={t('creatorPoolModal.predictionsBreakdownTitle')} data={predictionBreakdownData} t={t} />
-                            )}
-                            {drilldownView === 'shares' && (
-                                <BreakdownPieChart title={t('creatorPoolModal.sharesBreakdownTitle')} data={shareBreakdownData} t={t} />
-                            )}
-                            {drilldownView === 'badges' && (
-                                <BreakdownPieChart title={t('creatorPoolModal.badgesBreakdownTitle')} data={badgeBreakdownData} t={t} />
-                            )}
-                            {drilldownView === 'ranks' && (
-                                <BreakdownPieChart title={t('creatorPoolModal.ranksBreakdownTitle')} data={rankBreakdownData} t={t} />
+                            {drilldownView && (
+                                <BreakdownPieChart title={drilldownTitle} data={drilldownData} t={t} />
                             )}
                         </div>
                     </div>
