@@ -205,7 +205,7 @@ const runAssessmentJob = async () => {
                         const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
                         user.analystRating = {
                             total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
-                            predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
+                            fromBonus: 0, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
                         };
                     }
 

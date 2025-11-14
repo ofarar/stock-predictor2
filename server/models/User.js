@@ -33,7 +33,8 @@ const UserSchema = new Schema({
         fromBadges: { type: Number, default: 0 },
         fromShares: { type: Number, default: 0 },
         fromReferrals: { type: Number, default: 0 }, // For your new feature
-        fromRanks: { type: Number, default: 0 },      // For your new feature
+        fromRanks: { type: Number, default: 0 }, 
+        fromBonus: { type: Number, default: 0 },     // For your new feature
         shareBreakdownByStock: { type: Map, of: Number, default: {} },
         predictionBreakdownByStock: { type: Map, of: Number, default: {} }, // <-- NEW
         badgeBreakdown: { type: Map, of: Number, default: {} },             // <-- NEW

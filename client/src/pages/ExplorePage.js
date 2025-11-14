@@ -1,3 +1,4 @@
+// src/pages/ExplorePage.js
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -8,8 +9,11 @@ import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
-import FamousStocks from '../components/FamousStocks'; // <-- 1. IMPORT
+import FamousStocks from '../components/FamousStocks';
+import Aim from '../components/Aim';
+import PromoBanner from '../components/PromoBanner';
 
+// PredictionCard is unchanged, but we'll pass 'user' to it as 'currentUser'
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
     const { t, i18n } = useTranslation();
 
@@ -48,8 +52,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                                 </div>
                             )}
                         </div>
-
-                        <p className="text-xs text-gray-400">@{prediction.userId.username}</p>
+                        <p className="text-xs text-gray-400">{t('text_avg_rating')}: {prediction.userId.totalRating ? (prediction.userId.totalRating / (prediction.userId.predictionCount || 1)).toFixed(1) : 'N/A'}</p>
                     </div>
                     <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ml-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>
                 </div>
@@ -67,9 +70,11 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                         <p className="text-gray-300">{t('explore_predicts_price_of')}</p>
                         <div className="flex justify-center items-center gap-2">
                             <p className="text-3xl font-bold text-green-400 my-2">${prediction.targetPrice.toFixed(2)}</p>
-                            <p className={`text-lg font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                ({formatPercentage(percentChange, i18n.language)})
-                            </p>
+                            {percentChange !== 0 && (
+                                <p className={`text-lg font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                    ({formatPercentage(percentChange, i18n.language)})
+                                </p>
+                            )}
                             {prediction.description && (
                                 <button onClick={(e) => { e.stopPropagation(); onInfoClick(prediction.description); }} className="text-gray-500 hover:text-white" title={t('explore_view_rationale')}>
                                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
@@ -101,43 +106,46 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
     );
 };
 
-const ExplorePage = ({ requestLogin, settings }) => {
+const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-- 'user' prop is here
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
-    // 3. Read the 'status' from the URL, or default to 'Active'
     const [activeTab, setActiveTab] = useState(searchParams.get('status') || 'Active');
     const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date', verifiedOnly: false });
     const [descModal, setDescModal] = useState({ isOpen: false, description: '' });
-    const [currentUser, setCurrentUser] = useState(null);
+    // --- FIX: REMOVED currentUser state ---
+    // const [currentUser, setCurrentUser] = useState(user); 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    // --- 4. ADD NEW STATE FOR FAMOUS STOCKS ---
     const [famousStocksData, setFamousStocksData] = useState({ stocks: [], isHistorical: false });
     const [loadingFamous, setLoadingFamous] = useState(true);
-    // --- END ADD ---
 
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
-            .then(res => setCurrentUser(res.data));
+    // --- FIX: REMOVED this useEffect ---
+    // useEffect(() => {
+    //     setCurrentUser(user);
+    // }, [user]);
 
-        // --- 5. ADD API CALL FOR FAMOUS STOCKS ---
+    useEffect(() => {
+        // Fetch famous stocks (no auth required)
         setLoadingFamous(true);
         axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`)
             .then(res => setFamousStocksData(res.data))
             .catch(err => console.error("Failed to load famous stocks", err))
             .finally(() => setLoadingFamous(false));
-        // --- END ADD ---
     }, []);
 
     const fetchPredictions = useCallback((currentPage, isNewFilter) => {
         setLoading(true);
         const apiSortBy = filters.sortBy === 'potential' ? 'date' : filters.sortBy;
-        axios.get(`${process.env.REACT_APP_API_URL}/api/explore/feed`, { params: { status: activeTab, ...filters, sortBy: apiSortBy, page: currentPage } })
+
+        axios.get(`${process.env.REACT_APP_API_URL}/api/explore/feed`, {
+            params: { status: activeTab, ...filters, sortBy: apiSortBy, page: currentPage },
+            withCredentials: true
+        })
             .then(res => {
                 const { predictions: newPredictions, totalPages: newTotalPages } = res.data;
 
@@ -160,13 +168,13 @@ const ExplorePage = ({ requestLogin, settings }) => {
     useEffect(() => {
         setPage(1);
         fetchPredictions(1, true);
-    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, fetchPredictions]); // This is correct
+    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, fetchPredictions]);
 
     useEffect(() => {
         if (page > 1) {
             fetchPredictions(page, false);
         }
-    }, [page, fetchPredictions])
+    }, [page, fetchPredictions]);
 
     const handleFilterChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value }));
@@ -179,12 +187,13 @@ const ExplorePage = ({ requestLogin, settings }) => {
     };
 
     const handleVote = (predictionId, voteType) => {
-        if (!currentUser) return requestLogin();
+        if (!user) return requestLogin(); // <-- FIX: Use 'user' prop
+
         const originalPredictions = [...predictions];
         const updatedPredictions = predictions.map(p => {
             if (p._id === predictionId) {
                 const newPrediction = { ...p, likes: [...(p.likes || [])], dislikes: [...(p.dislikes || [])] };
-                const userId = currentUser._id;
+                const userId = user._id; // <-- FIX: Use 'user' prop
                 const userLikesIndex = newPrediction.likes.indexOf(userId);
                 const userDislikesIndex = newPrediction.dislikes.indexOf(userId);
                 if (voteType === 'like') {
@@ -216,14 +225,27 @@ const ExplorePage = ({ requestLogin, settings }) => {
         <>
             <DescriptionModal isOpen={descModal.isOpen} onClose={() => setDescModal({ isOpen: false, description: '' })} description={descModal.description} />
             <div className="animate-fade-in space-y-8">
-                {/* --- 6. ADD FAMOUS STOCKS COMPONENT AT THE TOP --- */}
+
+                {/* --- FIX: This now correctly uses the 'user' prop --- */}
+                {/* --- 2. THIS IS THE FIX --- */}
+                {/* Only render this block if auth is finished AND there is no user */}
+                {isAuthLoading ? (
+                    null // Wait for auth to complete
+                ) : !user && (
+                    <>
+                        <Aim />
+                        <PromoBanner />
+                    </>
+                )}
+                {/* --- END FIX --- */}
+
                 {!loadingFamous && famousStocksData.stocks.length > 0 && (
                     <FamousStocks
                         stocks={famousStocksData.stocks}
                         isHistorical={famousStocksData.isHistorical}
                     />
                 )}
-                {/* --- END ADD --- */}
+
                 <h1 className="text-3xl font-bold text-white mb-6">{t('explore_title')}</h1>
                 <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -251,19 +273,20 @@ const ExplorePage = ({ requestLogin, settings }) => {
                             </select>
                         </div>
                     </div>
-                    <div className="flex items-center justify-center pt-2">
-                        <input
-                            type="checkbox"
-                            id="verifiedOnly"
-                            checked={filters.verifiedOnly}
-                            onChange={(e) => handleFilterChange('verifiedOnly', e.target.checked)}
-                            className="h-4 w-4 rounded bg-gray-700 text-green-500"
-                        />
-                        <label htmlFor="verifiedOnly" className="ml-2 text-sm font-medium text-gray-300">{t('explore_verified_only')}</label>
-                    </div>
+                    {settings?.isVerificationEnabled && (
+                        <div className="flex items-center justify-center pt-2">
+                            <input
+                                type="checkbox"
+                                id="verifiedOnly"
+                                checked={filters.verifiedOnly}
+                                onChange={(e) => handleFilterChange('verifiedOnly', e.target.checked)}
+                                className="h-4 w-4 rounded bg-gray-700 text-green-500"
+                            />
+                            <label htmlFor="verifiedOnly" className="ml-2 text-sm font-medium text-gray-300">{t('explore_verified_only')}</label>
+                        </div>
+                    )}
                 </div>
                 <div className="flex border-b border-gray-700 mb-6">
-                    {/* --- 7. UPDATE TABS TO USE URL --- */}
                     <button onClick={() => {
                         setActiveTab('Active');
                         setPage(1);
@@ -286,7 +309,7 @@ const ExplorePage = ({ requestLogin, settings }) => {
                                     prediction={p}
                                     onInfoClick={(desc) => setDescModal({ isOpen: true, description: desc })}
                                     onVote={handleVote}
-                                    currentUser={currentUser}
+                                    currentUser={user} // <-- FIX: Use 'user' prop
                                     navigate={navigate}
                                     settings={settings}
                                 />)}

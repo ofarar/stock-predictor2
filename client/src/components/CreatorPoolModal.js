@@ -104,7 +104,8 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                 t('analystRating.pie.badges', 'Badges'),
                 t('analystRating.pie.shares', 'Shares'),
                 t('analystRating.pie.ranks', 'Ranks'),
-                t('analystRating.pie.referrals', 'Referrals')
+                t('analystRating.pie.referrals', 'Referrals'),
+                t('analystRating.pie.bonus', 'Bonus')
             ],
             datasets: [{
                 data: [
@@ -112,9 +113,17 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                     breakdown.fromBadges || 0,
                     breakdown.fromShares || 0,
                     breakdown.fromRanks || 0,
-                    breakdown.fromReferrals || 0
+                    breakdown.fromReferrals || 0,
+                    breakdown.fromBonus || 0
                 ],
-                backgroundColor: ['#22c55e', '#facc15', '#3b82f6', '#a855f7', '#ec4899'],
+                backgroundColor: [
+                    '#22c55e', // green
+                    '#facc15', // yellow
+                    '#3b82f6', // blue
+                    '#a855f7', // purple
+                    '#ec4899', // pink
+                    '#f97316'  // <-- 3. ADD NEW COLOR (orange)
+                ],
                 borderColor: '#4b5563',
                 borderWidth: 1,
             }]

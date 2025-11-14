@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 
@@ -9,7 +9,6 @@ import Header from './components/Header';
 import PredictionModal from './components/PredictionModal';
 import LoginPromptModal from './components/LoginPromptModal';
 import Footer from './components/Footer';
-import Aim from './components/Aim';
 
 // Import Pages
 import HomePage from './pages/HomePage';
@@ -35,20 +34,9 @@ import CompleteProfilePage from './pages/CompleteProfilePage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 
 
-// A small helper component to handle the conditional rendering
-const PageSpecificContent = () => {
-  const location = useLocation();
-  // We get the user prop if needed for other conditional components
-  // For now, just checking the path
-  return (
-    <>
-      {location.pathname === '/' && <Aim />}
-    </>
-  );
-};
-
 function App() {
   const [user, setUser] = useState(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isPredictionModalOpen, setIsPredictionModalOpen] = useState(false);
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
   const [stockToPredict, setStockToPredict] = useState(null);
@@ -56,8 +44,11 @@ function App() {
 
   // Fetch the current user once when the app loads
   const fetchUser = () => {
+    setIsAuthLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
-      .then(res => setUser(res.data || null));
+      .then(res => setUser(res.data || null))
+      .catch(() => setUser(null)) // <-- 3. On error, user is null
+      .finally(() => setIsAuthLoading(false)); // <-- 4. SET LOADING TO FALSE
   };
 
   useEffect(() => {
@@ -104,13 +95,12 @@ function App() {
         <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
         <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
         <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
-          <PageSpecificContent />
           <Routes>
             {/* --- Pass 'settings' prop down to all relevant pages --- */}
-            <Route path="/" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
+            <Route path="/" element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
             <Route path="/dashboard" element={<HomePage user={user} settings={settings} />} />
             <Route path="/complete-profile" element={<CompleteProfilePage />} />
-            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} /> {/* (This can now be a redirect, but leaving it works) */}
+            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
             <Route path="/scoreboard" element={<ScoreboardPage settings={settings} />} />
             <Route path="/profile/:userId" element={<ProfilePage settings={settings} requestLogin={requestLogin} />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage settings={settings} />} />

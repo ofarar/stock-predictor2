@@ -1076,5 +1076,10 @@
   "creatorPoolModal.breakdownTitle": "Breakdown Details",
   "notifications.newReferral": "{{username}} signed up using your referral link! +{{points}} Analyst Rating.",
   "notifications.types.NewReferral": "New Referral",
-  "header.dashboard": "Dashboard"
+  "header.dashboard": "Dashboard",
+  "aim.title": "Find Proven Insights. <0>Monetize Your Market Calls.</0>",
+  "promoBanner.creatorPoolText": "💰 <strong>Join as an Early User!</strong> Sign up now to earn <1>+1,000 bonus points</1> and get your share of platform revenue just for your contributions. <2>Join Now</2>",
+  "promoBanner.joinNow": "Join Now",
+  "analystRating.pie.bonus": "Bonus",
+  "analystRating.pie.labels.frombonus": "Bonus"
 }

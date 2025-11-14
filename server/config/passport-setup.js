@@ -50,11 +50,29 @@ passport.use(
                 } else {
                     // Username is available. Create the new user.
                     const defaultAvatar = `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
-                    const newUser = await new User({
+                    // --- NEW: Add Early User Bonus Points ---
+                    const earlyUserBonus = 1000;
+                    const analystRatingObject = {
+                        total: earlyUserBonus,
+                        fromPredictions: 0,
+                        fromBadges: 0,
+                        fromShares: 0,
+                        fromReferrals: 0,
+                        fromRanks: 0,
+                        fromBonus: earlyUserBonus, // <-- 1. ADDED HERE
+                        shareBreakdown: {},
+                        predictionBreakdownByStock: {},
+                        badgeBreakdown: {},
+                        rankBreakdown: {}
+                    };
+                    // --- END NEW ---
+
+                    const newUser = await new User({ // <-- 2. CREATE USER
                         googleId: profile.id,
                         username: newUsername,
                         email: userEmail,
-                        avatar: defaultAvatar
+                        avatar: defaultAvatar,
+                        analystRating: analystRatingObject
                     }).save()
 
                     // --- 3. NEW: CHECK FOR REFERRAL ---
@@ -68,7 +86,7 @@ passport.use(
                                 // On-the-fly migration for inviter's rating object
                                 if (typeof inviter.analystRating !== 'object' || inviter.analystRating === null) {
                                     const oldPoints = typeof inviter.analystRating === 'number' ? inviter.analystRating : 0;
-                                    inviter.analystRating = { total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
+                                    inviter.analystRating = { total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, fromBonus: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
                                 }
                                 inviter.analystRating.total += pointsToAward;
                                 inviter.analystRating.fromReferrals += pointsToAward;

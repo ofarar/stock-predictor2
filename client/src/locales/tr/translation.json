@@ -1091,5 +1091,10 @@
   "creatorPoolModal.breakdownTitle": "Döküm Detayları",
   "notifications.newReferral": "{{username}} davet linkini kullanarak kaydoldu! +{{points}} Analist Puanı.",
   "notifications.types.NewReferral": "Yeni Davet",
-  "header.dashboard": "Gösterge Paneli"
+  "header.dashboard": "Gösterge Paneli",
+  "aim.title": "Kanıtlanmış Analizleri Bul. <0>Piyasa Yorumlarını Paraya Çevir.</0>",
+  "promoBanner.creatorPoolText": "💰 <strong>Erken Kullanıcı Olarak Katıl!</strong> Sadece katkıların için platform gelirinden payını almak ve <1>+1.000 bonus puan</1> kazanmak için hemen kaydol. <2>Hemen Katıl</2>",
+  "promoBanner.joinNow": "Hemen Katıl",
+  "analystRating.pie.bonus": "Bonus", 
+  "analystRating.pie.labels.frombonus": "Bonus"
 }

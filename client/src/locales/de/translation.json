@@ -1085,5 +1085,10 @@
     "creatorPoolModal.breakdownTitle": "Aufschlüsselungsdetails",
     "notifications.newReferral": "{{username}} hat sich über deinen Empfehlungslink angemeldet! +{{points}} Analysten-Rating.",
     "notifications.types.NewReferral": "Neue Empfehlung",
-    "header.dashboard": "Dashboard"
+    "header.dashboard": "Dashboard",
+    "aim.title": "Finden Sie bewährte Einblicke. <0>Monetarisieren Sie Ihre Marktanalysen.</0>",
+    "promoBanner.creatorPoolText": "💰 <strong>Werden Sie Early User!</strong> Melden Sie sich jetzt an, um <1>+1.000 Bonuspunkte</1> zu erhalten und Ihren Anteil am Plattformumsatz nur für Ihre Beiträge zu bekommen. <2>Jetzt beitreten</2>",
+    "promoBanner.joinNow": "Jetzt beitreten",
+    "analystRating.pie.bonus": "Bonus", 
+    "analystRating.pie.labels.frombonus": "Bonus"
 }

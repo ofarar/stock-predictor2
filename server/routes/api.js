@@ -2952,7 +2952,7 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
             user.badges = []; // Clear existing badges for a fresh calculation
             // On-the-fly migration for the main object
             if (typeof user.analystRating !== 'object' || user.analystRating === null) {
-                user.analystRating = { total: 0, fromPredictions: 0, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
+                user.analystRating = { total: 0, fromPredictions: 0, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, fromBonus: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
             }
 
             // Keep points from real-time actions (Shares, Referrals)

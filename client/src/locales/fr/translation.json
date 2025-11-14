@@ -1090,5 +1090,10 @@
     "creatorPoolModal.breakdownTitle": "Détails de la Répartition",
     "notifications.newReferral": "{{username}} s'est inscrit en utilisant votre lien de parrainage ! +{{points}} Note d'Analyste.",
     "notifications.types.NewReferral": "Nouveau Parrainage",
-    "header.dashboard": "Tableau de bord"
+    "header.dashboard": "Tableau de bord",
+    "aim.title": "Trouvez des Perspectives Éprouvées. <0>Monétisez vos Analyses du Marché.</0>",
+    "promoBanner.creatorPoolText": "💰 <strong>Rejoignez-nous en tant que Premier Utilisateur !</strong> Inscrivez-vous maintenant pour gagner <1>+1 000 points bonus</1> et recevoir votre part des revenus de la plateforme juste pour vos contributions. <2>Rejoindre maintenant</2>",
+    "promoBanner.joinNow": "Rejoindre maintenant",
+    "analystRating.pie.bonus": "Bonus", 
+    "analystRating.pie.labels.frombonus": "Bonus"
 }

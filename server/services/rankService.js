@@ -81,7 +81,7 @@ const awardPointsForCategory = async (categoryName, categoryQuery) => {
                                         then: {
                                             total: { $ifNull: ["$analystRating", 0] }, // Use old number if it exists
                                             fromPredictions: { $ifNull: ["$analystRating", 0] }, // Assume old points were from predictions
-                                            fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
+                                            fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, fromBonus: 0,
                                             predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
                                         },
                                         else: "$analystRating"

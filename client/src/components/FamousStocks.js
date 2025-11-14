@@ -7,6 +7,7 @@ const SentimentStockCard = ({ stock }) => {
     const { t, i18n } = useTranslation();
 
     if (!stock.quote) {
+        // Card for when quote data is missing
         return (
             <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-center text-center text-gray-400 hover:bg-gray-700 h-full">
                 <div>
@@ -17,13 +18,26 @@ const SentimentStockCard = ({ stock }) => {
         );
     }
 
+    // --- FIX 1: Add "Hourly" to the array to find sentiment for BTC-USD ---
     const hasSentiment = stock.sentiment && Object.keys(stock.sentiment).length > 0;
-    const relevantSentimentType = hasSentiment ? (['Daily', 'Weekly', 'Monthly'].find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0]) : null;
+    const relevantSentimentType = hasSentiment ? (['Hourly', 'Daily', 'Weekly', 'Monthly'].find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0]) : null;
     const sentimentData = relevantSentimentType ? stock.sentiment[relevantSentimentType] : null;
 
-    const changePercent = stock.quote?.regularMarketChangePercent;
-    const isUp = stock.quote?.regularMarketChange >= 0;
+    // Daily market change (e.g., "-1.5%")
+    const dailyChangePercent = stock.quote?.regularMarketChangePercent;
+    const isDailyUp = stock.quote?.regularMarketChange >= 0;
 
+    // --- FIX 2: Calculate Target vs. Current % Change ---
+    let targetPercentageChange = null;
+    let isTargetUp = false;
+    // Check for sentimentData *and* valid price
+    if (sentimentData && typeof stock.quote.regularMarketPrice === 'number' && stock.quote.regularMarketPrice > 0) {
+        targetPercentageChange = ((sentimentData.averageTarget - stock.quote.regularMarketPrice) / stock.quote.regularMarketPrice) * 100;
+        isTargetUp = targetPercentageChange >= 0;
+    }
+    // --- END FIX 2 ---
+
+    // This is the fallback card for when there is a quote, but NO sentiment.
     if (!sentimentData) {
         return (
             <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-between hover:bg-gray-700 h-full">
@@ -33,10 +47,9 @@ const SentimentStockCard = ({ stock }) => {
                 </div>
                 <div className="text-right">
                     <p className="font-bold text-lg text-white">{formatCurrency(stock.quote.regularMarketPrice, i18n.language, stock.quote.currency)}</p>
-                    {/* --- ADDED % CHANGE --- */}
-                    {typeof changePercent === 'number' && (
-                        <p className={`text-sm font-bold ${isUp ? 'text-green-400' : 'text-red-400'}`}>
-                            {formatPercentage(changePercent, i18n.language)}
+                    {typeof dailyChangePercent === 'number' && (
+                        <p className={`text-sm font-bold ${isDailyUp ? 'text-green-400' : 'text-red-400'}`}>
+                            {formatPercentage(dailyChangePercent, i18n.language)}
                         </p>
                     )}
                 </div>
@@ -44,9 +57,8 @@ const SentimentStockCard = ({ stock }) => {
         );
     }
 
-    // --- FIX for {{type}} ---
-    // Translate the type itself (e.g., "Weekly") before passing it into the question
-    const translatedType = t(`predictionTypes.${relevantSentimentType.toLowerCase()}`, relevantSentimentType);
+    // This is the main card, for when quote AND sentiment exist.
+    const translatedType = t(`prediction_types.${relevantSentimentType}`, relevantSentimentType);
 
     return (
         <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-colors flex flex-col justify-between h-full">
@@ -56,15 +68,21 @@ const SentimentStockCard = ({ stock }) => {
                 </p>
             </div>
             <div className="text-right">
+
+                {/* --- FIX 3: Display Target % Change with color and fallback --- */}
+                {typeof targetPercentageChange === 'number' ? (
+                    <p className={`text-sm font-bold ${isTargetUp ? 'text-green-400' : 'text-red-400'}`}>
+                        {formatPercentage(targetPercentageChange, i18n.language)}
+                    </p>
+                ) : (
+                    <p className="text-sm font-bold text-gray-500">(...%)</p>
+                )}
+
                 <p className="text-2xl font-bold text-white">
                     {formatCurrency(sentimentData.averageTarget, i18n.language, stock.quote.currency)}
                 </p>
-                {/* --- ADDED % CHANGE --- */}
-                {typeof changePercent === 'number' && (
-                    <p className={`text-sm font-bold ${isUp ? 'text-green-400' : 'text-red-400'}`}>
-                        {formatPercentage(changePercent, i18n.language)}
-                    </p>
-                )}
+                {/* --- END FIX 3 --- */}
+
                 <p className="text-xs text-gray-500">
                     {t('sentiment.based_on_count', { count: sentimentData.predictionCount })}
                 </p>

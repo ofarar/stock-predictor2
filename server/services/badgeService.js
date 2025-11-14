@@ -94,7 +94,7 @@ const awardBadges = async (user) => {
                         // --- FIX: On-the-fly migration for analystRating ---
                         user.analystRating = {
                             total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
-                            predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
+                            fromBonus: 0, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
                         };
                         // --- END FIX ---
 

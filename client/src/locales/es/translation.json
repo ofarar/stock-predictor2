@@ -1090,5 +1090,10 @@
     "creatorPoolModal.breakdownTitle": "Detalles del Desglose",
     "notifications.newReferral": "¡{{username}} se registró con tu enlace de referido! +{{points}} Rating de Analista.",
     "notifications.types.NewReferral": "Nuevo Referido",
-    "header.dashboard": "Panel"
+    "header.dashboard": "Panel",
+    "aim.title": "Encuentre Perspectivas Probadas. <0>Monetice sus Predicciones del Mercado.</0>",
+   "promoBanner.creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de bonificación</1> y obtenga su parte de los ingresos de la plataforma solo por sus contribuciones. <2>Unirse ahora</2>",
+    "promoBanner.joinNow": "Unirse ahora",
+    "analystRating.pie.bonus": "Bono",
+    "analystRating.pie.labels.frombonus": "Bono"
 }

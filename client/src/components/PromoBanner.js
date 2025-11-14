@@ -1,27 +1,35 @@
+// src/components/PromoBanner.js
 import React, { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 
 const PromoBanner = () => {
     const [isVisible, setIsVisible] = useState(true);
+    const { t } = useTranslation(); // <-- This 't' is now used
 
     if (!isVisible) {
         return null;
     }
 
-    // This creates the dynamic URL
     const loginUrl = `${process.env.REACT_APP_API_URL}/auth/google`;
 
     return (
-        <div className="bg-blue-800 bg-opacity-50 text-center p-3 rounded-lg mb-8 relative">
-            <p className="text-white">
-                🎉 **Launch Offer:** Sign up now for free lifetime access. This offer is for a limited time! 
-                {/* Use the loginUrl variable here */}
-                <a href={loginUrl} className="font-bold underline hover:text-blue-300 ml-2">
-                    Join Now
-                </a>
+        <div className="bg-gradient-to-r from-blue-500 to-green-500 text-center p-4 rounded-lg mb-8 relative shadow-lg">
+            {/* FIX: Add pr-8 to make room for the close button */}
+            <p className="text-white font-medium pr-8">
+                <Trans 
+                    i18nKey="promoBanner.creatorPoolText"
+                    components={[
+                        <strong />, // <0>
+                        <span className="font-bold text-yellow-300" />, // <1>
+                        // FIX: Pass text *inside* the <a> tag
+                        <a href={loginUrl} className="font-bold underline hover:text-white ml-2 whitespace-nowrap">
+                        </a> // <2>
+                    ]}
+                />
             </p>
             <button 
                 onClick={() => setIsVisible(false)} 
-                className="absolute top-0 right-0 mt-2 mr-3 text-white opacity-50 hover:opacity-100 text-2xl"
+                className="absolute top-3 right-3 text-white opacity-70 hover:opacity-100 text-2xl"
                 aria-label="Close banner"
             >
                 &times;
