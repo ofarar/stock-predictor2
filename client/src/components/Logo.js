@@ -12,6 +12,11 @@ const Logo = () => {
             <span className="hidden sm:inline font-bold text-2xl text-white">
                 Stock<span className="text-green-400">Predictor</span>
             </span>
+            {/* --- ADD THIS BETA TAG --- */}
+            <span className="bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-md">
+                BETA
+            </span>
+            {/* --- END TAG --- */}
         </Link>
     );
 };
