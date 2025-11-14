@@ -1090,5 +1090,6 @@
   "analystRating.pie.labels.yearly": "Yıllık Sıralama",
   "creatorPoolModal.breakdownTitle": "Döküm Detayları",
   "notifications.newReferral": "{{username}} davet linkini kullanarak kaydoldu! +{{points}} Analist Puanı.",
-  "notifications.types.NewReferral": "Yeni Davet"
+  "notifications.types.NewReferral": "Yeni Davet",
+  "header.dashboard": "Gösterge Paneli"
 }

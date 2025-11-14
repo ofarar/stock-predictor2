@@ -1089,5 +1089,6 @@
     "analystRating.pie.labels.yearly": "年度排名",
     "creatorPoolModal.breakdownTitle": "明细详情",
     "notifications.newReferral": "{{username}} 使用您的推荐链接注册了！+{{points}} 分析师评分。",
-    "notifications.types.NewReferral": "新推荐"
+    "notifications.types.NewReferral": "新推荐",
+    "header.dashboard": "仪表板"
 }

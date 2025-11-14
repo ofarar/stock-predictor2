@@ -8,6 +8,7 @@ import VerifiedTick from '../components/VerifiedTick';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage, formatCurrency, formatDate } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
+import FamousStocks from '../components/FamousStocks'; // <-- 1. IMPORT
 
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
     const { t, i18n } = useTranslation();
@@ -113,12 +114,24 @@ const ExplorePage = ({ requestLogin, settings }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    // --- 4. ADD NEW STATE FOR FAMOUS STOCKS ---
+    const [famousStocksData, setFamousStocksData] = useState({ stocks: [], isHistorical: false });
+    const [loadingFamous, setLoadingFamous] = useState(true);
+    // --- END ADD ---
 
     const predictionTypes = ['All', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
             .then(res => setCurrentUser(res.data));
+
+        // --- 5. ADD API CALL FOR FAMOUS STOCKS ---
+        setLoadingFamous(true);
+        axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`)
+            .then(res => setFamousStocksData(res.data))
+            .catch(err => console.error("Failed to load famous stocks", err))
+            .finally(() => setLoadingFamous(false));
+        // --- END ADD ---
     }, []);
 
     const fetchPredictions = useCallback((currentPage, isNewFilter) => {
@@ -202,7 +215,15 @@ const ExplorePage = ({ requestLogin, settings }) => {
     return (
         <>
             <DescriptionModal isOpen={descModal.isOpen} onClose={() => setDescModal({ isOpen: false, description: '' })} description={descModal.description} />
-            <div className="animate-fade-in">
+            <div className="animate-fade-in space-y-8">
+                {/* --- 6. ADD FAMOUS STOCKS COMPONENT AT THE TOP --- */}
+                {!loadingFamous && famousStocksData.stocks.length > 0 && (
+                    <FamousStocks
+                        stocks={famousStocksData.stocks}
+                        isHistorical={famousStocksData.isHistorical}
+                    />
+                )}
+                {/* --- END ADD --- */}
                 <h1 className="text-3xl font-bold text-white mb-6">{t('explore_title')}</h1>
                 <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -242,6 +263,7 @@ const ExplorePage = ({ requestLogin, settings }) => {
                     </div>
                 </div>
                 <div className="flex border-b border-gray-700 mb-6">
+                    {/* --- 7. UPDATE TABS TO USE URL --- */}
                     <button onClick={() => {
                         setActiveTab('Active');
                         setPage(1);

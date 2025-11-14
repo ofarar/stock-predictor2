@@ -1075,5 +1075,6 @@
   "analystRating.pie.labels.yearly": "Yearly Rank",
   "creatorPoolModal.breakdownTitle": "Breakdown Details",
   "notifications.newReferral": "{{username}} signed up using your referral link! +{{points}} Analyst Rating.",
-  "notifications.types.NewReferral": "New Referral"
+  "notifications.types.NewReferral": "New Referral",
+  "header.dashboard": "Dashboard"
 }

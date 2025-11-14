@@ -1089,5 +1089,6 @@
     "analystRating.pie.labels.yearly": "Годовой Ранг",
     "creatorPoolModal.breakdownTitle": "Подробная разбивка",
     "notifications.newReferral": "{{username}} зарегистрировался по вашей реферальной ссылке! +{{points}} Рейтинга Аналитика.",
-    "notifications.types.NewReferral": "Новый Реферал"
+    "notifications.types.NewReferral": "Новый Реферал",
+    "header.dashboard": "Панель управления"
 }

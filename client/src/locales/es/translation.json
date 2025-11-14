@@ -1089,5 +1089,6 @@
     "analystRating.pie.labels.yearly": "Rango Anual",
     "creatorPoolModal.breakdownTitle": "Detalles del Desglose",
     "notifications.newReferral": "¡{{username}} se registró con tu enlace de referido! +{{points}} Rating de Analista.",
-    "notifications.types.NewReferral": "Nuevo Referido"
+    "notifications.types.NewReferral": "Nuevo Referido",
+    "header.dashboard": "Panel"
 }

@@ -11,7 +11,6 @@ import LongTermLeaders from '../components/LongTermLeaders';
 import HourlyWinnersFeed from '../components/HourlyWinnersFeed';
 import PromoBanner from '../components/PromoBanner';
 import MarketWatch from '../components/MarketWatch';
-import FamousStocks from '../components/FamousStocks';
 import PredictionModal from '../components/PredictionModal';
 
 const HomePage = ({ user, settings }) => {
@@ -19,9 +18,7 @@ const HomePage = ({ user, settings }) => {
     const [widgetData, setWidgetData] = useState({
         dailyLeaders: [],
         longTermLeaders: [],
-        hourlyWinners: [],
-        famousStocks: [],
-        isFamousHistorical: false,
+        hourlyWinners: []
     });
     const [loading, setLoading] = useState(true);
     const [isPredictionModalOpen, setPredictionModalOpen] = useState(false);
@@ -43,21 +40,17 @@ const HomePage = ({ user, settings }) => {
                 const [
                     hourlyWinnersRes,
                     dailyLeadersRes,
-                    longTermLeadersRes,
-                    famousStocksRes
+                    longTermLeadersRes
                 ] = await Promise.all([
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/hourly-winners`),
                     axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/daily-leaders`),
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`),
-                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/famous-stocks`)
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/widgets/long-term-leaders`)
                 ]);
 
                 setWidgetData({
                     hourlyWinners: hourlyWinnersRes.data,
                     dailyLeaders: dailyLeadersRes.data,
-                    longTermLeaders: longTermLeadersRes.data,
-                    famousStocks: famousStocksRes.data.stocks,
-                    isFamousHistorical: famousStocksRes.data.isHistorical,
+                    longTermLeaders: longTermLeadersRes.data
                 });
 
             } catch (err) {
@@ -108,10 +101,6 @@ const HomePage = ({ user, settings }) => {
                 {/* Sidebar Column */}
                 <div className="md:col-span-1 flex flex-col gap-8">
                     <MarketWatch />
-                    <FamousStocks
-                        stocks={widgetData.famousStocks}
-                        isHistorical={widgetData.isFamousHistorical}
-                    />
                     <LongTermLeaders leaders={widgetData.longTermLeaders} settings={settings} />
                 </div>
             </div>

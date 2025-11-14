@@ -1084,5 +1084,6 @@
     "analystRating.pie.labels.yearly": "Jährlicher Rang",
     "creatorPoolModal.breakdownTitle": "Aufschlüsselungsdetails",
     "notifications.newReferral": "{{username}} hat sich über deinen Empfehlungslink angemeldet! +{{points}} Analysten-Rating.",
-    "notifications.types.NewReferral": "Neue Empfehlung"
+    "notifications.types.NewReferral": "Neue Empfehlung",
+    "header.dashboard": "Dashboard"
 }

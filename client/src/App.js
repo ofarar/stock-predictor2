@@ -107,9 +107,10 @@ function App() {
           <PageSpecificContent />
           <Routes>
             {/* --- Pass 'settings' prop down to all relevant pages --- */}
-            <Route path="/" element={<HomePage user={user} settings={settings} />} />
+            <Route path="/" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
+            <Route path="/dashboard" element={<HomePage user={user} settings={settings} />} />
             <Route path="/complete-profile" element={<CompleteProfilePage />} />
-            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} />
+            <Route path="/explore" element={<ExplorePage requestLogin={requestLogin} settings={settings} />} /> {/* (This can now be a redirect, but leaving it works) */}
             <Route path="/scoreboard" element={<ScoreboardPage settings={settings} />} />
             <Route path="/profile/:userId" element={<ProfilePage settings={settings} requestLogin={requestLogin} />} />
             <Route path="/profile/:userId/followers" element={<FollowersPage settings={settings} />} />
