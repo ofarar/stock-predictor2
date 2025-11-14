@@ -1,10 +1,9 @@
 // src/components/PromoBanner.js
 import React, { useState } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 const PromoBanner = () => {
     const [isVisible, setIsVisible] = useState(true);
-    const { t } = useTranslation(); // <-- This 't' is now used
 
     if (!isVisible) {
         return null;
