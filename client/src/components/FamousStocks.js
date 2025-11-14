@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+// src/components/FamousStocks.js
+import React from 'react'; // <-- Removed useState, useEffect, useRef
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
@@ -7,9 +8,8 @@ const SentimentStockCard = ({ stock }) => {
     const { t, i18n } = useTranslation();
 
     if (!stock.quote) {
-        // Card for when quote data is missing
         return (
-            <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-center text-center text-gray-400 hover:bg-gray-700 h-full">
+            <Link to={`/stock/${stock.ticker}`} className="bg-gray-700 p-4 rounded-lg flex items-center justify-center text-center text-gray-400 hover:bg-gray-600 h-full flex-shrink-0 w-64">
                 <div>
                     <p className="font-bold text-white">{stock.ticker}</p>
                     <p className="text-sm">{t('famousStocks.noData')}</p>
@@ -18,29 +18,24 @@ const SentimentStockCard = ({ stock }) => {
         );
     }
 
-    // --- FIX 1: Add "Hourly" to the array to find sentiment for BTC-USD ---
     const hasSentiment = stock.sentiment && Object.keys(stock.sentiment).length > 0;
     const relevantSentimentType = hasSentiment ? (['Hourly', 'Daily', 'Weekly', 'Monthly'].find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0]) : null;
     const sentimentData = relevantSentimentType ? stock.sentiment[relevantSentimentType] : null;
 
-    // Daily market change (e.g., "-1.5%")
     const dailyChangePercent = stock.quote?.regularMarketChangePercent;
     const isDailyUp = stock.quote?.regularMarketChange >= 0;
 
-    // --- FIX 2: Calculate Target vs. Current % Change ---
     let targetPercentageChange = null;
     let isTargetUp = false;
-    // Check for sentimentData *and* valid price
     if (sentimentData && typeof stock.quote.regularMarketPrice === 'number' && stock.quote.regularMarketPrice > 0) {
         targetPercentageChange = ((sentimentData.averageTarget - stock.quote.regularMarketPrice) / stock.quote.regularMarketPrice) * 100;
         isTargetUp = targetPercentageChange >= 0;
     }
-    // --- END FIX 2 ---
 
     // This is the fallback card for when there is a quote, but NO sentiment.
     if (!sentimentData) {
         return (
-            <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg flex items-center justify-between hover:bg-gray-700 h-full">
+            <Link to={`/stock/${stock.ticker}`} className="bg-gray-700 p-4 rounded-lg flex items-center justify-between hover:bg-gray-600 h-full flex-shrink-0 w-64">
                 <div>
                     <p className="font-bold text-white">{stock.quote.shortName || stock.ticker}</p>
                     <p className="text-sm text-gray-400">{stock.ticker}</p>
@@ -61,15 +56,13 @@ const SentimentStockCard = ({ stock }) => {
     const translatedType = t(`prediction_types.${relevantSentimentType}`, relevantSentimentType);
 
     return (
-        <Link to={`/stock/${stock.ticker}`} className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-colors flex flex-col justify-between h-full">
+        <Link to={`/stock/${stock.ticker}`} className="bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-colors flex flex-col justify-between h-full flex-shrink-0 w-64">
             <div>
                 <p className="text-sm text-gray-400 mb-2">
                     {t('sentiment.question', { type: translatedType, ticker: stock.ticker })}
                 </p>
             </div>
             <div className="text-right">
-
-                {/* --- FIX 3: Display Target % Change with color and fallback --- */}
                 {typeof targetPercentageChange === 'number' ? (
                     <p className={`text-sm font-bold ${isTargetUp ? 'text-green-400' : 'text-red-400'}`}>
                         {formatPercentage(targetPercentageChange, i18n.language)}
@@ -77,12 +70,9 @@ const SentimentStockCard = ({ stock }) => {
                 ) : (
                     <p className="text-sm font-bold text-gray-500">(...%)</p>
                 )}
-
                 <p className="text-2xl font-bold text-white">
                     {formatCurrency(sentimentData.averageTarget, i18n.language, stock.quote.currency)}
                 </p>
-                {/* --- END FIX 3 --- */}
-
                 <p className="text-xs text-gray-500">
                     {t('sentiment.based_on_count', { count: sentimentData.predictionCount })}
                 </p>
@@ -93,29 +83,8 @@ const SentimentStockCard = ({ stock }) => {
 
 const FamousStocks = ({ stocks, isHistorical }) => {
     const { t } = useTranslation();
-    const [updatedTickers, setUpdatedTickers] = useState(new Set());
-    const prevTickersRef = useRef([]);
-
-    useEffect(() => {
-        const currentTickers = stocks.map(s => s.ticker);
-        const previousTickers = prevTickersRef.current;
-
-        // Only animate if the component was already mounted and has previous tickers to compare against
-        if (previousTickers.length > 0) {
-            const newTickers = currentTickers.filter(t => !previousTickers.includes(t));
-            if (newTickers.length > 0) {
-                const newSet = new Set(newTickers);
-                setUpdatedTickers(newSet);
-                const timer = setTimeout(() => {
-                    setUpdatedTickers(new Set());
-                }, 1000); // Animation duration should match CSS
-                return () => clearTimeout(timer);
-            }
-        }
-
-        // After the logic runs, update the ref to hold the current tickers for the next render.
-        prevTickersRef.current = currentTickers;
-    }, [stocks]); // This effect now correctly only depends on the 'stocks' prop.
+    
+    // --- FIX 1: Removed unused useState, useRef, and useEffect ---
 
     const validStocks = stocks?.filter(stock => stock.quote) || [];
 
@@ -124,15 +93,15 @@ const FamousStocks = ({ stocks, isHistorical }) => {
     }
 
     return (
-        <div>
+        // --- FIX 2: Added the widget container ---
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-bold text-white mb-4">
                 {isHistorical ? t('famousStocks.title_historical') : t('famousStocks.title')}
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* This is the horizontal scroll layout you wanted */}
+            <div className="flex gap-4 overflow-x-auto pb-2 modern-scrollbar">
                 {validStocks.map(stock => (
-                    <div key={stock.ticker} className={updatedTickers.has(stock.ticker) ? 'animate-fade-in' : ''}>
-                        <SentimentStockCard stock={stock} />
-                    </div>
+                    <SentimentStockCard key={stock.ticker} stock={stock} />
                 ))}
             </div>
         </div>
