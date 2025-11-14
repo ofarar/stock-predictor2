@@ -12,7 +12,20 @@ const financeAPI = require('../services/financeAPI');
 /**
  * Calculates a rating based on how close a prediction was to the actual price.
  */
-function calculateProximityRating(predictedPrice, actualPrice) {
+function calculateProximityRating(predictedPrice, actualPrice, priceAtCreation) {
+    // --- NEW: Direction Check ---
+    // If priceAtCreation isn't available (for very old predictions), skip this check
+    if (typeof priceAtCreation === 'number' && priceAtCreation > 0) {
+        const predictedDirection = predictedPrice - priceAtCreation; // e.g., +10 (Up)
+        const actualDirection = actualPrice - priceAtCreation;     // e.g., -5 (Down)
+
+        // If the signs are different (one positive, one negative), they got the direction wrong.
+        // (predictedDirection * actualDirection < 0) is a clean way to check this.
+        if (predictedDirection * actualDirection < 0) {
+            return 0; // Wrong direction = 0 points
+        }
+    }
+    // --- END NEW ---
     const MAX_RATING = 100;
     const MAX_ERROR_PERCENTAGE = 0.20;
     if (actualPrice === 0) return 0;
@@ -144,7 +157,7 @@ const runAssessmentJob = async () => {
 
             for (const prediction of predictions) {
                 try {
-                    const rating = calculateProximityRating(prediction.targetPrice, actualPrice);
+                    const rating = calculateProximityRating(prediction.targetPrice, actualPrice, prediction.priceAtCreation);
 
                     let analystRatingToAward = 0;
                     if (rating > 90) analystRatingToAward = 10;
