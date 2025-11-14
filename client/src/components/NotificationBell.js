@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage } from '../utils/formatters';
 
+// (getNotificationIcon function is unchanged)
 const getNotificationIcon = (type) => {
     if (type === 'GoldenPost') {
         return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>;
@@ -13,15 +14,12 @@ const getNotificationIcon = (type) => {
     switch (type) {
         case 'NewFollower':
             return <svg className="w-5 h-5 mr-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>;
-        // --- ADD THIS CASE ---
+        case 'NewReferral': // <-- Make sure this is in your Notification.js model
+            return <svg className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>;
         case 'PriceChange':
             return <svg className="w-5 h-5 mr-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m0 8c1.11 0 2.08-.402 2.599-1M12 16v1m0-1v-8"></path></svg>;
-        // --- END OF ADD ---
         case 'BadgeEarned':
-        case 'FollowerBadgeEarned':
             return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>;
-        case 'GoldenPost':
-            return <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>;
         case 'PredictionAssessed':
         default: // NewPrediction
             return <svg className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>;
@@ -33,23 +31,36 @@ const NotificationBell = ({ user }) => {
     const [notifications, setNotifications] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+    
+    // --- FIX 1: This ref now tracks if the *first data load* is done ---
     const isInitialMount = useRef(true);
 
     useEffect(() => {
         if (user) {
             axios.get(`${process.env.REACT_APP_API_URL}/api/notifications`, { withCredentials: true })
-                .then(res => setNotifications(res.data));
+                .then(res => {
+                    setNotifications(res.data);
+                    // Mark initial mount as "done" ONLY after the first fetch
+                    isInitialMount.current = false; 
+                });
+        } else {
+            // No user, set notifications to empty and mark as "done"
+            setNotifications([]);
+            isInitialMount.current = false;
         }
     }, [user]);
 
     const unreadCount = notifications.filter(n => !n.read).length;
 
+    // --- FIX 2: This effect now ONLY watches 'isOpen' ---
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
+        // Don't run on the initial mount OR if the bell is opened
+        if (isInitialMount.current || isOpen) {
             return;
         }
 
+        // This now only runs when 'isOpen' changes from true to false
+        // (and not on the initial load)
         if (!isOpen && unreadCount > 0) {
             axios.post(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read`, {}, { withCredentials: true })
                 .then(() => {
@@ -57,7 +68,7 @@ const NotificationBell = ({ user }) => {
                     setNotifications(readNotifications);
                 });
         }
-    }, [isOpen, notifications, unreadCount]);
+    }, [isOpen]); // <-- Dependency array is ONLY isOpen
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -84,9 +95,9 @@ const NotificationBell = ({ user }) => {
 
         promise.then(() => {
             setNotifications([]);
-            setIsOpen(false); // Close the dropdown on success
+            setIsOpen(false); 
         }).catch(() => {
-            // The toast handles showing the error, so no extra action is needed here.
+            // Toast handles error
         });
     };
 
@@ -106,16 +117,17 @@ const NotificationBell = ({ user }) => {
                     <div className="p-2 font-bold text-white border-b border-gray-700">{t('header.notifications.title')}</div>
                     <div className="max-h-96 overflow-y-auto">
                         {notifications.length > 0 ? notifications.map(n => {
-                            // Create a fresh interpolation object for each notification
-                            // to prevent mutation issues across re-renders.
                             const interpolation = { ...n.metadata };
-
                             const messageKey = n.messageKey || 'notifications.default';
 
                             if (n.metadata?.badgeName) {
                                 const badgeKey = n.metadata.badgeName.toLowerCase().replace(/ /g, '_');
                                 interpolation.badgeName = t(`badges.${badgeKey}.name`, n.metadata.badgeName);
                             }
+                            if (n.metadata?.predictionType) {
+                                interpolation.predictionType = t(`prediction_types.${n.metadata.predictionType}`);
+                            }
+                            // --- FIX 3: Add 'rating' interpolation ---
                             if (n.metadata?.rating != null) {
                                 interpolation.rating = n.metadata.rating.toFixed(1);
                             }
