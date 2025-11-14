@@ -383,9 +383,6 @@
         "Quarterly": "Trimestral",
         "Yearly": "Anual"
     },
-    "aim": {
-        "title": "Predice el mercado. <0>Rastrea tu precisión.</0>"
-    },
     "avatarModal": {
         "title": "Cambiar tu Avatar",
         "styleLabel": "Estilo",
