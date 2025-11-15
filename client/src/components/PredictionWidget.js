@@ -163,10 +163,12 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 onClose();
             })
             .catch((err) => {
-                if (err.response && err.response.data?.code === 'PREDICTION_LIMIT_REACHED') {
+                // --- FIX: Handle the new 'errorKey' from the server ---
+                if (err.response && err.response.data?.errorKey === 'prediction.duplicateError') {
+                    toast.error(t(err.response.data.errorKey, err.response.data.metadata));
+                } else if (err.response && err.response.data?.code === 'PREDICTION_LIMIT_REACHED') {
                     toast.error(t('prediction.limitReached', { limit: err.response.data.limit }));
                 } else {
-                    // Use a more specific error if available from backend, otherwise generic
                     toast.error(err.response?.data?.message || t('prediction.submitFailed'));
                 }
             })

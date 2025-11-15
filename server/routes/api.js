@@ -1594,7 +1594,12 @@ router.post('/predict', predictLimiter, async (req, res) => {
         });
 
         if (existingPrediction) {
-            return res.status(409).json({ message: t('prediction.duplicateError', 'You already have an active {{type}} prediction for {{ticker}}.', { type: predictionType, ticker: stockTicker }) });
+            // --- FIX: Send an error key, not a translated string ---
+            return res.status(409).json({
+                message: 'Duplicate prediction',
+                errorKey: 'prediction.duplicateError',
+                metadata: { type: predictionType, ticker: stockTicker }
+            });
         }
         // --- END NEW ---
 
