@@ -877,19 +877,21 @@ router.get('/admin/all-users', async (req, res) => {
     try {
         const { sortBy = 'username', order = 'asc', isGoldenMember, isVerified } = req.query;
 
-        // Whitelist valid sort fields to prevent injection
+        // Whitelist valid sort fields
         const validSortKeys = [
-            'avgScore', 'avgRating', 'goldenSubscribersCount', 'followingCount', // <-- 'avgScore' is valid
-            'avgScore', 'goldenSubscribersCount', 'followingCount',
-            'goldenSubscriptionsCount'
+            'avgRating', 'goldenSubscribersCount', 'followingCount',
+            'goldenSubscriptionsCount', 'predictionCount', 'username', 'createdAt'
         ];
 
-        // --- FIX: Remap old 'avgScore' to new 'avgRating' for sorting ---
         let sortKey = validSortKeys.includes(sortBy) ? sortBy : 'username';
+        
+        // --- FIX: Remap old 'avgScore' to new 'avgRating' for sorting ---
+        // This handles any old bookmarks or frontend state still sending 'avgScore'
         if (sortKey === 'avgScore') {
             sortKey = 'avgRating';
         }
         // --- END FIX ---
+
         const sortOrder = order === 'asc' ? 1 : -1;
         const sortQuery = { [sortKey]: sortOrder, username: 1 }; // Add username as a secondary sort
 
@@ -900,8 +902,10 @@ router.get('/admin/all-users', async (req, res) => {
         }
         if (isVerified === 'true') { matchQuery.isVerified = true; }
 
+        // --- START: New, Correct Aggregation Pipeline ---
         const usersWithStats = await User.aggregate([
             { $match: matchQuery },
+            // 1. Add fields for follower counts, etc.
             {
                 $addFields: {
                     followersCount: { $size: { $ifNull: ["$followers", []] } },
@@ -910,33 +914,35 @@ router.get('/admin/all-users', async (req, res) => {
                     goldenSubscriptionsCount: { $size: { $ifNull: ["$goldenSubscriptions", []] } },
                 }
             },
+            // 2. Look up all predictions for the user
             {
                 $lookup: { from: 'predictions', localField: '_id', foreignField: 'userId', as: 'predictions' }
             },
-            {
-                $addFields: {
-                    predictionCount: { $size: "$predictions" },
-                    avgRating: {
-                        $cond: {
-                            if: { $gt: [{ $size: "$predictions" }, 0] },
-                            then: { $avg: { $ifNull: ["$predictions.rating", "$predictions.score"] } }, // <-- MIGRATE
-                            else: 0
-                        }
-                    }
-                }
-            },
+            // 3. Project only the fields we need. This is the crucial step.
             {
                 $project: {
-                    username: 1, avatar: 1, isGoldenMember: 1, isVerified: 1,
+                    username: 1, 
+                    avatar: 1, 
+                    isGoldenMember: 1, 
+                    isVerified: 1,
                     verifiedAt: 1,
-                    followersCount: 1, followingCount: 1,
-                    goldenSubscribersCount: 1, goldenSubscriptionsCount: 1,
-                    predictionCount: 1,
-                    avgRating: { $round: ["$avgRating", 1] } // <-- Renamed
+                    followersCount: 1, 
+                    followingCount: 1,
+                    goldenSubscribersCount: 1, 
+                    goldenSubscriptionsCount: 1,
+                    
+                    // 4. Calculate total prediction count
+                    predictionCount: { $size: { $ifNull: ["$predictions", []] } },
+                    
+                    // 5. Read the PRE-CALCULATED, CORRECT avgRating from the user document
+                    //    We are NO LONGER calculating it here. This fixes the bug.
+                    avgRating: { $round: [{ $ifNull: ["$avgRating", 0] }, 1] } 
                 }
             },
+            // 6. Sort based on the projected fields
             { $sort: sortQuery }
         ]);
+        // --- END: New, Correct Aggregation Pipeline ---
 
         res.json(usersWithStats);
     } catch (err) {
@@ -944,6 +950,7 @@ router.get('/admin/all-users', async (req, res) => {
         res.status(500).json({ message: 'Error fetching user data.' });
     }
 });
+// --- END OF THE FIXED ROUTE ---
 
 // POST: Handle contact form submission
 router.post('/contact', async (req, res) => {
@@ -1803,30 +1810,36 @@ router.get('/profile/:userId', async (req, res) => {
         });
         // --- END FIX ---
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
+
+        // --- DELETE THIS OLD, INCONSISTENT CODE ---
+        // const totalRating = assessedPredictions.reduce((sum, p) => sum + p.rating, 0);
+        // let overallAvgRating = assessedPredictions.length > 0 ? Math.round((totalRating / assessedPredictions.length) * 10) / 10 : 0;
+
         // --- ADD THIS NEW, CONSISTENT AGGREGATION ---
-        let overallAvgRating = 0;
-        if (assessedPredictions.length > 0) {
-            const stats = await Prediction.aggregate([
-                { $match: { userId: new mongoose.Types.ObjectId(req.params.userId), status: 'Assessed' } },
-                { $group: { _id: null, avg: { $avg: { $ifNull: ["$rating", "$score"] } } } }
-            ]);
-            if (stats[0]) {
-                // Use the same rounding as the scoreboard (1 decimal place)
-                overallAvgRating = Math.round(stats[0].avg * 10) / 10;
-            }
-        }
-        // --- END FIX --
+        // let overallAvgRating = 0;
+        // if (assessedPredictions.length > 0) {
+        //     const stats = await Prediction.aggregate([
+        //         { $match: { userId: new mongoose.Types.ObjectId(req.params.userId), status: 'Assessed' } },
+        //         { $group: { _id: null, avg: { $avg: { $ifNull: ["$rating", "$score"] } } } }
+        //     ]);
+        //     if (stats[0]) {
+        //         // Use the same rounding as the scoreboard (1 decimal place)
+        //         overallAvgRating = Math.round(stats[0].avg * 10) / 10;
+        //     }
+        // }
 
         // This logic will now work because 'predictions' has the 'rating' field
         const overallRank = (await User.countDocuments({ totalRating: { $gt: user.totalRating } })) + 1;
-
 
         // --- Start of Corrected Logic ---
 
         // 1. Initialize the performance object early
         const performance = {
             overallRank: overallRank,
-            overallAvgRating,
+            // --- THIS IS THE FIX ---
+            // Read the avgRating from the user object we already fetched!
+            overallAvgRating: Math.round(user.avgRating * 10) / 10,
+            // --- END FIX ---
         };
 
         // --- Helper function to calculate global rank for a specific category ---
@@ -3031,17 +3044,16 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
 
             }
 
-            // --- ADD THIS NEW BLOCK ---
+
             // 5. Recalculate and set the average prediction rating
             const stats = await Prediction.aggregate([
                 { $match: { userId: user._id, status: 'Assessed' } },
                 { $group: { _id: null, avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }
             ]);
             user.avgRating = stats[0] ? stats[0].avgRating : 0;
-            // --- END NEW BLOCK ---
 
 
-            // 5. Sum total (Ranks will be added later by the cron job)
+            // 6. Sum total (Ranks will be added later by the cron job)
             user.analystRating.total =
                 (user.analystRating.fromPredictions || 0) +
                 (user.analystRating.fromBadges || 0) +
