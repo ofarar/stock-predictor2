@@ -1803,11 +1803,23 @@ router.get('/profile/:userId', async (req, res) => {
         });
         // --- END FIX ---
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
+        // --- ADD THIS NEW, CONSISTENT AGGREGATION ---
+        let overallAvgRating = 0;
+        if (assessedPredictions.length > 0) {
+            const stats = await Prediction.aggregate([
+                { $match: { userId: new mongoose.Types.ObjectId(req.params.userId), status: 'Assessed' } },
+                { $group: { _id: null, avg: { $avg: { $ifNull: ["$rating", "$score"] } } } }
+            ]);
+            if (stats[0]) {
+                // Use the same rounding as the scoreboard (1 decimal place)
+                overallAvgRating = Math.round(stats[0].avg * 10) / 10;
+            }
+        }
+        // --- END FIX --
 
         // This logic will now work because 'predictions' has the 'rating' field
         const overallRank = (await User.countDocuments({ totalRating: { $gt: user.totalRating } })) + 1;
-        const totalRating = assessedPredictions.reduce((sum, p) => sum + p.rating, 0);
-        let overallAvgRating = assessedPredictions.length > 0 ? Math.round((totalRating / assessedPredictions.length) * 10) / 10 : 0;
+
 
         // --- Start of Corrected Logic ---
 
@@ -3018,6 +3030,15 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
                 await awardBadges(user);
 
             }
+
+            // --- ADD THIS NEW BLOCK ---
+            // 5. Recalculate and set the average prediction rating
+            const stats = await Prediction.aggregate([
+                { $match: { userId: user._id, status: 'Assessed' } },
+                { $group: { _id: null, avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }
+            ]);
+            user.avgRating = stats[0] ? stats[0].avgRating : 0;
+            // --- END NEW BLOCK ---
 
 
             // 5. Sum total (Ranks will be added later by the cron job)

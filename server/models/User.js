@@ -40,6 +40,7 @@ const UserSchema = new Schema({
         badgeBreakdown: { type: Map, of: Number, default: {} },             // <-- NEW
         rankBreakdown: { type: Map, of: Number, default: {} }
     },
+    avgRating: { type: Number, default: 0, index: true }, // Stores the user's 0-100 average prediction rating
     language: { type: String, default: 'en' },
     invitedBy: { type: Schema.Types.ObjectId, ref: 'User' },
     referrals: [{ type: Schema.Types.ObjectId, ref: 'User' }],

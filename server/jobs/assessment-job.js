@@ -240,6 +240,19 @@ const runAssessmentJob = async () => {
 
                     await user.save();
 
+                    // --- NEW FIX: RECALCULATE AND SAVE AVG RATING ---
+                    // After saving, recalculate and save the average rating
+                    const stats = await Prediction.aggregate([
+                        { $match: { userId: user._id, status: 'Assessed' } },
+                        { $group: { _id: null, avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }
+                    ]);
+
+                    if (stats[0]) {
+                        // We just added this field to the User.js schema
+                        await User.findByIdAndUpdate(user._id, { avgRating: stats[0].avgRating });
+                    }
+                    // --- END NEW FIX ---
+
                     // Award badges with the now-updated user object
                     await awardBadges(user);
 
