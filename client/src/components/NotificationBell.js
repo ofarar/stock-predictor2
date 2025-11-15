@@ -31,7 +31,8 @@ const NotificationBell = ({ user }) => {
     const [notifications, setNotifications] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
-    
+    const prevIsOpen = useRef(isOpen);
+
     // --- FIX 1: This ref now tracks if the *first data load* is done ---
     const isInitialMount = useRef(true);
 
@@ -41,7 +42,7 @@ const NotificationBell = ({ user }) => {
                 .then(res => {
                     setNotifications(res.data);
                     // Mark initial mount as "done" ONLY after the first fetch
-                    isInitialMount.current = false; 
+                    isInitialMount.current = false;
                 });
         } else {
             // No user, set notifications to empty and mark as "done"
@@ -52,23 +53,24 @@ const NotificationBell = ({ user }) => {
 
     const unreadCount = notifications.filter(n => !n.read).length;
 
-    // --- FIX 2: This effect now ONLY watches 'isOpen' ---
+    // --- FIX 2: This effect now ONLY watches for 'isOpen' changing ---
     useEffect(() => {
-        // Don't run on the initial mount OR if the bell is opened
-        if (isInitialMount.current || isOpen) {
-            return;
-        }
+        // We only care about when the dropdown *closes*.
+        // Check if the PREVIOUS value was 'true' and the NEW value is 'false'.
+        if (prevIsOpen.current === true && isOpen === false && unreadCount > 0) {
 
-        // This now only runs when 'isOpen' changes from true to false
-        // (and not on the initial load)
-        if (!isOpen && unreadCount > 0) {
+            // This code now *only* runs when the user closes the dropdown
             axios.post(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read`, {}, { withCredentials: true })
                 .then(() => {
                     const readNotifications = notifications.map(n => ({ ...n, read: true }));
                     setNotifications(readNotifications);
                 });
         }
-    }, [isOpen, unreadCount, notifications]); // <-- Dependency array is ONLY isOpen
+
+        // Finally, update the 'prevIsOpen' ref to the current value for the *next* render
+        prevIsOpen.current = isOpen;
+
+    }, [isOpen, unreadCount, notifications]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -95,7 +97,7 @@ const NotificationBell = ({ user }) => {
 
         promise.then(() => {
             setNotifications([]);
-            setIsOpen(false); 
+            setIsOpen(false);
         }).catch(() => {
             // Toast handles error
         });
