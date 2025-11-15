@@ -448,9 +448,9 @@
     "share": {
         "shareOnX": "Partager sur X",
         "ownerActive": "Je prédis que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Voir ma prédiction et voter sur Stock-Predictor !",
-        "ownerAssessed": "Ma prédiction pour ${{ticker}} s'est terminée avec un score de {{score}} ! J'avais prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}. Voir le résultat !",
+        "ownerAssessed": "Ma prédiction pour ${{ticker}} s'est terminée avec un score de {{rating}} ! J'avais prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}. Voir le résultat !",
         "visitorActive": "Prédiction intéressante : {{username}} pense que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Qu'en pensez-vous ?",
-        "visitorAssessed": "Regardez ce résultat : la prédiction de {{username}} pour ${{ticker}} a obtenu un score de {{score}} ! Il/elle avait prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}."
+        "visitorAssessed": "Regardez ce résultat : la prédiction de {{username}} pour ${{ticker}} a obtenu un score de {{rating}} ! Il/elle avait prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}."
     },
     "editprofile_telegram_label": "Lien Telegram",
     "editprofile_telegram_placeholder": "https://t.me/votrenomdutilisateur",
@@ -720,7 +720,8 @@
             "title": "Données de prix en direct non disponibles",
             "description": "Nous n'avons pas pu récupérer le prix en direct de cet actif pour le moment. Cela peut se produire en cas de forte volatilité du marché ou de brèves pannes de l'API.",
             "button": "Essayer une autre action"
-        }
+        },
+        "duplicateError": "Vous avez déjà une prédiction {{type}} active pour {{ticker}}."
     },
     "scoreboard": {
         "title": "Classements",
@@ -1092,6 +1093,6 @@
     "aim.title": "Trouvez des Perspectives Éprouvées. <0>Monétisez vos Analyses du Marché.</0>",
     "promoBanner.creatorPoolText": "💰 <strong>Rejoignez-nous en tant que Premier Utilisateur !</strong> Inscrivez-vous maintenant pour gagner <1>+1 000 points bonus</1> et recevoir votre part des revenus de la plateforme juste pour vos contributions. <2>Rejoindre maintenant</2>",
     "promoBanner.joinNow": "Rejoindre maintenant",
-    "analystRating.pie.bonus": "Bonus", 
+    "analystRating.pie.bonus": "Bonus",
     "analystRating.pie.labels.frombonus": "Bonus"
 }

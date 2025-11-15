@@ -448,9 +448,9 @@
     "share": {
         "shareOnX": "Compartir en X",
         "ownerActive": "Predigo que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¡Mira mi predicción y vota en Stock-Predictor!",
-        "ownerAssessed": "¡Mi predicción para ${{ticker}} terminó con una puntuación de {{score}}! Predije {{targetPrice}} y cerró en {{actualPrice}}. ¡Mira el resultado!",
+        "ownerAssessed": "¡Mi predicción para ${{ticker}} terminó con una puntuación de {{rating}}! Predije {{targetPrice}} y cerró en {{actualPrice}}. ¡Mira el resultado!",
         "visitorActive": "Predicción interesante: {{username}} cree que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¿Qué opinas?",
-        "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{score}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}."
+        "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{rating}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}."
     },
     "editprofile_telegram_label": "Enlace de Telegram",
     "editprofile_telegram_placeholder": "https://t.me/tuusuario",
@@ -720,7 +720,8 @@
             "title": "Datos de precios en vivo no disponibles",
             "description": "No pudimos recuperar el precio en vivo para este activo en este momento. Esto puede ocurrir durante alta volatilidad del mercado o breves interrupciones de la API.",
             "button": "Probar con otra acción"
-        }
+        },
+        "duplicateError": "Ya tiene una predicción {{type}} activa para {{ticker}}."
     },
     "scoreboard": {
         "title": "Tabla de Clasificación",
@@ -1090,7 +1091,7 @@
     "notifications.types.NewReferral": "Nuevo Referido",
     "header.dashboard": "Panel",
     "aim.title": "Encuentre Perspectivas Probadas. <0>Monetice sus Predicciones del Mercado.</0>",
-   "promoBanner.creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de bonificación</1> y obtenga su parte de los ingresos de la plataforma solo por sus contribuciones. <2>Unirse ahora</2>",
+    "promoBanner.creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de bonificación</1> y obtenga su parte de los ingresos de la plataforma solo por sus contribuciones. <2>Unirse ahora</2>",
     "promoBanner.joinNow": "Unirse ahora",
     "analystRating.pie.bonus": "Bono",
     "analystRating.pie.labels.frombonus": "Bono"

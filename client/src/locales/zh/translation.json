@@ -448,9 +448,9 @@
     "share": {
         "shareOnX": "在 X 上分享",
         "ownerActive": "我预测 ${{ticker}} 将在 {{deadline}} 前达到 {{targetPrice}}。快来 Stock-Predictor 查看我的预测并投票！",
-        "ownerAssessed": "我對 ${{ticker}} 的預測以 {{score}} 分結束！我預測的價格是 {{targetPrice}}，收盤價是 {{actualPrice}}。來看看結果吧！",
+        "ownerAssessed": "我對 ${{ticker}} 的預測以 {{rating}} 分結束！我預測的價格是 {{targetPrice}}，收盤價是 {{actualPrice}}。來看看結果吧！",
         "visitorActive": "有趣的预测：{{username}} 认为 ${{ticker}} 将在 {{deadline}} 前达到 {{targetPrice}}。你怎么看？",
-        "visitorAssessed": "快来看看这个结果：{{username}} 对 ${{ticker}} 的预测获得了 {{score}} 分！他们预测的价格是 {{targetPrice}}，收盘价是 {{actualPrice}}。"
+        "visitorAssessed": "快来看看这个结果：{{username}} 对 ${{ticker}} 的预测获得了 {{rating}} 分！他们预测的价格是 {{targetPrice}}，收盘价是 {{actualPrice}}。"
     },
     "editprofile_telegram_label": "Telegram 链接",
     "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -720,7 +720,8 @@
             "title": "实时价格数据不可用",
             "description": "我们目前无法获取此资产的实时价格。这可能在市场剧烈波动或API短暂中断时发生。",
             "button": "尝试其他股票"
-        }
+        },
+        "duplicateError": "您已经有一个关于 {{ticker}} 的有效 {{type}} 预测。"
     },
     "scoreboard": {
         "title": "排行榜",

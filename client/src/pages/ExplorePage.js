@@ -52,7 +52,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                                 </div>
                             )}
                         </div>
-                        <p className="text-xs text-gray-400">{t('text_avg_rating')}: {prediction.userId.totalRating ? (prediction.userId.totalRating / (prediction.userId.predictionCount || 1)).toFixed(1) : 'N/A'}</p>
+                        <p className="text-xs text-gray-400">{t('text_avg_rating')}: {prediction.userId.avgRating ? prediction.userId.avgRating.toFixed(1) : 'N/A'}</p>
                     </div>
                     <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ml-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>
                 </div>

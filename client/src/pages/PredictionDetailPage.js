@@ -213,7 +213,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     // Use `currentQuote.displayPrice` as it's the standardized field
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
     const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close")); // <-- Renamed
-    const priceLabel = isAssessed ? t("prediction.actualPrice") : (marketIsOpenNow ? t("Current") : t("Closing Price"));
+    const priceLabel = isAssessed ? t("prediction.currentPrice") : (marketIsOpenNow ? t("Current") : t("Closing Price"));
 
     let rating = isAssessed ? prediction.rating : calculateLiveScore(prediction.targetPrice, currentPrice); // <-- Renamed
     const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating; // <-- Renamed

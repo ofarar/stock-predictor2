@@ -448,9 +448,9 @@
     "share": {
         "shareOnX": "Auf X teilen",
         "ownerActive": "Ich prognostiziere, dass ${{ticker}} bis zum {{deadline}} {{targetPrice}} erreichen wird. Sieh dir meine Prognose an und stimme auf Stock-Predictor ab!",
-        "ownerAssessed": "Meine Prognose für ${{ticker}} endete mit einer Punktzahl von {{score}}! Ich hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}. Sieh dir das Ergebnis an!",
+        "ownerAssessed": "Meine Prognose für ${{ticker}} endete mit einer Punktzahl von {{rating}}! Ich hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}. Sieh dir das Ergebnis an!",
         "visitorActive": "Interessante Prognose: {{username}} glaubt, dass ${{ticker}} bis zum {{deadline}} {{targetPrice}} erreichen wird. Was denkst du?",
-        "visitorAssessed": "Schau dir dieses Ergebnis an: Die Prognose von {{username}} für ${{ticker}} erzielte {{score}} Punkte! Er/Sie hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}."
+        "visitorAssessed": "Schau dir dieses Ergebnis an: Die Prognose von {{username}} für ${{ticker}} erzielte {{rating}} Punkte! Er/Sie hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}."
     },
     "editprofile_telegram_label": "Telegram-Link",
     "editprofile_telegram_placeholder": "https://t.me/deinbenutzername",
@@ -715,7 +715,8 @@
             "title": "Live-Kursdaten nicht verfügbar",
             "description": "Wir konnten den Live-Preis für diesen Vermögenswert im Moment nicht abrufen. Dies kann bei hoher Marktvolatilität oder kurzen API-Ausfällen vorkommen.",
             "button": "Andere Aktie versuchen"
-        }
+        },
+        "prediction.duplicateError": "Sie haben bereits eine aktive {{type}}-Prognose für {{ticker}}."
     },
     "scoreboard": {
         "title": "Bestenlisten",
@@ -1087,6 +1088,6 @@
     "aim.title": "Finden Sie bewährte Einblicke. <0>Monetarisieren Sie Ihre Marktanalysen.</0>",
     "promoBanner.creatorPoolText": "💰 <strong>Werden Sie Early User!</strong> Melden Sie sich jetzt an, um <1>+1.000 Bonuspunkte</1> zu erhalten und Ihren Anteil am Plattformumsatz nur für Ihre Beiträge zu bekommen. <2>Jetzt beitreten</2>",
     "promoBanner.joinNow": "Jetzt beitreten",
-    "analystRating.pie.bonus": "Bonus", 
+    "analystRating.pie.bonus": "Bonus",
     "analystRating.pie.labels.frombonus": "Bonus"
 }

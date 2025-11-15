@@ -1585,6 +1585,18 @@ router.post('/predict', predictLimiter, async (req, res) => {
         const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
         const sanitizedDescription = xss(description);
 
+        // --- NEW: Check for existing active prediction ---
+        const existingPrediction = await Prediction.findOne({
+            userId: req.user._id,
+            stockTicker: stockTicker,
+            predictionType: predictionType,
+            status: 'Active'
+        });
+
+        if (existingPrediction) {
+            return res.status(409).json({ message: t('prediction.duplicateError', 'You already have an active {{type}} prediction for {{ticker}}.', { type: predictionType, ticker: stockTicker }) });
+        }
+        // --- END NEW ---
 
         // --- Resilient Price Fetch ---
         let currentPrice = null;
@@ -2868,7 +2880,8 @@ router.get('/explore/feed', async (req, res) => {
                         actualPrice: 1, createdAt: 1, description: 1, priceAtCreation: 1, likes: 1, dislikes: 1,
                         userId: {
                             _id: '$userDetails._id', username: '$userDetails.username', avatar: '$userDetails.avatar',
-                            isGoldenMember: '$userDetails.isGoldenMember', totalRating: '$userDetails.totalRating', isVerified: '$userDetails.isVerified'
+                            isGoldenMember: '$userDetails.isGoldenMember', totalRating: '$userDetails.totalRating', isVerified: '$userDetails.isVerified',
+                            avgRating: '$userDetails.avgRating'
                         }
                     }
                 }
@@ -2884,7 +2897,8 @@ router.get('/explore/feed', async (req, res) => {
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limitNum)
-                .populate('userId', 'username avatar isGoldenMember totalRating isVerified') // <-- Renamed
+                // --- FIX: Populate 'avgRating' here as well ---
+                .populate('userId', 'username avatar isGoldenMember totalRating isVerified avgRating')
                 .lean();
 
             // --- FIX: Manually migrate 'score' to 'rating' ---

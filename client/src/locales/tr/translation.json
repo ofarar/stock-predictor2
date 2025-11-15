@@ -448,9 +448,9 @@
   "share": {
     "shareOnX": "X'te Paylaş",
     "ownerActive": "${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve Stock-Predictor'da oy ver!",
-    "ownerAssessed": "${{ticker}} için yaptığım tahmin {{score}} puanla sonuçlandı! Tahminim {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu. Sonucu gör!",
+    "ownerAssessed": "${{ticker}} için yaptığım tahmin {{rating}} puanla sonuçlandı! Tahminim {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu. Sonucu gör!",
     "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
-    "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{score}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu."
+    "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{rating}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu."
   },
   "editprofile_telegram_label": "Telegram Bağlantısı",
   "editprofile_telegram_placeholder": "https://t.me/kullaniciadiniz",
@@ -720,7 +720,8 @@
       "title": "Canlı Fiyat Verileri Mevcut Değil",
       "description": "Bu varlık için anlık fiyatı şu anda alamadık. Bu durum, piyasanın yoğun olduğu zamanlarda veya kısa süreli API kesintilerinde yaşanabilir.",
       "button": "Farklı Bir Hisse Dene"
-    }
+    },
+    "duplicateError": "{{ticker}} için zaten aktif bir {{type}} tahmininiz var."
   },
   "scoreboard": {
     "title": "Liderler Tablosu",

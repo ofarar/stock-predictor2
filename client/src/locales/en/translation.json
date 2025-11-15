@@ -447,9 +447,9 @@
   "share": {
     "shareOnX": "Share on X",
     "ownerActive": "I'm predicting that ${{ticker}} will reach {{targetPrice}} by {{deadline}}. See my prediction and vote on Stock-Predictor!",
-    "ownerAssessed": "My prediction for ${{ticker}} finished with a score of {{score}}! I predicted {{targetPrice}}, and it closed at {{actualPrice}}. See the result!",
+    "ownerAssessed": "My prediction for ${{ticker}} finished with a rating of {{rating}}! I predicted {{targetPrice}}, and it closed at {{actualPrice}}. See the result!",
     "visitorActive": "Interesting prediction: {{username}} thinks ${{ticker}} will hit {{targetPrice}} by {{deadline}}. What do you think?",
-    "visitorAssessed": "Check out this result: {{username}}'s prediction for ${{ticker}} scored {{score}}! They predicted {{targetPrice}}, and it closed at {{actualPrice}}."
+    "visitorAssessed": "Check out this result: {{username}}'s prediction for ${{ticker}} earned a rating of {{rating}}! They predicted {{targetPrice}}, and it closed at {{actualPrice}}."
   },
   "editprofile_telegram_label": "Telegram Link",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -719,7 +719,8 @@
       "title": "Live Price Data Unavailable",
       "description": "We couldn't retrieve the live price for this asset right now. This can happen during high market volatility or brief API outages.",
       "button": "Try a Different Stock"
-    }
+    },
+    "duplicateError": "You already have an active {{type}} prediction for {{ticker}}."
   },
   "scoreboard": {
     "title": "Leaderboards",
