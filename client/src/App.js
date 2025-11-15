@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
+import { Helmet } from 'react-helmet-async'; // <-- 1. IMPORT
+import { useTranslation } from 'react-i18next'; // <-- 2. IMPORT
 
 // Import Components
 import ScrollToTop from './components/ScrollToTop';
@@ -35,6 +37,7 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage';
 
 
 function App() {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isPredictionModalOpen, setIsPredictionModalOpen] = useState(false);
@@ -88,6 +91,10 @@ function App() {
 
   return (
     <Router>
+      <Helmet>
+        <title>{t('seo.default.title', 'StockPredictor - Predict the Market, Track Your Accuracy')}</title>
+        <meta name="description" content={t('seo.default.description', 'Join the StockPredictor community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
+      </Helmet>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
       <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">

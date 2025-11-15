@@ -12,6 +12,7 @@ import LoadMoreButton from '../components/LoadMoreButton';
 import FamousStocks from '../components/FamousStocks';
 import Aim from '../components/Aim';
 import PromoBanner from '../components/PromoBanner';
+import { Helmet } from 'react-helmet-async';
 
 // PredictionCard is unchanged, but we'll pass 'user' to it as 'currentUser'
 const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate, settings }) => {
@@ -223,6 +224,12 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
 
     return (
         <>
+            {/* --- 2. ADD HELMET COMPONENT --- */}
+            <Helmet>
+                <title>{t('seo.explore_page.title', 'Explore Stock Predictions & Top Performers | StockPredictor')}</title>
+                <meta name="description" content={t('seo.explore_page.description', 'Explore the latest active and assessed stock predictions from the StockPredictor community. Filter by stock, timeframe, and see who the top-performers are.')} />
+            </Helmet>
+            {/* --- END --- */}
             <DescriptionModal isOpen={descModal.isOpen} onClose={() => setDescModal({ isOpen: false, description: '' })} description={descModal.description} />
             <div className="animate-fade-in space-y-8">
 

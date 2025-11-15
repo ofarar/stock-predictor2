@@ -12,6 +12,7 @@ import EditPredictionModal from '../components/EditPredictionModal';
 import PredictionHistoryModal from '../components/PredictionHistoryModal';
 import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } from '../utils/formatters';
 import ShareModal from '../components/ShareModal'; // Import ShareModal
+import { Helmet } from 'react-helmet-async'; // <-- 1. IMPORT
 
 // --- YOUR "GRAPH" SHARE ICON ---
 const ShareIcon = () => (
@@ -205,6 +206,23 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     // This guard is CRITICAL. It waits until prediction is loaded.
     if (!prediction) return <div className="text-center text-white">{t("Prediction not found.")}</div>;
 
+    // --- 2. CREATE DYNAMIC SEO CONTENT (AFTER GUARDS) ---
+    const username = prediction.userId.username;
+    const stockTicker = prediction.stockTicker;
+    const predictionType = t(`predictionTypes.${prediction.predictionType.toLowerCase()}`);
+
+    const pageTitle = t('seo.prediction_page.title', {
+        username: username,
+        type: predictionType,
+        ticker: stockTicker
+    });
+    const pageDescription = t('seo.prediction_page.description', {
+        username: username,
+        type: predictionType,
+        ticker: stockTicker
+    });
+    // --- END ---
+
     // --- ALL LOGIC MOVED AFTER THE GUARDS ---
     // This is now safe because `prediction` is guaranteed to exist.
     const isOwner = currentUser?._id === prediction.userId?._id;
@@ -228,6 +246,10 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
 
     return (
         <>
+            <Helmet>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+            </Helmet>
             {/* --- Render the ShareModal --- */}
 
             <ShareModal

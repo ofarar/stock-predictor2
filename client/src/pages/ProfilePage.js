@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 
 // New Component Imports
 import ProfileHeader from '../components/ProfileHeader';
@@ -177,8 +178,23 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const activePredictions = predictions.filter(p => p.status === 'Active');
     const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
 
+    // --- 2. CREATE DYNAMIC SEO CONTENT ---
+    const pageTitle = t('seo.profile_page.title', {
+        username: user.username
+    });
+    const pageDescription = t('seo.profile_page.description', {
+        username: user.username
+    });
+    // --- END ---
+
     return (
         <>
+            {/* --- 3. ADD HELMET COMPONENT --- */}
+            <Helmet>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+            </Helmet>
+            {/* --- END --- */}
             {/* All modals are rendered here */}
             <VerifiedStatusModal isOpen={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} onCancel={() => { setIsStatusModalOpen(false); setIsCancelConfirmOpen(true); }} />
             <ConfirmationModal isOpen={isCancelConfirmOpen} onClose={() => setIsCancelConfirmOpen(false)} onConfirm={confirmCancelVerification} title={t('cancel_verification_title')} message={t('cancel_verification_msg')} />

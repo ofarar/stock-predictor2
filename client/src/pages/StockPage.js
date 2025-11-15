@@ -9,6 +9,7 @@ import VerifiedTick from '../components/VerifiedTick';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
 import CommunitySentiment from '../components/CommunitySentiment';
+import { Helmet } from 'react-helmet-async';
 
 const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
@@ -121,8 +122,25 @@ const StockPage = ({ onPredictClick, settings }) => {
     const isWatching = currentUser?.watchlist?.includes(ticker);
     const currentPrice = quote?.regularMarketPrice;
 
+    // --- 2. CREATE DYNAMIC SEO CONTENT ---
+    const pageTitle = t('seo.stock_page.title', {
+        name: quote?.longName || ticker,
+        ticker: ticker
+    });
+    const pageDescription = t('seo.stock_page.description', {
+        name: quote?.longName || ticker,
+        ticker: ticker
+    });
+    // --- END --
+
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
+            {/* --- 3. ADD HELMET COMPONENT --- */}
+            <Helmet>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+            </Helmet>
+            {/* --- END --- */}
             {/* Header section (unchanged) */}
             <div className="grid grid-cols-[1fr,auto] gap-x-6 gap-y-2 items-end">
                 <div className="text-left min-w-0">
@@ -161,10 +179,10 @@ const StockPage = ({ onPredictClick, settings }) => {
             <CommunitySentiment ticker={ticker} currentPrice={currentPrice} />
 
             <div className="space-y-8">
-                
+
                 {/* --- NEW LAYOUT: Grid --- */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                    
+
                     {/* --- BLOCK 1: Active Predictions (Moved Up) --- */}
                     <div className="lg:col-span-2 bg-gray-800 p-6 rounded-lg">
                         <h3 className="text-xl font-bold text-white mb-4">{t('active_predictions_on', { ticker })}</h3>
@@ -281,7 +299,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                     />
                 </div>
                 {/* --- END BLOCK 3 --- */}
-                
+
             </div>
         </div>
     );

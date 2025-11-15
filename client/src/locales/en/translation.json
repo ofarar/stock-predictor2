@@ -1080,5 +1080,27 @@
   "promoBanner.creatorPoolText": "💰 <strong>Join as an Early User!</strong> Sign up now to earn <1>+1,000 bonus points</1> and get your share of platform revenue just for your contributions. <2>Join Now</2>",
   "promoBanner.joinNow": "Join Now",
   "analystRating.pie.bonus": "Bonus",
-  "analystRating.pie.labels.frombonus": "Bonus"
+  "analystRating.pie.labels.frombonus": "Bonus",
+  "seo": {
+    "default": {
+      "title": "StockPredictor - Predict the Market, Track Your Accuracy",
+      "description": "Join the StockPredictor community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record."
+    },
+    "explore_page": {
+      "title": "Explore Stock Predictions & Top Performers | StockPredictor",
+      "description": "Explore the latest active and assessed stock predictions from the StockPredictor community. Filter by stock, timeframe, and see who the top-performers are."
+    },
+    "stock_page": {
+      "title": "{{name}} ({{ticker}}) Stock Predictions & Sentiment | StockPredictor",
+      "description": "See the latest community predictions and sentiment for {{name}} ({{ticker}}). Join the conversation and make your own stock prediction on StockPredictor."
+    },
+    "prediction_page": {
+      "title": "{{username}}'s {{type}} prediction for ${{ticker}} | StockPredictor",
+      "description": "View {{username}}'s {{type}} prediction for ${{ticker}}. Do you agree or disagree? Vote on their prediction and see the full analysis on StockPredictor."
+    },
+    "profile_page": {
+      "title": "{{username}}'s Profile & Prediction Record | StockPredictor",
+      "description": "View the full profile, prediction history, badges, and analyst rating for {{username}} on StockPredictor. Follow them to get updates on their new predictions."
+    }
+  }
 }
