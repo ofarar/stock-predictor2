@@ -1071,6 +1071,7 @@
   "analystRating.pie.labels.quarterly": "Quarterly Rank",
   "analystRating.pie.labels.yearly": "Yearly Rank",
   "creatorPoolModal.breakdownTitle": "Breakdown Details",
+  "creatorPoolModal.loading": "Loading Leaderboard...",
   "notifications.newReferral": "{{username}} signed up using your referral link! +{{points}} Analyst Rating.",
   "notifications.types.NewReferral": "New Referral",
   "header.dashboard": "Dashboard",

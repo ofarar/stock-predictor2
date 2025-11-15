@@ -1086,6 +1086,7 @@
   "analystRating.pie.labels.quarterly": "Çeyreklik Sıralama",
   "analystRating.pie.labels.yearly": "Yıllık Sıralama",
   "creatorPoolModal.breakdownTitle": "Döküm Detayları",
+  "creatorPoolModal.loading": "Lider tablosu yükleniyor...",
   "notifications.newReferral": "{{username}} davet linkini kullanarak kaydoldu! +{{points}} Analist Puanı.",
   "notifications.types.NewReferral": "Yeni Davet",
   "header.dashboard": "Gösterge Paneli",

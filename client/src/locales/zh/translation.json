@@ -1085,12 +1085,13 @@
     "analystRating.pie.labels.quarterly": "季度排名",
     "analystRating.pie.labels.yearly": "年度排名",
     "creatorPoolModal.breakdownTitle": "明细详情",
+    "creatorPoolModal.loading": "正在加载排行榜...",
     "notifications.newReferral": "{{username}} 使用您的推荐链接注册了！+{{points}} 分析师评分。",
     "notifications.types.NewReferral": "新推荐",
     "header.dashboard": "仪表板",
     "aim.title": "发现可靠见解。 <0>将您的市场分析变现。</0>",
     "promoBanner.creatorPoolText": "💰 <strong>成为早期用户！</strong> 立即注册即可赚取 <1>+1,000 奖励积分</1>，并仅凭您的贡献即可获得平台收入份额。 <2>立即加入</2>",
     "promoBanner.joinNow": "立即加入",
-    "analystRating.pie.bonus": "奖励", 
+    "analystRating.pie.bonus": "奖励",
     "analystRating.pie.labels.frombonus": "奖励"
 }

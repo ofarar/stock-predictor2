@@ -245,7 +245,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                             <p className="text-gray-300 text-sm">{t('creatorPoolModal.totalRating')}</p>
                             <p className="text-2xl font-bold text-white">{totalRating.toLocaleString()}</p>
                         </div>
-                        <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2 py-1 modern-scrollbar">
+                        <div className="space-y-2 max-h-[60vh] overflow-y-auto px-2 py-1 modern-scrollbar">
                             {loading ? (
                                 <p className="text-gray-400 text-center">{t('explore_loading')}</p>
                             ) : (

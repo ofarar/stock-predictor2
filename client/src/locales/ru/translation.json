@@ -1085,6 +1085,7 @@
     "analystRating.pie.labels.quarterly": "Квартальный Ранг",
     "analystRating.pie.labels.yearly": "Годовой Ранг",
     "creatorPoolModal.breakdownTitle": "Подробная разбивка",
+    "creatorPoolModal.loading": "Загрузка таблицы лидеров...",
     "notifications.newReferral": "{{username}} зарегистрировался по вашей реферальной ссылке! +{{points}} Рейтинга Аналитика.",
     "notifications.types.NewReferral": "Новый Реферал",
     "header.dashboard": "Панель управления",

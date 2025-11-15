@@ -1080,6 +1080,7 @@
     "analystRating.pie.labels.quarterly": "Quartalsrang",
     "analystRating.pie.labels.yearly": "Jährlicher Rang",
     "creatorPoolModal.breakdownTitle": "Aufschlüsselungsdetails",
+    "creatorPoolModal.loading": "Bestenliste wird geladen...",
     "notifications.newReferral": "{{username}} hat sich über deinen Empfehlungslink angemeldet! +{{points}} Analysten-Rating.",
     "notifications.types.NewReferral": "Neue Empfehlung",
     "header.dashboard": "Dashboard",

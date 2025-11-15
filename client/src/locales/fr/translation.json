@@ -1085,6 +1085,7 @@
     "analystRating.pie.labels.quarterly": "Rang Trimestriel",
     "analystRating.pie.labels.yearly": "Rang Annuel",
     "creatorPoolModal.breakdownTitle": "Détails de la Répartition",
+    "creatorPoolModal.loading": "Chargement du classement...",
     "notifications.newReferral": "{{username}} s'est inscrit en utilisant votre lien de parrainage ! +{{points}} Note d'Analyste.",
     "notifications.types.NewReferral": "Nouveau Parrainage",
     "header.dashboard": "Tableau de bord",
