@@ -31,7 +31,7 @@
     "profile_following_button": "Siguiendo",
     "profile_unfollow_button": "Dejar de seguir",
     "profile_overall_rank": "Rango general",
-    "profile_avg_score": "Puntuación media",
+    "profile_avg_score": "Rating Promedio",
     "profile_total_points": "Puntos totales",
     "profile_total_predictions": "Predicciones totales",
     "profile_tab_profile": "Perfil",
@@ -73,9 +73,9 @@
     "about_how_it_works_golden_text": "Conviértete en Miembro Golden para ofrecer contenido exclusivo a tus suscriptores y construir tu marca.",
     "about_how_it_works_track_title": "5. Registra tu Historial",
     "about_how_it_works_track_text": "Construye un historial transparente y a largo plazo de tu rendimiento en todos los plazos y activos.",
-    "scoring_explained_title": "Explicación del sistema de puntuación",
+    "scoring_explained_title": "Explicación del Rating",
     "scoring_explained_text1": "Nuestra plataforma utiliza un **Sistema de Puntuación por Proximidad** para recompensar la precisión. En lugar de una simple respuesta de \"correcto\" o \"incorrecto\", tu puntuación se basa en qué tan cerca estuvo tu predicción del resultado real.",
-    "scoring_explained_text2": "Por ejemplo, si una acción está en 152 $ y predices que estará en 150 $, recibirás una puntuación mucho más alta que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo por encima de las suposiciones al azar. La puntuación máxima para una predicción perfecta es de 100 puntos, y los puntos disminuyen cuanto más se aleja tu predicción del precio final.",
+    "scoring_explained_text2": "Por ejemplo, si una acción está en 152 $ y predices que estará en 150 $, recibirás un rating mucho más alta que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo por encima de las suposiciones al azar. La puntuación máxima para una predicción perfecta es de 100 puntos, y los puntos disminuyen cuanto más se aleja tu predicción del precio final.",
     "aiwizard_coming_soon": "PRÓXIMAMENTE",
     "aiwizard_title": "Asistente de Portafolio con IA",
     "aiwizard_description": "Obtén recomendaciones personalizadas de acciones basadas en los patrones de nuestros mejores predictores.",
@@ -101,8 +101,8 @@
     "contact_fill_form_text": "Rellena el formulario y nos pondremos en contacto contigo lo antes posible.",
     "contact_urgent_text": "Para asuntos urgentes, también puede contactarnos directamente en:",
     "contact_email": "predictostock@gmail.com",
-    "contact_name_label": "Tu nombre",
-    "contact_email_label": "Tu correo electrónico",
+    "contact_name_label": "Su nombre",
+    "contact_email_label": "Su correo electrónico",
     "contact_message_label": "Mensaje",
     "contact_sending": "Enviando...",
     "contact_send_button": "Enviar mensaje",
@@ -145,7 +145,7 @@
     "explore_agree": "De Acuerdo",
     "explore_disagree": "En Desacuerdo",
     "explore_vote_failed": "Votación fallida.",
-    "followers_avg_score": "Puntaje Prom.",
+    "followers_avg_score": "Rating Prom.",
     "followers_subscribed_on": "Suscrito el {{date}}",
     "followers_cancel_subscription": "Cancelar Suscripción",
     "followers_could_not_load_lists": "No se pudieron cargar las listas de usuarios.",
@@ -284,7 +284,7 @@
     "title_top_performers": "🏆 Mejores Jugadores",
     "label_prediction_type": "Tipo de Predicción",
     "label_filter_by_stock": "Filtrar por Acción",
-    "text_avg_score": "Puntaje Prom.",
+    "text_avg_score": "Rating Prom.",
     "msg_loading_scoreboard_error": "No se pudieron cargar los datos de la tabla de clasificación.",
     "msg_no_users_found": "No se encontraron usuarios para estos filtros.",
     "msg_try_broaden_search": "Intenta ampliar tus criterios de búsqueda.",
@@ -409,7 +409,7 @@
     "badgeInfoModal": {
         "title": "Cómo Funcionan los Logros",
         "loadingText": "Cargando detalles...",
-        "scoreLabel": "Puntuación > {{score}}",
+        "ratingLabel": "Puntuación > {{rating}}",
         "minPredictions": "Requiere al menos {{count}} predicciones.",
         "closeButton": "Cerrar"
     },
@@ -581,7 +581,7 @@
         "nextResults": "Próximos resultados en: {{timeLeft}}",
         "marketClosed": "Mercado Cerrado",
         "noPredictions": "Aún no hay predicciones evaluadas.",
-        "pointsSuffix": "+{{score}} pts"
+        "ratingSuffix": "+{{rating}} pts"
     },
     "infoModal": {
         "title": "Explicación del Bono por Tiempo",
@@ -618,7 +618,7 @@
     },
     "loginPromptModal": {
         "title": "Únete a la Comunidad",
-        "description": "Crea una cuenta para hacer predicciones, seguir a los mejores predictores y escalar en las tablas de clasificación.",
+        "description": "Cree una cuenta para hacer predicciones, seguir a los mejores predictores y escalar en las tablas de clasificación.",
         "signUpWithGoogle": "Registrarse con Google"
     },
     "longTermLeaders": {
@@ -643,8 +643,7 @@
             "predictions": "{{count}} Predicciones",
             "stocks": "Acciones: {{tickers}}"
         },
-        "noData": "No hay datos de rendimiento para este filtro.",
-        "tooltipLabel": "Puntuación: {{score}}"
+        "noData": "No hay datos de rendimiento para este filtro."
     },
     "performanceTabs": {
         "shareOnX": "Compartir en X",
@@ -657,7 +656,7 @@
             "byStock": "Por Acción"
         },
         "statCard": {
-            "averageScore": "Puntuación Media",
+            "averageScore": "Rating Promedio",
             "rank": "RANGO",
             "topRankTitle": "Rango Top {{rank}}"
         },
@@ -709,7 +708,7 @@
         "rationale": "Justificación (Opcional)",
         "rationalePlaceholder": "¿Cuál es su razonamiento para este movimiento de precios?",
         "placePrediction": "Realizar Predicción",
-        "maxScore": "Puntuación Máx.: {{score}}",
+        "maxRating": "Puntuación Máx.: {{rating}}",
         "confirmationMessage": "Su predicción de {{price}} representa un cambio de {{percent}}, que es superior al rango típico de {{limit}} %. ¿Está seguro?",
         "limitReached": "Has alcanzado el límite diario de {{limit}} predicciones.",
         "submitFailed": "Error al enviar la predicción.",
@@ -729,7 +728,7 @@
         "loadError": "No se pudieron cargar los datos de la tabla de clasificación.",
         "predictionType": "Tipo de Predicción",
         "filterStock": "Filtrar por Acción",
-        "avgScore": "Puntuación Media",
+        "avgScore": "Rating Promedio",
         "noUsers": "No se encontraron usuarios para estos filtros.",
         "noUsersHint": "Intenta ampliar tus criterios de búsqueda.",
         "rank": "Rango: {{number}}",
@@ -807,7 +806,7 @@
         "loadMore": "Cargar más",
         "recommendedPredictors": "Predictores recomendados",
         "noRecommendedUsers": "Aún no hay predictores destacados para esta acción.",
-        "avgScoreLabel": "Puntaje promedio: ",
+        "avgScoreLabel": "Rating promedio: ",
         "followingButton": "Seguir",
         "toast": {
             "loadingAdd": "Agregando {{ticker}}...",
@@ -835,7 +834,7 @@
         "openingHourPrediction": "Predicción para la hora de apertura",
         "marketClosed": "El mercado está cerrado actualmente",
         "forDate": "Para el {{date}}",
-        "maxScore": "Puntuación Máx.: {{score}}",
+        "maxRating": "Puntuación Máx.: {{rating}}",
         "invalidType": "Seleccione un tipo de predicción válido."
     },
     "profile": {
@@ -932,7 +931,7 @@
         "seconds": "s"
     },
     "completeProfile": {
-        "title": "Elige tu nombre de usuario",
+        "title": "Elija su nombre de usuario",
         "subtitle": "El nombre de usuario <1>{{username}}</1> ya está en uso. Por favor, elige uno diferente para completar tu registro.",
         "usernameLabel": "Nombre de usuario",
         "completeButton": "Completar registro",
@@ -1094,5 +1093,27 @@
     "promoBanner.creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de bonificación</1> y obtenga su parte de los ingresos de la plataforma solo por sus contribuciones. <2>Unirse ahora</2>",
     "promoBanner.joinNow": "Unirse ahora",
     "analystRating.pie.bonus": "Bono",
-    "analystRating.pie.labels.frombonus": "Bono"
+    "analystRating.pie.labels.frombonus": "Bono",
+    "seo": {
+        "default": {
+            "title": "StockPredictor - Prediga el Mercado, Siga su Precisión",
+            "description": "Únase a la comunidad de StockPredictor para hacer predicciones de acciones, seguir su precisión y seguir a los analistas con mejor rendimiento. Regístrese para construir su historial."
+        },
+        "explore_page": {
+            "title": "Explorar Predicciones de Acciones y Analistas Top | StockPredictor",
+            "description": "Explore las últimas predicciones de acciones activas y evaluadas de la comunidad de StockPredictor. Filtre por acción, período de tiempo y vea quiénes son los mejores."
+        },
+        "stock_page": {
+            "title": "Predicciones y Sentimiento de {{name}} ({{ticker}}) | StockPredictor",
+            "description": "Vea las últimas predicciones y el sentimiento de la comunidad para {{name}} ({{ticker}}). Únase a la conversación y haga su propia predicción de acciones en StockPredictor."
+        },
+        "prediction_page": {
+            "title": "Predicción {{type}} de {{username}} para {{ticker}} | StockPredictor",
+            "description": "Vea la predicción {{type}} de {{username}} para {{ticker}}. ¿Está de acuerdo o en desacuerdo? Vote sobre su predicción y vea el análisis completo en StockPredictor."
+        },
+        "profile_page": {
+            "title": "Perfil e Historial de Predicciones de {{username}} | StockPredictor",
+            "description": "Vea el perfil completo, historial de predicciones, insignias y rating de analista de {{username}} en StockPredictor. Sígalo para recibir actualizaciones sobre sus nuevas predicciones."
+        }
+    }
 }

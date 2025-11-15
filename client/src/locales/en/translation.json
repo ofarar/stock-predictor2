@@ -144,7 +144,7 @@
   "explore_agree": "Agree",
   "explore_disagree": "Disagree",
   "explore_vote_failed": "Vote failed.",
-  "followers_avg_score": "Avg Score",
+  "followers_avg_score": "Avg Rating",
   "followers_subscribed_on": "Subscribed on {{date}}",
   "followers_cancel_subscription": "Cancel Subscription",
   "followers_could_not_load_lists": "Could not load user lists.",
@@ -263,7 +263,7 @@
   "no_prediction_history_label": "No prediction history yet.",
   "load_more_label": "Load More",
   "overall_rank_label": "Overall Rank",
-  "average_score_label": "Average Score",
+  "average_score_label": "Average Rating",
   "total_points_label": "Total Points",
   "analyst_rating_label": "Analyst Rating",
   "creator_pool_share_label": "Creator Pool Share",
@@ -432,7 +432,7 @@
     "title": "Today's Top Performers",
     "subtitle": "(Based on today's hourly predictions)",
     "noData": "No data yet today.",
-    "averageScoreSuffix": "avg"
+    "averageScoreSuffix": "Avg Rating"
   },
   "descriptionModal": {
     "title": "Predictor's Rationale"
@@ -624,7 +624,7 @@
     "title": "Long-Term Leaders",
     "description": "(Based on Quarterly & Yearly accuracy)",
     "noData": "No data yet.",
-    "accuracyLabel": "Avg"
+    "accuracyLabel": "Avg Rating"
   },
   "performanceChart": {
     "title": "Performance Chart",
@@ -708,7 +708,7 @@
     "rationale": "Rationale (Optional)",
     "rationalePlaceholder": "What is your rationale for this prediction?",
     "placePrediction": "Place Prediction",
-    "maxScore": "Max Rating: {{score}}",
+    "maxScore": "Max Rating: {{rating}}",
     "confirmationMessage": "Your prediction of {{price}} is a {{percent}} change, which is more than the typical {{limit}}% range. Are you sure?",
     "limitReached": "You have reached the daily prediction limit of {{limit}}.",
     "submitFailed": "Failed to submit prediction.",
@@ -728,7 +728,7 @@
     "loadError": "Could not load leaderboard data.",
     "predictionType": "Prediction Type",
     "filterStock": "Filter by Stock",
-    "avgScore": "Avg Score",
+    "avgScore": "Avg Rating",
     "noUsers": "No users found for these filters.",
     "noUsersHint": "Try broadening your search criteria.",
     "rank": "Rank: {{number}}",
@@ -807,7 +807,7 @@
     "loadMore": "Load More",
     "recommendedPredictors": "Recommended Predictors",
     "noRecommendedUsers": "No top predictors for this stock yet.",
-    "avgScoreLabel": "Avg Score: ",
+    "avgScoreLabel": "Avg Rating: ",
     "followingButton": "Follow",
     "toast": {
       "loadingAdd": "Adding {{ticker}}...",
@@ -835,7 +835,7 @@
     "openingHourPrediction": "Opening Hour Prediction",
     "marketClosed": "Market is currently closed",
     "forDate": "For {{date}}",
-    "maxScore": "Max Rating: {{score}}",
+    "maxRating": "Max Rating: {{rating}}",
     "invalidType": "Select a valid prediction type."
   },
   "profile": {
@@ -1014,7 +1014,7 @@
   "analystRatingInfo.title": "Analyst Rating Explained",
   "analystRatingInfo.description": "Your 'Analyst Rating' is a measure of your valuable contributions to the platform. This rating determines your share of the Creator Pool.",
   "analystRatingInfo.section1.title": "1. High-Quality Predictions (+2 to +10 Rating)",
-  "analystRatingInfo.section1.text": "You earn Analyst Rating points for every prediction that is assessed with high accuracy (Score > 70). The higher your score, the more points you earn. This rewards quality over quantity.",
+  "analystRatingInfo.section1.text": "You earn Analyst Rating points for every prediction that is assessed with high accuracy (Rating > 70). The higher your score, the more points you earn. This rewards quality over quantity.",
   "analystRatingInfo.section2.title": "2. Earning Badges (+100 to +500 Rating)",
   "analystRatingInfo.section2.text": "When you earn a new badge (e.g., 'Weekly Strategist'), you receive a large, one-time rating bonus. Gold badges provide a larger bonus than Silver or Bronze.",
   "analystRatingInfo.section3.title": "3. Sharing Content (+5 Rating)",
@@ -1077,7 +1077,7 @@
   "notifications.types.NewReferral": "New Referral",
   "header.dashboard": "Dashboard",
   "aim.title": "Find Proven Insights. <0>Monetize Your Market Calls.</0>",
-  "promoBanner.creatorPoolText": "💰 <strong>Join as an Early User!</strong> Sign up now to earn <1>+1,000 bonus points</1> and get your share of platform revenue just for your contributions. <2>Join Now</2>",
+  "promoBanner.creatorPoolText": "💰 <strong>Join as an Early User!</strong> Sign up now to earn <1>+1,000 Analyst Rating</1> and get your share of platform revenue just for your contributions. <2>Join Now</2>",
   "promoBanner.joinNow": "Join Now",
   "analystRating.pie.bonus": "Bonus",
   "analystRating.pie.labels.frombonus": "Bonus",

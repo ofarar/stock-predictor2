@@ -46,7 +46,7 @@
     "profile_following_button": "Abonné",
     "profile_unfollow_button": "Ne plus suivre",
     "profile_overall_rank": "Rang Global",
-    "profile_avg_score": "Score Moyen",
+    "profile_avg_score": "Note Moyenne",
     "profile_total_points": "Points Totaux",
     "profile_total_predictions": "Prédictions Totales",
     "profile_tab_profile": "Profil",
@@ -73,9 +73,9 @@
     "verified_status_modal_text": "Vous avez augmenté la confiance et la visibilité au sein de la communauté.",
     "verified_status_modal_close": "Fermer",
     "verified_status_modal_remove": "Supprimer le statut de vérification",
-    "scoring_explained_title": "Explication du Score",
+    "scoring_explained_title": "Explication de la Note",
     "scoring_explained_text1": "Notre plateforme utilise un **Système de Score par Proximité** pour récompenser la précision. Au lieu d'un simple \"correct\" ou \"incorrect\", votre score est basé sur la proximité de votre prédiction par rapport au résultat réel.",
-    "scoring_explained_text2": "Par exemple, si une action est à 152 $ et que vous prédisez qu'elle sera à 150 $, vous recevrez un score beaucoup plus élevé que quelqu'un qui a prédit 180 $. Ce système est conçu pour récompenser l'analyse réfléchie plutôt que les suppositions aléatoires. Le score maximum pour une prédiction parfaite est de 100 points, les points diminuant à mesure que votre prédiction s'éloigne du prix final.",
+    "scoring_explained_text2": "Par exemple, si une action est à 152 $ et que vous prédisez qu'elle sera à 150 $, vous recevrez une note beaucoup plus élevé que quelqu'un qui a prédit 180 $. Ce système est conçu pour récompenser l'analyse réfléchie plutôt que les suppositions aléatoires. Le score maximum pour une prédiction parfaite est de 100 points, les points diminuant à mesure que votre prédiction s'éloigne du prix final.",
     "aiwizard_coming_soon": "BIENTÔT DISPONIBLE",
     "aiwizard_title": "Assistant de Portefeuille IA",
     "aiwizard_description": "Obtenez des recommandations d'actions personnalisées basées sur les habitudes de nos meilleurs prédicteurs.",
@@ -145,7 +145,7 @@
     "explore_agree": "D'accord",
     "explore_disagree": "Pas d'accord",
     "explore_vote_failed": "Le vote a échoué.",
-    "followers_avg_score": "Score Moy.",
+    "followers_avg_score": "Note Moy.",
     "followers_subscribed_on": "Abonné le {{date}}",
     "followers_cancel_subscription": "Annuler l'abonnement",
     "followers_could_not_load_lists": "Impossible de charger les listes d'utilisateurs.",
@@ -284,7 +284,7 @@
     "title_top_performers": "🏆 Meilleurs Prédicteurs",
     "label_prediction_type": "Type de Prédiction",
     "label_filter_by_stock": "Filtrer par Action",
-    "text_avg_score": "Score Moy.",
+    "text_avg_score": "Note Moy.",
     "msg_loading_scoreboard_error": "Impossible de charger le classement.",
     "msg_no_users_found": "Aucun utilisateur trouvé pour ces filtres.",
     "msg_try_broaden_search": "Essayez d'élargir vos critères de recherche.",
@@ -409,7 +409,7 @@
     "badgeInfoModal": {
         "title": "Comment fonctionnent les Succès",
         "loadingText": "Chargement des détails...",
-        "scoreLabel": "Score > {{score}}",
+        "ratingLabel": "Note > {{rating}}",
         "minPredictions": "Nécessite au moins {{count}} prédictions.",
         "closeButton": "Fermer"
     },
@@ -573,7 +573,7 @@
         "goldenPost": "{{username}} a publié un nouveau Post Doré.",
         "badgeEarnedSelf": "Félicitations ! Vous avez remporté le badge {{tier}} {{badgeName}}.",
         "badgeEarnedFollower": "{{username}} a remporté le badge {{tier}} {{badgeName}} !",
-        "predictionAssessed": "Votre prédiction {{predictionType}} sur {{stockTicker}} a marqué {{rating}} points !",
+        "predictionAssessed": "Votre prédiction {{predictionType}} sur {{stockTicker}} a obtenu une note de {{rating}} !",
         "priceChange": "Le prix de l'abonnement de {{creatorName}} passera de ${{oldPrice}} à ${{newPrice}} le {{effectiveDate}}."
     },
     "hourlyWinnersFeed": {
@@ -581,7 +581,7 @@
         "nextResults": "Prochains résultats dans : {{timeLeft}}",
         "marketClosed": "Marché Fermé",
         "noPredictions": "Aucune prédiction évaluée pour le moment.",
-        "pointsSuffix": "+{{score}} pts"
+        "ratingSuffix": "+{{rating}} Note"
     },
     "infoModal": {
         "title": "Explication du Bonus de Temps",
@@ -639,12 +639,11 @@
             "yearly": "Annuel"
         },
         "tooltip": {
-            "avgRating": "Note Moy.: {{rating}}",
+            "avgRating": "Note : {{rating}}",
             "predictions": "{{count}} Prédictions",
             "stocks": "Actions: {{tickers}}"
         },
-        "noData": "Aucune donnée de performance pour ce filtre.",
-        "tooltipLabel": "Score : {{score}}"
+        "noData": "Aucune donnée de performance pour ce filtre."
     },
     "performanceTabs": {
         "shareOnX": "Partager sur X",
@@ -657,7 +656,7 @@
             "byStock": "Par Action"
         },
         "statCard": {
-            "averageScore": "Score Moyen",
+            "averageScore": "Note Moyenne",
             "rank": "RANG",
             "topRankTitle": "Top {{rank}}"
         },
@@ -694,7 +693,7 @@
     },
     "common": {
         "close": "Fermer",
-        "score": "Score",
+        "score": "Note",
         "dataDelayed": "Données retardées jusqu'à 15 minutes"
     },
     "prediction": {
@@ -709,7 +708,7 @@
         "rationale": "Justification (Optionnel)",
         "rationalePlaceholder": "Quel est votre raisonnement derrière cette prédiction de prix ?",
         "placePrediction": "Placer la Prédiction",
-        "maxScore": "Score Max : {{score}}",
+        "maxRating": "Note Max : {{rating}}",
         "confirmationMessage": "Votre prédiction de {{price}} représente une variation de {{percent}}, ce qui est supérieur à la plage habituelle de {{limit}} %. Êtes-vous sûr(e) ?",
         "limitReached": "Vous avez atteint la limite de prédiction quotidienne de {{limit}}.",
         "submitFailed": "Échec de la soumission de la prédiction.",
@@ -729,7 +728,7 @@
         "loadError": "Impossible de charger les données du classement.",
         "predictionType": "Type de Prédiction",
         "filterStock": "Filtrer par Action",
-        "avgScore": "Score Moy.",
+        "avgScore": "Note Moy.",
         "noUsers": "Aucun utilisateur trouvé pour ces filtres.",
         "noUsersHint": "Essayez d'élargir vos critères de recherche.",
         "rank": "Rang : {{number}}",
@@ -807,7 +806,7 @@
         "loadMore": "Charger plus",
         "recommendedPredictors": "Prédicteurs recommandés",
         "noRecommendedUsers": "Aucun meilleur prédicteur pour cette action pour l’instant.",
-        "avgScoreLabel": "Score moy. : ",
+        "avgScoreLabel": "Note moy. : ",
         "followingButton": "Suivre",
         "toast": {
             "loadingAdd": "Ajout de {{ticker}}...",
@@ -835,7 +834,7 @@
         "openingHourPrediction": "Prédiction pour l'heure d'ouverture",
         "marketClosed": "Le marché est actuellement fermé",
         "forDate": "Pour le {{date}}",
-        "maxScore": "Score Max : {{score}}",
+        "maxRating": "Note Max : {{rating}}",
         "invalidType": "Sélectionnez un type de prédiction valide."
     },
     "profile": {
@@ -1094,5 +1093,27 @@
     "promoBanner.creatorPoolText": "💰 <strong>Rejoignez-nous en tant que Premier Utilisateur !</strong> Inscrivez-vous maintenant pour gagner <1>+1 000 points bonus</1> et recevoir votre part des revenus de la plateforme juste pour vos contributions. <2>Rejoindre maintenant</2>",
     "promoBanner.joinNow": "Rejoindre maintenant",
     "analystRating.pie.bonus": "Bonus",
-    "analystRating.pie.labels.frombonus": "Bonus"
+    "analystRating.pie.labels.frombonus": "Bonus",
+    "seo": {
+        "default": {
+            "title": "StockPredictor - Prédisez le Marché, Suivez votre Précision",
+            "description": "Rejoignez la communauté StockPredictor pour faire des prédictions boursières, suivre votre précision et suivre les meilleurs analystes. Inscrivez-vous pour bâtir votre historique."
+        },
+        "explore_page": {
+            "title": "Explorer les Prédictions Boursières & Meilleurs Performeurs | StockPredictor",
+            "description": "Explorez les dernières prédictions boursières actives et évaluées de la communauté StockPredictor. Filtrez par action, par période et voyez qui sont les meilleurs."
+        },
+        "stock_page": {
+            "title": "Prédictions & Sentiment pour {{name}} ({{ticker}}) | StockPredictor",
+            "description": "Consultez les dernières prédictions et le sentiment de la communauté pour {{name}} ({{ticker}}). Participez à la conversation et faites votre propre prédiction sur StockPredictor."
+        },
+        "prediction_page": {
+            "title": "Prédiction {{type}} de {{username}} pour {{ticker}} | StockPredictor",
+            "description": "Voir la prédiction {{type}} de {{username}} pour {{ticker}}. D'accord ou pas d'accord ? Votez sur sa prédiction et consultez l'analyse complète sur StockPredictor."
+        },
+        "profile_page": {
+            "title": "Profil & Historique de Prédictions de {{username}} | StockPredictor",
+            "description": "Consultez le profil complet, l'historique des prédictions, les badges et la note d'analyste de {{username}} sur StockPredictor. Suivez-le pour recevoir des mises à jour sur ses nouvelles prédictions."
+        }
+    }
 }

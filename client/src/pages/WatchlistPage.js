@@ -439,7 +439,7 @@ const WatchlistPage = ({ settings }) => {
                                                                 </div>
                                                                 <p className="text-xs text-gray-400">
                                                                     {t('watchlistPage.avgScoreLabel')}
-                                                                    <span className="font-bold text-green-400 ml-1">{user.avgScore}</span>
+                                                                    <span className="font-bold text-green-400 ml-1">{user.avgRating}</span>
                                                                 </p>
                                                             </div>
                                                         </div>

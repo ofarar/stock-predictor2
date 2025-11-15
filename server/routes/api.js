@@ -1029,7 +1029,7 @@ router.get('/watchlist', async (req, res) => {
                 Prediction.find({ stockTicker: ticker, status: 'Active' })
                     .sort({ createdAt: -1 })
                     .limit(5) // Hardcoded limit for the initial fetch
-                    .populate('userId', 'username avatar isGoldenMember score isVerified')
+                    .populate('userId', 'username avatar isGoldenMember isVerified')
                     .lean(),
                 // 2. Get top 3 predictors overall for this ticker
                 Prediction.aggregate([
@@ -1039,7 +1039,7 @@ router.get('/watchlist', async (req, res) => {
                     { $limit: 3 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgRating: { $round: ['$avgRating', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice' } }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgRating: { $round: ['$avgScore', 1] }, acceptingNewSubscribers: '$user.acceptingNewSubscribers', goldenMemberPrice: '$user.goldenMemberPrice' } }
                 ]),
                 // 3. Get the single top verified predictor for this ticker
                 Prediction.aggregate([
@@ -1051,7 +1051,7 @@ router.get('/watchlist', async (req, res) => {
                     { $limit: 1 },
                     { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'user' } },
                     { $unwind: '$user' },
-                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgRating: { $round: ['$avgRating', 1] } } }
+                    { $project: { _id: '$user._id', username: '$user.username', avatar: '$user.avatar', isGoldenMember: '$user.isGoldenMember', isVerified: '$user.isVerified', avgRating: { $round: ['$avgScore', 1] } } }
                 ])
             ]);
 

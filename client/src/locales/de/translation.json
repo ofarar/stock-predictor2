@@ -32,7 +32,7 @@
     "header_ai_assist": "KI-Portfolio-Assistent",
     "header_settings": "Einstellungen",
     "profile_followers": "Follower",
-    "profile_following": "Folge ich",
+    "profile_following": "Gefolgt",
     "profile_subscribers": "Abonnenten",
     "profile_subscriptions": "Abonnements",
     "profile_edit": "Profil bearbeiten",
@@ -46,7 +46,7 @@
     "profile_following_button": "Gefolgt",
     "profile_unfollow_button": "Nicht mehr folgen",
     "profile_overall_rank": "Gesamtrang",
-    "profile_avg_score": "Durchschn. Punktzahl",
+    "profile_avg_score": "Durchschn. Rating",
     "profile_total_points": "Gesamtpunkte",
     "profile_total_predictions": "Gesamtprognosen",
     "profile_tab_profile": "Profil",
@@ -145,7 +145,7 @@
     "explore_agree": "Zustimmen",
     "explore_disagree": "Ablehnen",
     "explore_vote_failed": "Abstimmung fehlgeschlagen.",
-    "followers_avg_score": "Durchschn. Punktzahl",
+    "followers_avg_score": "Durchschn. Rating",
     "followers_subscribed_on": "Abonniert am {{date}}",
     "followers_cancel_subscription": "Abonnement kündigen",
     "followers_could_not_load_lists": "Benutzerlisten konnten nicht geladen werden.",
@@ -284,7 +284,7 @@
     "title_top_performers": "🏆 Top-Performer",
     "label_prediction_type": "Prognosetyp",
     "label_filter_by_stock": "Nach Aktie filtern",
-    "text_avg_score": "Durchschn. Punktzahl",
+    "text_avg_score": "Durchschn. Rating",
     "msg_loading_scoreboard_error": "Bestenlistendaten konnten nicht geladen werden.",
     "msg_no_users_found": "Für diese Filter wurden keine Benutzer gefunden.",
     "msg_try_broaden_search": "Versuchen Sie, Ihre Suchkriterien zu erweitern.",
@@ -409,7 +409,7 @@
     "badgeInfoModal": {
         "title": "Wie Erfolge funktionieren",
         "loadingText": "Details werden geladen...",
-        "scoreLabel": "Punktzahl > {{score}}",
+        "ratingLabel": "Punktzahl > {{rating}}",
         "minPredictions": "Benötigt mindestens {{count}} Prognosen.",
         "closeButton": "Schließen"
     },
@@ -581,7 +581,7 @@
         "nextResults": "Nächste Ergebnisse in: {{timeLeft}}",
         "marketClosed": "Markt geschlossen",
         "noPredictions": "Noch keine Prognosen bewertet.",
-        "pointsSuffix": "+{{score}} Pkt."
+        "ratingSuffix": "+{{rating}} Rating"
     },
     "infoModal": {
         "title": "Zeitbonus erklärt",
@@ -643,8 +643,7 @@
             "predictions": "{{count}} Prognosen",
             "stocks": "Aktien: {{tickers}}"
         },
-        "noData": "Keine Leistungsdaten für diesen Filter.",
-        "tooltipLabel": "Punktzahl: {{score}}"
+        "noData": "Keine Leistungsdaten für diesen Filter."
     },
     "performanceTabs": {
         "tabs": {
@@ -652,7 +651,7 @@
             "byStock": "Nach Aktie"
         },
         "statCard": {
-            "averageScore": "Durchschnittliche Punktzahl",
+            "averageScore": "Durchschnittliche Rating",
             "rank": "RANG",
             "topRankTitle": "Top-{{rank}}-Rang"
         },
@@ -704,7 +703,7 @@
         "rationale": "Begründung (Optional)",
         "rationalePlaceholder": "Erläutern Sie Ihre Gründe für diese Preisvorhersage.",
         "placePrediction": "Prognose abgeben",
-        "maxScore": "Max. Punktzahl: {{score}}",
+        "maxRating": "Max. Punktzahl: {{rating}}",
         "confirmationMessage": "Ihre Vorhersage von {{price}} ist eine Änderung von {{percent}}, was über dem üblichen Bereich von {{limit}} % liegt. Sind Sie sicher?",
         "limitReached": "Sie haben das tägliche Vorhersagelimit von {{limit}} erreicht.",
         "submitFailed": "Fehler beim Senden der Prognose.",
@@ -724,7 +723,7 @@
         "loadError": "Bestenlistendaten konnten nicht geladen werden.",
         "predictionType": "Prognosetyp",
         "filterStock": "Nach Aktie filtern",
-        "avgScore": "Durchschn. Punktzahl",
+        "avgScore": "Durchschn. Ranking",
         "noUsers": "Für diese Filter wurden keine Benutzer gefunden.",
         "noUsersHint": "Versuchen Sie, Ihre Suchkriterien zu erweitern.",
         "rank": "Rang: {{number}}",
@@ -802,7 +801,7 @@
         "loadMore": "Mehr laden",
         "recommendedPredictors": "Empfohlene Prognostiker",
         "noRecommendedUsers": "Noch keine Top-Prognostiker für diese Aktie.",
-        "avgScoreLabel": "Durchschn. Punktzahl: ",
+        "avgScoreLabel": "Durchschn. Rating: ",
         "followingButton": "Folgen",
         "toast": {
             "loadingAdd": "{{ticker}} wird hinzugefügt...",
@@ -830,7 +829,7 @@
         "openingHourPrediction": "Eröffnungsstunden-Prognose",
         "marketClosed": "Markt ist derzeit geschlossen",
         "forDate": "Für {{date}}",
-        "maxScore": "Max. Punktzahl: {{score}}",
+        "maxRating": "Max. Punktzahl: {{rating}}",
         "invalidType": "Wählen Sie einen gültigen Vorhersagetyp."
     },
     "profile": {
@@ -1089,5 +1088,27 @@
     "promoBanner.creatorPoolText": "💰 <strong>Werden Sie Early User!</strong> Melden Sie sich jetzt an, um <1>+1.000 Bonuspunkte</1> zu erhalten und Ihren Anteil am Plattformumsatz nur für Ihre Beiträge zu bekommen. <2>Jetzt beitreten</2>",
     "promoBanner.joinNow": "Jetzt beitreten",
     "analystRating.pie.bonus": "Bonus",
-    "analystRating.pie.labels.frombonus": "Bonus"
+    "analystRating.pie.labels.frombonus": "Bonus",
+    "seo": {
+        "default": {
+            "title": "StockPredictor - Prognostizieren Sie den Markt, verfolgen Sie Ihre Genauigkeit",
+            "description": "Treten Sie der StockPredictor-Community bei, um Aktienprognosen zu erstellen, Ihre Genauigkeit zu verfolgen und Top-Analysten zu folgen. Melden Sie sich an, um Ihre Erfolgsbilanz aufzubauen."
+        },
+        "explore_page": {
+            "title": "Aktienprognosen & Top-Performer entdecken | StockPredictor",
+            "description": "Entdecken Sie die neuesten aktiven und bewerteten Aktienprognosen der StockPredictor-Community. Filtern Sie nach Aktie, Zeitrahmen und sehen Sie, wer die Top-Performer sind."
+        },
+        "stock_page": {
+            "title": "{{name}} ({{ticker}}) Aktienprognosen & Stimmung | StockPredictor",
+            "description": "Sehen Sie die neuesten Community-Prognosen und die Stimmung für {{name}} ({{ticker}}). Nehmen Sie an der Konversation teil und erstellen Sie Ihre eigene Aktienprognose auf StockPredictor."
+        },
+        "prediction_page": {
+            "title": "{{username}}s {{type}}-Prognose für {{ticker}} | StockPredictor",
+            "description": "Sehen Sie sich {{username}}s {{type}}-Prognose für {{ticker}} an. Stimmen Sie zu oder nicht? Stimmen Sie über die Prognose ab und sehen Sie die vollständige Analyse auf StockPredictor."
+        },
+        "profile_page": {
+            "title": "{{username}}s Profil & Prognose-Verlauf | StockPredictor",
+            "description": "Sehen Sie sich das vollständige Profil, den Prognose-Verlauf, die Abzeichen und das Analysten-Rating von {{username}} auf StockPredictor an. Folgen Sie ihm, um Updates zu seinen neuen Prognosen zu erhalten."
+        }
+    }
 }

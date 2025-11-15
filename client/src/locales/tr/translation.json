@@ -330,7 +330,7 @@
       },
       "creator_pool": {
         "title": "7. İçerik Üretici Havuzu Ödemeleri",
-        "content": "En iyi katkıda bulunanlarımızı ödüllendirmek amacıyla StockPredictor, üç aylık net kârının (gelir eksi tüm işletme giderleri, vergiler ve ücretler) yüzde ellisini (%50) bir 'İçerik Üretici Havuzuna' ayırır. Bu havuz, kullanıcılara platformdaki toplam Analist Puanı içindeki yüzdelerine göre 'Analist Puanı' baz alınarak dağıtılır. Ödemeler üç ayda bir hesaplanır ve Net-30 bazında (çeyrek bittikten 30 gün sonra) dağıtılır. Bir ödeme almaya hak kazanmak için, bir kullanıcının en az 100,00 USD tutarında birikmiş ödeme bakiyesine sahip olması gerekir. Bu minimumun altındaki bakiyeler bir sonraki çeyreğe devreder. Tüm kullanıcılar, herhangi bir ödemeden kaynaklanan kendi vergi yükümlülüklerinden sorumludur. StockPredictor, İçerik Üretici Havuzu programını herhangi bir zamanda bildirimde bulunarak veya bulunmaksızın değiştirme, duraklatma veya sonlandırma hakkını saklı tutar."
+        "content": "En iyi katkıda bulunanlarımızı ödüllendirmek amacıyla StockPredictor, Çeyreklik net kârının (gelir eksi tüm işletme giderleri, vergiler ve ücretler) yüzde ellisini (%50) bir 'İçerik Üretici Havuzuna' ayırır. Bu havuz, kullanıcılara platformdaki toplam Analist Puanı içindeki yüzdelerine göre 'Analist Puanı' baz alınarak dağıtılır. Ödemeler üç ayda bir hesaplanır ve Net-30 bazında (çeyrek bittikten 30 gün sonra) dağıtılır. Bir ödeme almaya hak kazanmak için, bir kullanıcının en az 100,00 USD tutarında birikmiş ödeme bakiyesine sahip olması gerekir. Bu minimumun altındaki bakiyeler bir sonraki çeyreğe devreder. Tüm kullanıcılar, herhangi bir ödemeden kaynaklanan kendi vergi yükümlülüklerinden sorumludur. StockPredictor, İçerik Üretici Havuzu programını herhangi bir zamanda bildirimde bulunarak veya bulunmaksızın değiştirme, duraklatma veya sonlandırma hakkını saklı tutar."
       },
       "payments_and_refunds": {
         "title": "8. Ödemeler, Abonelikler ve Geri Ödemeler",
@@ -380,7 +380,7 @@
     "Daily": "Günlük",
     "Weekly": "Haftalık",
     "Monthly": "Aylık",
-    "Quarterly": "Üç Aylık",
+    "Quarterly": "Çeyreklik",
     "Yearly": "Yıllık"
   },
   "avatarModal": {
@@ -409,7 +409,7 @@
   "badgeInfoModal": {
     "title": "Başarımlar Nasıl Çalışır",
     "loadingText": "Detaylar yükleniyor...",
-    "scoreLabel": "Puan > {{score}}",
+    "ratingLabel": "Puan > {{rating}}",
     "minPredictions": "En az {{count}} tahmin gerektirir.",
     "closeButton": "Kapat"
   },
@@ -512,7 +512,7 @@
     "daily": "Günlük",
     "weekly": "Haftalık",
     "monthly": "Aylık",
-    "quarterly": "Üç Aylık",
+    "quarterly": "Çeyreklik",
     "yearly": "Yıllık",
     "cancelButton": "İptal",
     "postingButton": "Gönderiliyor...",
@@ -581,7 +581,7 @@
     "nextResults": "Sonraki sonuçlar: {{timeLeft}}",
     "marketClosed": "Piyasa Kapalı",
     "noPredictions": "Henüz değerlendirilmiş tahmin yok.",
-    "pointsSuffix": "+{{score}} puan"
+    "ratingSuffix": "+{{rating}} puan"
   },
   "infoModal": {
     "title": "Zaman Bonusu Açıklaması",
@@ -623,7 +623,7 @@
   },
   "longTermLeaders": {
     "title": "Uzun Vadeli Liderler",
-    "description": "(Üç Aylık ve Yıllık doğruluğa göre)",
+    "description": "(Çeyreklik ve Yıllık doğruluğa göre)",
     "noData": "Henüz veri yok.",
     "accuracyLabel": "Ort"
   },
@@ -635,7 +635,7 @@
       "daily": "Günlük",
       "weekly": "Haftalık",
       "monthly": "Aylık",
-      "quarterly": "Üç Aylık",
+      "quarterly": "Çeyreklik",
       "yearly": "Yıllık"
     },
     "tooltip": {
@@ -643,8 +643,7 @@
       "predictions": "{{count}} Tahmin",
       "stocks": "Hisseler: {{tickers}}"
     },
-    "noData": "Bu filtre için performans verisi yok.",
-    "tooltipLabel": "Puan: {{score}}"
+    "noData": "Bu filtre için performans verisi yok."
   },
   "performanceTabs": {
     "shareOnX": "X'te Paylaş",
@@ -687,7 +686,7 @@
     "weeklyDescription": "Hisse senedi fiyatını mevcut işlem haftasının sonu (Cuma) için tahmin edin. Haftalık trendleri takip etmek için iyidir.",
     "monthly": "Aylık",
     "monthlyDescription": "Hisse senedi fiyatını mevcut takvim ayının sonu için tahmin edin. Aylık momentumu yakalamak için en iyisidir.",
-    "quarterly": "Üç Aylık",
+    "quarterly": "Çeyreklik",
     "quarterlyDescription": "Hisse senedi fiyatını mevcut mali çeyreğin sonu (örn. Mart, Haziran, Eylül, Aralık) için tahmin edin.",
     "yearly": "Yıllık",
     "yearlyDescription": "Hisse senedi fiyatını mevcut takvim yılının sonu için tahmin edin. Büyük piyasa değişimleri için uzun vadeli bir tahmindir."
@@ -709,7 +708,7 @@
     "rationale": "Gerekçe (İsteğe Bağlı)",
     "rationalePlaceholder": "Bu fiyat hareketinin arkasındaki gerekçeniz nedir?",
     "placePrediction": "Tahmin Yap",
-    "maxScore": "Maks Puan: {{score}}",
+    "maxRating": "Maks Puan: {{rating}}",
     "confirmationMessage": "Yaptığınız {{price}} tutarındaki tahmin, tipik %{{limit}} aralığının üzerinde, {{percent}}'lik bir değişime denk geliyor. Emin misiniz?",
     "limitReached": "Günlük {{limit}} tahmin limitine ulaştınız.",
     "submitFailed": "Tahmin gönderilemedi.",
@@ -836,7 +835,7 @@
     "openingHourPrediction": "Açılış Saati Tahmini",
     "marketClosed": "Piyasa şu anda kapalı",
     "forDate": "Bitiş tarihi: {{date}}",
-    "maxScore": "Maks Puan: {{score}}",
+    "maxRating": "Maks Puan: {{rating}}",
     "invalidType": "Geçerli bir tahmin türü seçin."
   },
   "profile": {
@@ -1094,6 +1093,28 @@
   "aim.title": "Kanıtlanmış Analizleri Bul. <0>Piyasa Yorumlarını Paraya Çevir.</0>",
   "promoBanner.creatorPoolText": "💰 <strong>Erken Kullanıcı Olarak Katıl!</strong> Sadece katkıların için platform gelirinden payını almak ve <1>+1.000 bonus puan</1> kazanmak için hemen kaydol. <2>Hemen Katıl</2>",
   "promoBanner.joinNow": "Hemen Katıl",
-  "analystRating.pie.bonus": "Bonus", 
-  "analystRating.pie.labels.frombonus": "Bonus"
+  "analystRating.pie.bonus": "Bonus",
+  "analystRating.pie.labels.frombonus": "Bonus",
+  "seo": {
+    "default": {
+      "title": "StockPredictor - Piyasayı Tahmin Edin, İsabet Oranınızı Takip Edin",
+      "description": "Hisse senedi tahminleri yapmak, isabet oranınızı takip etmek ve en iyi performans gösteren analistleri izlemek için StockPredictor topluluğuna katılın. Başarı geçmişinizi oluşturmak için kaydolun."
+    },
+    "explore_page": {
+      "title": "Hisse Tahminlerini ve En İyileri Keşfedin | StockPredictor",
+      "description": "StockPredictor topluluğunun en son aktif ve değerlendirilmiş hisse senedi tahminlerini keşfedin. Hisseye, zaman dilimine göre filtreleyin ve en iyi performans gösterenlerin kim olduğunu görün."
+    },
+    "stock_page": {
+      "title": "{{name}} ({{ticker}}) Hisse Tahminleri & Topluluk Görüşü | StockPredictor",
+      "description": "{{name}} ({{ticker}}) için en son topluluk tahminlerini ve görüşlerini görün. Sohbete katılın ve StockPredictor'da kendi hisse senedi tahmininizi yapın."
+    },
+    "prediction_page": {
+      "title": "{{username}} kullanıcısının {{ticker}} için {{type}} tahmini | StockPredictor",
+      "description": "{{username}} kullanıcısının {{ticker}} için {{type}} tahminini görüntüleyin. Katılıyor musunuz, katılmıyor musunuz? Tahmini oylayın ve StockPredictor'daki tam analizi görün."
+    },
+    "profile_page": {
+      "title": "{{username}} Profili & Tahmin Kaydı | StockPredictor",
+      "description": "StockPredictor'da {{username}} kullanıcısının tam profilini, tahmin geçmişini, rozetlerini ve analist puanını görüntüleyin. Yeni tahminlerinden haberdar olmak için takip edin."
+    }
+  }
 }

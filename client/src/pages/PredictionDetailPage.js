@@ -229,9 +229,14 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const isAssessed = prediction.status === 'Assessed';
     const marketIsOpenNow = isMarketOpen();
     // Use `currentQuote.displayPrice` as it's the standardized field
-    const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
     const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close")); // <-- Renamed
-    const priceLabel = isAssessed ? t("prediction.currentPrice") : (marketIsOpenNow ? t("Current") : t("Closing Price"));
+    // Example of a fix:
+    // 1. Get the price
+    const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
+
+    // 2. Get the label
+    // This logic is now simple and correct for a 24/7 asset like BTC.
+    const priceLabel = isAssessed ? t("Actual Price") : t("Current Price");
 
     let rating = isAssessed ? prediction.rating : calculateLiveScore(prediction.targetPrice, currentPrice); // <-- Renamed
     const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating; // <-- Renamed

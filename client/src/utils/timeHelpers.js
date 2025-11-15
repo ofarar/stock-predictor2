@@ -126,7 +126,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
                 const penalty = Math.floor(elapsedMinutes / (totalMinutes / 20));
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / totalMinutes * 100);
-                message = t('predictionWidgetMessages.maxScore', { score: maxScore });
+                message = t('predictionWidgetMessages.maxRating', { rating: maxScore });
             } else {
                 // This is the case for "next open day"
                 message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline.toJSDate(), i18n.language) });
@@ -189,7 +189,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             break;
     }
 
-    message = message || t('predictionWidgetMessages.maxScore', { score: maxScore });
+    message = message || t('predictionWidgetMessages.maxRating', { score: maxScore });
 
     // Final check for Hourly
     if (predictionType === 'Hourly' && !marketOpen && !preMarket) {

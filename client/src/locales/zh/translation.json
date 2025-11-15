@@ -31,7 +31,7 @@
     "profile_following_button": "正在关注",
     "profile_unfollow_button": "取消关注",
     "profile_overall_rank": "总排名",
-    "profile_avg_score": "平均得分",
+    "profile_avg_score": "平均评分",
     "profile_total_points": "总积分",
     "profile_total_predictions": "总预测数",
     "profile_tab_profile": "个人资料",
@@ -145,7 +145,7 @@
     "explore_agree": "同意",
     "explore_disagree": "不同意",
     "explore_vote_failed": "投票失败。",
-    "followers_avg_score": "平均得分",
+    "followers_avg_score": "平均评分",
     "followers_subscribed_on": "订阅于 {{date}}",
     "followers_cancel_subscription": "取消订阅",
     "followers_could_not_load_lists": "无法加载用户列表。",
@@ -192,14 +192,14 @@
     "Could not load prediction details.": "无法加载预测详情。",
     "Loading Prediction...": "正在加载预测...",
     "Prediction not found.": "未找到预测。",
-    "Live Score": "实时得分",
+    "Live Score": "实时评分",
     "Score at Close": "收盘时得分",
     "Current": "当前",
     "Closing Price": "收盘价",
     "(Price journey visual is not available for this older prediction)": "(此旧预测的价格走势图不可用)",
     "Target Price": "目标价格",
     "View Rationale": "查看理由",
-    "Final Score": "最终得分",
+    "Final Score": "最终评分",
     "Time Remaining": "剩余时间",
     "DO YOU AGREE?": "您同意吗？",
     "Agree": "同意",
@@ -284,7 +284,7 @@
     "title_top_performers": "🏆 表现最佳者",
     "label_prediction_type": "预测类型",
     "label_filter_by_stock": "按股票筛选",
-    "text_avg_score": "平均得分",
+    "text_avg_score": "平均评分",
     "msg_loading_scoreboard_error": "无法加载排行榜数据。",
     "msg_no_users_found": "未找到符合这些筛选条件的用户。",
     "msg_try_broaden_search": "请尝试扩大您的搜索标准。",
@@ -409,7 +409,7 @@
     "badgeInfoModal": {
         "title": "成就系统如何运作",
         "loadingText": "正在加载详情...",
-        "scoreLabel": "得分 > {{score}}",
+        "ratingLabel": "评分 > {{rating}}",
         "minPredictions": "至少需要 {{count}} 次预测。",
         "closeButton": "关闭"
     },
@@ -573,7 +573,7 @@
         "goldenPost": "{{username}} 发布了新的黄金帖子。",
         "badgeEarnedSelf": "恭喜！您已获得 {{tier}} {{badgeName}} 徽章。",
         "badgeEarnedFollower": "{{username}} 获得了 {{tier}} {{badgeName}} 徽章！",
-        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{rating}} 分！",
+        "predictionAssessed": "您对 {{stockTicker}} 的 {{predictionType}} 预测获得了 {{rating}} 评分！",
         "priceChange": "{{creatorName}} 的订阅价格将于 {{effectiveDate}} 从 ${{oldPrice}} 更改为 ${{newPrice}}。"
     },
     "hourlyWinnersFeed": {
@@ -581,7 +581,7 @@
         "nextResults": "距离下次结果：{{timeLeft}}",
         "marketClosed": "市场已关闭",
         "noPredictions": "暂无已评估的预测。",
-        "pointsSuffix": "+{{score}}分"
+        "ratingSuffix": "+{{rating}} 评分"
     },
     "infoModal": {
         "title": "时间奖励说明",
@@ -643,8 +643,7 @@
             "predictions": "{{count}} 条预测",
             "stocks": "股票: {{tickers}}"
         },
-        "noData": "此筛选条件下没有表现数据。",
-        "tooltipLabel": "分数: {{score}}"
+        "noData": "此筛选条件下没有表现数据。"
     },
     "performanceTabs": {
         "shareOnX": "在 X 上分享",
@@ -657,7 +656,7 @@
             "byStock": "按股票"
         },
         "statCard": {
-            "averageScore": "平均得分",
+            "averageScore": "平均评分",
             "rank": "排名",
             "topRankTitle": "排名前 {{rank}}"
         },
@@ -694,7 +693,7 @@
     },
     "common": {
         "close": "关闭",
-        "score": "分数",
+        "score": "评分",
         "dataDelayed": "数据延迟最多15分钟"
     },
     "prediction": {
@@ -709,7 +708,7 @@
         "rationale": "理由（可选）",
         "rationalePlaceholder": "请说明您预测此价格变动的理由。",
         "placePrediction": "提交预测",
-        "maxScore": "最高分: {{score}}",
+        "maxRating": "最高评分: {{rating}}",
         "confirmationMessage": "您对 {{price}} 的预测是 {{percent}} 的变动，超过了通常的 {{limit}}% 范围。您确定吗？",
         "limitReached": "您已达到每日 {{limit}} 次的预测上限。",
         "submitFailed": "提交预测失败。",
@@ -729,7 +728,7 @@
         "loadError": "无法加载排行榜数据。",
         "predictionType": "预测类型",
         "filterStock": "按股票筛选",
-        "avgScore": "平均得分",
+        "avgScore": "平均评分",
         "noUsers": "未找到符合这些筛选条件的用户。",
         "noUsersHint": "请尝试扩大您的搜索标准。",
         "rank": "排名: {{number}}",
@@ -807,7 +806,7 @@
         "loadMore": "加载更多",
         "recommendedPredictors": "推荐预测者",
         "noRecommendedUsers": "此股票暂无顶级预测者。",
-        "avgScoreLabel": "平均分：",
+        "avgScoreLabel": "平均评分：",
         "followingButton": "关注",
         "toast": {
             "loadingAdd": "正在添加 {{ticker}}...",
@@ -835,7 +834,7 @@
         "openingHourPrediction": "开盘小时预测",
         "marketClosed": "市场当前已关闭",
         "forDate": "截止于 {{date}}",
-        "maxScore": "最高得分: {{score}}",
+        "maxRating": "最高评分: {{rating}}",
         "invalidType": "请选择一个有效的预测类型。"
     },
     "profile": {
@@ -1094,5 +1093,27 @@
     "promoBanner.creatorPoolText": "💰 <strong>成为早期用户！</strong> 立即注册即可赚取 <1>+1,000 奖励积分</1>，并仅凭您的贡献即可获得平台收入份额。 <2>立即加入</2>",
     "promoBanner.joinNow": "立即加入",
     "analystRating.pie.bonus": "奖励",
-    "analystRating.pie.labels.frombonus": "奖励"
+    "analystRating.pie.labels.frombonus": "奖励",
+    "seo": {
+        "default": {
+            "title": "StockPredictor - 预测市场，追踪您的准确性",
+            "description": "加入 StockPredictor 社区，进行股票预测，追踪您的准确性，并关注表现顶尖的分析师。注册以建立您的业绩记录。"
+        },
+        "explore_page": {
+            "title": "浏览股票预测与顶尖表现者 | StockPredictor",
+            "description": "浏览 StockPredictor 社区最新的活跃和已评估的股票预测。按股票、时间范围筛选，看看谁是顶尖表现者。"
+        },
+        "stock_page": {
+            "title": "{{name}} ({{ticker}}) 股票预测与社区情绪 | StockPredictor",
+            "description": "查看社区对 {{name}} ({{ticker}}) 的最新预测和情绪。加入对话，在 StockPredictor 上做出您自己的股票预测。"
+        },
+        "prediction_page": {
+            "title": "{{username}} 对 {{ticker}} 的 {{type}} 预测 | StockPredictor",
+            "description": "查看 {{username}} 对 {{ticker}} 的 {{type}} 预测。您同意还是不同意？对他们的预测进行投票，并在 StockPredictor 上查看完整分析。"
+        },
+        "profile_page": {
+            "title": "{{username}} 的个人资料和预测记录 | StockPredictor",
+            "description": "在 StockPredictor 上查看 {{username}} 的完整个人资料、预测历史、徽章和分析师评级。关注他们以获取他们的新预测更新。"
+        }
+    }
 }
