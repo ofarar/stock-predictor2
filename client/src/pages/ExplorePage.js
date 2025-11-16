@@ -58,13 +58,34 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                     <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ml-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>
                 </div>
                 {isAssessed ? (
-                    <div className="grid grid-cols-2 gap-4 text-center">
-                        <div><p className="text-xs text-gray-400">{t('explore_predicted')}</p><p className="font-semibold text-white">
-                            {formatCurrency(prediction.targetPrice, i18n.language, prediction.currency)}
-                        </p></div>
-                        <div className="col-span-2"><p className="text-xs text-gray-400">{t('Final Rating')}</p><p className={`font-bold text-lg ${prediction.rating > 60 ? 'text-green-400' : 'text-red-400'}`}>
-                            {prediction.rating.toFixed(1)}
-                        </p></div>
+                    // FIX: Changed to 3 columns and added "Actual Price"
+                    <div className="grid grid-cols-3 gap-4 text-center">
+
+                        {/* 1. Predicted Price */}
+                        <div>
+                            <p className="text-xs text-gray-400">{t('explore_predicted')}</p>
+                            <p className="font-semibold text-white">
+                                {formatCurrency(prediction.targetPrice, i18n.language, prediction.currency)}
+                            </p>
+                        </div>
+
+                        {/* 2. Actual Price (The missing piece) */}
+                        <div>
+                            <p className="text-xs text-gray-400">{t('Actual Price')}</p>
+                            <p className="font-semibold text-white">
+                                {/* You may need to ensure 'actualPrice' is sent from your API */}
+                                {formatCurrency(prediction.actualPrice, i18n.language, prediction.currency)}
+                            </p>
+                        </div>
+
+                        {/* 3. Final Rating (No col-span) */}
+                        <div>
+                            <p className="text-xs text-gray-400">{t('Final Rating')}</p>
+                            <p className={`font-bold text-lg ${prediction.rating > 60 ? 'text-green-400' : 'text-red-400'}`}>
+                                {prediction.rating.toFixed(1)}
+                            </p>
+                        </div>
+
                     </div>
                 ) : (
                     <div className="text-center">
