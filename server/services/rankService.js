@@ -30,7 +30,12 @@ const getLeaderboard = async (categoryQuery = {}) => {
                 predictionCount: { $sum: 1 }
             }
         },
-        { $match: { predictionCount: { $gt: 0 } } },
+        {
+            $match: {
+                predictionCount: { $gt: 0 },
+                avgRating: { $gte: 70 } // <-- ADD THIS LINE
+            }
+        },
         { $sort: { avgRating: -1 } }
     ]);
 };
