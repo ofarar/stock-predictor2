@@ -1,18 +1,23 @@
 const nodemailer = require('nodemailer');
+// --- 1. Import the SendGrid transport ---
+const sgTransport = require('nodemailer-sendgrid-transport');
 
-// We'll use a Gmail account for sending emails.
-// For this to work, you'll need to enable "Less secure app access" on the Google account.
-// It's recommended to use an app-specific password if you have 2-Factor Authentication enabled.
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.GMAIL_USER, // Your Gmail address from .env
-        pass: process.env.GMAIL_PASS  // Your Gmail password or app password from .env
-    }
-});
+// --- 2. Configure the SendGrid transporter ---
+// This uses your API key from the .env file
+const options = {
+  auth: {
+    api_key: process.env.SENDGRID_API_KEY
+  }
+}
+const transporter = nodemailer.createTransport(sgTransport(options));
 
-const ADMIN_EMAIL = process.env.GMAIL_USER; // Admin email will be the same as the sender
-const APP_URL = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:3000';
+
+// --- 3. Update your admin email and app URL ---
+const ADMIN_EMAIL = 'noreply@stockpredictorai.com'; // Your authenticated email
+const APP_URL = 'https://www.stockpredictorai.com'; // Your production domain
+
+// const ADMIN_EMAIL = process.env.GMAIL_USER; // Admin email will be the same as the sender
+// const APP_URL = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:3000';
 
 // --- NEW: Reusable Email Footer ---
 /**
