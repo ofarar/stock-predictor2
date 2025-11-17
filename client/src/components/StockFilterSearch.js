@@ -54,7 +54,7 @@ const StockFilterSearch = ({ onStockSelect, initialValue = '', placeholder }) =>
         <div className="relative" ref={searchRef}>
             <input
                 type="text"
-                placeholder={t('stockFilterSearch.placeholder')}
+                placeholder={placeholder || t('stockFilterSearch.placeholder')}
                 value={searchTerm}
                 onChange={handleInputChange}
                 onFocus={() => setIsDropdownOpen(true)}

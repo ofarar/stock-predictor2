@@ -82,7 +82,7 @@ const PredictionHistoryModal = ({ isOpen, onClose, prediction }) => {
                                         <p className="text-xs text-gray-500">{formatDateTime(entry.updatedAt, i18n.language)}</p>
                                     </div>
                                     {entry.reason && (
-                                        <p className="text-sm text-gray-300 mt-1 italic">"{entry.reason}"</p>
+                                        <p className="text-sm text-gray-300 mt-1 italic">&quot;{entry.reason}&quot;</p>
                                     )}
                                 </div>
                             ))}

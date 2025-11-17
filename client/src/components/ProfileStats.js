@@ -30,7 +30,7 @@ const StatCard = ({ label, value, isRank = false, onClick, onInfoClick }) => {
     );
 };
 
-const ProfileStats = ({ user, performance, predictionCount, totalAnalystRating, onInfoClick, onCreatorPoolClick, onRatingInfoClick }) => {
+const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCreatorPoolClick, onRatingInfoClick }) => {
     const { t, i18n } = useTranslation();
 
     // Calculate share percentage, ensure it's a number

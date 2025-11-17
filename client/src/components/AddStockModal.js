@@ -1,5 +1,6 @@
 // src/components/AddStockModal.js
 import React, { useState } from 'react';
+import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import StockFilterSearch from './StockFilterSearch';
 
@@ -13,10 +14,14 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
                 await onAdd(selectedStock, 'add');
                 onClose();
             } catch (error) {
-                console.error("Could not add stock:", error);
+                console.error("Failed to add stock:", error);
             }
         }
     };
+
+    if (!isOpen) {
+        return null;
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
@@ -50,4 +55,9 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
     );
 };
 
+AddStockModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onAdd: PropTypes.func.isRequired,
+};
 export default AddStockModal;

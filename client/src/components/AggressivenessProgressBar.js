@@ -1,5 +1,6 @@
 // src/components/AggressivenessProgressBar.js
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { formatScorePercentage } from '../utils/formatters';
 
@@ -52,6 +53,16 @@ const AggressivenessProgressBar = ({ data, analyzedCount, onInfoClick }) => {
             </div>
         </div>
     );
+};
+
+AggressivenessProgressBar.propTypes = {
+  data: PropTypes.shape({
+    defensive: PropTypes.number.isRequired,
+    neutral: PropTypes.number.isRequired,
+    offensive: PropTypes.number.isRequired,
+  }).isRequired,
+  analyzedCount: PropTypes.number.isRequired,
+  onInfoClick: PropTypes.func.isRequired,
 };
 
 export default AggressivenessProgressBar;

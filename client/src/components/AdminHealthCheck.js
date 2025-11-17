@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -43,8 +44,8 @@ const AdminHealthCheck = () => {
 
     // 2. This new function updates the 'selected' state for one check
     const handleToggleCheck = (checkId) => {
-        setChecks(prev => 
-            prev.map(c => 
+        setChecks(prev =>
+            prev.map(c =>
                 c.id === checkId ? { ...c, selected: !c.selected } : c
             )
         );
@@ -54,7 +55,7 @@ const AdminHealthCheck = () => {
     const handleToggleAll = () => {
         // Check if all are currently selected
         const allSelected = checks.every(c => c.selected);
-        setChecks(prev => 
+        setChecks(prev =>
             prev.map(c => ({ ...c, selected: !allSelected }))
         );
     };
@@ -62,18 +63,18 @@ const AdminHealthCheck = () => {
     // 4. This function is MODIFIED to only run selected checks
     const runChecks = async () => {
         setIsLoading(true);
-        
+
         // Find which checks to run
         const checksToRun = checks.filter(c => c.selected);
-        
+
         // Reset the status of *only* the selected checks
-        setChecks(prev => prev.map(c => 
+        setChecks(prev => prev.map(c =>
             c.selected ? { ...c, status: 'pending', result: null } : c
         ));
 
         for (const check of checksToRun) {
             // 1. Set the current check to 'running'
-            setChecks(prev => prev.map(c => 
+            setChecks(prev => prev.map(c =>
                 c.id === check.id ? { ...c, status: 'running' } : c
             ));
 
@@ -85,13 +86,16 @@ const AdminHealthCheck = () => {
                     { withCredentials: true }
                 );
                 // 3. Update the check with the result (success or failed)
-                setChecks(prev => prev.map(c => 
+                setChecks(prev => prev.map(c =>
                     c.id === check.id ? { ...c, status: response.data.status, result: response.data } : c
                 ));
             } catch (error) {
+                // --- ADD THIS LINE ---
+                console.error(`Health check for '${check.name}' failed:`, error);
+
                 // Handle critical failures
-                setChecks(prev => prev.map(c => 
-                    c.id === check.id ? { ...c, status: 'failed', result: { details: 'Failed to run check.' } } : c
+                setChecks(prev => prev.map(c =>
+                    c.id === check.id ? { ...c, status: 'failed', result: { details: error.message || 'Failed to run check.' } } : c // <-- MODIFIED THIS LINE
                 ));
                 toast.error(`Error running check for ${check.name}.`);
                 // Note: We don't break the loop, so other checks can still try to run
@@ -99,7 +103,7 @@ const AdminHealthCheck = () => {
         }
         setIsLoading(false);
     };
-    
+
     // 5. Helper value to determine button text
     const areAllSelected = checks.every(c => c.selected);
     const selectedCount = checks.filter(c => c.selected).length;
@@ -108,7 +112,7 @@ const AdminHealthCheck = () => {
         <div className="bg-gray-800 p-6 rounded-lg">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                 <h2 className="text-xl font-bold text-white flex-shrink-0">System Health Check</h2>
-                
+
                 {/* 6. New Button Group */}
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <button
@@ -151,7 +155,7 @@ const AdminHealthCheck = () => {
                                 <StatusIcon status={check.status} />
                             </div>
                         </div>
-                        
+
                         {/* 8. Show details (latency on mobile, and any result text) */}
                         {check.result && (
                             <>
@@ -171,4 +175,9 @@ const AdminHealthCheck = () => {
     );
 };
 
+// --- ADD THIS BLOCK ---
+StatusIcon.propTypes = {
+    status: PropTypes.string.isRequired,
+};
+// --- END ---
 export default AdminHealthCheck;

@@ -188,13 +188,6 @@ const WatchlistPage = ({ settings }) => {
         setIsJoinModalOpen(true);
     };
 
-    const handleJoinSuccess = () => {
-        toast.success(`Successfully subscribed to ${userToJoin.username}!`);
-        setIsJoinModalOpen(false);
-        setUserToJoin(null);
-        fetchAllData(); // Refetch all data to update the UI
-    };
-
     const selectedPredictionData = data.predictions[selectedTicker] || { items: [], totalPages: 0, currentPage: 0 };
     const currentPrice = data?.quotes?.find((q) => q.symbol === selectedTicker)?.regularMarketPrice || 0;
 
@@ -237,7 +230,6 @@ const WatchlistPage = ({ settings }) => {
                 isOpen={isJoinModalOpen}
                 onClose={() => setIsJoinModalOpen(false)}
                 goldenMember={userToJoin}
-                onUpdate={handleJoinSuccess}
             />
             <div className="animate-fade-in space-y-8">
                 <div className="flex items-center gap-4">

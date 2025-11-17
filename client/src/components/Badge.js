@@ -1,6 +1,7 @@
 // src/components/Badge.js
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 const badgeStyles = {
@@ -14,8 +15,8 @@ const Badge = ({ name, tier, onClick }) => {
     const style = badgeStyles[tier] || { color: 'text-gray-500', icon: '⚫' };
 
     return (
-        <button 
-            onClick={onClick} 
+        <button
+            onClick={onClick}
             // FIX: Adjusted width, padding, and text sizes for a smaller look
             className="flex-shrink-0 w-40 bg-gray-700 p-3 rounded-lg text-center transition-transform hover:-translate-y-1"
         >
@@ -24,6 +25,12 @@ const Badge = ({ name, tier, onClick }) => {
             <p className={`text-xs font-semibold ${style.color}`}>{t(`tiers.${tier}`, tier)}</p>
         </button>
     );
+};
+
+Badge.propTypes = {
+    name: PropTypes.string.isRequired,
+    tier: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired
 };
 
 export default Badge;

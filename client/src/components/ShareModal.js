@@ -26,7 +26,7 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
              .then(() => {
                  toast.success(t('analystRating.pointsAwarded', '+5 Analyst Rating!'), { duration: 2000 });
              })
-             .catch(err => console.log("Failed to log share activity.")); // Don't bother user on fail
+             .catch(console.log("Failed to log share activity.")); // Don't bother user on fail
         
         // 3. Close this modal
         onClose();
@@ -48,7 +48,7 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
                 </div>
                 
                 <p className="text-gray-300 mb-4 bg-gray-700 p-3 rounded-md italic">
-                    "{text}"
+                    &quot;{text}&quot;
                 </p>
 
                 <div className="bg-gray-900 p-3 rounded-md flex items-center gap-2">

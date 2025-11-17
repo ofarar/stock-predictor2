@@ -5,7 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-const JoinGoldenModal = ({ isOpen, onClose, goldenMember, onUpdate }) => {
+const JoinGoldenModal = ({ isOpen, onClose, goldenMember }) => {
     const { t } = useTranslation();
     const [isProcessing, setIsProcessing] = useState(false); // State to disable button during API call
 

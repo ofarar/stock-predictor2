@@ -114,7 +114,7 @@ const AdminPage = () => {
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">AI Wizard Feature</h2>
                 <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
-                    <label htmlFor="isAIWizardEnabled" className="font-medium text-gray-300">Enable "AI Wizard" Page</label>
+                    <label htmlFor="isAIWizardEnabled" className="font-medium text-gray-300">Enable &quot;AI Wizard&quot; Page</label>
                     <input type="checkbox" id="isAIWizardEnabled" checked={settings.isAIWizardEnabled} onChange={(e) => handleSettingsChange('isAIWizardEnabled', e.target.checked)} />
                 </div>
             </div>
@@ -123,7 +123,7 @@ const AdminPage = () => {
                 <h2 className="text-xl font-bold text-white mb-4">Verification Feature</h2>
                 <div className="space-y-4">
                     <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
-                        <label htmlFor="isVerificationEnabled" className="font-medium text-gray-300">Enable "Get Verified" Feature</label>
+                        <label htmlFor="isVerificationEnabled" className="font-medium text-gray-300">Enable &quot;Get Verified&quot; Feature</label>
                         <input type="checkbox" id="isVerificationEnabled" checked={settings.isVerificationEnabled} onChange={(e) => handleSettingsChange('isVerificationEnabled', e.target.checked)} />
                     </div>
                     <div>

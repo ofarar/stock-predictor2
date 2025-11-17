@@ -62,13 +62,13 @@ const FollowersPage = ({ settings }) => {
 
         toast.promise(promise, {
             loading: t('watchlistPage.toast.loadingFollow'), // Reusing existing translation
-            success: (res) => {
+            success: () => {
                 // Success! The optimistic update was correct.
                 // Optional background refresh:
                 // fetchFollowData();
                 return t('watchlistPage.toast.successFollow'); // Reusing existing translation
             },
-            error: (err) => {
+            error: () => {
                 // API call failed. Revert the optimistic UI updates.
                 setUserData(originalUserData);
                 setCurrentUser(originalCurrentUser);
@@ -103,7 +103,7 @@ const FollowersPage = ({ settings }) => {
 
         toast.promise(promise, {
             loading: t('followers.unfollowing'),
-            success: (res) => {
+            success: () => {
                 // Success! The optimistic update was correct.
                 // We might still refetch *silently* in the background
                 // to ensure counts or other data are perfectly synced,
@@ -111,7 +111,7 @@ const FollowersPage = ({ settings }) => {
                 // fetchFollowData(); // Optional background refresh
                 return t('followers.unfollowSuccess');
             },
-            error: (err) => {
+            error: () => {
                 // API call failed. Revert the optimistic UI updates.
                 setUserData(originalUserData);
                 setCurrentUser(originalCurrentUser);

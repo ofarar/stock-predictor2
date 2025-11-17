@@ -150,4 +150,5 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
     );
 });
 
+ProfileHeader.displayName = 'ProfileHeader';
 export default ProfileHeader;

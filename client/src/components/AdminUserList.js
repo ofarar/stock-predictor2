@@ -1,5 +1,6 @@
 // src/components/AdminUserList.js
 import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -33,23 +34,23 @@ const UserCard = ({ user, settings }) => {
                     </p>
                     {/* Conditionally render VerifiedTick based on BOTH settings and user status */}
                     {settings?.isVerificationEnabled && user.isVerified && (
-                         <span className="ml-1 inline-block align-middle flex-shrink-0">
-                             <VerifiedTick />
-                         </span>
+                        <span className="ml-1 inline-block align-middle flex-shrink-0">
+                            <VerifiedTick />
+                        </span>
                     )}
                 </div>
-                 {/* --- Display VERIFIED DATE --- */}
-                 {settings?.isVerificationEnabled && user.isVerified && user.verifiedAt && (
+                {/* --- Display VERIFIED DATE --- */}
+                {settings?.isVerificationEnabled && user.isVerified && user.verifiedAt && (
                     <p className="text-xs text-green-400 mt-1 whitespace-nowrap">
                         Ver. {formatDateTimeShort(user.verifiedAt, i18n.language)}
                     </p>
                 )}
-                 {/* --------------------------- */}
+                {/* --------------------------- */}
             </div>
 
             {/* Right side: stats */}
             <div className="flex-grow grid grid-cols-2 sm:grid-cols-4 gap-4 items-center w-full">
-                 <div className="text-center">
+                <div className="text-center">
                     <p className="text-xs text-gray-400">Followers</p>
                     <p className="font-bold text-white">{user.followersCount}</p>
                 </div>
@@ -70,6 +71,25 @@ const UserCard = ({ user, settings }) => {
             </div>
         </Link>
     );
+};
+
+// --- ADD THIS ENTIRE BLOCK ---
+UserCard.propTypes = {
+    user: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        avatar: PropTypes.string,
+        isGoldenMember: PropTypes.bool,
+        username: PropTypes.string.isRequired,
+        isVerified: PropTypes.bool,
+        verifiedAt: PropTypes.string, // Date string
+        followersCount: PropTypes.number,
+        predictionCount: PropTypes.number,
+        avgRating: PropTypes.number,
+        goldenSubscribersCount: PropTypes.number
+    }).isRequired,
+    settings: PropTypes.shape({
+        isVerificationEnabled: PropTypes.bool
+    })
 };
 // --- End UserCard Sub-component ---
 
@@ -167,6 +187,12 @@ const AdminUserList = ({ settings }) => {
             )}
         </div>
     );
+};
+
+AdminUserList.propTypes = {
+    settings: PropTypes.shape({
+        isVerificationEnabled: PropTypes.bool
+    })
 };
 
 export default AdminUserList;

@@ -1,6 +1,7 @@
 // src/components/AIWizardWaitlist.js
 
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import VerifiedTick from './VerifiedTick';
 import LoadMoreButton from './LoadMoreButton'; // Ensure LoadMoreButton is imported
@@ -85,6 +86,12 @@ const AIWizardWaitlist = ({ settings }) => {
             )}
         </div>
     );
+};
+
+AIWizardWaitlist.propTypes = {
+    settings: PropTypes.shape({
+        isVerificationEnabled: PropTypes.bool
+    })
 };
 
 export default AIWizardWaitlist;

@@ -6,16 +6,16 @@ import toast from 'react-hot-toast'; // Make sure toast is imported
 
 const AdminPanel = () => {
     const handleEvaluate = () => {
-        if (window.confirm("Are you sure you want to manually evaluate all active predictions?")) {
+        if (globalThis.confirm("Are you sure you want to manually evaluate all active predictions?")) {
             axios.post(`${process.env.REACT_APP_API_URL}/api/admin/evaluate`, {}, { withCredentials: true })
-                .then(res => toast.success("Evaluation job started."))
-                .catch(err => toast.error("Error: You might not be an admin."));
+                .then(() => toast.success("Evaluation job started."))
+                .catch(() => toast.error("Error: You might not be an admin."));
         }
     };
 
     // Function for the new button
     const handleRecalculateAnalytics = () => {
-        if (window.confirm("Are you sure you want to recalculate ALL analyst ratings, breakdowns, and badges for ALL users? This is a heavy operation and will reset badge/prediction points.")) {
+        if (globalThis.confirm("Are you sure you want to recalculate ALL analyst ratings, breakdowns, and badges for ALL users? This is a heavy operation and will reset badge/prediction points.")) {
             const promise = axios.post(`${process.env.REACT_APP_API_URL}/api/admin/recalculate-analytics`, {}, { withCredentials: true });
 
             toast.promise(promise, {
