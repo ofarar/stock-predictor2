@@ -1116,5 +1116,8 @@
       "title": "{{username}} Profili & Tahmin Kaydı | StockPredictor",
       "description": "StockPredictor'da {{username}} kullanıcısının tam profilini, tahmin geçmişini, rozetlerini ve analist puanını görüntüleyin. Yeni tahminlerinden haberdar olmak için takip edin."
     }
-  }
+  },
+  "common.accept": "Kabul Et",
+  "common.decline": "Reddet",
+  "common.cookieConsent": "Bu web sitesi, kullanıcı deneyimini iyileştirmek için çerezler kullanır. Kabul ederek, çerezleri analiz ve yönlendirmeler için kullanmamızı onaylamış olursunuz."
 }

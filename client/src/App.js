@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CookieConsent from "react-cookie-consent";
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { Helmet } from 'react-helmet-async'; // <-- 1. IMPORT
@@ -44,6 +45,7 @@ function App() {
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
   const [stockToPredict, setStockToPredict] = useState(null);
   const [settings, setSettings] = useState(null);
+  const [cookieConsent, setCookieConsent] = useState(false);
 
   // Fetch the current user once when the app loads
   const fetchUser = () => {
@@ -63,13 +65,13 @@ function App() {
     // Check for 'ref' in the URL query parameters
     const params = new URLSearchParams(window.location.search);
     const refCode = params.get('ref');
-    if (refCode) {
+    if (refCode && cookieConsent) {
       // Store it in localStorage to persist it until the user logs in
       localStorage.setItem('referralCode', refCode);
     }
     // --- END NEW ---
 
-  }, []);
+  }, [cookieConsent]);
 
   // This function is now passed to more components
   const requestLogin = () => setIsLoginPromptOpen(true);
@@ -136,6 +138,27 @@ function App() {
         </main>
         <Footer />
       </div>
+      {/* --- 5. ADD THE BANNER --- */}
+      <CookieConsent
+        location="bottom"
+        buttonText={t('common.accept', 'Accept')}
+        declineButtonText={t('common.decline', 'Decline')}
+        cookieName="stockpredictor-cookie-consent"
+        style={{ background: "#2B374A" }}
+        buttonStyle={{ color: "#4e503b", fontSize: "13px", background: "#EAB308", borderRadius: "5px" }}
+        declineButtonStyle={{ color: "#FFF", fontSize: "13px", background: "#4B5563", borderRadius: "5px" }}
+        expires={150}
+        enableDeclineButton
+        onAccept={() => {
+          setCookieConsent(true);
+        }}
+        onDecline={() => {
+          setCookieConsent(false);
+        }}
+      >
+        {t('common.cookieConsent', 'This website uses cookies to enhance the user experience. By accepting, you agree to our use of cookies for analytics and referrals.')}
+      </CookieConsent>
+      {/* --- END BANNER --- */}
     </Router>
   );
 }

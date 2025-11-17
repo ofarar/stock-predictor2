@@ -1115,5 +1115,8 @@
             "title": "Perfil e Historial de Predicciones de {{username}} | StockPredictor",
             "description": "Vea el perfil completo, historial de predicciones, insignias y rating de analista de {{username}} en StockPredictor. Sígalo para recibir actualizaciones sobre sus nuevas predicciones."
         }
-    }
+    },
+    "common.accept": "Aceptar",
+    "common.decline": "Rechazar",
+    "common.cookieConsent": "Este sitio web utiliza cookies para mejorar la experiencia del usuario. Al aceptar, usted acepta nuestro uso de cookies para análisis y referencias."
 }

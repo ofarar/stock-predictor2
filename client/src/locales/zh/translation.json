@@ -1115,5 +1115,8 @@
             "title": "{{username}} 的个人资料和预测记录 | StockPredictor",
             "description": "在 StockPredictor 上查看 {{username}} 的完整个人资料、预测历史、徽章和分析师评级。关注他们以获取他们的新预测更新。"
         }
-    }
+    },
+    "common.accept": "接受",
+    "common.decline": "拒绝",
+    "common.cookieConsent": "本网站使用cookie来增强用户体验。接受即表示您同意我们使用cookie进行分析和推荐。"
 }

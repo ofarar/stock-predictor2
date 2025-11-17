@@ -1115,5 +1115,8 @@
             "title": "Profil & Historique de Prédictions de {{username}} | StockPredictor",
             "description": "Consultez le profil complet, l'historique des prédictions, les badges et la note d'analyste de {{username}} sur StockPredictor. Suivez-le pour recevoir des mises à jour sur ses nouvelles prédictions."
         }
-    }
+    },
+    "common.accept": "Accepter",
+    "common.decline": "Refuser",
+    "common.cookieConsent": "Ce site Web utilise des cookies pour améliorer l'expérience utilisateur. En acceptant, vous consentez à notre utilisation de cookies pour les analyses et les parrainages."
 }

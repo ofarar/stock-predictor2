@@ -1110,5 +1110,8 @@
             "title": "{{username}}s Profil & Prognose-Verlauf | StockPredictor",
             "description": "Sehen Sie sich das vollständige Profil, den Prognose-Verlauf, die Abzeichen und das Analysten-Rating von {{username}} auf StockPredictor an. Folgen Sie ihm, um Updates zu seinen neuen Prognosen zu erhalten."
         }
-    }
+    },
+    "common.accept": "Akzeptieren",
+    "common.decline": "Ablehnen",
+    "common.cookieConsent": "Diese Website verwendet Cookies, um die Benutzererfahrung zu verbessern. Mit Ihrer Zustimmung erklären Sie sich mit der Verwendung von Cookies für Analysen und Empfehlungen einverstanden."
 }
