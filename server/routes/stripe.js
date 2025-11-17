@@ -58,7 +58,7 @@ router.post('/create-checkout-session', async (req, res) => {
     const YOUR_DOMAIN =
         process.env.NODE_ENV === 'production'
             ? 'https://predictostock.vercel.app'
-            : 'http://localhost:3000';
+            : 'http://localhost:5173';
 
     const VERIFIED_PRICE_ID = process.env.VERIFIED_PRICE_ID;
 
@@ -146,7 +146,7 @@ router.post('/connect/create-account', async (req, res) => {
 router.post('/connect/onboarding-link', async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');
 
-    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:3000';
+    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:5173';
 
     try {
         const user = await User.findById(req.user.id);
@@ -189,7 +189,7 @@ router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
         return res.status(400).json({ message: "You cannot subscribe to yourself." });
     }
 
-    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:3000';
+    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:5173';
 
     try {
         const [payingUser, targetGoldenMember] = await Promise.all([
@@ -265,7 +265,7 @@ router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
 // --- STRIPE CUSTOMER PORTAL ---
 router.post('/create-portal-session', async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');
-    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:3000';
+    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:5173';
 
     try {
         const user = await User.findById(req.user.id);

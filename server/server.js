@@ -23,7 +23,7 @@ app.use(helmet());
 
 // --- CORS Configuration ---
 // This tells your server to accept requests from your Vercel app.
-const allowedOrigins = ['http://localhost:3000', 'https://predictostock.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://predictostock.vercel.app'];
 
 const corsOptions = {
     origin: function (origin, callback) {
