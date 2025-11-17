@@ -59,9 +59,9 @@
     "verified_status_modal_close": "关闭",
     "verified_status_modal_remove": "移除认证状态",
     "homepage_aim": "预测市场。追踪你的准确率。",
-    "about_title": "关于 StockPredictor",
+    "about_title": "关于 StockPredictorAI",
     "about_mission_title": "我们的使命",
-    "about_mission_text": "StockPredictor 的创立基于一个原则：有见识的群体智慧可以成为驾驭金融市场的强大工具。我们的使命是提供一个平台，让新手投资者和专业人士都能测试自己的分析能力，向社区学习，并建立透明的市场预测记录。",
+    "about_mission_text": "StockPredictorAI 的创立基于一个原则：有见识的群体智慧可以成为驾驭金融市场的强大工具。我们的使命是提供一个平台，让新手投资者和专业人士都能测试自己的分析能力，向社区学习，并建立透明的市场预测记录。",
     "about_how_it_works_title": "运作方式",
     "about_how_it_works_predict_title": "1. 预测市场",
     "about_how_it_works_predict_text": "对数千种资产进行从每小时到每年的不同时间范围的预测。",
@@ -172,7 +172,7 @@
     "golden_feed_no_posts_title": "未找到符合这些筛选条件的帖子。",
     "golden_feed_no_posts_subtitle": "尝试扩大搜索范围或订阅更多黄金会员。",
     "loading_dashboard": "正在加载仪表板...",
-    "welcome_message": "欢迎来到 StockPredictor",
+    "welcome_message": "欢迎来到 StockPredictorAI",
     "description": "登录以开始做出预测并建立您的虚拟投资组合。",
     "google_signin": "使用谷歌登录",
     "loading_settings": "正在加载设置...",
@@ -210,7 +210,7 @@
     "privacy_title": "隐私政策",
     "privacy_last_updated": "最后更新于：2025 年 11 月 8 日",
     "privacy_intro_title": "1. 简介",
-    "privacy_intro_text": "欢迎来到 StockPredictor（“我们”、“我们的”）。我们致力于保护您的个人数据。本隐私政策解释了当您使用我们的服务时，我们如何收集、使用、共享和保护您的信息。使用 StockPredictor 即表示您同意按照本政策收集和使用信息。本政策是根据欧盟的《通用数据保护条例》（GDPR）编写的。",
+    "privacy_intro_text": "欢迎来到 StockPredictorAI（“我们”、“我们的”）。我们致力于保护您的个人数据。本隐私政策解释了当您使用我们的服务时，我们如何收集、使用、共享和保护您的信息。使用 StockPredictorAI 即表示您同意按照本政策收集和使用信息。本政策是根据欧盟的《通用数据保护条例》（GDPR）编写的。",
     "info_collection_title": "2. 我们收集的信息",
     "info_collection_a_title": "A. 您提供的信息",
     "info_collection_a_text": "我们收集您直接提供给我们的信息，包括： \n • 帐户信息：当您使用 Google 注册时，我们会收到您的 Google 帐户提供的姓名、电子邮件地址和个人资料图片。当您完善个人资料时，我们还会收集您选择的用户名以及您添加的任何可选信息，例如您的“关于”简介和社交媒体链接。 \n • 付款信息：为了处理“Verified Predictor”身份或“Golden Member”订阅的付款，我们需要您的付款信息。这些信息由我们的支付处理商 Stripe 直接收集和处理，绝不会存储在我们的服务器上。我们只存储您的订阅状态和客户 ID 的记录。 \n • 用户内容：我们收集您创建的内容，例如您的预测、理由和 Golden Feed 帖子。",
@@ -306,7 +306,7 @@
         "sections": {
             "acceptance_of_terms": {
                 "title": "1. 接受条款",
-                "content": "访问或使用 StockPredictor 网站（“服务”），即表示您同意受本服务条款的约束。如果您不同意条款的任何部分，则不得访问本服务。"
+                "content": "访问或使用 StockPredictorAI 网站（“服务”），即表示您同意受本服务条款的约束。如果您不同意条款的任何部分，则不得访问本服务。"
             },
             "no_financial_advice": {
                 "title": "2. 无财务建议",
@@ -318,19 +318,19 @@
             },
             "limitation_of_liability": {
                 "title": "4. 责任限制",
-                "content": "在任何情况下，StockPredictor 及其董事或员工均不对因您访问或使用本服务而导致的任何间接、附带、特殊、后果性或惩罚性损害负责，包括但不限于利润、数据或其他无形损失。"
+                "content": "在任何情况下，StockPredictorAI 及其董事或员工均不对因您访问或使用本服务而导致的任何间接、附带、特殊、后果性或惩罚性损害负责，包括但不限于利润、数据或其他无形损失。"
             },
             "golden_members": {
                 "title": "5. 黄金会员订阅和平台费用",
-                "content": "StockPredictor 为某些用户（“黄金会员”）提供一个平台，以提供基于订阅的内容。激活您的黄金会员身份，即表示您同意向其他用户提供这些服务。为支付平台运营、支付处理和管理成本，StockPredictor 将从您的订阅者产生的总订阅收入中保留百分之三十（30%）的平台费（“平台费”）。剩余的百分之七十（70%）将通过我们的支付处理商 Stripe 支付给您。这笔 30% 的费用会自动从每笔交易中扣除。成为黄金会员，即表示您承认并同意此 30% 平台费结构。"
+                "content": "StockPredictorAI 为某些用户（“黄金会员”）提供一个平台，以提供基于订阅的内容。激活您的黄金会员身份，即表示您同意向其他用户提供这些服务。为支付平台运营、支付处理和管理成本，StockPredictorAI 将从您的订阅者产生的总订阅收入中保留百分之三十（30%）的平台费（“平台费”）。剩余的百分之七十（70%）将通过我们的支付处理商 Stripe 支付给您。这笔 30% 的费用会自动从每笔交易中扣除。成为黄金会员，即表示您承认并同意此 30% 平台费结构。"
             },
             "analyst_rating": {
                 "title": "6. 分析师评分系统",
-                "content": "本服务设有“分析师评分”系统，以奖励高质量的贡献。用户可以通过各种活动获得评分，包括但不限于：在预测中获得高分（例如 >70% 的准确率）、赢得平台徽章、在排行榜上获得高排名以及分享平台内容。具体的活动和评分数量由 StockPredictor 决定，并可能随时更改。此评分为一项促销功能，没有直接的现金价值。"
+                "content": "本服务设有“分析师评分”系统，以奖励高质量的贡献。用户可以通过各种活动获得评分，包括但不限于：在预测中获得高分（例如 >70% 的准确率）、赢得平台徽章、在排行榜上获得高排名以及分享平台内容。具体的活动和评分数量由 StockPredictorAI 决定，并可能随时更改。此评分为一项促销功能，没有直接的现金价值。"
             },
             "creator_pool": {
                 "title": "7. 创作者池支付",
-                "content": "作为对我们顶级贡献者的奖励，StockPredictor 将其季度净利润（收入减去所有运营支出、税费）的百分之五十（50%）分配到一个“创作者池”。该池根据用户在平台总分析师评分中所占百分比的“分析师评分”分配给用户。付款按季度计算，并按 Net-30（季度结束后 30 天）分配。用户必须累积至少 100.00 美元的付款余额才有资格获得付款。低于此最低金额的余额将结转至下一季度。所有用户均需自行承担因任何付款而产生的税务责任。StockPredictor 保留随时修改、暂停或终止创作者池计划的权利，无论是否另行通知。"
+                "content": "作为对我们顶级贡献者的奖励，StockPredictorAI 将其季度净利润（收入减去所有运营支出、税费）的百分之五十（50%）分配到一个“创作者池”。该池根据用户在平台总分析师评分中所占百分比的“分析师评分”分配给用户。付款按季度计算，并按 Net-30（季度结束后 30 天）分配。用户必须累积至少 100.00 美元的付款余额才有资格获得付款。低于此最低金额的余额将结转至下一季度。所有用户均需自行承担因任何付款而产生的税务责任。StockPredictorAI 保留随时修改、暂停或终止创作者池计划的权利，无论是否另行通知。"
             },
             "payments_and_refunds": {
                 "title": "8. 付款、订阅和退款",
@@ -338,15 +338,15 @@
             },
             "content_and_ip": {
                 "title": "9. 用户内容和知识产权",
-                "content": "您保留您在服务上创建的内容的所有权，包括您的个人资料信息、预测理由和 Golden Feed 帖子（“用户内容”）。通过发布用户内容，您授予 StockPredictor 非排他性、全球性、免版税、永久性的许可，允许我们仅为运营、推广和改进服务的目的使用、托管、显示、复制和分发您的用户内容。您保证您拥有您的用户内容或拥有发布内容并授予我们此许可所需的所有权利，并且您的内容不侵犯任何第三方的权利。如果您认为您的版权受到侵犯，请立即通过 predictostock@gmail.com 与我们联系并提供 DMCA 删除通知。"
+                "content": "您保留您在服务上创建的内容的所有权，包括您的个人资料信息、预测理由和 Golden Feed 帖子（“用户内容”）。通过发布用户内容，您授予 StockPredictorAI 非排他性、全球性、免版税、永久性的许可，允许我们仅为运营、推广和改进服务的目的使用、托管、显示、复制和分发您的用户内容。您保证您拥有您的用户内容或拥有发布内容并授予我们此许可所需的所有权利，并且您的内容不侵犯任何第三方的权利。如果您认为您的版权受到侵犯，请立即通过 predictostock@gmail.com 与我们联系并提供 DMCA 删除通知。"
             },
             "termination": {
                 "title": "10. 帐户终止",
-                "content": "StockPredictor 保留自行决定暂停或终止您的帐户和服务访问权限的权利，无论是否通知，原因包括但不限于违反本条款。您也可以随时通过联系我们或使用应用内删除功能（如果可用）来终止您的帐户。一旦任何一方终止，您使用服务的权利将立即终止。所有预付的订阅费用均不予退还，您无权获得终止时剩余订阅期的任何部分的退款。我们保留在终止时删除您的用户内容的权利，但没有义务这样做。"
+                "content": "StockPredictorAI 保留自行决定暂停或终止您的帐户和服务访问权限的权利，无论是否通知，原因包括但不限于违反本条款。您也可以随时通过联系我们或使用应用内删除功能（如果可用）来终止您的帐户。一旦任何一方终止，您使用服务的权利将立即终止。所有预付的订阅费用均不予退还，您无权获得终止时剩余订阅期的任何部分的退款。我们保留在终止时删除您的用户内容的权利，但没有义务这样做。"
             },
             "disputes": {
                 "title": "11. 争议解决和管辖法律",
-                "content": "本服务条款受荷兰法律管辖并据其解释，不考虑其法律冲突原则。您同意，您与 StockPredictor 之间的任何争议将专门通过在荷兰海牙进行的具有约束力的仲裁解决，而不是在法庭上解决。您和 StockPredictor 同意放弃参与集体诉讼或集体仲裁的任何权利。所有争议必须以您的个人身份提出，不得作为任何声称的集体或代表诉讼的原告或集体成员。"
+                "content": "本服务条款受荷兰法律管辖并据其解释，不考虑其法律冲突原则。您同意，您与 StockPredictorAI 之间的任何争议将专门通过在荷兰海牙进行的具有约束力的仲裁解决，而不是在法庭上解决。您和 StockPredictorAI 同意放弃参与集体诉讼或集体仲裁的任何权利。所有争议必须以您的个人身份提出，不得作为任何声称的集体或代表诉讼的原告或集体成员。"
             }
         }
     },
@@ -1022,13 +1022,13 @@
     "analystRatingInfo.section5.title": "5. 推荐",
     "analystRatingInfo.section5.text": "您将因邀请新的活跃用户加入平台而获得丰厚的评分奖励。",
     "referralModal.title": "邀请并赚取",
-    "referralModal.description": "邀请朋友加入 StockPredictor。当他们注册时，您将获得 500 分析师评分积分！",
+    "referralModal.description": "邀请朋友加入 StockPredictorAI。当他们注册时，您将获得 500 分析师评分积分！",
     "referralModal.copied": "链接已复制到剪贴板！",
     "referralModal.copy": "复制",
     "referralModal.share": "分享到 X",
-    "referralModal.shareTweet": "快来加入 StockPredictor，开始您的市场预测！我们仅凭准确预测就能赚取平台收入分成。",
+    "referralModal.shareTweet": "快来加入 StockPredictorAI，开始您的市场预测！我们仅凭准确预测就能赚取平台收入分成。",
     "referralModal.shareOnTelegram": "分享到 Telegram",
-    "referralModal.shareTelegram": "快来加入 StockPredictor，开始您的市场预测！我们仅凭准确预测就能赚取平台收入分成。",
+    "referralModal.shareTelegram": "快来加入 StockPredictorAI，开始您的市场预测！我们仅凭准确预测就能赚取平台收入分成。",
     "analystRating.pie.predictions": "来自预测",
     "analystRating.pie.badges": "来自徽章",
     "analystRating.pie.shares": "来自分享",
@@ -1096,24 +1096,24 @@
     "analystRating.pie.labels.frombonus": "奖励",
     "seo": {
         "default": {
-            "title": "StockPredictor - 预测市场，追踪您的准确性",
-            "description": "加入 StockPredictor 社区，进行股票预测，追踪您的准确性，并关注表现顶尖的分析师。注册以建立您的业绩记录。"
+            "title": "StockPredictorAI - 预测市场，追踪您的准确性",
+            "description": "加入 StockPredictorAI 社区，进行股票预测，追踪您的准确性，并关注表现顶尖的分析师。注册以建立您的业绩记录。"
         },
         "explore_page": {
-            "title": "浏览股票预测与顶尖表现者 | StockPredictor",
-            "description": "浏览 StockPredictor 社区最新的活跃和已评估的股票预测。按股票、时间范围筛选，看看谁是顶尖表现者。"
+            "title": "浏览股票预测与顶尖表现者 | StockPredictorAI",
+            "description": "浏览 StockPredictorAI 社区最新的活跃和已评估的股票预测。按股票、时间范围筛选，看看谁是顶尖表现者。"
         },
         "stock_page": {
-            "title": "{{name}} ({{ticker}}) 股票预测与社区情绪 | StockPredictor",
-            "description": "查看社区对 {{name}} ({{ticker}}) 的最新预测和情绪。加入对话，在 StockPredictor 上做出您自己的股票预测。"
+            "title": "{{name}} ({{ticker}}) 股票预测与社区情绪 | StockPredictorAI",
+            "description": "查看社区对 {{name}} ({{ticker}}) 的最新预测和情绪。加入对话，在 StockPredictorAI 上做出您自己的股票预测。"
         },
         "prediction_page": {
-            "title": "{{username}} 对 {{ticker}} 的 {{type}} 预测 | StockPredictor",
-            "description": "查看 {{username}} 对 {{ticker}} 的 {{type}} 预测。您同意还是不同意？对他们的预测进行投票，并在 StockPredictor 上查看完整分析。"
+            "title": "{{username}} 对 {{ticker}} 的 {{type}} 预测 | StockPredictorAI",
+            "description": "查看 {{username}} 对 {{ticker}} 的 {{type}} 预测。您同意还是不同意？对他们的预测进行投票，并在 StockPredictorAI 上查看完整分析。"
         },
         "profile_page": {
-            "title": "{{username}} 的个人资料和预测记录 | StockPredictor",
-            "description": "在 StockPredictor 上查看 {{username}} 的完整个人资料、预测历史、徽章和分析师评级。关注他们以获取他们的新预测更新。"
+            "title": "{{username}} 的个人资料和预测记录 | StockPredictorAI",
+            "description": "在 StockPredictorAI 上查看 {{username}} 的完整个人资料、预测历史、徽章和分析师评级。关注他们以获取他们的新预测更新。"
         }
     },
     "common.accept": "接受",

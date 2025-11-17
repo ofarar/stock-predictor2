@@ -39,7 +39,7 @@ const ReferralModal = ({ isOpen, onClose, userId }) => {
                 </div>
 
                 <p className="text-gray-300 mb-4">
-                    {t('referralModal.description', 'Invite friends to StockPredictor. When they sign up, you’ll earn 500 Analyst Rating points!')}
+                    {t('referralModal.description', 'Invite friends to StockPredictorAI. When they sign up, you’ll earn 500 Analyst Rating points!')}
                 </p>
 
                 <div className="bg-gray-900 p-3 rounded-md flex items-center gap-2">

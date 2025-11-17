@@ -59,9 +59,9 @@
     "verified_status_modal_close": "Cerrar",
     "verified_status_modal_remove": "Eliminar estado de verificación",
     "homepage_aim": "Predice el mercado. Rastrea tu precisión.",
-    "about_title": "Acerca de StockPredictor",
+    "about_title": "Acerca de StockPredictorAI",
     "about_mission_title": "Nuestra Misión",
-    "about_mission_text": "StockPredictor se fundó bajo el principio de que la sabiduría colectiva de las personas informadas puede ser una herramienta poderosa para navegar por los mercados financieros. Nuestra misión es ofrecer una plataforma donde tanto los inversores novatos como los profesionales puedan poner a prueba sus habilidades analíticas, aprender de la comunidad y construir un historial transparente de sus predicciones de mercado.",
+    "about_mission_text": "StockPredictorAI se fundó bajo el principio de que la sabiduría colectiva de las personas informadas puede ser una herramienta poderosa para navegar por los mercados financieros. Nuestra misión es ofrecer una plataforma donde tanto los inversores novatos como los profesionales puedan poner a prueba sus habilidades analíticas, aprender de la comunidad y construir un historial transparente de sus predicciones de mercado.",
     "about_how_it_works_title": "Cómo Funciona",
     "about_how_it_works_predict_title": "1. Predice el Mercado",
     "about_how_it_works_predict_text": "Haz predicciones sobre miles de activos con varios plazos, desde horarios hasta anuales.",
@@ -172,7 +172,7 @@
     "golden_feed_no_posts_title": "No se encontraron publicaciones para estos filtros.",
     "golden_feed_no_posts_subtitle": "Intenta ampliar tus criterios de búsqueda o suscribirte a más Miembros Dorados.",
     "loading_dashboard": "Cargando panel...",
-    "welcome_message": "Bienvenido a StockPredictor",
+    "welcome_message": "Bienvenido a StockPredictorAI",
     "description": "Inicia sesión para empezar a hacer predicciones y construir tu cartera virtual.",
     "google_signin": "Iniciar sesión con Google",
     "loading_settings": "Cargando ajustes...",
@@ -210,7 +210,7 @@
     "privacy_title": "Política de Privacidad",
     "privacy_last_updated": "Última actualización: 8 de noviembre de 2025",
     "privacy_intro_title": "1. Introducción",
-    "privacy_intro_text": "Bienvenido a StockPredictor ('nosotros', 'nos', 'nuestro'). Estamos comprometidos a proteger sus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos su información cuando utiliza nuestro servicio. Al usar StockPredictor, usted acepta la recopilación y el uso de información de acuerdo con esta política. Esta política está redactada en cumplimiento del Reglamento General de Protección de Datos (RGPD) de la UE.",
+    "privacy_intro_text": "Bienvenido a StockPredictorAI ('nosotros', 'nos', 'nuestro'). Estamos comprometidos a proteger sus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos su información cuando utiliza nuestro servicio. Al usar StockPredictorAI, usted acepta la recopilación y el uso de información de acuerdo con esta política. Esta política está redactada en cumplimiento del Reglamento General de Protección de Datos (RGPD) de la UE.",
     "info_collection_title": "2. Información que recopilamos",
     "info_collection_a_title": "A. Información que usted proporciona",
     "info_collection_a_text": "Recopilamos la información que usted nos proporciona directamente, incluyendo: \n • Información de la cuenta: Cuando se registra usando Google, recibimos su nombre, dirección de correo electrónico y foto de perfil según lo proporciona su cuenta de Google. Cuando completa su perfil, también recopilamos el nombre de usuario que eligió y cualquier información opcional que agregue, como su biografía 'Acerca de' y enlaces a redes sociales. \n • Información de pago: Para procesar los pagos del estado 'Verified Predictor' o las suscripciones 'Golden Member', requerimos su información de pago. Esta es recopilada y procesada directamente por nuestro procesador de pagos, Stripe, y nunca se almacena en nuestros servidores. Solo almacenamos un registro de su estado de suscripción e ID de cliente. \n • Contenido del usuario: Recopilamos el contenido que usted crea, como sus predicciones, fundamentos y publicaciones de Golden Feed.",
@@ -306,7 +306,7 @@
         "sections": {
             "acceptance_of_terms": {
                 "title": "1. Aceptación de los Términos",
-                "content": "Al acceder o utilizar el sitio web de StockPredictor (\"Servicio\"), usted acepta estar sujeto a estos Términos de Servicio. Si no está de acuerdo con alguna parte de los términos, no podrá acceder al Servicio."
+                "content": "Al acceder o utilizar el sitio web de StockPredictorAI (\"Servicio\"), usted acepta estar sujeto a estos Términos de Servicio. Si no está de acuerdo con alguna parte de los términos, no podrá acceder al Servicio."
             },
             "no_financial_advice": {
                 "title": "2. No es Asesoramiento Financiero",
@@ -318,19 +318,19 @@
             },
             "limitation_of_liability": {
                 "title": "4. Limitación de Responsabilidad",
-                "content": "En ningún caso StockPredictor, ni sus directores o empleados, serán responsables por daños indirectos, incidentales, especiales, consecuentes o punitivos, incluyendo, sin limitación, la pérdida de beneficios, datos u otras pérdidas intangibles, que resulten de su acceso o uso del Servicio."
+                "content": "En ningún caso StockPredictorAI, ni sus directores o empleados, serán responsables por daños indirectos, incidentales, especiales, consecuentes o punitivos, incluyendo, sin limitación, la pérdida de beneficios, datos u otras pérdidas intangibles, que resulten de su acceso o uso del Servicio."
             },
             "golden_members": {
                 "title": "5. Suscripciones de Miembro Golden y Tarifas de la Plataforma",
-                "content": "StockPredictor proporciona una plataforma para que ciertos usuarios ('Miembros Golden') ofrezcan contenido basado en suscripción. Al activar su estado de Miembro Golden, acepta ofrecer estos servicios a otros usuarios. Para cubrir la operación de la plataforma, el procesamiento de pagos y los costos administrativos, StockPredictor retendrá una tarifa de plataforma del treinta por ciento (30%) (la 'Tarifa de Plataforma') de los ingresos brutos por suscripción generados por sus suscriptores. El setenta por ciento (70%) restante se le pagará a través de nuestro procesador de pagos, Stripe. Esta tarifa del 30% se deduce automáticamente de cada transacción. Al convertirse en Miembro Golden, usted reconoce y acepta esta estructura de Tarifa de Plataforma del 30%."
+                "content": "StockPredictorAI proporciona una plataforma para que ciertos usuarios ('Miembros Golden') ofrezcan contenido basado en suscripción. Al activar su estado de Miembro Golden, acepta ofrecer estos servicios a otros usuarios. Para cubrir la operación de la plataforma, el procesamiento de pagos y los costos administrativos, StockPredictorAI retendrá una tarifa de plataforma del treinta por ciento (30%) (la 'Tarifa de Plataforma') de los ingresos brutos por suscripción generados por sus suscriptores. El setenta por ciento (70%) restante se le pagará a través de nuestro procesador de pagos, Stripe. Esta tarifa del 30% se deduce automáticamente de cada transacción. Al convertirse en Miembro Golden, usted reconoce y acepta esta estructura de Tarifa de Plataforma del 30%."
             },
             "analyst_rating": {
                 "title": "6. Sistema de Rating de Analista",
-                "content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictor y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo."
+                "content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictorAI y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo."
             },
             "creator_pool": {
                 "title": "7. Pagos del Fondo de Creadores",
-                "content": "Como recompensa a nuestros principales contribuyentes, StockPredictor asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictor se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
+                "content": "Como recompensa a nuestros principales contribuyentes, StockPredictorAI asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictorAI se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
             },
             "payments_and_refunds": {
                 "title": "8. Pagos, Suscripciones y Reembolsos",
@@ -338,15 +338,15 @@
             },
             "content_and_ip": {
                 "title": "9. Contenido del Usuario y Derechos de Propiedad Intelectual",
-                "content": "Usted conserva todos los derechos de propiedad sobre el contenido que crea en el Servicio, incluida la información de su perfil, las justificaciones de las predicciones y las publicaciones del Golden Feed ('Contenido del Usuario'). Al publicar Contenido del Usuario, usted otorga a StockPredictor una licencia no exclusiva, mundial, libre de regalías y perpetua para usar, alojar, mostrar, reproducir y distribuir su Contenido del Usuario únicamente con el fin de operar, promocionar y mejorar el Servicio. Usted garantiza que es propietario de su Contenido del Usuario o que tiene todos los derechos necesarios para publicarlo y otorgarnos esta licencia, y que su contenido no infringe los derechos de ningún tercero. Si cree que se han infringido sus derechos de autor, contáctenos de inmediato en predictostock@gmail.com con un Aviso de Retirada de DMCA."
+                "content": "Usted conserva todos los derechos de propiedad sobre el contenido que crea en el Servicio, incluida la información de su perfil, las justificaciones de las predicciones y las publicaciones del Golden Feed ('Contenido del Usuario'). Al publicar Contenido del Usuario, usted otorga a StockPredictorAI una licencia no exclusiva, mundial, libre de regalías y perpetua para usar, alojar, mostrar, reproducir y distribuir su Contenido del Usuario únicamente con el fin de operar, promocionar y mejorar el Servicio. Usted garantiza que es propietario de su Contenido del Usuario o que tiene todos los derechos necesarios para publicarlo y otorgarnos esta licencia, y que su contenido no infringe los derechos de ningún tercero. Si cree que se han infringido sus derechos de autor, contáctenos de inmediato en predictostock@gmail.com con un Aviso de Retirada de DMCA."
             },
             "termination": {
                 "title": "10. Cancelación de la Cuenta",
-                "content": "StockPredictor se reserva el derecho de suspender o cancelar su cuenta y el acceso al Servicio a nuestra entera discreción, con o sin previo aviso, por cualquier motivo, incluida la violación de estos Términos. También puede cancelar su cuenta en cualquier momento contactándonos o utilizando una función de eliminación en la aplicación, si estuviera disponible. Tras la cancelación por cualquiera de las partes, su derecho a utilizar el Servicio cesará de inmediato. Todas las tarifas prepagadas por Suscripciones no son reembolsables y no será elegible para un reembolso por ninguna parte del período de suscripción restante en el momento de la cancelación. Nos reservamos el derecho de eliminar su Contenido del Usuario tras la cancelación, pero no estamos obligados a hacerlo."
+                "content": "StockPredictorAI se reserva el derecho de suspender o cancelar su cuenta y el acceso al Servicio a nuestra entera discreción, con o sin previo aviso, por cualquier motivo, incluida la violación de estos Términos. También puede cancelar su cuenta en cualquier momento contactándonos o utilizando una función de eliminación en la aplicación, si estuviera disponible. Tras la cancelación por cualquiera de las partes, su derecho a utilizar el Servicio cesará de inmediato. Todas las tarifas prepagadas por Suscripciones no son reembolsables y no será elegible para un reembolso por ninguna parte del período de suscripción restante en el momento de la cancelación. Nos reservamos el derecho de eliminar su Contenido del Usuario tras la cancelación, pero no estamos obligados a hacerlo."
             },
             "disputes": {
                 "title": "11. Resolución de Disputas y Ley Aplicable",
-                "content": "Estos Términos de Servicio se rigen e interpretan de acuerdo con las leyes de los Países Bajos, sin tener en cuenta sus principios de conflicto de leyes. Usted acepta resolver cualquier disputa que tenga con StockPredictor exclusivamente a través de un arbitraje vinculante en La Haya, Países Bajos, y no en un tribunal de justicia. Usted y StockPredictor acuerdan renunciar a cualquier derecho a participar en una demanda colectiva o un arbitraje colectivo. Todas las disputas deben presentarse a título individual, y no como demandante o miembro de una clase en ningún presunto procedimiento colectivo o representativo."
+                "content": "Estos Términos de Servicio se rigen e interpretan de acuerdo con las leyes de los Países Bajos, sin tener en cuenta sus principios de conflicto de leyes. Usted acepta resolver cualquier disputa que tenga con StockPredictorAI exclusivamente a través de un arbitraje vinculante en La Haya, Países Bajos, y no en un tribunal de justicia. Usted y StockPredictorAI acuerdan renunciar a cualquier derecho a participar en una demanda colectiva o un arbitraje colectivo. Todas las disputas deben presentarse a título individual, y no como demandante o miembro de una clase en ningún presunto procedimiento colectivo o representativo."
             }
         }
     },
@@ -1022,13 +1022,13 @@
     "analystRatingInfo.section5.title": "5. Referidos",
     "analystRatingInfo.section5.text": "Ganará una bonificación de rating significativa por invitar a usuarios nuevos y activos a la plataforma.",
     "referralModal.title": "Invitar y Ganar",
-    "referralModal.description": "Invita a amigos a StockPredictor. ¡Cuando se registren, ganarás 500 puntos de Rating de Analista!",
+    "referralModal.description": "Invita a amigos a StockPredictorAI. ¡Cuando se registren, ganarás 500 puntos de Rating de Analista!",
     "referralModal.copied": "¡Enlace copiado al portapapeles!",
     "referralModal.copy": "Copiar",
     "referralModal.share": "Compartir en X",
-    "referralModal.shareTweet": "¡Únete a mí en StockPredictor y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.",
+    "referralModal.shareTweet": "¡Únete a mí en StockPredictorAI y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.",
     "referralModal.shareOnTelegram": "Compartir en Telegram",
-    "referralModal.shareTelegram": "¡Únete a mí en StockPredictor y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.",
+    "referralModal.shareTelegram": "¡Únete a mí en StockPredictorAI y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.",
     "analystRating.pie.predictions": "De Predicciones",
     "analystRating.pie.badges": "De Insignias",
     "analystRating.pie.shares": "De Compartidos",
@@ -1096,24 +1096,24 @@
     "analystRating.pie.labels.frombonus": "Bono",
     "seo": {
         "default": {
-            "title": "StockPredictor - Prediga el Mercado, Siga su Precisión",
-            "description": "Únase a la comunidad de StockPredictor para hacer predicciones de acciones, seguir su precisión y seguir a los analistas con mejor rendimiento. Regístrese para construir su historial."
+            "title": "StockPredictorAI - Prediga el Mercado, Siga su Precisión",
+            "description": "Únase a la comunidad de StockPredictorAI para hacer predicciones de acciones, seguir su precisión y seguir a los analistas con mejor rendimiento. Regístrese para construir su historial."
         },
         "explore_page": {
-            "title": "Explorar Predicciones de Acciones y Analistas Top | StockPredictor",
-            "description": "Explore las últimas predicciones de acciones activas y evaluadas de la comunidad de StockPredictor. Filtre por acción, período de tiempo y vea quiénes son los mejores."
+            "title": "Explorar Predicciones de Acciones y Analistas Top | StockPredictorAI",
+            "description": "Explore las últimas predicciones de acciones activas y evaluadas de la comunidad de StockPredictorAI. Filtre por acción, período de tiempo y vea quiénes son los mejores."
         },
         "stock_page": {
-            "title": "Predicciones y Sentimiento de {{name}} ({{ticker}}) | StockPredictor",
-            "description": "Vea las últimas predicciones y el sentimiento de la comunidad para {{name}} ({{ticker}}). Únase a la conversación y haga su propia predicción de acciones en StockPredictor."
+            "title": "Predicciones y Sentimiento de {{name}} ({{ticker}}) | StockPredictorAI",
+            "description": "Vea las últimas predicciones y el sentimiento de la comunidad para {{name}} ({{ticker}}). Únase a la conversación y haga su propia predicción de acciones en StockPredictorAI."
         },
         "prediction_page": {
-            "title": "Predicción {{type}} de {{username}} para {{ticker}} | StockPredictor",
-            "description": "Vea la predicción {{type}} de {{username}} para {{ticker}}. ¿Está de acuerdo o en desacuerdo? Vote sobre su predicción y vea el análisis completo en StockPredictor."
+            "title": "Predicción {{type}} de {{username}} para {{ticker}} | StockPredictorAI",
+            "description": "Vea la predicción {{type}} de {{username}} para {{ticker}}. ¿Está de acuerdo o en desacuerdo? Vote sobre su predicción y vea el análisis completo en StockPredictorAI."
         },
         "profile_page": {
-            "title": "Perfil e Historial de Predicciones de {{username}} | StockPredictor",
-            "description": "Vea el perfil completo, historial de predicciones, insignias y rating de analista de {{username}} en StockPredictor. Sígalo para recibir actualizaciones sobre sus nuevas predicciones."
+            "title": "Perfil e Historial de Predicciones de {{username}} | StockPredictorAI",
+            "description": "Vea el perfil completo, historial de predicciones, insignias y rating de analista de {{username}} en StockPredictorAI. Sígalo para recibir actualizaciones sobre sus nuevas predicciones."
         }
     },
     "common.accept": "Aceptar",

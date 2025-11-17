@@ -28,8 +28,8 @@ const createEmailFooter = (email) => {
     const currentYear = new Date().getFullYear();
     return `
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.8em; color: #777;">
-            <p>&copy; ${currentYear} StockPredictor. All rights reserved.</p>
-            <p>You are receiving this email because you created an account on StockPredictor with the address ${email}.</p>
+            <p>&copy; ${currentYear} StockPredictorAI. All rights reserved.</p>
+            <p>You are receiving this email because you created an account on StockPredictorAI with the address ${email}.</p>
             <p>
                 <a href="${APP_URL}/privacy" style="color: #007BFF; text-decoration: none;">Privacy Policy</a> &bull;
                 <a href="${APP_URL}/terms" style="color: #007BFF; text-decoration: none;">Terms of Service</a>
@@ -52,7 +52,7 @@ exports.sendPriceChangeEmail = (email, username, creatorName, oldPrice, newPrice
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: `Price Change for your ${creatorName} Subscription`, html: emailBody
     }).catch(err => console.error("Price change email sending error:", err));
 };
@@ -74,7 +74,7 @@ exports.sendGoldenActivationEmail = (email, username) => {
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: 'Your Golden Member Status is Active!', html: emailBody
     }).catch(err => console.error("Golden activation email sending error:", err));
 };
@@ -88,13 +88,13 @@ exports.sendGoldenDeactivationEmail = (email, username) => {
             <p>This email confirms that you have successfully deactivated your Golden Member status. You will no longer be able to receive new subscribers, and your existing subscribers have been notified.</p>
             <p>You can reactivate your Golden Member status at any time from your profile settings.</p>
             <p style="margin-top: 20px; font-size: 0.9em; color: #777;">
-                - The StockPredictor Team
+                - The StockPredictorAI Team
             </p>
             ${createEmailFooter(email)} 
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: 'Your Golden Member Status is Deactivated', html: emailBody
     }).catch(err => console.error("Golden deactivation email sending error:", err));
 };
@@ -104,7 +104,7 @@ exports.sendGoldenDeactivationEmail = (email, username) => {
 exports.sendWelcomeEmail = (email, username) => {
     const emailBody = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-            <h1 style="color: #4CAF50; text-align: center;">Welcome to StockPredictor, ${username}!</h1>
+            <h1 style="color: #4CAF50; text-align: center;">Welcome to StockPredictorAI, ${username}!</h1>
             <p>We're thrilled to have you on board!</p>
             <p>Ready to jump in? You can start by making your first prediction or see what the community is predicting right now.</p>
             <div style="text-align: center; margin: 30px 0;">
@@ -116,8 +116,8 @@ exports.sendWelcomeEmail = (email, username) => {
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
-        subject: 'Welcome to StockPredictor! Your Journey Begins.', html: emailBody
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
+        subject: 'Welcome to StockPredictorAI! Your Journey Begins.', html: emailBody
     }).catch(err => console.error("Welcome email sending error:", err));
 };
 /**
@@ -126,7 +126,7 @@ exports.sendWelcomeEmail = (email, username) => {
 exports.sendContactFormEmail = (name, senderEmail, message) => {
     const emailBody = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <h2 style="color: #4CAF50;">New Message from StockPredictor Contact Form</h2>
+            <h2 style="color: #4CAF50;">New Message from StockPredictorAI Contact Form</h2>
             <p><strong>From:</strong> ${name} (${senderEmail})</p>
             <hr/>
             <p><strong>Message:</strong></p>
@@ -136,8 +136,8 @@ exports.sendContactFormEmail = (name, senderEmail, message) => {
 
     return transporter.sendMail({
         to: ADMIN_EMAIL,
-        from: `"StockPredictor Contact Form" <${ADMIN_EMAIL}>`,
-        subject: `[StockPredictor] New Message from ${name}`,
+        from: `"StockPredictorAI Contact Form" <${ADMIN_EMAIL}>`,
+        subject: `[StockPredictorAI] New Message from ${name}`,
         replyTo: senderEmail,
         html: emailBody
     });
@@ -153,7 +153,7 @@ exports.sendWaitlistConfirmationEmail = (email) => {
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: 'You are on the waitlist for the AI Wizard!', html: emailBody
     }).catch(err => console.error("Waitlist confirmation email sending error:", err));
 };
@@ -176,7 +176,7 @@ exports.sendVerificationSuccessEmail = (email, username) => {
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: 'Your Verified Predictor Status is Active!', html: emailBody
     }).catch(err => console.error("Verification success email sending error:", err));
 };
@@ -192,7 +192,7 @@ exports.sendVerificationCancelledEmail = (email, username) => {
         </div>
     `;
     transporter.sendMail({
-        to: email, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: email, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: 'Verified Predictor Status Canceled', html: emailBody
     }).catch(err => console.error("Verification cancellation email sending error:", err));
 };
@@ -214,7 +214,7 @@ exports.sendNewSubscriberEmail = (subscriberEmail, subscriberUsername, creatorUs
         </div>
     `;
     transporter.sendMail({
-        to: subscriberEmail, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: subscriberEmail, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: `You are now subscribed to ${creatorUsername}!`, html: emailBody
     }).catch(err => console.error("New subscriber email sending error:", err));
 };
@@ -234,7 +234,7 @@ exports.sendCreatorNotificationEmail = (creatorEmail, creatorUsername, subscribe
         </div>
     `;
     transporter.sendMail({
-        to: creatorEmail, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: creatorEmail, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: `New Subscriber: ${subscriberUsername} just joined your Golden Feed!`, html: emailBody
     }).catch(err => console.error("Creator notification email sending error:", err));
 };
@@ -249,7 +249,7 @@ exports.sendSubscriptionCancelledEmail = (subscriberEmail, subscriberUsername, c
         </div>
     `;
     transporter.sendMail({
-        to: subscriberEmail, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: subscriberEmail, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: `Your subscription to ${creatorUsername} has been canceled`, html: emailBody
     }).catch(err => console.error("Subscriber cancellation email sending error:", err));
 };
@@ -264,7 +264,7 @@ exports.sendCreatorCancellationEmail = (creatorEmail, creatorUsername, subscribe
         </div>
     `;
     transporter.sendMail({
-        to: creatorEmail, from: `"StockPredictor" <${ADMIN_EMAIL}>`,
+        to: creatorEmail, from: `"StockPredictorAI" <${ADMIN_EMAIL}>`,
         subject: `Subscription Canceled: ${subscriberUsername}`, html: emailBody
     }).catch(err => console.error("Creator cancellation email sending error:", err));
 };

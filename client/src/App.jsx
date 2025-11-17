@@ -94,8 +94,8 @@ function App() {
   return (
     <Router>
       <Helmet>
-        <title>{t('seo.default.title', 'StockPredictor - Predict the Market, Track Your Accuracy')}</title>
-        <meta name="description" content={t('seo.default.description', 'Join the StockPredictor community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
+        <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
+        <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
       </Helmet>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />

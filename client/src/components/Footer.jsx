@@ -31,7 +31,7 @@ const Footer = () => {
                 </div>
 
                 <div className="text-center text-gray-500 mt-8 pt-8 border-t border-gray-800">
-                    &copy; {currentYear} StockPredictor. {t('footer.copyright')}
+                    &copy; {currentYear} stockpredictorai.com. {t('footer.copyright')}
                 </div>
             </div>
         </footer>
