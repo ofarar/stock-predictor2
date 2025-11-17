@@ -27,7 +27,7 @@ router.get(
 
       const baseURL =
         process.env.NODE_ENV === 'production'
-          ? 'https://predictostock.vercel.app'
+          ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
           : 'http://localhost:5173';
 
       // Handle case where username is taken
@@ -70,7 +70,7 @@ router.get('/logout', (req, res, next) => {
 
     const redirectURL =
       process.env.NODE_ENV === 'production'
-        ? 'https://predictostock.vercel.app'
+        ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
         : 'http://localhost:5173';
 
     res.redirect(redirectURL);

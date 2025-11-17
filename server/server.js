@@ -23,7 +23,11 @@ app.use(helmet());
 
 // --- CORS Configuration ---
 // This tells your server to accept requests from your Vercel app.
-const allowedOrigins = ['http://localhost:5173', 'https://predictostock.vercel.app'];
+const allowedOrigins = [
+    'http://localhost:5173', // for local development
+    'https://stock-predictor2.pages.dev', // Cloudflare Pages default domain
+    'https://www.stockpredictorai.com',  // your custom domain
+];
 
 const corsOptions = {
     origin: function (origin, callback) {

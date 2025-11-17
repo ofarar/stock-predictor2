@@ -57,7 +57,7 @@ router.post('/create-checkout-session', async (req, res) => {
 
     const YOUR_DOMAIN =
         process.env.NODE_ENV === 'production'
-            ? 'https://predictostock.vercel.app'
+            ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
             : 'http://localhost:5173';
 
     const VERIFIED_PRICE_ID = process.env.VERIFIED_PRICE_ID;
@@ -146,7 +146,9 @@ router.post('/connect/create-account', async (req, res) => {
 router.post('/connect/onboarding-link', async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');
 
-    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:5173';
+    const YOUR_DOMAIN = process.env.NODE_ENV === 'production'
+        ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
+        : 'http://localhost:5173';
 
     try {
         const user = await User.findById(req.user.id);
@@ -189,7 +191,9 @@ router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
         return res.status(400).json({ message: "You cannot subscribe to yourself." });
     }
 
-    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:5173';
+    const YOUR_DOMAIN = process.env.NODE_ENV === 'production'
+        ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
+        : 'http://localhost:5173';
 
     try {
         const [payingUser, targetGoldenMember] = await Promise.all([
@@ -265,7 +269,9 @@ router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
 // --- STRIPE CUSTOMER PORTAL ---
 router.post('/create-portal-session', async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');
-    const YOUR_DOMAIN = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:5173';
+    const YOUR_DOMAIN = process.env.NODE_ENV === 'production'
+        ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
+        : 'http://localhost:5173';
 
     try {
         const user = await User.findById(req.user.id);
@@ -340,11 +346,11 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         ),
                     };
                     console.log(`Webhook: Attempting to update VERIFICATION for user ${userId} with data:`, updateData);
-                    
+
                     // --- MODIFICATION: Fetch user *after* update ---
                     const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
                     console.log(`User ${userId} successfully verified via checkout session ${session.id}.`);
-                    
+
                     // Send the email
                     if (user) {
                         sendVerificationSuccessEmail(user.email, user.username);
@@ -380,7 +386,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         })
                     ]);
                     console.log(`Webhook: Successfully recorded Golden Subscription: ${payingUserId} subscribed to ${goldenMemberUserId}`);
-                    
+
                     // Send emails to both parties
                     const payingUser = await User.findById(payingUserId);
                     const goldenMember = await User.findById(goldenMemberUserId);
@@ -549,7 +555,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                         })
                     ]);
                     console.log(`Webhook: Removed Golden Subscription relationship between ${payingUserId} and ${goldenMemberUserId}.`);
-                    
+
                     // Send cancellation emails
                     const payingUser = await User.findById(payingUserId);
                     const goldenMember = await User.findById(goldenMemberUserId);
