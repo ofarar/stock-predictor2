@@ -1118,5 +1118,31 @@
     },
     "common.accept": "Accepter",
     "common.decline": "Refuser",
-    "common.cookieConsent": "Ce site Web utilise des cookies pour améliorer l'expérience utilisateur. En acceptant, vous consentez à notre utilisation de cookies pour les analyses et les parrainages."
+    "common.cookieConsent": "Ce site Web utilise des cookies pour améliorer l'expérience utilisateur. En acceptant, vous consentez à notre utilisation de cookies pour les analyses et les parrainages.",
+    "promoBanner": {
+        "creatorPoolText": "💰 <strong>Devenez un Utilisateur Pionnier !</strong> Inscrivez-vous maintenant pour gagner <1>+1 000 points de Note d'Analyste</1> et obtenez votre part des revenus de la plateforme.",
+        "joinNow": "Rejoindre Maintenant",
+        "whyJoin": "Pourquoi Rejoindre ?"
+    },
+    "benefitsModal": {
+        "title": "Débloquez l'Expérience Complète",
+        "subtitle": "Rejoignez la communauté pour prédire, suivre et gagner.",
+        "predict": {
+            "title": "Faire des Prédictions",
+            "desc": "Construisez un historique transparent et prouvez vos compétences."
+        },
+        "notify": {
+            "title": "Notifications Intelligentes",
+            "desc": "Recevez des alertes lorsque vos analystes préférés font un mouvement."
+        },
+        "watchlist": {
+            "title": "Liste de Suivi Personnalisée",
+            "desc": "Suivez des actions spécifiques et voyez le sentiment de la communauté en direct."
+        },
+        "earn": {
+            "title": "Gagner des Revenus",
+            "desc": "Les meilleurs performeurs partagent 50 % des bénéfices de la plateforme via le Pool Créateurs."
+        },
+        "footer": "Rejoignez plus de 1000 analystes qui prédisent le marché aujourd'hui."
+    },
 }

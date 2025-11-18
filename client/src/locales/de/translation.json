@@ -1113,5 +1113,31 @@
     },
     "common.accept": "Akzeptieren",
     "common.decline": "Ablehnen",
-    "common.cookieConsent": "Diese Website verwendet Cookies, um die Benutzererfahrung zu verbessern. Mit Ihrer Zustimmung erklären Sie sich mit der Verwendung von Cookies für Analysen und Empfehlungen einverstanden."
+    "common.cookieConsent": "Diese Website verwendet Cookies, um die Benutzererfahrung zu verbessern. Mit Ihrer Zustimmung erklären Sie sich mit der Verwendung von Cookies für Analysen und Empfehlungen einverstanden.",
+    "promoBanner": {
+        "creatorPoolText": "💰 <strong>Werden Sie Early User!</strong> Melden Sie sich jetzt an, um <1>+1.000 Analysten-Rating</1> zu erhalten und Ihren Anteil am Plattformumsatz zu sichern.",
+        "joinNow": "Jetzt beitreten",
+        "whyJoin": "Warum beitreten?"
+    },
+    "benefitsModal": {
+        "title": "Nutzen Sie das volle Potenzial",
+        "subtitle": "Treten Sie der Community bei, um Prognosen zu erstellen, Erfolge zu verfolgen und zu verdienen.",
+        "predict": {
+            "title": "Prognosen erstellen",
+            "desc": "Bauen Sie eine transparente Erfolgsbilanz auf und beweisen Sie Ihre Fähigkeiten."
+        },
+        "notify": {
+            "title": "Intelligente Benachrichtigungen",
+            "desc": "Erhalten Sie Benachrichtigungen, wenn Ihre Lieblingsanalysten aktiv werden."
+        },
+        "watchlist": {
+            "title": "Personalisierte Beobachtungsliste",
+            "desc": "Verfolgen Sie bestimmte Aktien und sehen Sie die Live-Community-Stimmung."
+        },
+        "earn": {
+            "title": "Einnahmen erzielen",
+            "desc": "Top-Performer teilen sich 50% der Plattformgewinne über den Creator Pool."
+        },
+        "footer": "Schließen Sie sich heute 1000+ Analysten an, die den Markt prognostizieren."
+    }
 }

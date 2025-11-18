@@ -1118,5 +1118,31 @@
     },
     "common.accept": "Aceptar",
     "common.decline": "Rechazar",
-    "common.cookieConsent": "Este sitio web utiliza cookies para mejorar la experiencia del usuario. Al aceptar, usted acepta nuestro uso de cookies para análisis y referencias."
+    "common.cookieConsent": "Este sitio web utiliza cookies para mejorar la experiencia del usuario. Al aceptar, usted acepta nuestro uso de cookies para análisis y referencias.",
+    "promoBanner": {
+        "creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de Rating de Analista</1> y obtenga su parte de los ingresos de la plataforma.",
+        "joinNow": "Unirse ahora",
+        "whyJoin": "¿Por qué unirse?"
+    },
+    "benefitsModal": {
+        "title": "Desbloquee la Experiencia Completa",
+        "subtitle": "Únase a la comunidad para predecir, seguir y ganar.",
+        "predict": {
+            "title": "Hacer Predicciones",
+            "desc": "Construya un historial transparente y demuestre sus habilidades."
+        },
+        "notify": {
+            "title": "Notificaciones Inteligentes",
+            "desc": "Reciba alertas cuando sus analistas favoritos hagan un movimiento."
+        },
+        "watchlist": {
+            "title": "Lista de Seguimiento Personalizada",
+            "desc": "Siga acciones específicas y vea el sentimiento de la comunidad en vivo."
+        },
+        "earn": {
+            "title": "Obtener Ingresos",
+            "desc": "Los mejores rendimientos comparten el 50% de las ganancias de la plataforma a través del Fondo de Creadores."
+        },
+        "footer": "Únase a más de 1000 analistas que predicen el mercado hoy."
+    }
 }

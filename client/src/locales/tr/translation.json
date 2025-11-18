@@ -1119,5 +1119,31 @@
   },
   "common.accept": "Kabul Et",
   "common.decline": "Reddet",
-  "common.cookieConsent": "Bu web sitesi, kullanıcı deneyimini iyileştirmek için çerezler kullanır. Kabul ederek, çerezleri analiz ve yönlendirmeler için kullanmamızı onaylamış olursunuz."
+  "common.cookieConsent": "Bu web sitesi, kullanıcı deneyimini iyileştirmek için çerezler kullanır. Kabul ederek, çerezleri analiz ve yönlendirmeler için kullanmamızı onaylamış olursunuz.",
+  "promoBanner": {
+    "creatorPoolText": "💰 <strong>Erken Kullanıcı Olarak Katıl!</strong> <1>+1.000 Analist Puanı</1> kazanmak ve platform gelirinden payını almak için hemen kaydol.",
+    "joinNow": "Hemen Katıl",
+    "whyJoin": "Neden Katılmalıyım?"
+  },
+  "benefitsModal": {
+    "title": "Tam Deneyimin Kilidini Aç",
+    "subtitle": "Tahmin yapmak, takip etmek ve kazanmak için topluluğa katıl.",
+    "predict": {
+      "title": "Tahmin Yap",
+      "desc": "Şeffaf bir başarı geçmişi oluştur ve yeteneklerini kanıtla."
+    },
+    "notify": {
+      "title": "Akıllı Bildirimler",
+      "desc": "Favori analistlerin bir hamle yaptığında bildirim al."
+    },
+    "watchlist": {
+      "title": "Özel İzleme Listesi",
+      "desc": "Belirli hisseleri takip et ve canlı topluluk görüşünü gör."
+    },
+    "earn": {
+      "title": "Gelir Elde Et",
+      "desc": "En iyi performans gösterenler, İçerik Üretici Havuzu aracılığıyla platform kârının %50'sini paylaşır."
+    },
+    "footer": "Bugün piyasayı tahmin eden 1000'den fazla analiste katıl."
+  }
 }

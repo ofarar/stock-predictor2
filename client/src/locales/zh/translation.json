@@ -1118,5 +1118,31 @@
     },
     "common.accept": "接受",
     "common.decline": "拒绝",
-    "common.cookieConsent": "本网站使用cookie来增强用户体验。接受即表示您同意我们使用cookie进行分析和推荐。"
+    "common.cookieConsent": "本网站使用cookie来增强用户体验。接受即表示您同意我们使用cookie进行分析和推荐。",
+    "promoBanner": {
+        "creatorPoolText": "💰 <strong>成为早期用户！</strong> 立即注册即可赚取 <1>+1,000 分析师评分</1> 并获得您的平台收入份额。",
+        "joinNow": "立即加入",
+        "whyJoin": "为何加入？"
+    },
+    "benefitsModal": {
+        "title": "解锁完整体验",
+        "subtitle": "加入社区进行预测、追踪业绩并赚取收益。",
+        "predict": {
+            "title": "做出预测",
+            "desc": "建立透明的业绩记录并证明您的技能。"
+        },
+        "notify": {
+            "title": "智能通知",
+            "desc": "当您喜爱的分析师采取行动时获取提醒。"
+        },
+        "watchlist": {
+            "title": "自定义观察列表",
+            "desc": "追踪特定股票并查看实时社区情绪。"
+        },
+        "earn": {
+            "title": "赚取收益",
+            "desc": "表现最佳者通过创作者池分享 50% 的平台利润。"
+        },
+        "footer": "立即加入 1000 多位正在预测市场的分析师行列。"
+    }
 }
