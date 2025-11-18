@@ -447,7 +447,7 @@
     },
     "share": {
         "shareOnX": "Поделиться в X",
-        "ownerActive": "Я прогнозирую, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. Посмотрите мой прогноз и проголосуйте на Stock-Predictor!",
+        "ownerActive": "Я прогнозирую, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. Посмотрите мой прогноз и проголосуйте на StockPredictorAI!",
         "ownerAssessed": "Мой прогноз по ${{ticker}} завершился с результатом {{rating}}! Я прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}. Посмотрите результат!",
         "visitorActive": "Интересный прогноз: {{username}} считает, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. А вы что думаете?",
         "visitorAssessed": "Оцените результат: прогноз пользователя {{username}} по ${{ticker}} получил {{rating}} очков! Он/она прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}."
@@ -648,8 +648,8 @@
     "performanceTabs": {
         "shareOnX": "Поделиться в X",
         "shareText": {
-            "byStock": "Я на #{{rank}} месте по прогнозам для ${{ticker}} на Stock-Predictor! Попробуйте превзойти меня.",
-            "byType": "Я на #{{rank}} месте по прогнозам типа '{{type}}' на Stock-Predictor! Посмотрите мою статистику."
+            "byStock": "Я на #{{rank}} месте по прогнозам для ${{ticker}} на StockPredictorAI! Попробуйте превзойти меня.",
+            "byType": "Я на #{{rank}} месте по прогнозам типа '{{type}}' на StockPredictorAI! Посмотрите мою статистику."
         },
         "tabs": {
             "byType": "По типу",

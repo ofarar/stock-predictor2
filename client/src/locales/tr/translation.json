@@ -447,7 +447,7 @@
   },
   "share": {
     "shareOnX": "X'te Paylaş",
-    "ownerActive": "${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve Stock-Predictor'da oy ver!",
+    "ownerActive": "${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve StockPredictorAI'da oy ver!",
     "ownerAssessed": "${{ticker}} için yaptığım tahmin {{rating}} puanla sonuçlandı! Tahminim {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu. Sonucu gör!",
     "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
     "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{rating}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu."
@@ -648,8 +648,8 @@
   "performanceTabs": {
     "shareOnX": "X'te Paylaş",
     "shareText": {
-      "byStock": "Stock-Predictor'da ${{ticker}} tahminlerim için {{rank}}. sıradayım! Daha iyisini yapıp yapamayacağını gör.",
-      "byType": "Stock-Predictor'da '{{type}}' tahminlerim için {{rank}}. sıradayım! İstatistiklerime göz at."
+      "byStock": "StockPredictorAI'da ${{ticker}} tahminlerim için {{rank}}. sıradayım! Daha iyisini yapıp yapamayacağını gör.",
+      "byType": "StockPredictorAI'da '{{type}}' tahminlerim için {{rank}}. sıradayım! İstatistiklerime göz at."
     },
     "tabs": {
       "byType": "Türe Göre",

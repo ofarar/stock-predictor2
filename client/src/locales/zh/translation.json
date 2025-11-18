@@ -447,7 +447,7 @@
     },
     "share": {
         "shareOnX": "在 X 上分享",
-        "ownerActive": "我预测 ${{ticker}} 将在 {{deadline}} 前达到 {{targetPrice}}。快来 Stock-Predictor 查看我的预测并投票！",
+        "ownerActive": "我预测 ${{ticker}} 将在 {{deadline}} 前达到 {{targetPrice}}。快来 StockPredictorAI 查看我的预测并投票！",
         "ownerAssessed": "我對 ${{ticker}} 的預測以 {{rating}} 分結束！我預測的價格是 {{targetPrice}}，收盤價是 {{actualPrice}}。來看看結果吧！",
         "visitorActive": "有趣的预测：{{username}} 认为 ${{ticker}} 将在 {{deadline}} 前达到 {{targetPrice}}。你怎么看？",
         "visitorAssessed": "快来看看这个结果：{{username}} 对 ${{ticker}} 的预测获得了 {{rating}} 分！他们预测的价格是 {{targetPrice}}，收盘价是 {{actualPrice}}。"
@@ -648,8 +648,8 @@
     "performanceTabs": {
         "shareOnX": "在 X 上分享",
         "shareText": {
-            "byStock": "我在 Stock-Predictor 上对 ${{ticker}} 的预测排名第 #{{rank}}！看看你能不能做得更好。",
-            "byType": "我在 Stock-Predictor 上对“{{type}}”类型的预测排名第 #{{rank}}！快来看看我的统计数据。"
+            "byStock": "我在 StockPredictorAI 上对 ${{ticker}} 的预测排名第 #{{rank}}！看看你能不能做得更好。",
+            "byType": "我在 StockPredictorAI 上对“{{type}}”类型的预测排名第 #{{rank}}！快来看看我的统计数据。"
         },
         "tabs": {
             "byType": "按类型",

@@ -447,7 +447,7 @@
     },
     "share": {
         "shareOnX": "Partager sur X",
-        "ownerActive": "Je prédis que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Voir ma prédiction et voter sur Stock-Predictor !",
+        "ownerActive": "Je prédis que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Voir ma prédiction et voter sur StockPredictorAI !",
         "ownerAssessed": "Ma prédiction pour ${{ticker}} s'est terminée avec un score de {{rating}} ! J'avais prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}. Voir le résultat !",
         "visitorActive": "Prédiction intéressante : {{username}} pense que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Qu'en pensez-vous ?",
         "visitorAssessed": "Regardez ce résultat : la prédiction de {{username}} pour ${{ticker}} a obtenu un score de {{rating}} ! Il/elle avait prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}."
@@ -648,8 +648,8 @@
     "performanceTabs": {
         "shareOnX": "Partager sur X",
         "shareText": {
-            "byStock": "Je suis classé(e) n°{{rank}} pour mes prédictions sur ${{ticker}} sur Stock-Predictor ! Voyez si vous pouvez faire mieux.",
-            "byType": "Je suis classé(e) n°{{rank}} pour les prédictions de type '{{type}}' sur Stock-Predictor ! Consultez mes statistiques."
+            "byStock": "Je suis classé(e) n°{{rank}} pour mes prédictions sur ${{ticker}} sur StockPredictorAI ! Voyez si vous pouvez faire mieux.",
+            "byType": "Je suis classé(e) n°{{rank}} pour les prédictions de type '{{type}}' sur StockPredictorAI ! Consultez mes statistiques."
         },
         "tabs": {
             "byType": "Par Type",

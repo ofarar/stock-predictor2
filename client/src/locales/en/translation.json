@@ -446,7 +446,7 @@
   },
   "share": {
     "shareOnX": "Share on X",
-    "ownerActive": "I'm predicting that ${{ticker}} will reach {{targetPrice}} by {{deadline}}. See my prediction and vote on Stock-Predictor!",
+    "ownerActive": "I'm predicting that ${{ticker}} will reach {{targetPrice}} by {{deadline}}. See my prediction and vote on StockPredictorAI!",
     "ownerAssessed": "My prediction for ${{ticker}} finished with a rating of {{rating}}! I predicted {{targetPrice}}, and it closed at {{actualPrice}}. See the result!",
     "visitorActive": "Interesting prediction: {{username}} thinks ${{ticker}} will hit {{targetPrice}} by {{deadline}}. What do you think?",
     "visitorAssessed": "Check out this result: {{username}}'s prediction for ${{ticker}} earned a rating of {{rating}}! They predicted {{targetPrice}}, and it closed at {{actualPrice}}."
@@ -648,8 +648,8 @@
   "performanceTabs": {
     "shareOnX": "Share on X",
     "shareText": {
-      "byStock": "I'm ranked #{{rank}} for my ${{ticker}} predictions on Stock-Predictor! See if you can do better.",
-      "byType": "I'm ranked #{{rank}} for '{{type}}' predictions on Stock-Predictor! Check out my stats."
+      "byStock": "I'm ranked #{{rank}} for my ${{ticker}} predictions on StockPredictorAI! See if you can do better.",
+      "byType": "I'm ranked #{{rank}} for '{{type}}' predictions on StockPredictorAI! Check out my stats."
     },
     "tabs": {
       "byType": "By Type",
