@@ -61,9 +61,6 @@ const SignupBenefitsModal = ({ isOpen, onClose }) => {
                     >
                         {t('loginPromptModal.signUpWithGoogle', 'Sign Up with Google')}
                     </a>
-                    <p className="mt-4 text-sm text-gray-500">
-                        {t('benefitsModal.footer', 'Join 1000+ analysts predicting the market today.')}
-                    </p>
                 </div>
             </div>
         </div>
