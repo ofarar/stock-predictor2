@@ -246,7 +246,11 @@ router.post('/admin/health-check/:service', async (req, res) => {
                 // --- END FIX ---
             });
         case 'finance-historical':
-            return checkService(() => financeAPI.getHistorical('AAPL', { period1: '2024-01-01' }));
+            // FIX: Must include period2 (the end date) to make the historical query valid.
+            return checkService(() => financeAPI.getHistorical('AAPL', {
+                period1: '2025-10-01', // Starting range (e.g., last month)
+                period2: '2025-11-18'  // Ending range (Today's date)
+            }));
         case 'avatar':
             return checkService(async () => {
                 await axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test');
