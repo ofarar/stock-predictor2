@@ -246,11 +246,21 @@ router.post('/admin/health-check/:service', async (req, res) => {
                 // --- END FIX ---
             });
         case 'finance-historical':
-            // FIX: Must include period2 (the end date) to make the historical query valid.
-            return checkService(() => financeAPI.getHistorical('AAPL', {
-                period1: '2025-10-01', // Starting range (e.g., last month)
-                period2: '2025-11-18'  // Ending range (Today's date)
-            }));
+            // FIX: Use async function to convert historical array to string summary
+            return checkService(async () => {
+                const historicalData = await financeAPI.getHistorical('AAPL', {
+                    period1: '2025-10-01',
+                    period2: '2025-11-18'
+                });
+
+                if (historicalData && historicalData.length > 0) {
+                    // Create a safe, readable string summary
+                    const firstDate = new Date(historicalData[0].date).toLocaleDateString('en-US');
+                    const lastDate = new Date(historicalData[historicalData.length - 1].date).toLocaleDateString('en-US');
+                    return `OK (Fetched ${historicalData.length} data points, from ${firstDate} to ${lastDate})`;
+                }
+                throw new Error("Historical data returned an empty array.");
+            });
         case 'avatar':
             return checkService(async () => {
                 await axios.get('https://api.dicebear.com/8.x/lorelei/svg?seed=test');
