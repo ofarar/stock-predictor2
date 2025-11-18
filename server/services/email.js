@@ -1,16 +1,20 @@
+// server/services/email.js
+
 const nodemailer = require('nodemailer');
-// --- 1. Import the SendGrid transport ---
-const sgTransport = require('nodemailer-sendgrid-transport');
+// Note: We are switching from SendGrid's API transport to generic SMTP
+// You don't need the SendGrid import anymore.
 
-// --- 2. Configure the SendGrid transporter ---
-// This uses your API key from the .env file
-const options = {
-  auth: {
-    api_key: process.env.SENDGRID_API_KEY
-  }
-}
-const transporter = nodemailer.createTransport(sgTransport(options));
-
+// --- 2. Configure the Brevo/SMTP Transporter ---
+// You will need to obtain the BREVO_SMTP_KEY (password) from your Brevo account.
+const transporter = nodemailer.createTransport({
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.BREVO_SMTP_USER, 
+        pass: process.env.BREVO_SMTP_KEY
+    }
+});
 
 // --- 3. Update your admin email and app URL ---
 const ADMIN_EMAIL = 'noreply@stockpredictorai.com'; // Your authenticated email
