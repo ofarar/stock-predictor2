@@ -19,6 +19,7 @@ const transporter = nodemailer.createTransport({
 // --- 3. Update your admin email and app URL ---
 const ADMIN_EMAIL = 'noreply@stockpredictorai.com'; // Your authenticated email
 const APP_URL = 'https://www.stockpredictorai.com'; // Your production domain
+const CONTACT_RECIPIENT = process.env.CONTACT_INBOX;
 
 // const ADMIN_EMAIL = process.env.GMAIL_USER; // Admin email will be the same as the sender
 // const APP_URL = process.env.NODE_ENV === 'production' ? 'https://predictostock.vercel.app' : 'http://localhost:3000';
@@ -124,6 +125,7 @@ exports.sendWelcomeEmail = (email, username) => {
         subject: 'Welcome to StockPredictorAI! Your Journey Begins.', html: emailBody
     }).catch(err => console.error("Welcome email sending error:", err));
 };
+
 /**
  * Sends the contact form submission to the admin.
  */
@@ -138,9 +140,10 @@ exports.sendContactFormEmail = (name, senderEmail, message) => {
         </div>
     `;
 
+    // --- CRITICAL FIX: Change 'to' to the new recipient variable ---
     return transporter.sendMail({
-        to: ADMIN_EMAIL,
-        from: `"StockPredictorAI Contact Form" <${ADMIN_EMAIL}>`,
+        to: CONTACT_RECIPIENT, // <--- YOUR PRIVATE GMAIL ADDRESS
+        from: `"StockPredictorAI Contact Form" <${ADMIN_EMAIL}>`, // <--- Brevo verified sender
         subject: `[StockPredictorAI] New Message from ${name}`,
         replyTo: senderEmail,
         html: emailBody
