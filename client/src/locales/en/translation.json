@@ -1105,5 +1105,31 @@
   },
   "common.accept": "Accept",
   "common.decline": "Decline",
-  "common.cookieConsent": "This website uses cookies to enhance the user experience. By accepting, you agree to our use of cookies for analytics and referrals."
+  "common.cookieConsent": "This website uses cookies to enhance the user experience. By accepting, you agree to our use of cookies for analytics and referrals.",
+  "promoBanner": {
+    "creatorPoolText": "💰 <strong>Join as an Early User!</strong> Sign up now to earn <1>+1,000 Analyst Rating</1> and get your share of platform revenue.",
+    "joinNow": "Join Now",
+    "whyJoin": "Why Join?"
+  },
+  "benefitsModal": {
+    "title": "Unlock the Full Experience",
+    "subtitle": "Join the community to predict, track, and earn.",
+    "predict": {
+      "title": "Make Predictions",
+      "desc": "Build a transparent track record and prove your skills."
+    },
+    "notify": {
+      "title": "Smart Notifications",
+      "desc": "Get alerts when your favorite analysts make a move."
+    },
+    "watchlist": {
+      "title": "Custom Watchlist",
+      "desc": "Track specific stocks and see live community sentiment."
+    },
+    "earn": {
+      "title": "Earn Revenue",
+      "desc": "Top performers share 50% of platform profits via the Creator Pool."
+    },
+    "footer": "Join 1000+ analysts predicting the market today."
+  }
 }
