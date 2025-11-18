@@ -13,6 +13,7 @@ import PredictionHistoryModal from '../components/PredictionHistoryModal';
 import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } from '../utils/formatters';
 import ShareModal from '../components/ShareModal'; // Import ShareModal
 import { Helmet } from 'react-helmet-async'; // <-- 1. IMPORT
+import { isMarketOpen } from '../utils/timeHelpers'; // <-- NEW IMPORT
 
 // --- YOUR "GRAPH" SHARE ICON ---
 const ShareIcon = () => (
@@ -33,15 +34,7 @@ const calculateLiveScore = (predictedPrice, actualPrice) => {
     return parseFloat(rating.toFixed(1));
 };
 
-const isMarketOpen = () => {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const day = now.getUTCDay();
-    const isWeekday = day >= 1 && day <= 5;
-    const isAfterOpen = utcHour > 13 || (utcHour === 13 && now.getUTCMinutes() >= 30);
-    const isBeforeClose = utcHour < 20;
-    return isWeekday && isAfterOpen && isBeforeClose;
-};
+// --- DELETED: Local isMarketOpen function ---
 
 // --- Accept 'user' (currentUser) as a prop ---
 const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => {
@@ -127,8 +120,9 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     }, [prediction, t]);
 
     // This useEffect hook *only* updates the live price
+    // FIX: Pass prediction.stockTicker to isMarketOpen
     useEffect(() => {
-        if (prediction?.status === 'Active' && isMarketOpen()) {
+        if (prediction?.status === 'Active' && isMarketOpen(prediction.stockTicker)) {
             const quoteTimer = setInterval(() => {
                 axios.get(`${import.meta.env.VITE_API_URL}/api/quote/${prediction.stockTicker}`)
                     .then(quoteRes => {
@@ -140,7 +134,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             }, 60000); // Update price every minute
             return () => clearInterval(quoteTimer);
         }
-    }, [prediction]); // Removed fetchData dependency to stop loop
+    }, [prediction]); 
 
     const handleVote = (voteType) => {
         if (!currentUser) return requestLogin();
@@ -227,9 +221,13 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     // This is now safe because `prediction` is guaranteed to exist.
     const isOwner = currentUser?._id === prediction.userId?._id;
     const isAssessed = prediction.status === 'Assessed';
-    const marketIsOpenNow = isMarketOpen();
+
+    // FIX: Use the correct isMarketOpen with ticker
+    const marketIsOpenNow = isMarketOpen(prediction.stockTicker, currentQuote?.marketState);
+
     // Use `currentQuote.displayPrice` as it's the standardized field
-    const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close")); // <-- Renamed
+    const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close")); 
+    
     // Example of a fix:
     // 1. Get the price
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
