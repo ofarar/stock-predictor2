@@ -235,7 +235,16 @@ router.post('/admin/health-check/:service', async (req, res) => {
             }), 'OK'); // The 'OK' here is just a fallback
         // --- END NEW CASE ---
         case 'finance-current':
-            return checkService(() => financeAPI.getQuote('AAPL'));
+            return checkService(async () => {
+                const quote = await financeAPI.getQuote('AAPL');
+
+                // --- FIX: Return a string summary instead of the raw object ---
+                if (quote && quote.price) {
+                    return `OK (AAPL Price: ${quote.price.toFixed(2)} ${quote.currency})`;
+                }
+                throw new Error("Quote fetched but price/currency data is missing.");
+                // --- END FIX ---
+            });
         case 'finance-historical':
             return checkService(() => financeAPI.getHistorical('AAPL', { period1: '2024-01-01' }));
         case 'avatar':
@@ -884,7 +893,7 @@ router.get('/admin/all-users', async (req, res) => {
         ];
 
         let sortKey = validSortKeys.includes(sortBy) ? sortBy : 'username';
-        
+
         // --- FIX: Remap old 'avgScore' to new 'avgRating' for sorting ---
         // This handles any old bookmarks or frontend state still sending 'avgScore'
         if (sortKey === 'avgScore') {
@@ -921,22 +930,22 @@ router.get('/admin/all-users', async (req, res) => {
             // 3. Project only the fields we need. This is the crucial step.
             {
                 $project: {
-                    username: 1, 
-                    avatar: 1, 
-                    isGoldenMember: 1, 
+                    username: 1,
+                    avatar: 1,
+                    isGoldenMember: 1,
                     isVerified: 1,
                     verifiedAt: 1,
-                    followersCount: 1, 
+                    followersCount: 1,
                     followingCount: 1,
-                    goldenSubscribersCount: 1, 
+                    goldenSubscribersCount: 1,
                     goldenSubscriptionsCount: 1,
-                    
+
                     // 4. Calculate total prediction count
                     predictionCount: { $size: { $ifNull: ["$predictions", []] } },
-                    
+
                     // 5. Read the PRE-CALCULATED, CORRECT avgRating from the user document
                     //    We are NO LONGER calculating it here. This fixes the bug.
-                    avgRating: { $round: [{ $ifNull: ["$avgRating", 0] }, 1] } 
+                    avgRating: { $round: [{ $ifNull: ["$avgRating", 0] }, 1] }
                 }
             },
             // 6. Sort based on the projected fields
@@ -1377,7 +1386,7 @@ router.put('/settings/admin', async (req, res) => {
         if (req.body.isPromoBannerActive !== undefined) {
             updateData.isPromoBannerActive = req.body.isPromoBannerActive;
         }
-        
+
         // --- 2. Handle Badge Settings ---
         if (req.body.badgeSettings) {
             updateData.badgeSettings = req.body.badgeSettings;
