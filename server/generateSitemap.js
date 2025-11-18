@@ -57,8 +57,12 @@ async function generateSitemap() {
         });
 
         // 3. Add Dynamic Profile Routes
-        const activeUserIds = await User.find({ predictionCount: { $gt: 0 } }).select('_id');
-        activeUserIds.forEach(user => {
+        // FIX: Query users based on a field that actually exists and indicates activity (e.g., analystRating.total)
+        // We use $gt: 0 to filter out accounts with no activity.
+        const activeUsers = await User.find({ 'analystRating.total': { $gt: 0 } }).select('_id');
+
+        // Ensure you iterate over the result from the corrected query
+        activeUsers.forEach(user => {
             smStream.write({
                 url: `/profile/${user._id}`,
                 changefreq: 'weekly',
