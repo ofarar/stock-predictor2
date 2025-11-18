@@ -1,3 +1,5 @@
+// src/pages/AdminPage.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,10 +13,11 @@ const AdminPage = () => {
     const [settings, setSettings] = useState({
         isVerificationEnabled: false,
         verificationPrice: 0,
-        isAIWizardEnabled: false, // Add initial state
+        isAIWizardEnabled: false,
         maxPredictionsPerDay: 10,
         badgeSettings: {},
-        isFinanceApiEnabled: true
+        isFinanceApiEnabled: true,
+        isPromoBannerActive: true // <--- 1. Add default state
     });
     const [loading, setLoading] = useState(true);
     const [badgeSettingsJson, setBadgeSettingsJson] = useState('');
@@ -58,7 +61,8 @@ const AdminPage = () => {
             isAIWizardEnabled: settings.isAIWizardEnabled,
             maxPredictionsPerDay: parseInt(settings.maxPredictionsPerDay) || 20,
             badgeSettings: badgeSettings,
-            isFinanceApiEnabled: settings.isFinanceApiEnabled
+            isFinanceApiEnabled: settings.isFinanceApiEnabled,
+            isPromoBannerActive: settings.isPromoBannerActive // <--- 2. Include in save payload
         };
 
         const promise = axios.put(`${import.meta.env.VITE_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
@@ -78,14 +82,30 @@ const AdminPage = () => {
 
             <AdminHealthCheck />
 
-            {/* --- NEW: The waitlist component is now here, conditionally rendered --- */}
+            {/* Conditionally render waitlist if enabled */}
             {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}
 
             <AdminUserList settings={settings} />
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">General Settings</h2>
-                {/* --- ADD THIS NEW TOGGLE --- */}
+                
+                {/* --- 3. NEW PROMO BANNER TOGGLE --- */}
+                <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
+                    <label htmlFor="isPromoBannerActive" className="font-medium text-gray-300">
+                        Enable Promo Banner
+                        <p className="text-xs text-gray-400">Show the "Join as Early User" banner to guests on public pages.</p>
+                    </label>
+                    <input
+                        type="checkbox"
+                        id="isPromoBannerActive"
+                        checked={settings.isPromoBannerActive ?? true}
+                        onChange={(e) => handleSettingsChange('isPromoBannerActive', e.target.checked)}
+                        className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500"
+                    />
+                </div>
+                {/* ---------------------------------- */}
+
                 <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
                     <label htmlFor="isFinanceApiEnabled" className="font-medium text-gray-300">
                         Enable Live Finance API
@@ -96,9 +116,10 @@ const AdminPage = () => {
                         id="isFinanceApiEnabled"
                         checked={settings.isFinanceApiEnabled}
                         onChange={(e) => handleSettingsChange('isFinanceApiEnabled', e.target.checked)}
+                        className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500"
                     />
                 </div>
-                {/* --- END OF NEW TOGGLE --- */}
+                
                 <div>
                     <label className="block text-sm font-medium text-gray-300">Max Predictions Per Day Per User</label>
                     <input
@@ -110,12 +131,11 @@ const AdminPage = () => {
                 </div>
             </div>
 
-            {/* --- NEW AI WIZARD SETTINGS SECTION --- */}
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">AI Wizard Feature</h2>
                 <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
                     <label htmlFor="isAIWizardEnabled" className="font-medium text-gray-300">Enable &quot;AI Wizard&quot; Page</label>
-                    <input type="checkbox" id="isAIWizardEnabled" checked={settings.isAIWizardEnabled} onChange={(e) => handleSettingsChange('isAIWizardEnabled', e.target.checked)} />
+                    <input type="checkbox" id="isAIWizardEnabled" checked={settings.isAIWizardEnabled} onChange={(e) => handleSettingsChange('isAIWizardEnabled', e.target.checked)} className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500" />
                 </div>
             </div>
 
@@ -124,7 +144,7 @@ const AdminPage = () => {
                 <div className="space-y-4">
                     <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
                         <label htmlFor="isVerificationEnabled" className="font-medium text-gray-300">Enable &quot;Get Verified&quot; Feature</label>
-                        <input type="checkbox" id="isVerificationEnabled" checked={settings.isVerificationEnabled} onChange={(e) => handleSettingsChange('isVerificationEnabled', e.target.checked)} />
+                        <input type="checkbox" id="isVerificationEnabled" checked={settings.isVerificationEnabled} onChange={(e) => handleSettingsChange('isVerificationEnabled', e.target.checked)} className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500" />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-300">Verification Price ($)</label>

@@ -1,6 +1,5 @@
 // server/models/Setting.js
 
-// FIX: Changed from 'import mongoose from 'mongoose';'
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -26,7 +25,7 @@ const defaultBadgeSettings = {
 };
 
 const SettingSchema = new Schema({
-    isPromoBannerActive: { type: Boolean, default: true },
+    isPromoBannerActive: { type: Boolean, default: true }, // <--- THIS IS THE KEY FIELD
     badgeSettings: { type: Object, default: defaultBadgeSettings },
     isVerificationEnabled: { type: Boolean, default: false },
     verificationPrice: { type: Number, default: 4.99 },
@@ -35,5 +34,4 @@ const SettingSchema = new Schema({
     isFinanceApiEnabled: { type: Boolean, default: true }
 });
 
-// FIX: Changed from 'export default mongoose.model(...);'
 module.exports = mongoose.model('Setting', SettingSchema);

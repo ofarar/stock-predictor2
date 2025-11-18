@@ -11,9 +11,10 @@ import { useTranslation } from 'react-i18next';
 import EditPredictionModal from '../components/EditPredictionModal';
 import PredictionHistoryModal from '../components/PredictionHistoryModal';
 import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } from '../utils/formatters';
-import ShareModal from '../components/ShareModal'; // Import ShareModal
-import { Helmet } from 'react-helmet-async'; // <-- 1. IMPORT
-import { isMarketOpen } from '../utils/timeHelpers'; // <-- NEW IMPORT
+import ShareModal from '../components/ShareModal';
+import { Helmet } from 'react-helmet-async';
+import { isMarketOpen } from '../utils/timeHelpers';
+import PromoBanner from '../components/PromoBanner'; // <--- 1. NEW IMPORT
 
 // --- YOUR "GRAPH" SHARE ICON ---
 const ShareIcon = () => (
@@ -34,9 +35,6 @@ const calculateLiveScore = (predictedPrice, actualPrice) => {
     return parseFloat(rating.toFixed(1));
 };
 
-// --- DELETED: Local isMarketOpen function ---
-
-// --- Accept 'user' (currentUser) as a prop ---
 const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => {
     const { t, i18n } = useTranslation();
     const { predictionId } = useParams();
@@ -55,13 +53,11 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     // --- CONSOLIDATED DATA FETCHING ---
     const fetchData = useCallback(() => {
         setLoading(true);
-        // We only need to fetch the prediction. The user prop is passed from App.js.
         axios.get(`${import.meta.env.VITE_API_URL}/api/prediction/${predictionId}`)
             .then(predictionRes => {
                 const pred = predictionRes.data;
                 setPrediction(pred);
                 if (pred.status === 'Active') {
-                    // If active, fetch the live quote
                     return axios.get(`${import.meta.env.VITE_API_URL}/api/quote/${pred.stockTicker}`);
                 }
             })
@@ -74,12 +70,11 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             .finally(() => setLoading(false));
     }, [predictionId, t]);
 
-    // This useEffect runs once when the component loads
     useEffect(() => {
         fetchData();
     }, [fetchData]);
 
-    // --- PRESERVED: Your view count logic ---
+    // --- View Count Logic ---
     useEffect(() => {
         const logView = () => {
             try {
@@ -100,9 +95,8 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             logView();
         }
     }, [predictionId]);
-    // --- END PRESERVED ---
 
-    // This useEffect hook updates the time left (no data fetching)
+    // Timer Logic
     useEffect(() => {
         if (prediction?.status === 'Active') {
             const updateTimer = () => {
@@ -113,14 +107,13 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                     setTimeLeft(formatTimeLeft(total, t));
                 }
             };
-            updateTimer(); // Run once immediately
-            const timer = setInterval(updateTimer, 1000); // Update every second
+            updateTimer();
+            const timer = setInterval(updateTimer, 1000);
             return () => clearInterval(timer);
         }
     }, [prediction, t]);
 
-    // This useEffect hook *only* updates the live price
-    // FIX: Pass prediction.stockTicker to isMarketOpen
+    // Live Price Update Logic
     useEffect(() => {
         if (prediction?.status === 'Active' && isMarketOpen(prediction.stockTicker)) {
             const quoteTimer = setInterval(() => {
@@ -131,16 +124,15 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                         }
                     })
                     .catch(() => { /* fail silently */ });
-            }, 60000); // Update price every minute
+            }, 60000);
             return () => clearInterval(quoteTimer);
         }
-    }, [prediction]); 
+    }, [prediction]);
 
     const handleVote = (voteType) => {
         if (!currentUser) return requestLogin();
         if (!prediction || prediction.status !== 'Active') return;
 
-        // Optimistic update
         const originalPrediction = { ...prediction };
         const newPrediction = { ...prediction, likes: [...prediction.likes], dislikes: [...prediction.dislikes] };
         const userId = currentUser._id;
@@ -155,29 +147,23 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         }
         setPrediction(newPrediction);
 
-        // API call
         axios.post(`${import.meta.env.VITE_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
             .catch(() => { toast.error(t("Vote failed.")); setPrediction(originalPrediction); });
     };
 
-    // --- This function PREPARES the share content ---
     const openShareModal = () => {
         if (!prediction) return;
 
         const url = window.location.href;
-        // Use prediction.userId (which is populated)
         const isOwner = currentUser?._id === prediction.userId?._id;
         const isAssessed = prediction.status === 'Assessed';
 
         const params = {
             ticker: prediction.stockTicker,
             targetPrice: formatCurrency(prediction.targetPrice, i18n.language, prediction.currency),
-            // --- THIS IS THE FIX ---
-            // We now pass the translated timeframe instead of the date.
             deadline: t(`prediction_timeframes.${prediction.predictionType.toLowerCase()}`),
-            // --- END FIX ---
             username: prediction.userId.username,
-            rating: (prediction.rating || prediction.score)?.toFixed(1), // Use 'rating' or 'score'
+            rating: (prediction.rating || prediction.score)?.toFixed(1),
             actualPrice: formatCurrency(prediction.actualPrice, i18n.language, prediction.currency),
         };
 
@@ -189,18 +175,13 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         }
 
         const text = t(messageKey, params);
-
-        // Set the content for the modal and open it
         setShareContent({ text, url });
         setIsShareModalOpen(true);
     };
 
-    // --- RENDER GUARDS ---
     if (loading) return <div className="text-center text-white">{t("Loading Prediction...")}</div>;
-    // This guard is CRITICAL. It waits until prediction is loaded.
     if (!prediction) return <div className="text-center text-white">{t("Prediction not found.")}</div>;
 
-    // --- 2. CREATE DYNAMIC SEO CONTENT (AFTER GUARDS) ---
     const username = prediction.userId.username;
     const stockTicker = prediction.stockTicker;
     const predictionType = t(`predictionTypes.${prediction.predictionType.toLowerCase()}`);
@@ -215,29 +196,16 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         type: predictionType,
         ticker: stockTicker
     });
-    // --- END ---
 
-    // --- ALL LOGIC MOVED AFTER THE GUARDS ---
-    // This is now safe because `prediction` is guaranteed to exist.
     const isOwner = currentUser?._id === prediction.userId?._id;
     const isAssessed = prediction.status === 'Assessed';
-
-    // FIX: Use the correct isMarketOpen with ticker
     const marketIsOpenNow = isMarketOpen(prediction.stockTicker, currentQuote?.marketState);
-
-    // Use `currentQuote.displayPrice` as it's the standardized field
-    const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close")); 
-    
-    // Example of a fix:
-    // 1. Get the price
+    const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close"));
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
-
-    // 2. Get the label
-    // This logic is now simple and correct for a 24/7 asset like BTC.
     const priceLabel = isAssessed ? t("Actual Price") : t("Current Price");
 
-    let rating = isAssessed ? prediction.rating : calculateLiveScore(prediction.targetPrice, currentPrice); // <-- Renamed
-    const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating; // <-- Renamed
+    let rating = isAssessed ? prediction.rating : calculateLiveScore(prediction.targetPrice, currentPrice);
+    const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating;
     const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
     const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
     const hasInitialPrice = typeof prediction.priceAtCreation === 'number';
@@ -253,7 +221,6 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
             </Helmet>
-            {/* --- Render the ShareModal --- */}
 
             <ShareModal
                 isOpen={isShareModalOpen}
@@ -269,6 +236,15 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             <PredictionHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} prediction={prediction} />
 
             <div className="max-w-2xl mx-auto animate-fade-in">
+                
+                {/* --- 2. NEW: Promo Banner displayed for guests if enabled in settings --- */}
+                {!currentUser && settings?.isPromoBannerActive && (
+                    <div className="mb-6">
+                        <PromoBanner />
+                    </div>
+                )}
+                {/* --------------------------------------------------------------------- */}
+
                 <div className="bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl">
                     <div className="flex justify-between items-start">
                         <div>
@@ -281,7 +257,6 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                             <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
                                 {t(`predictionStatus.${prediction.status}`)}
                             </div>
-                            {/* --- SHARE BUTTON UPDATED --- */}
                             <button onClick={openShareModal} title={t('prediction.share_title')} className="text-gray-400 hover:text-white">
                                 <ShareIcon />
                             </button>
@@ -310,7 +285,6 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
                                     </button>
                                 )}
-                                {/* --- This is line 279 --- */}
                                 {isOwner && prediction.status === 'Active' && (
                                     <button onClick={() => setIsEditModalOpen(true)} title="Edit Prediction" className="text-gray-500 hover:text-white">
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l10.732-10.732z"></path></svg>

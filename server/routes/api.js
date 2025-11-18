@@ -1373,30 +1373,36 @@ router.put('/settings/admin', async (req, res) => {
     try {
         const updateData = {};
 
-        // This logic now correctly handles all settings sent from the admin page
+        // --- 1. Handle Promo Banner Setting ---
         if (req.body.isPromoBannerActive !== undefined) {
             updateData.isPromoBannerActive = req.body.isPromoBannerActive;
         }
+        
+        // --- 2. Handle Badge Settings ---
         if (req.body.badgeSettings) {
             updateData.badgeSettings = req.body.badgeSettings;
         }
+
+        // --- 3. Handle Verification Settings ---
         if (req.body.isVerificationEnabled !== undefined) {
             updateData.isVerificationEnabled = req.body.isVerificationEnabled;
         }
         if (req.body.verificationPrice !== undefined) {
             updateData.verificationPrice = req.body.verificationPrice;
         }
-        // --- START: ADDED FIX ---
-        // This check was missing. It will now save the AI Wizard setting.
+
+        // --- 4. Handle AI Wizard ---
         if (req.body.isAIWizardEnabled !== undefined) {
             updateData.isAIWizardEnabled = req.body.isAIWizardEnabled;
         }
-        // --- ADD THIS BLOCK ---
+
+        // --- 5. Handle Limits ---
         if (req.body.maxPredictionsPerDay !== undefined) {
             updateData.maxPredictionsPerDay = parseInt(req.body.maxPredictionsPerDay) || 10;
         }
-        // --- END: ADDED FIX ---
-        if (req.body.isFinanceApiEnabled !== undefined) { // <-- ADD THIS BLOCK
+
+        // --- 6. Handle Finance API Toggle ---
+        if (req.body.isFinanceApiEnabled !== undefined) {
             updateData.isFinanceApiEnabled = req.body.isFinanceApiEnabled;
         }
 
