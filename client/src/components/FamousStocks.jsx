@@ -1,10 +1,10 @@
 // src/components/FamousStocks.js
-import React from 'react'; // <-- Removed useState, useEffect, useRef
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 
-const SentimentStockCard = ({ stock }) => {
+const SentimentStockCard = ({ stock, isHistorical }) => { // <--- 1. Receive isHistorical prop
     const { t, i18n } = useTranslation();
 
     if (!stock.quote) {
@@ -19,7 +19,19 @@ const SentimentStockCard = ({ stock }) => {
     }
 
     const hasSentiment = stock.sentiment && Object.keys(stock.sentiment).length > 0;
-    const relevantSentimentType = hasSentiment ? (['Hourly', 'Daily', 'Weekly', 'Monthly'].find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0]) : null;
+    
+    // --- 2. SMART SENTIMENT SELECTION FIX ---
+    let relevantSentimentType = null;
+    if (hasSentiment) {
+        // Define priorities based on the context
+        const priorityOrder = isHistorical 
+            ? ['Weekly', 'Daily', 'Monthly', 'Hourly'] // In 7-day mode, prefer Weekly/Daily
+            : ['Hourly', 'Daily', 'Weekly', 'Monthly']; // In Today mode, prefer Hourly/Daily
+            
+        relevantSentimentType = priorityOrder.find(type => stock.sentiment[type]) || Object.keys(stock.sentiment)[0];
+    }
+    // --- END FIX ---
+
     const sentimentData = relevantSentimentType ? stock.sentiment[relevantSentimentType] : null;
 
     const dailyChangePercent = stock.quote?.regularMarketChangePercent;
@@ -32,7 +44,7 @@ const SentimentStockCard = ({ stock }) => {
         isTargetUp = targetPercentageChange >= 0;
     }
 
-    // This is the fallback card for when there is a quote, but NO sentiment.
+    // Fallback card (Price Only)
     if (!sentimentData) {
         return (
             <Link to={`/stock/${stock.ticker}`} className="bg-gray-700 p-4 rounded-lg flex items-center justify-between hover:bg-gray-600 h-full flex-shrink-0 w-64">
@@ -52,7 +64,7 @@ const SentimentStockCard = ({ stock }) => {
         );
     }
 
-    // This is the main card, for when quote AND sentiment exist.
+    // Main Sentiment Card
     const translatedType = t(`prediction_types.${relevantSentimentType}`, relevantSentimentType);
 
     return (
@@ -83,8 +95,6 @@ const SentimentStockCard = ({ stock }) => {
 
 const FamousStocks = ({ stocks, isHistorical }) => {
     const { t } = useTranslation();
-    
-    // --- FIX 1: Removed unused useState, useRef, and useEffect ---
 
     const validStocks = stocks?.filter(stock => stock.quote) || [];
 
@@ -93,15 +103,14 @@ const FamousStocks = ({ stocks, isHistorical }) => {
     }
 
     return (
-        // --- FIX 2: Added the widget container ---
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-bold text-white mb-4">
                 {isHistorical ? t('famousStocks.title_historical') : t('famousStocks.title')}
             </h3>
-            {/* This is the horizontal scroll layout you wanted */}
             <div className="flex gap-4 overflow-x-auto pb-2 modern-scrollbar">
                 {validStocks.map(stock => (
-                    <SentimentStockCard key={stock.ticker} stock={stock} />
+                    // --- 3. Pass isHistorical to the card ---
+                    <SentimentStockCard key={stock.ticker} stock={stock} isHistorical={isHistorical} />
                 ))}
             </div>
         </div>
