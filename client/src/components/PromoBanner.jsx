@@ -1,12 +1,13 @@
 // src/components/PromoBanner.js
+
 import React, { useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next'; // Import useTranslation
-import SignupBenefitsModal from './SignupBenefitsModal'; // <--- Import the new modal
+import { Trans, useTranslation } from 'react-i18next';
+import SignupBenefitsModal from './SignupBenefitsModal';
 
 const PromoBanner = () => {
-    const { t } = useTranslation(); // Initialize hook
+    const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(true);
-    const [isBenefitsOpen, setIsBenefitsOpen] = useState(false); // State for modal
+    const [isBenefitsOpen, setIsBenefitsOpen] = useState(false);
 
     if (!isVisible) {
         return null;
@@ -50,10 +51,10 @@ const PromoBanner = () => {
                     </a>
                 </div>
 
-                {/* Close X */}
+                {/* Close X Button (THE FIX) */}
                 <button
                     onClick={() => setIsVisible(false)}
-                    className="absolute top-2 right-2 text-white/60 hover:text-white text-xl p-1 leading-none"
+                    className="absolute top-0 right-0 text-white/60 hover:text-white text-xl p-1 leading-none" // CHANGED top-1 right-1 to top-0 right-0
                     aria-label="Close banner"
                 >
                     &times;
