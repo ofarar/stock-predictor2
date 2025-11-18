@@ -646,6 +646,11 @@
         "noData": "Keine Leistungsdaten für diesen Filter."
     },
     "performanceTabs": {
+        "shareOnX": "Auf X teilen",
+        "shareText": {
+            "byStock": "Ich bin auf StockPredictorAI mit Rang #{{rank}} für meine ${{ticker}} Prognosen! Mal sehen, ob Sie es besser können.",
+            "byType": "Ich bin auf StockPredictorAI mit Rang #{{rank}} für '{{type}}' Prognosen! Sehen Sie sich meine Statistiken an."
+        },
         "tabs": {
             "byType": "Nach Typ",
             "byStock": "Nach Aktie"
