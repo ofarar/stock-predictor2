@@ -173,8 +173,9 @@ router.get('/stock/:ticker', async (req, res) => {
     }
 });
 
-// GET: Community sentiment for a stock
-router.get('/stock/:ticker/community-sentiment', async (req, res) => {
+// server/routes/market.js (inside the router.get('/community-sentiment/:ticker', ...))
+
+router.get('/community-sentiment/:ticker', async (req, res) => {
     try {
         const { ticker } = req.params;
         const upperTicker = ticker.toUpperCase();
@@ -215,16 +216,18 @@ router.get('/stock/:ticker/community-sentiment', async (req, res) => {
             { $sort: { count: -1 } }
         ]);
 
-        const processedSentiments = sentiments.map(s => ({
-            ...s,
-            avgTargetPrice: s.avgTargetPrice ? parseFloat(s.avgTargetPrice.toFixed(2)) : 0
-        }));
+        // --- FIX: CONVERT ARRAY TO MAP AND RETURN ---
+        const sentimentMap = sentiments.reduce((acc, s) => {
+            acc[s.type] = {
+                averageTarget: s.avgTargetPrice ? parseFloat(s.avgTargetPrice.toFixed(2)) : 0,
+                predictionCount: s.count
+            };
+            return acc;
+        }, {});
 
-        res.json({
-            ticker: upperTicker,
-            currentPrice: currentPrice,
-            sentiments: processedSentiments
-        });
+        // Return the map directly. The frontend uses the map keys and the currentPrice prop.
+        res.json(sentimentMap);
+        // ---------------------------------------------
 
     } catch (err) {
         console.error(`Error fetching community sentiment for ${req.params.ticker}:`, err);

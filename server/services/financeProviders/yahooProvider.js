@@ -12,10 +12,10 @@ async function getYahooInstance() {
     try {
         // Use async import() to load the ESM 'yahoo-finance2' module
         const { default: YahooFinance } = await import('yahoo-finance2');
-        
+
         // Initialize with new v3 syntax (as per your documentation)
         yahooFinanceInstance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
-        
+
         console.log("Yahoo Finance v3 provider initialized successfully.");
         return yahooFinanceInstance;
     } catch (err) {
@@ -59,7 +59,7 @@ const mapYahooSearch = (q) => ({
     symbol: q.symbol,
     name: q.shortname || q.longname || null,
     // v3 compatibility for your frontend
-    shortname: q.shortname || q.longname || null, 
+    shortname: q.shortname || q.longname || null,
     longname: q.longname || q.shortname || null,
 });
 
@@ -70,7 +70,7 @@ const getQuote = async (tickers) => {
     try {
         // 2. Call v3 method
         const result = await yahoo.quote(tickers);
-        
+
         // 3. Map the result(s)
         if (Array.isArray(result)) {
             return result.map(mapYahooQuote).filter(q => q !== null);

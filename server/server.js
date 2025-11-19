@@ -33,15 +33,20 @@ const allowedOrigins = [
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
+        // --- FIX: Allow local connections (localhost:xxxx) and no-origin requests ---
+        if (!origin || origin.includes('localhost')) {
+            return callback(null, true);
+        }
+        // ------------------------------------------------------------------------
+
+        // Check against the explicit production list
         if (allowedOrigins.indexOf(origin) === -1) {
             const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
             return callback(new Error(msg), false);
         }
         return callback(null, true);
     },
-    credentials: true, // This is important for cookies/sessions
+    credentials: true,
 };
 
 const io = new Server(server, {

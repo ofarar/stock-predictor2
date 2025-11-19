@@ -1,6 +1,16 @@
 const yahooProvider = require('./financeProviders/yahooProvider');
 const currentProvider = yahooProvider;
 const Setting = require('../models/Setting'); // <-- 1. IMPORT SETTING MODEL
+const cryptoProvider = require('./financeProviders/cryptoProvider');
+
+// --- NEW HELPER: Dynamically selects the correct provider ---
+const getProvider = (ticker) => {
+    if (ticker.includes('-USD') || ticker.endsWith('BTC') || ticker.endsWith('ETH')) {
+        return cryptoProvider; // Use CoinGecko
+    }
+    return currentProvider; // Default to Yahoo
+};
+// -------------------------------------------------------------
 
 // --- Cache for API calls ---
 const quoteCache = new Map();
@@ -68,22 +78,18 @@ const getApiCallStats = () => {
 // --- Exported Adapter Functions (Delegate to the selected provider) ---
 
 /**
- * Fetches quote data using the currently configured provider.
+ * Fetches quote data using the appropriate provider, enforced by cache.
  * @param {string|string[]} tickers
  * @returns {Promise<StandardQuote|StandardQuote[]|null>}
  */
-// --- START: MODIFY THIS FUNCTION ---
 const getQuote = async (tickers) => {
-    // --- 2. ADD THIS CHECK ---
+    // --- 1. Global Safety Check (Correct) ---
     if (!(await isFinanceApiEnabled())) {
         console.warn("Finance API is disabled. Returning null for getQuote.");
-        // Return null or an empty array to match what the app expects on failure
         return Array.isArray(tickers) ? [] : null;
     }
-    // --- END CHECK ---
-    // This function will now use the cache and the counter
 
-    // 1. Handle array case by calling self (this logic is recursive)
+    // 2. Handle array case by calling self (Correct)
     if (Array.isArray(tickers)) {
         const promises = tickers.map(ticker => getQuote(ticker));
         return Promise.all(promises);
@@ -93,25 +99,32 @@ const getQuote = async (tickers) => {
     const cacheKey = `quote:${ticker}`;
     const now = Date.now();
 
-    // 2. Check for a valid, non-expired cache entry
+    // --- 3. MISSING CHECK (CRITICAL): Check Cache FIRST ---
     if (quoteCache.has(cacheKey)) {
         const cacheEntry = quoteCache.get(cacheKey);
+        // CACHE_TTL_MS is 2 minutes, throttling external API calls
         if (now - cacheEntry.timestamp < CACHE_TTL_MS) {
-            // Cache hit! Return the cached data.
+            console.log(`Serving quote for ${ticker} from cache.`);
             return cacheEntry.data;
         }
     }
+    // --- END MISSING CHECK ---
 
-    // 3. Cache miss or expired. Increment counter and fetch.
-    incrementCounter('getQuote'); // <-- INCREMENT
-    const data = await currentProvider.getQuote(ticker);
+    // 4. Cache miss: Determine provider and fetch data
+    // (We assume getProvider(ticker) correctly returns cryptoProvider or yahooProvider)
+    const provider = getProvider(ticker);
 
-    // 4. Store the new data in the cache
+    // 5. Increment counter and fetch data from the external API
+    incrementCounter('getQuote'); // Only increment on cache miss
+
+    // Note: If this fails for Crypto, the error is immediately reported to the user console (429)
+    const data = await provider.getQuote(ticker);
+
+    // 6. Store the new data in the cache (for both Yahoo and Crypto)
     quoteCache.set(cacheKey, { data: data, timestamp: now });
 
     return data;
 };
-// --- END: MODIFY THIS FUNCTION ---
 
 /**
  * Fetches historical data using the currently configured provider.

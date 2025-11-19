@@ -10,6 +10,7 @@ import { formatCurrency, formatPercentage } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
 import CommunitySentiment from '../components/CommunitySentiment';
 import { Helmet } from 'react-helmet-async';
+import { isMarketOpen } from '../utils/timeHelpers';
 
 const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
@@ -87,6 +88,27 @@ const StockPage = ({ onPredictClick, settings }) => {
     useEffect(() => {
         fetchTopPredictors(1);
     }, [fetchTopPredictors]);
+
+    // --- NEW: Live Price Update Interval (Required for 24/7 assets like BTC) ---
+    useEffect(() => {
+        // 1. Ensure ticker is available
+        if (!ticker) return;
+
+        // 2. Check market status. This returns TRUE 24/7 for BTC.
+        if (isMarketOpen(ticker)) {
+            const quoteTimer = setInterval(() => {
+                axios.get(`${import.meta.env.VITE_API_URL}/api/quote/${ticker}`)
+                    .then(res => {
+                        // Update the main quote state with the fresh data
+                        if (res.data) setQuote(res.data);
+                    })
+                    .catch(() => { /* fail silently if API drops */ });
+            }, 60000); // Refresh every 60 seconds
+
+            // 3. CRUCIAL: Cleanup function runs when component unmounts or ticker changes
+            return () => clearInterval(quoteTimer);
+        }
+    }, [ticker]); // <--- This dependency triggers the effect when the page loads or switches tickers
 
     const handleLoadMorePredictors = () => {
         if (!loadingPredictors && topPredictors.page < topPredictors.totalPages) {
