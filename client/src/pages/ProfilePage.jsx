@@ -59,6 +59,34 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isCreatorPoolModalOpen, setIsCreatorPoolModalOpen] = useState(false);
     const [isRatingInfoModalOpen, setIsRatingInfoModalOpen] = useState(false);
 
+    // --- NEW: Handle Profile View Counting ---
+    useEffect(() => {
+        if (!userId) return;
+
+        const logView = () => {
+            try {
+                // Use localStorage to debounce views (1 view per hour per profile)
+                const viewedProfiles = JSON.parse(localStorage.getItem('viewed_profiles') || '{}');
+                const now = Date.now();
+                const oneHour = 60 * 60 * 1000;
+
+                // If never viewed OR viewed more than 1 hour ago
+                if (!viewedProfiles[userId] || (now - viewedProfiles[userId] > oneHour)) {
+                    // Fire and forget
+                    axios.post(`${import.meta.env.VITE_API_URL}/api/users/${userId}/view`);
+
+                    // Update local storage
+                    viewedProfiles[userId] = now;
+                    localStorage.setItem('viewed_profiles', JSON.stringify(viewedProfiles));
+                }
+            } catch (error) {
+                console.error("Failed to log profile view", error);
+            }
+        };
+
+        logView();
+    }, [userId]);
+
     useEffect(() => {
         // Check if the success parameter exists
         if (searchParams.get('subscribe') === 'success') {

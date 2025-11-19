@@ -1144,5 +1144,6 @@
             "desc": "Les meilleurs performeurs partagent 50 % des bénéfices de la plateforme via le Pool Créateurs."
         },
         "footer": "L'inscription est 100 % gratuite. Aucune carte de crédit requise."
-    }
+    },
+    "profile_views_label": "Vues"
 }

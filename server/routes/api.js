@@ -330,6 +330,18 @@ router.post('/admin/health-check/:service', async (req, res) => {
     }
 });
 
+// --- NEW: Profile View Count Endpoint ---
+router.post('/users/:id/view', viewLimiter, async (req, res) => {
+    try {
+        // Atomic increment. Efficient and thread-safe.
+        await User.findByIdAndUpdate(req.params.id, { $inc: { profileViews: 1 } }).exec();
+        res.status(200).send();
+    } catch (err) {
+        // Fail silently on server error to not disrupt client
+        res.status(200).send();
+    }
+});
+
 // NEW: Recommendation Wizard Endpoint
 router.post('/golden-members/recommend', async (req, res) => {
     if (!req.user) { // Add a guard clause for safety

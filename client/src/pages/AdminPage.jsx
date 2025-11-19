@@ -80,16 +80,16 @@ const AdminPage = () => {
                 </button>
             </div>
 
-            <AdminHealthCheck />
-
+            <AdminUserList settings={settings} />
             {/* Conditionally render waitlist if enabled */}
             {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}
 
-            <AdminUserList settings={settings} />
+            <AdminHealthCheck />
+
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">General Settings</h2>
-                
+
                 {/* --- 3. NEW PROMO BANNER TOGGLE --- */}
                 <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
                     <label htmlFor="isPromoBannerActive" className="font-medium text-gray-300">
@@ -119,7 +119,7 @@ const AdminPage = () => {
                         className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500"
                     />
                 </div>
-                
+
                 <div>
                     <label className="block text-sm font-medium text-gray-300">Max Predictions Per Day Per User</label>
                     <input

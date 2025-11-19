@@ -1144,5 +1144,6 @@
             "desc": "Top-Performer teilen sich 50% der Plattformgewinne über den Creator Pool."
         },
         "footer": "Die Anmeldung ist zu 100 % kostenlos. Keine Kreditkarte erforderlich."
-    }
+    },
+    "profile_views_label": "Aufrufe"
 }

@@ -1144,5 +1144,6 @@
             "desc": "Los mejores rendimientos comparten el 50% de las ganancias de la plataforma a través del Fondo de Creadores."
         },
         "footer": "Registrarse es 100% gratuito. No se requiere tarjeta de crédito."
-    }
+    },
+    "profile_views_label": "Vistas"
 }

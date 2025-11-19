@@ -58,6 +58,16 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                     </span>
                 </h1>
                 <p className="text-gray-500 text-sm mt-1">{t('member_since_label', { date: new Date(user.createdAt).toLocaleDateString(i18n.language) })}</p>
+                <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 mb-2 text-gray-400 text-xs">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span>
+                        {/* Use a fallback 0 if the field doesn't exist yet */}
+                        {(user.profileViews || 0).toLocaleString()} {t('profile_views_label', 'Views')}
+                    </span>
+                </div>
                 <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
                     <p className="text-gray-400">{user.about || t('no_bio_label')}</p>
                     {user.xLink && (<a href={user.xLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>)}

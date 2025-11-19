@@ -80,7 +80,8 @@ const UserSchema = new Schema({
         achievedAt: { type: Date, default: Date.now }
     }], default: [],
     lastCheckedGoldenFeed: { type: Date, default: Date.now },
-    dailyPredictionCount: { type: Number, default: 0 }, // <-- ADD THIS LINE
+    dailyPredictionCount: { type: Number, default: 0 },
+    profileViews: { type: Number, default: 0 },
     lastPredictionDate: { type: Date },
 }, { timestamps: true });
 
