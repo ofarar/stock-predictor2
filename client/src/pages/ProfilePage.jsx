@@ -102,7 +102,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
             setSearchParams(searchParams, { replace: true });
         }
         if (searchParams.get('onboarding') === 'refresh') {
-            toast.info("Stripe onboarding link expired or invalid. Please try connecting again.");
+            toast.success("Stripe onboarding link expired or invalid. Please try connecting again.");
             searchParams.delete('onboarding');
             setSearchParams(searchParams, { replace: true });
         }

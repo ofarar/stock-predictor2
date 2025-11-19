@@ -47,6 +47,7 @@
   * **Atomic Database Operations:** Critical writes, such as incrementing view counts (`$inc`) or updating analyst ratings, utilize MongoDB atomic operators to ensure data integrity under high concurrency without race conditions.
   * **Optimistic UI:** The frontend (`FollowersPage.jsx`, `PredictionDetailPage.jsx`) updates the UI immediately upon user action (e.g., following, endorsing) before the server response is received, ensuring a responsive user experience.
   * **Event-Driven Updates:** Real-time features (like price updates or new prediction alerts) are handled via **Socket.io**, pushing data to clients instantly rather than relying solely on polling.
+  * **Code Splitting:** Utilizes `React.lazy` and `Suspense` to load non-critical pages on demand, significantly reducing the initial bundle size for faster application startup.
 
 ### 2\. Security Measures
 
