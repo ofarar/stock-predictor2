@@ -222,7 +222,7 @@ router.get('/profile/:userId', async (req, res) => {
         });
         const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
 
-        const overallRank = (await User.countDocuments({ totalRating: { $gt: user.totalRating } })) + 1;
+        const overallRank = (await User.countDocuments({ avgRating: { $gt: user.avgRating } })) + 1;
 
         const performance = {
             overallRank: overallRank,
