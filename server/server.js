@@ -1,6 +1,8 @@
+require("./instrument.js");
 require('dotenv').config();
 
 const express = require('express');
+const Sentry = require("@sentry/node");
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
@@ -91,6 +93,15 @@ app.use(express.json());
 //    These routes (like /api/quotes) will now receive req.body correctly.
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
+
+// --- 2. ADD SENTRY ERROR HANDLER HERE ---
+// This must go AFTER all your app.use() routes, but BEFORE the server.listen
+Sentry.setupExpressErrorHandler(app);
+
+// Optional: Add the debug route to test it
+app.get("/debug-sentry", function mainHandler(req, res) {
+    throw new Error("My first Sentry error!");
+});
 
 // --- END CORRECT MIDDLEWARE ORDER ---
 

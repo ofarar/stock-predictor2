@@ -10,6 +10,7 @@
     "build-all": "npm run generate-sitemap && cd client && npm run build"
   },
   "dependencies": {
+    "@sentry/node": "^10.26.0",
     "axios": "^1.12.2",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",

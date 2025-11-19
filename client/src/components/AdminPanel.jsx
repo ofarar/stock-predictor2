@@ -2,7 +2,7 @@
 
 import React from 'react';
 import axios from 'axios';
-import toast from 'react-hot-toast'; // Make sure toast is imported
+import toast from 'react-hot-toast';
 
 const AdminPanel = () => {
     const handleEvaluate = () => {
@@ -13,17 +13,31 @@ const AdminPanel = () => {
         }
     };
 
-    // Function for the new button
     const handleRecalculateAnalytics = () => {
-        if (globalThis.confirm("Are you sure you want to recalculate ALL analyst ratings, breakdowns, and badges for ALL users? This is a heavy operation and will reset badge/prediction points.")) {
+        if (globalThis.confirm("Are you sure you want to recalculate ALL analyst ratings?")) {
             const promise = axios.post(`${import.meta.env.VITE_API_URL}/api/admin/recalculate-analytics`, {}, { withCredentials: true });
-
             toast.promise(promise, {
                 loading: 'Recalculating all analytics...',
                 success: 'Analytics recalculated successfully!',
                 error: 'Failed to recalculate analytics.'
             });
         }
+    };
+
+    // --- NEW: Sentry Test Function ---
+    const handleTestSentry = () => {
+        // We call the backend endpoint directly. 
+        // Since it throws an error, the axios promise will fail (catch).
+        axios.get(`${import.meta.env.VITE_API_URL}/debug-sentry`)
+            .then(() => {
+                // We should actually never get here if the server crashes properly
+                toast.success("Request sent.");
+            })
+            .catch((err) => {
+                // A 500 error means Sentry caught it!
+                console.error("Sentry Test Error:", err);
+                toast.success("Error triggered! Check your Sentry Dashboard.");
+            });
     };
 
     return (
@@ -37,12 +51,19 @@ const AdminPanel = () => {
                 >
                     Evaluate Predictions Now
                 </button>
-                {/* New Button */}
                 <button
                     onClick={handleRecalculateAnalytics}
                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-400"
                 >
                     Recalculate All Analytics
+                </button>
+                
+                {/* --- NEW BUTTON --- */}
+                <button
+                    onClick={handleTestSentry}
+                    className="bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-500"
+                >
+                    Trigger Sentry Error
                 </button>
             </div>
         </div>
