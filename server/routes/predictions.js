@@ -116,7 +116,8 @@ router.post('/predict', predictLimiter, async (req, res) => {
             currency: currency,
             description: sanitizedDescription,
             initialDescription: sanitizedDescription,
-            status: 'Active'
+            status: 'Active',
+            maxRatingAtCreation: maxRatingAtCreation || 100
         });
         await prediction.save();
 

@@ -158,8 +158,14 @@ const runAssessmentJob = async () => {
 
             for (const prediction of predictions) {
                 try {
-                    const rating = calculateProximityRating(prediction.targetPrice, actualPrice, prediction.priceAtCreation);
+                    // 1. Calculate the raw rating (up to 100)
+                    const rawRating = calculateProximityRating(prediction.targetPrice, actualPrice, prediction.priceAtCreation);
 
+                    // 2. Apply Time Penalty Cap (The FIX)
+                    const maxAllowedRating = prediction.maxRatingAtCreation || 100;
+                    const rating = Math.min(rawRating, maxAllowedRating); // Capping the score here
+
+                    // 3. The rest of the assessment logic uses the capped 'rating'
                     let analystRatingToAward = 0;
                     if (rating > 90) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_90;
                     else if (rating > 80) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_80;

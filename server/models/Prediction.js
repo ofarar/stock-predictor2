@@ -12,6 +12,7 @@ const PredictionSchema = new Schema({
     rating: { type: Number, default: 0 },
     actualPrice: { type: Number },
     priceAtCreation: { type: Number },
+    maxRatingAtCreation: { type: Number, default: 100 },
     currency: { type: String, default: 'USD' },
     description: { type: String, maxLength: 500 },
     initialDescription: { type: String, maxLength: 500 },

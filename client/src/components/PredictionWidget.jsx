@@ -164,6 +164,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
             deadline: formState.deadline,
             predictionType,
             description,
+            maxRatingAtCreation: formState.maxScore
         };
         axios.post(`${import.meta.env.VITE_API_URL}/api/predict`, predictionData, { withCredentials: true })
             .then(() => {
