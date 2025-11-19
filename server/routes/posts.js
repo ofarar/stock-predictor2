@@ -6,7 +6,6 @@ const Notification = require('../models/Notification');
 const financeAPI = require('../services/financeAPI');
 const xss = require('xss');
 
-// POST: Create a Golden Post
 router.post('/posts/golden', async (req, res) => {
     if (!req.user || !req.user.isGoldenMember) {
         return res.status(403).json({ message: 'Only Golden Members can create posts.' });
@@ -24,25 +23,22 @@ router.post('/posts/golden', async (req, res) => {
             isGoldenPost: true,
         };
 
-        // --- Resilient Prediction Attachment Logic ---
+        // --- Resilient Prediction Attachment Logic (Remains Unchanged) ---
         if (attachedPrediction && attachedPrediction.stockTicker) {
             let priceAtCreation = null;
             let currency = 'USD'; // Default currency
 
             try {
-                // Attempt to fetch the quote
                 const quote = await financeAPI.getQuote(attachedPrediction.stockTicker);
                 priceAtCreation = quote.regularMarketPrice;
                 currency = quote.currency;
             } catch (financeApiError) {
-                // Log the non-critical error but continue
                 console.warn(`Golden Post: Could not fetch price for ${attachedPrediction.stockTicker} at creation. Error: ${financeApiError.message}`);
-                // priceAtCreation remains null
             }
 
             newPostData.attachedPrediction = {
                 ...attachedPrediction,
-                priceAtCreation: priceAtCreation, // Will be null if API failed
+                priceAtCreation: priceAtCreation,
                 currency: currency,
             };
         }
@@ -51,20 +47,25 @@ router.post('/posts/golden', async (req, res) => {
         const newPost = new Post(newPostData);
         await newPost.save();
 
-        // Notify subscribers
-        const subscribers = await User.find({ 'goldenSubscriptions.user': req.user._id });
-        const notifications = subscribers.map(subscriber => ({
-            recipient: subscriber._id,
-            sender: req.user._id,
-            type: 'GoldenPost',
-            messageKey: 'notifications.newGoldenPost',
-            link: `/posts/golden/${req.user._id}`, // Link to the creator's feed
-            metadata: {
-                username: req.user.username
-            }
-        }));
+        // --- FIX 1 & 2: Use efficient population and add message content ---
+        // Fetch the creator and populate their list of active subscribers
+        const creator = await User.findById(req.user._id).populate('goldenSubscribers.user');
+        const validSubscribers = creator.goldenSubscribers.filter(sub => sub.user);
 
-        if (notifications.length > 0) {
+        if (validSubscribers.length > 0) {
+            const notifications = validSubscribers.map(sub => ({
+                recipient: sub.user._id,
+                sender: creator._id,
+                type: 'GoldenPost',
+                messageKey: 'notifications.goldenPost',
+                link: '/golden-feed',
+                metadata: {
+                    username: creator.username,
+                    // FIX 2: Add post message snippet (clipped to 50 chars)
+                    postMessage: newPost.message.substring(0, 50) + (newPost.message.length > 50 ? '...' : '')
+                }
+            }));
+
             await Notification.insertMany(notifications);
         }
 

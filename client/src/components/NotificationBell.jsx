@@ -144,6 +144,12 @@ const NotificationBell = ({ user }) => {
                                                 ({formatPercentage(n.metadata.percentage, i18n.language)})
                                             </span>
                                         )}
+                                        {/* --- NEW: Display Golden Post Preview --- */}
+                                        {n.type === 'GoldenPost' && n.metadata?.postMessage && (
+                                            <p className="text-xs text-gray-400 italic mt-0.5">
+                                                "{n.metadata.postMessage}"
+                                            </p>
+                                        )}
                                     </div>
                                 </Link>
                             );
