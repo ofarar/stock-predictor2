@@ -57,7 +57,7 @@ www.stockpredictorai.com
 
 -----
 
-## 🧠 Domain Logic & Gamification
+## 🧠 Domain Logic
 
 ### 1\. Prediction Scoring Algorithm (0-100)
 
