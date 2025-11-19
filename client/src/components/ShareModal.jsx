@@ -21,13 +21,22 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
         // 1. Open the share window
         window.open(shareUrl, '_blank', 'noopener,noreferrer');
 
-        // 2. Award points
-        axios.post(`${import.meta.env.VITE_API_URL}/api/activity/share`, {}, { shareContext }, { withCredentials: true })
-             .then(() => {
-                 toast.success(t('analystRating.pointsAwarded', '+5 Analyst Rating!'), { duration: 2000 });
-             })
-             .catch(console.log("Failed to log share activity.")); // Don't bother user on fail
-        
+        // 2. Award points (FIXED SYNTAX)
+        // Argument 1: URL
+        // Argument 2: Data Body (contains shareContext)
+        // Argument 3: Config (contains withCredentials)
+        axios.post(
+            `${import.meta.env.VITE_API_URL}/api/activity/share`,
+            { shareContext }, // <--- Data goes here
+            { withCredentials: true } // <--- Config goes here
+        )
+            .then(() => {
+                toast.success(t('analystRating.pointsAwarded', '+5 Analyst Rating!'), { duration: 2000 });
+            })
+            .catch(err => {
+                console.error("Failed to log share activity:", err);
+            });
+
         // 3. Close this modal
         onClose();
     };
@@ -46,28 +55,28 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                
+
                 <p className="text-gray-300 mb-4 bg-gray-700 p-3 rounded-md italic">
                     &quot;{text}&quot;
                 </p>
 
                 <div className="bg-gray-900 p-3 rounded-md flex items-center gap-2">
-                    <input 
+                    <input
                         type="text"
                         value={url}
                         readOnly
                         className="bg-transparent text-gray-400 w-full outline-none"
                     />
-                    <button 
+                    <button
                         onClick={copyToClipboard}
                         className="bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600"
                     >
                         {t('referralModal.copy', 'Copy')}
                     </button>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
-                    <button 
+                    <button
                         onClick={() => handleShare('x')}
                         className="bg-[#1DA1F2] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0c85d0] flex items-center justify-center gap-2 w-full sm:w-auto"
                     >
@@ -75,11 +84,11 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
                         {t('referralModal.share', 'Share on X')}
                     </button>
 
-                    <button 
+                    <button
                         onClick={() => handleShare('telegram')}
                         className="bg-[#0088cc] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0077b3] flex items-center justify-center gap-2 w-full sm:w-auto"
                     >
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"/></svg>
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" /></svg>
                         {t('referralModal.shareOnTelegram', 'Share on Telegram')}
                     </button>
                 </div>
