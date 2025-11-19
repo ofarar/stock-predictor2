@@ -1,12 +1,14 @@
-// server/instrument.js
-
-// Import with `import * as Sentry from "@sentry/node"` if you are using ESM
+// instrument.js
+require('dotenv').config(); // Load env vars first so DSN is available
 const Sentry = require("@sentry/node");
 
-// Ensure this runs before everything else
+// Ensure to call this before requiring any other modules!
 Sentry.init({
-  dsn: process.env.SENTRY_DSN, 
-  // Setting this option to true will send default PII data to Sentry.
-  // For example, automatic IP address collection on events
+  dsn: process.env.SENTRY_DSN,
+
+  // Adds request headers and IP for users, for more info visit:
+  // https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
 });
+
+module.exports = Sentry;

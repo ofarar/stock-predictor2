@@ -99,14 +99,16 @@ app.use(express.json());
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
 
-// --- 2. ADD SENTRY ERROR HANDLER HERE ---
-// This must go AFTER all your app.use() routes, but BEFORE the server.listen
-Sentry.setupExpressErrorHandler(app);
-
-// Optional: Add the debug route to test it
-app.get("/debug-sentry", function mainHandler(req, res) {
-    throw new Error("My first Sentry error!");
-});
+// // --- SENTRY VERIFICATION SNIPPET (FROM DOCS) ---
+// // This will trigger an error shortly after server start to verify Sentry is working.
+// setTimeout(() => {
+//     try {
+//         foo(); // This function is undefined and will throw an error
+//     } catch (e) {
+//         console.log("Triggering Sentry Test Error...");
+//         Sentry.captureException(e);
+//     }
+// }, 5000); // Wait 5 seconds after start
 
 // --- END CORRECT MIDDLEWARE ORDER ---
 

@@ -69,7 +69,7 @@ router.post('/predict', predictLimiter, async (req, res) => {
         user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate('followers', 'notificationSettings');
         // --- End Daily Limit Check ---
 
-        const { stockTicker, targetPrice, deadline, predictionType, description } = req.body;
+        const { stockTicker, targetPrice, deadline, predictionType, description, maxRatingAtCreation } = req.body;
         const sanitizedDescription = xss(description);
 
         // --- Check for existing active prediction ---
