@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
@@ -143,15 +144,63 @@ router.post('/golden-feed/mark-as-read', async (req, res) => {
     res.status(200).send();
 });
 
-// GET: Specific User's Golden Posts
 router.get('/posts/golden/:userId', async (req, res) => {
     try {
-        const posts = await Post.find({ userId: req.params.userId, isGoldenPost: true })
-            .sort({ createdAt: -1 })
-            .populate('userId', 'username avatar isGoldenMember isVerified');
-        res.json(posts);
+        const profileUserId = req.params.userId;
+        let isAllowed = false;
+        let posts = [];
+
+        if (req.user) {
+            // FIX 1: Fetch the FULL current user object once at the start of the block
+            const currentSessionUser = await User.findById(req.user._id);
+
+            if (!currentSessionUser) {
+                // Should not happen if session is valid, but good check
+                return res.status(401).json({ message: 'Session user not found.' });
+            }
+
+            const currentUserId = currentSessionUser._id.toString();
+            const profileUser = await User.findById(profileUserId);
+
+            if (!profileUser) {
+                return res.status(404).json({ message: 'User not found.' });
+            }
+
+            const isOwner = currentUserId === profileUserId;
+
+            // --- Subscriber Check ---
+            const isSubscriber = profileUser.goldenSubscribers.some(
+                sub => sub && sub.user && sub.user.toString() === currentUserId
+            );
+            // ------------------------
+
+            if (isOwner || isSubscriber) {
+                isAllowed = true;
+
+                // --- Post Fetching Logic ---
+                const profileObjectId = new mongoose.Types.ObjectId(profileUserId);
+
+                // FIX 2: Use the already fetched currentSessionUser for the timestamp
+                const lastCheck = currentSessionUser.lastCheckedGoldenFeed || new Date(0);
+
+                // Fetch posts (using lean/limit for performance)
+                const rawPosts = await Post.find({ userId: profileObjectId, isGoldenPost: true })
+                    .sort({ createdAt: -1 })
+                    .limit(50) // Limit posts for the feed
+                    .lean();
+
+                // Add the 'isNew' flag for the frontend UI
+                rawPosts.forEach(post => { post.isNew = new Date(post.createdAt) > new Date(lastCheck); });
+                posts = rawPosts;
+            }
+        }
+
+        // Return the access control flag and the posts (which will be empty if access is denied)
+        res.json({ isAllowed, posts });
+
     } catch (err) {
-        res.status(500).json({ message: 'Error fetching user posts.' });
+        console.error("Error fetching profile golden feed:", err);
+        res.status(500).json({ message: 'Server error while fetching feed.' });
     }
 });
 

@@ -45,9 +45,8 @@ const PostCard = ({ post, locale }) => {
                             </span>
                             {percentChange !== null && (
                                 <span
-                                    className={`text-xs font-bold ${
-                                        percentChange >= 0 ? 'text-green-400' : 'text-red-400'
-                                    }`}
+                                    className={`text-xs font-bold ${percentChange >= 0 ? 'text-green-400' : 'text-red-400'
+                                        }`}
                                 >
                                     {percentChange >= 0 ? '+' : ''}
                                     {formatPercent(percentChange)}
@@ -68,7 +67,7 @@ const PostCard = ({ post, locale }) => {
     );
 };
 
-const GoldenFeed = ({ profileUser, onJoinClick }) => {
+const GoldenFeed = ({ profileUser, onJoinClick, isOwnProfile }) => {
     const { t, i18n } = useTranslation();
     const locale = i18n.language || 'en';
     const [posts, setPosts] = useState([]);
@@ -99,7 +98,21 @@ const GoldenFeed = ({ profileUser, onJoinClick }) => {
         return <p className="text-gray-500 text-center py-8">{t('goldenFeed.loading')}</p>;
     }
 
-    if (!isAllowed) {
+    // --- FIX: Check if the user is the owner OR if the backend grants access ---
+    if (!isAllowed && !isOwnProfile) {
+        // Show the paywall ONLY if the backend said NO (isAllowed=false) AND it's NOT the owner 
+
+        // Safety check: If the user hasn't activated their Golden Membership, they should see a different prompt.
+        if (!profileUser.isGoldenMember) {
+            return (
+                <div className="text-center bg-gray-800 p-8 rounded-lg">
+                    <p className="text-gray-400">This feed is only available for Golden Members.</p>
+                    <p className="font-bold text-white mt-2">Activate your status in the profile header to start posting.</p>
+                </div>
+            );
+        }
+
+        // Show the paywall for external users
         return (
             <div className="text-center bg-gray-800 p-8 rounded-lg">
                 <span className="text-5xl" role="img" aria-label="lock">🔒</span>
@@ -109,19 +122,19 @@ const GoldenFeed = ({ profileUser, onJoinClick }) => {
                 <p className="text-gray-400 mt-2">
                     {t('goldenFeed.exclusiveContentDescription', { username: profileUser.username })}
                 </p>
-                <button
-                    onClick={onJoinClick}
-                    className="mt-6 font-bold py-3 px-6 rounded-md bg-yellow-500 text-black hover:bg-yellow-400 transition-transform hover:scale-105"
-                >
+                <button onClick={onJoinClick} className="mt-6 font-bold py-3 px-6 rounded-md bg-yellow-500 text-black hover:bg-yellow-400 transition-transform hover:scale-105">
                     {t('goldenFeed.joinButton', { price: profileUser.goldenMemberPrice })}
                 </button>
             </div>
         );
     }
+    // ----------------------------------------------------------------------
 
+    // If isAllowed is true OR if it's the owner (isOwnProfile), we render the posts.
     return (
         <div className="space-y-4">
-            {posts.length > 0 ? (
+            {/* FIX: Use logical OR (||) to ensure posts is an array before checking length */}
+            {posts && posts.length > 0 ? (
                 posts.map((post) => <PostCard key={post._id} post={post} locale={locale} />)
             ) : (
                 <p className="text-gray-500 text-center py-8">
