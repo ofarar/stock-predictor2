@@ -24,7 +24,7 @@ const ShareIcon = () => (
 );
 // --- END ICON ---
 
-const calculateLiveScore = (predictedPrice, actualPrice) => {
+const calculateLiveScore = (predictedPrice, actualPrice, priceAtCreation) => {
     if (!actualPrice || actualPrice <= 0) return '...';
 
     // --- FIX: Direction Check added here ---
