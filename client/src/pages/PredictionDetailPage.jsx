@@ -26,6 +26,18 @@ const ShareIcon = () => (
 
 const calculateLiveScore = (predictedPrice, actualPrice) => {
     if (!actualPrice || actualPrice <= 0) return '...';
+
+    // --- FIX: Direction Check added here ---
+    if (typeof priceAtCreation === 'number' && priceAtCreation > 0) {
+        const predictedDirection = predictedPrice - priceAtCreation;
+        const actualDirection = actualPrice - priceAtCreation;
+
+        // If predicted direction is opposite of actual direction, score is 0.
+        if (predictedDirection * actualDirection < 0) {
+            return 0;
+        }
+    }
+
     const MAX_SCORE = 100;
     const MAX_ERROR_PERCENTAGE = 0.20;
     const error = Math.abs(predictedPrice - actualPrice);
@@ -204,7 +216,10 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
     const priceLabel = isAssessed ? t("Actual Price") : t("Current Price");
 
-    let rating = isAssessed ? prediction.rating : calculateLiveScore(prediction.targetPrice, currentPrice);
+    let rating = isAssessed
+        ? prediction.rating
+        // FIX: Pass the initial price (priceAtCreation) to the scoring function
+        : calculateLiveScore(prediction.targetPrice, currentPrice, prediction.priceAtCreation);
     const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating;
     const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
     const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
@@ -236,7 +251,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             <PredictionHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} prediction={prediction} />
 
             <div className="max-w-2xl mx-auto animate-fade-in">
-                
+
                 {/* --- 2. NEW: Promo Banner displayed for guests if enabled in settings --- */}
                 {!currentUser && settings?.isPromoBannerActive && (
                     <div className="mb-6">
