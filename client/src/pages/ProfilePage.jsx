@@ -1,10 +1,10 @@
-// src/pages/ProfilePage.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
+import { API_URL, API_ENDPOINTS, STORAGE_KEYS, URL_PARAMS, PARAM_VALUES, PREDICTION_STATUS, NUMERIC_CONSTANTS, DEFAULT_VALUES } from '../constants';
 
 // New Component Imports
 import ProfileHeader from '../components/ProfileHeader';
@@ -39,7 +39,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [activePredictionQuotes, setActivePredictionQuotes] = useState({});
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
-    const [activeTab, setActiveTab] = useState('Profile');
+    const [activeTab, setActiveTab] = useState(PARAM_VALUES.PROFILE);
     const [searchParams, setSearchParams] = useSearchParams();
 
     // All state for modals remains in the parent component
@@ -66,18 +66,17 @@ const ProfilePage = ({ settings, requestLogin }) => {
         const logView = () => {
             try {
                 // Use localStorage to debounce views (1 view per hour per profile)
-                const viewedProfiles = JSON.parse(localStorage.getItem('viewed_profiles') || '{}');
+                const viewedProfiles = JSON.parse(localStorage.getItem(STORAGE_KEYS.VIEWED_PROFILES) || '{}');
                 const now = Date.now();
-                const oneHour = 60 * 60 * 1000;
 
                 // If never viewed OR viewed more than 1 hour ago
-                if (!viewedProfiles[userId] || (now - viewedProfiles[userId] > oneHour)) {
+                if (!viewedProfiles[userId] || (now - viewedProfiles[userId] > NUMERIC_CONSTANTS.ONE_HOUR_MS)) {
                     // Fire and forget
-                    axios.post(`${import.meta.env.VITE_API_URL}/api/users/${userId}/view`);
+                    axios.post(`${API_URL}${API_ENDPOINTS.USER_VIEW(userId)}`);
 
                     // Update local storage
                     viewedProfiles[userId] = now;
-                    localStorage.setItem('viewed_profiles', JSON.stringify(viewedProfiles));
+                    localStorage.setItem(STORAGE_KEYS.VIEWED_PROFILES, JSON.stringify(viewedProfiles));
                 }
             } catch (error) {
                 console.error("Failed to log profile view", error);
@@ -89,21 +88,21 @@ const ProfilePage = ({ settings, requestLogin }) => {
 
     useEffect(() => {
         // Check if the success parameter exists
-        if (searchParams.get('subscribe') === 'success') {
+        if (searchParams.get(URL_PARAMS.SUBSCRIBE) === PARAM_VALUES.SUCCESS) {
             toast.success(t('joinGoldenModal.toast.success', { username: profileData?.user?.username || 'member' }));
             // Optionally remove the query parameter from the URL without reloading
-            searchParams.delete('subscribe');
+            searchParams.delete(URL_PARAMS.SUBSCRIBE);
             setSearchParams(searchParams, { replace: true });
         }
         // Also handle onboarding redirect parameter if needed
-        if (searchParams.get('onboarding') === 'complete') {
+        if (searchParams.get(URL_PARAMS.ONBOARDING) === PARAM_VALUES.COMPLETE) {
             toast.success("Stripe onboarding completed successfully!");
-            searchParams.delete('onboarding');
+            searchParams.delete(URL_PARAMS.ONBOARDING);
             setSearchParams(searchParams, { replace: true });
         }
-        if (searchParams.get('onboarding') === 'refresh') {
+        if (searchParams.get(URL_PARAMS.ONBOARDING) === PARAM_VALUES.REFRESH) {
             toast.success("Stripe onboarding link expired or invalid. Please try connecting again.");
-            searchParams.delete('onboarding');
+            searchParams.delete(URL_PARAMS.ONBOARDING);
             setSearchParams(searchParams, { replace: true });
         }
     }, [searchParams, setSearchParams, t, profileData?.user?.username]);
@@ -112,15 +111,15 @@ const ProfilePage = ({ settings, requestLogin }) => {
         if (isVerifiedJustNow) {
             const timer = setTimeout(() => {
                 setIsVerifiedJustNow(false); // Reset the animation state
-            }, 2400); // 2.4 seconds, matching the animation duration (0.8s * 3)
+            }, NUMERIC_CONSTANTS.VERIFICATION_ANIMATION_DURATION_MS);
             return () => clearTimeout(timer);
         }
     }, [isVerifiedJustNow]);
 
     useEffect(() => {
-        const tab = searchParams.get('tab');
-        if (tab === 'GoldenFeed') {
-            setActiveTab('GoldenFeed');
+        const tab = searchParams.get(URL_PARAMS.TAB);
+        if (tab === PARAM_VALUES.GOLDEN_FEED) {
+            setActiveTab(PARAM_VALUES.GOLDEN_FEED);
         }
     }, [searchParams]);
 
@@ -128,19 +127,19 @@ const ProfilePage = ({ settings, requestLogin }) => {
         setLoading(true);
         try {
             const [profileRes, currentUserRes] = await Promise.all([
-                axios.get(`${import.meta.env.VITE_API_URL}/api/profile/${userId}`, { withCredentials: true }),
-                axios.get(`${import.meta.env.VITE_API_URL}/auth/current_user`, { withCredentials: true })
+                axios.get(`${API_URL}${API_ENDPOINTS.PROFILE(userId)}`, { withCredentials: true }),
+                axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true })
             ]);
             const profile = profileRes.data;
             console.log("ProfilePage fetched data:", profile.user);
             setProfileData(profile);
             setCurrentUser(currentUserRes.data);
             setFilteredPerformance(profile.performance); // Initialize with overall performance
-            const activePredictions = profile.predictions.filter(p => p.status === 'Active');
+            const activePredictions = profile.predictions.filter(p => p.status === PREDICTION_STATUS.ACTIVE);
             if (activePredictions.length > 0) {
                 try {
                     const tickers = [...new Set(activePredictions.map(p => p.stockTicker))];
-                    const quotesRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/quotes`, { tickers }, { withCredentials: true });
+                    const quotesRes = await axios.post(`${API_URL}${API_ENDPOINTS.QUOTES}`, { tickers }, { withCredentials: true });
 
                     // Check if quotesRes.data exists and is an array before reducing
                     if (quotesRes.data && Array.isArray(quotesRes.data)) {
@@ -174,10 +173,10 @@ const ProfilePage = ({ settings, requestLogin }) => {
     }, []);
 
     const handleFollow = () => {
-        axios.post(`${import.meta.env.VITE_API_URL}/api/users/${userId}/follow`, {}, { withCredentials: true }).then(() => fetchData());
+        axios.post(`${API_URL}${API_ENDPOINTS.FOLLOW(userId)}`, {}, { withCredentials: true }).then(() => fetchData());
     };
     const handleUnfollow = () => {
-        axios.post(`${import.meta.env.VITE_API_URL}/api/users/${userId}/unfollow`, {}, { withCredentials: true }).then(() => fetchData());
+        axios.post(`${API_URL}${API_ENDPOINTS.UNFOLLOW(userId)}`, {}, { withCredentials: true }).then(() => fetchData());
     };
 
     const handleEditClick = (prediction) => {
@@ -186,7 +185,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     };
 
     const confirmCancelVerification = () => {
-        const promise = axios.post(`${import.meta.env.VITE_API_URL}/api/profile/cancel-verification`, {}, { withCredentials: true })
+        const promise = axios.post(`${API_URL}${API_ENDPOINTS.CANCEL_VERIFICATION}`, {}, { withCredentials: true })
             .then(() => fetchData());
         toast.promise(promise, {
             loading: t('processing_verification_msg'),
@@ -203,8 +202,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const isOwnProfile = currentUser?._id === user._id;
     const isFollowing = currentUser?.following?.includes(user._id);
     const isSubscribed = currentUser?.goldenSubscriptions?.some(sub => sub.user === user._id);
-    const activePredictions = predictions.filter(p => p.status === 'Active');
-    const assessedPredictions = predictions.filter(p => p.status === 'Assessed');
+    const activePredictions = predictions.filter(p => p.status === PREDICTION_STATUS.ACTIVE);
+    const assessedPredictions = predictions.filter(p => p.status === PREDICTION_STATUS.ASSESSED);
 
     // --- 2. CREATE DYNAMIC SEO CONTENT ---
     const pageTitle = t('seo.profile_page.title', {
@@ -241,7 +240,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                         console.error("Error fetching data after verification:", error);
                     }
                 }}
-                price={settings?.verificationPrice.toFixed(2) || '4.99'}
+                price={settings?.verificationPrice.toFixed(2) || DEFAULT_VALUES.VERIFICATION_PRICE}
             />
             <BadgeDetailModal badge={selectedBadge} onClose={() => setSelectedBadge(null)} />
             <BadgeInfoModal isOpen={isBadgeInfoOpen} onClose={() => setIsBadgeInfoOpen(false)} />
@@ -296,11 +295,11 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 />
 
                 <div className="flex border-b border-gray-700 mb-8">
-                    <button onClick={() => setActiveTab('Profile')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'Profile' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('profile_tab_label')}</button>
-                    {user.isGoldenMember && (<button onClick={() => setActiveTab('GoldenFeed')} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'GoldenFeed' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-yellow-600 hover:text-yellow-400'}`}>{t('golden_feed_tab_label')}</button>)}
+                    <button onClick={() => setActiveTab(PARAM_VALUES.PROFILE)} className={`px-4 py-2 font-bold transition-colors ${activeTab === PARAM_VALUES.PROFILE ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>{t('profile_tab_label')}</button>
+                    {user.isGoldenMember && (<button onClick={() => setActiveTab(PARAM_VALUES.GOLDEN_FEED)} className={`px-4 py-2 font-bold transition-colors ${activeTab === PARAM_VALUES.GOLDEN_FEED ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-yellow-600 hover:text-yellow-400'}`}>{t('golden_feed_tab_label')}</button>)}
                 </div>
 
-                {activeTab === 'Profile' && (
+                {activeTab === PARAM_VALUES.PROFILE && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-8">
                             <WatchlistShowcase stocks={user.watchlist} />
@@ -331,7 +330,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                     </div>
                 )}
 
-                {activeTab === 'GoldenFeed' && (
+                {activeTab === PARAM_VALUES.GOLDEN_FEED && (
                     <div>
                         {isOwnProfile && (
                             <div className="flex justify-end mb-4">

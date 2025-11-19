@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 import { getPredictionDetails } from '../utils/timeHelpers';
 import Tooltip from '../components/Tooltip';
+import { THRESHOLDS, NUMERIC_CONSTANTS } from '../constants';
 
 const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick, requestConfirmation }) => {
     const { t, i18n } = useTranslation();
@@ -56,7 +57,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                 .then(res => setSearchResults(res.data.quotes || []))
                 .catch(() => setError(t('prediction.searchFailed', 'Search failed.'))) // Use translation key
                 .finally(() => setIsLoading(false));
-        }, 500);
+        }, NUMERIC_CONSTANTS.SEARCH_DEBOUNCE_MS);
         return () => clearTimeout(delayDebounceFn);
     }, [searchTerm, t]);
 
@@ -126,7 +127,14 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
             const targetValue = parseFloat(target);
             if (!isNaN(targetValue)) {
                 percentChange = Math.abs(((targetValue - currentPrice) / currentPrice) * 100);
-                const thresholds = { Hourly: 3, Daily: 10, Weekly: 15, Monthly: 20, Quarterly: 40, Yearly: 100 };
+                const thresholds = {
+                    Hourly: THRESHOLDS.CONFIRMATION_HOURLY,
+                    Daily: THRESHOLDS.CONFIRMATION_DAILY,
+                    Weekly: THRESHOLDS.CONFIRMATION_WEEKLY,
+                    Monthly: THRESHOLDS.CONFIRMATION_MONTHLY,
+                    Quarterly: THRESHOLDS.CONFIRMATION_QUARTERLY,
+                    Yearly: THRESHOLDS.CONFIRMATION_YEARLY,
+                };
                 const limit = thresholds[predictionType];
 
                 // Trigger confirmation only if percentage was calculable and exceeds limit
@@ -291,7 +299,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
 
                     <div>
                         <label className="block text-sm text-gray-300">{t('prediction.rationale')}</label>
-                        <textarea placeholder={t('prediction.rationalePlaceholder')} value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm" rows="2" />
+                        <textarea placeholder={t('prediction.rationalePlaceholder')} value={description} onChange={(e) => setDescription(e.target.value)} maxLength={NUMERIC_CONSTANTS.RATIONALE_CHAR_LIMIT} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white text-sm" rows="2" />
                     </div>
                     <button type="submit" disabled={!formState.isOpen || isSubmitting} className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed">
                         {isSubmitting ? t('prediction.submitting') : t('prediction.placePrediction')}

@@ -16,7 +16,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
     const [isSaving, setIsSaving] = useState(false);
     const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
     const navigate = useNavigate();
-    const CHARACTER_LIMIT = 300;
+    const CHARACTER_LIMIT = NUMERIC_CONSTANTS.ABOUT_CHAR_LIMIT;
 
     useEffect(() => {
         axios.get(`${import.meta.env.VITE_API_URL}/auth/current_user`, { withCredentials: true })

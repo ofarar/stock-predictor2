@@ -8,6 +8,7 @@ const JobLog = require('../models/JobLog');
 const Notification = require('../models/Notification');
 const { awardBadges } = require('../services/badgeService');
 const financeAPI = require('../services/financeAPI');
+const { PREDICTION_MAX_RATING, PREDICTION_MAX_ERROR_PERCENTAGE, RATING_DIRECTION_CHECK_ENABLED, RATING_AWARDS } = require('../constants');
 
 /**
  * Calculates a rating based on how close a prediction was to the actual price.
@@ -26,8 +27,8 @@ function calculateProximityRating(predictedPrice, actualPrice, priceAtCreation) 
         }
     }
     // --- END NEW ---
-    const MAX_RATING = 100;
-    const MAX_ERROR_PERCENTAGE = 0.20;
+    const MAX_RATING = PREDICTION_MAX_RATING;
+    const MAX_ERROR_PERCENTAGE = PREDICTION_MAX_ERROR_PERCENTAGE;
     if (actualPrice === 0) return 0;
     const error = Math.abs(predictedPrice - actualPrice);
     const errorPercentage = error / actualPrice;
@@ -160,9 +161,9 @@ const runAssessmentJob = async () => {
                     const rating = calculateProximityRating(prediction.targetPrice, actualPrice, prediction.priceAtCreation);
 
                     let analystRatingToAward = 0;
-                    if (rating > 90) analystRatingToAward = 10;
-                    else if (rating > 80) analystRatingToAward = 5;
-                    else if (rating > 70) analystRatingToAward = 2;
+                    if (rating > 90) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_90;
+                    else if (rating > 80) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_80;
+                    else if (rating > 70) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_70;
 
                     prediction.status = 'Assessed';
                     prediction.rating = rating;

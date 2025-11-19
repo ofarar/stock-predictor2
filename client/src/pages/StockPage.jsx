@@ -103,7 +103,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                         if (res.data) setQuote(res.data);
                     })
                     .catch(() => { /* fail silently if API drops */ });
-            }, 60000); // Refresh every 60 seconds
+            }, NUMERIC_CONSTANTS.QUOTE_REFRESH_INTERVAL_MS); // Refresh every 60 seconds
 
             // 3. CRUCIAL: Cleanup function runs when component unmounts or ticker changes
             return () => clearInterval(quoteTimer);

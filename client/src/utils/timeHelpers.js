@@ -2,6 +2,7 @@
 import { DateTime } from 'luxon';
 import { getExchangeConfig } from './marketConfig';
 import { formatDate } from './formatters';
+import { THRESHOLDS } from '../constants';
 
 /**
  * Checks if the market for a specific ticker is currently open.
@@ -11,7 +12,7 @@ import { formatDate } from './formatters';
  */
 export const isMarketOpen = (ticker, marketState) => {
     const config = getExchangeConfig(ticker);
-    
+
     if (config.is247) return true; // Crypto is always open
 
     // 1. Primary Check: Use the API's reported state. This handles ALL holidays.
@@ -22,9 +23,9 @@ export const isMarketOpen = (ticker, marketState) => {
     // 2. Fallback Check: If no marketState is provided, use the Luxon time check.
     // This is for when we don't have a live quote (e.g., before user has searched).
     const now = DateTime.now().setZone(config.timezone);
-    
+
     if (now.weekday > 5) return false; // Weekends
-    
+
     if (config.is245) { // Forex logic
         if (now.weekday === 5 && now.hour >= 17) return false; // Fri after 5PM
         if (now.weekday === 6) return false; // Sat
@@ -72,7 +73,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
 
     const config = getExchangeConfig(ticker);
     const now = DateTime.now().setZone(config.timezone);
-    
+
     let deadline = now;
     let message = '';
     let barWidth = 100;
@@ -90,7 +91,9 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
                 message = t('predictionWidgetMessages.openingHourPrediction');
             } else if (marketOpen) {
                 const elapsedMinutes = now.minute;
-                const penalty = elapsedMinutes > 10 ? Math.floor(((elapsedMinutes - 10) / 50) * 20) : 0;
+                const penaltyStart = THRESHOLDS.TIME_PENALTY_HOURLY_START_MIN;
+                const maxLoss = THRESHOLDS.TIME_PENALTY_HOURLY_MAX_LOSS;
+                const penalty = elapsedMinutes > penaltyStart ? Math.floor(((elapsedMinutes - penaltyStart) / (60 - penaltyStart)) * maxLoss) : 0;
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / 60 * 100);
                 deadline = now.plus({ hours: 1 }).startOf('hour');
@@ -104,25 +107,25 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
         }
         case 'Daily': {
             const closeTime = now.set(config.close);
-            
+
             // If it's after close OR it's not open (i.e., a holiday) OR it's a weekend
             if (now > closeTime || !marketOpen || now.weekday > 5) {
                 deadline = deadline.plus({ days: 1 });
             }
-            
+
             // Now, find the next valid trading day (skip weekends)
             // (Note: This still doesn't know about *future* holidays, but it's much better)
             while (deadline.weekday > 5) {
                 deadline = deadline.plus({ days: 1 });
             }
-            
+
             deadline = deadline.set(config.close);
 
             if (deadline.hasSame(now, 'day') && marketOpen) {
                 const openTime = now.set(config.open);
                 const totalMinutes = closeTime.diff(openTime, 'minutes').minutes;
                 const elapsedMinutes = Math.max(0, now.diff(openTime, 'minutes').minutes);
-                
+
                 const penalty = Math.floor(elapsedMinutes / (totalMinutes / 20));
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / totalMinutes * 100);
@@ -143,7 +146,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             const totalMillis = deadline.diff(startOfWeek).milliseconds;
             const elapsedMillis = Math.max(0, now.diff(startOfWeek).milliseconds);
             const percentElapsed = (elapsedMillis / totalMillis) * 100;
-            const penalty = Math.floor(percentElapsed / (100 / 20));
+            const penalty = Math.floor(percentElapsed / (100 / THRESHOLDS.TIME_PENALTY_WEEKLY_MAX_LOSS));
             maxScore = Math.max(80, 100 - penalty);
             barWidth = 100 - percentElapsed;
             message = t('predictionWidgetMessages.forDate', { date: formatDate(deadline.toJSDate(), i18n.language) });
@@ -156,7 +159,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             }
             const totalDaysInMonth = now.daysInMonth;
             const elapsedDays = now.day;
-            const penalty = Math.floor((elapsedDays / totalDaysInMonth) * 25);
+            const penalty = Math.floor((elapsedDays / totalDaysInMonth) * THRESHOLDS.TIME_PENALTY_MONTHLY_MAX_LOSS);
             maxScore = 100 - penalty;
             barWidth = 100 - (elapsedDays / totalDaysInMonth * 100);
             break;
@@ -169,7 +172,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             const startOfQuarter = now.startOf('quarter');
             const totalDays = deadline.diff(startOfQuarter, 'days').days;
             const elapsedDays = now.diff(startOfQuarter, 'days').days;
-            const penalty = Math.floor((elapsedDays / totalDays) * 25);
+            const penalty = Math.floor((elapsedDays / totalDays) * THRESHOLDS.TIME_PENALTY_QUARTERLY_MAX_LOSS);
             maxScore = 100 - penalty;
             barWidth = 100 - (elapsedDays / totalDays * 100);
             break;
@@ -178,7 +181,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             deadline = now.endOf('year').set(config.close);
             const startOfYear = now.startOf('year');
             const elapsedDays = now.diff(startOfYear, 'days').days;
-            const penalty = Math.floor((elapsedDays / 365) * 30);
+            const penalty = Math.floor((elapsedDays / 365) * THRESHOLDS.TIME_PENALTY_YEARLY_MAX_LOSS);
             maxScore = 100 - penalty;
             barWidth = 100 - (elapsedDays / 365 * 100);
             break;
@@ -197,16 +200,16 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
         message = t('predictionWidgetMessages.marketClosed');
         barWidth = 0;
     }
-    
+
     // Final check for Daily
     if (predictionType === 'Daily' && !marketOpen && !deadline.hasSame(now, 'day')) {
-         // This is fine, it's a prediction for the next open day.
+        // This is fine, it's a prediction for the next open day.
     }
 
-    return { 
-        isOpen, 
-        message, 
-        deadline: deadline.toJSDate(), 
-        barWidth: `${Math.max(0, barWidth)}%` 
+    return {
+        isOpen,
+        message,
+        deadline: deadline.toJSDate(),
+        barWidth: `${Math.max(0, barWidth)}%`
     };
 };
