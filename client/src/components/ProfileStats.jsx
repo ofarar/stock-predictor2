@@ -41,6 +41,7 @@ const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCr
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <StatCard label={t('overall_rank_label')} value={performance.overallRank} isRank={true} />
+            <StatCard label={t('profile_avg_rating')} value={performance.overallAvgRating.toFixed(1)} />
             {/* Replaced 'Total Points' with 'Analyst Rating' */}
             <StatCard
                 label={t('analyst_rating_label')}
@@ -55,7 +56,6 @@ const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCr
                 onClick={onCreatorPoolClick}
             />
 
-            <StatCard label={t('profile_avg_rating')} value={performance.overallAvgRating.toFixed(1)} />
             {performance.aggressiveness && (
                 <AggressivenessProgressBar
                     data={performance.aggressiveness.distribution}
