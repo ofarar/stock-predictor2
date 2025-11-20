@@ -42,6 +42,7 @@ const PrivacyPage = () => {
                         <li>{t('sharing_list_a')}</li>
                         <li>{t('sharing_list_b')}</li>
                         <li>{t('sharing_list_c')}</li>
+                        <li>{t('sharing_list_d')}</li>
                     </ul>
                 </PrivacySection>
                 
