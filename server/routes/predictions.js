@@ -9,23 +9,28 @@ const financeAPI = require('../services/financeAPI');
 const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 const { getCommunitySentiment } = require('../utils/sentimentHelper');
+const {
+    PREDICT_LIMIT, PREDICT_WINDOW_MS,
+    VIEW_LIMIT, VIEW_WINDOW_MS,
+    ACTION_LIMIT, ACTION_WINDOW_MS
+} = require('../constants'); // <-- NEW IMPORT
 
 // Limiters
 const predictLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 100, // Max 100 predictions per hour per IP (adjust as needed)
+    windowMs: PREDICT_WINDOW_MS, // 1 hour
+    max: PREDICT_LIMIT, // Max 100 predictions per hour per IP (adjust as needed)
     message: 'You have made too many predictions, please try again after an hour',
 });
 
 const viewLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 100, // Limit each IP to 100 view requests per hour
+    windowMs: VIEW_WINDOW_MS, // 1 hour
+    max: VIEW_LIMIT, // Limit each IP to 100 view requests per hour
     message: 'Too many requests.',
 });
 
 const actionLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200, // Max 200 "actions" (like/follow) per 15 min per IP
+    windowMs: ACTION_WINDOW_MS, // 15 minutes
+    max: ACTION_LIMIT, // Max 200 "actions" (like/follow) per 15 min per IP
     message: 'Too many actions, please try again later.',
 });
 

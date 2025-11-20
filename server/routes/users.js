@@ -11,27 +11,31 @@ const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 const { createOrUpdateStripePriceForUser } = require('./stripe');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { awardBadges } = require('../services/badgeService');
 const financeAPI = require('../services/financeAPI');
+const {
+    CONTACT_LIMIT, CONTACT_WINDOW_MS,
+    VIEW_LIMIT, VIEW_WINDOW_MS,
+    ACTION_LIMIT, ACTION_WINDOW_MS
+} = require('../constants'); // <-- NEW IMPORT
 
 // Limiters
 const contactLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 5,
+    windowMs: CONTACT_WINDOW_MS, // 1 hour
+    max: CONTACT_LIMIT,
     message: 'Too many contact form submissions from this IP, please try again after an hour',
     standardHeaders: true,
     legacyHeaders: false,
 });
 
 const actionLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200,
+    windowMs: ACTION_WINDOW_MS, // 15 minutes
+    max: ACTION_LIMIT,
     message: 'Too many actions, please try again later.',
 });
 
 const viewLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 100,
+    windowMs: VIEW_WINDOW_MS, // 1 hour
+    max: VIEW_LIMIT,
     message: 'Too many requests.',
 });
 

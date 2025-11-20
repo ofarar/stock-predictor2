@@ -55,3 +55,20 @@ exports.NOTIFICATION_THRESHOLD_PERCENTAGES = {
     Yearly: 100,
 };
 exports.SHORT_TERM_PREDICTION_TYPES = ['Hourly', 'Daily', 'Weekly'];
+
+// --- RATE LIMITING (NEWLY ADDED) ---
+// Prediction creation limit (10 requests per hour)
+exports.PREDICT_LIMIT = 10;
+exports.PREDICT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+// Social actions limit (60 requests per 15 minutes)
+exports.ACTION_LIMIT = 60;
+exports.ACTION_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+
+// View/read actions limit (30 requests per hour)
+exports.VIEW_LIMIT = 30;
+exports.VIEW_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+// Contact form limit (5 requests per hour)
+exports.CONTACT_LIMIT = 5;
+exports.CONTACT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
