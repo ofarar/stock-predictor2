@@ -21,10 +21,6 @@ primary_region = 'ams'
   cpu_kind = 'shared'
   cpus = 1
 
-[metrics]
-  port = 9091
-  path = "/metrics"
-
 [logs]
   forward = [
     { url = "https://s1598290.eu-nbg-2.betterstackdata.com", headers = { Authorization = "Bearer ${LOGTAIL_TOKEN}" } }
