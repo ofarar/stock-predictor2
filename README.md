@@ -1,4 +1,3 @@
-
 # 📈 StockPredictorAI
 
 **[StockPredictorAI]((https://stockpredictorai.com/))** is a professional financial forecasting platform where market analysts and investors validate their insights against real-time market data. It features a transparent performance tracking system, a meritocratic reputation index, and a creator economy that allows top-performing analysts to monetize their expertise.
@@ -54,6 +53,45 @@
   * **Secure Session Management:** Uses `express-session` with `connect-mongo` for persistent storage and cryptographically strong secrets.
   * **Traffic Security:** `Helmet` middleware sets secure HTTP headers. The backend trusts the Fly.io proxy (`trust proxy`) to correctly handle SSL termination and IP rate limiting.
   * **Rate Limiting:** Specific limiters (`predictLimiter`, `actionLimiter`) prevent API abuse on high-cost endpoints.
+
+-----
+
+## 🛡️ Security and Attack Prevention
+
+Security is a primary concern. This application implements several layers of defense, including industry-standard middleware, robust data validation, and dedicated security practices for authentication and payments.
+
+---
+
+### 1. Backend API Protection
+
+We use **Helmet.js** to set secure HTTP headers and **Rate Limiting** to prevent brute-force and denial-of-service (DoS) attacks on critical endpoints.
+
+| Defense Mechanism | Component/File | Configuration | Rationale |
+| :--- | :--- | :--- | :--- |
+| **HTTP Headers** | `server.js` | `helmet()` middleware | Protects against XSS, clickjacking, and other common attacks by setting security headers. |
+| **API Rate Limiting** | `predictions.js`, `users.js` | Uses constants for limits: `PREDICT_LIMIT` (10/hr), `ACTION_LIMIT` (60/15m). | Prevents database strain and excessive external API calls (e.g., Yahoo Finance costs) from bots/rapid automation. |
+| **Data Sanitization** | `predictions.js`, `posts.js`, `users.js` | `xss` library | Cleans all user-generated content (descriptions, posts, profile fields) before saving to the database, preventing stored Cross-Site Scripting (XSS). |
+| **CORS** | `server.js` | `cors` middleware | Whitelists only approved domains (`localhost`, production domains) to prevent unauthorized origins from accessing the API. |
+
+---
+
+### 2. Authentication and Session Management
+
+| Defense Mechanism | Component/File | Configuration | Rationale |
+| :--- | :--- | :--- | :--- |
+| **Secure Cookies** | `server.js` | `httpOnly: true`, `secure: true`, `sameSite: 'none'` (Production) | Protects session cookies from client-side script access and ensures cookies are only sent over HTTPS. |
+| **CSRF Protection** | Session/Cookie based | N/A (Relies on SameSite=None and HttpOnly) | While a dedicated CSRF token middleware isn't explicit, using `HttpOnly` and appropriate `SameSite` settings mitigates many CSRF risks when combined with stateless APIs and secure cookie policies. |
+| **Referral Protection** | `passport-setup.js`, `users.js` | Session variable (`req.session.referralCode`) | Ensures referral codes are validated and processed only once during the final user registration/creation step. |
+
+---
+
+### 3. Payment and Payout Security (Stripe)
+
+| Defense Mechanism | Component/File | Configuration | Rationale |
+| :--- | :--- | :--- | :--- |
+| **Webhook Verification** | `routes/stripe.js` | `stripe.webhooks.constructEvent()` | Critically verifies that incoming webhook events are genuinely from Stripe using the unique signing secret, preventing replay attacks and spoofing. |
+| **Atomic Updates** | `routes/stripe.js` | Webhook handler logic | Subscription status changes are only updated after the webhook is successfully verified, ensuring payment and subscription status integrity. |
+| **Dedicated Body Parser** | `server.js`, `routes/stripe.js` | `express.raw({ type: 'application/json' })` | Ensures the raw request body is available to the webhook verification function *before* Express parses it, which is essential for signature verification. |
 
 -----
 
