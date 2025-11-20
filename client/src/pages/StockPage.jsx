@@ -11,6 +11,7 @@ import LoadMoreButton from '../components/LoadMoreButton';
 import CommunitySentiment from '../components/CommunitySentiment';
 import { Helmet } from 'react-helmet-async';
 import { isMarketOpen } from '../utils/timeHelpers';
+import { NUMERIC_CONSTANTS } from '../constants';
 
 const StockPage = ({ onPredictClick, settings }) => {
     const { t, i18n } = useTranslation();
