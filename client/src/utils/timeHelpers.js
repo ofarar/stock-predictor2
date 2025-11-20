@@ -106,23 +106,32 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             break;
         }
         case 'Daily': {
+            const openTime = now.set(config.open);
             const closeTime = now.set(config.close);
 
-            // If it's after close OR it's not open (i.e., a holiday) OR it's a weekend
-            if (now > closeTime || !marketOpen || now.weekday > 5) {
+            // --- START FIX: Determine if the deadline should be today or shifted ---
+
+            // 1. A prediction targets TODAY's close ONLY if it's a weekday AND the current time is before close.
+            const shouldBeToday = now.weekday <= 5 && now < closeTime;
+
+            // 2. If it shouldn't be today (i.e., past close or a weekend), bump the date.
+            if (!shouldBeToday) {
                 deadline = deadline.plus({ days: 1 });
             }
 
-            // Now, find the next valid trading day (skip weekends)
-            // (Note: This still doesn't know about *future* holidays, but it's much better)
+            // 3. Skip any resulting weekend days
             while (deadline.weekday > 5) {
                 deadline = deadline.plus({ days: 1 });
             }
 
+            // 4. Set the time to the close of the calculated date
             deadline = deadline.set(config.close);
 
-            if (deadline.hasSame(now, 'day') && marketOpen) {
-                const openTime = now.set(config.open);
+            // --- END FIX ---
+
+
+            if (shouldBeToday) {
+                // If it's pre-market (e.g., 8:00 AM), elapsedMinutes will be < 0, penalizedMinutes = 0. Correct.
                 const totalMinutes = closeTime.diff(openTime, 'minutes').minutes;
                 const elapsedMinutes = Math.max(0, now.diff(openTime, 'minutes').minutes);
 

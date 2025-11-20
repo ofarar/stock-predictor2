@@ -3,6 +3,8 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
+# fly.toml app configuration file (Final Recommended Version)
+
 app = 'stockpredictorai-api'
 primary_region = 'ams'
 
@@ -21,6 +23,7 @@ primary_region = 'ams'
   cpu_kind = 'shared'
   cpus = 1
 
-[[services]]
-  http_checks = []
-  internal_port = 8686
+[logs] # <--- KEEP THIS SECTION
+  forward = [
+    { url = "https://s1598290.eu-nbg-2.betterstackdata.com", headers = { Authorization = "Bearer ${LOGTAIL_TOKEN}" } }
+  ]
