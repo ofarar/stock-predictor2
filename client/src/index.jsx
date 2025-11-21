@@ -8,7 +8,7 @@ import * as Sentry from "@sentry/react";
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
-  debug: true, // Enable debug mode
+  debug: false, // Enable debug mode
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration(),
@@ -19,7 +19,8 @@ Sentry.init({
     "localhost",                  // local dev
     "stockpredictorai.com",       // main domain
     "www.stockpredictorai.com",   // www subdomain
-    /^https:\/\/.*\.stockpredictorai\.com\/api/ // optional: any API subpath
+    /^https:\/\/.*\.stockpredictorai\.com\/api/, // optional: any API subpath,
+    "stockpredictorai-api.fly.dev"
   ],
   // Session Replay
   replaysSessionSampleRate: 0.1,

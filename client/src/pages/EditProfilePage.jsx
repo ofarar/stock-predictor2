@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AvatarSelectionModal from '../components/AvatarSelectionModal';
-import { NUMERIC_CONSTANTS } from '../constants';
 
 const EditProfilePage = ({ onProfileUpdate }) => {
     const { t } = useTranslation();
