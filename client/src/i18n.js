@@ -10,6 +10,7 @@ import translationES from './locales/es/translation.json';
 import translationZH from './locales/zh/translation.json';
 import translationRU from './locales/ru/translation.json';
 import translationFR from './locales/fr/translation.json';
+import translationNL from './locales/nl/translation.json';
 
 i18n
   .use(LanguageDetector)
@@ -22,7 +23,8 @@ i18n
       es: { translation: translationES },
       zh: { translation: translationZH },
       ru: { translation: translationRU },
-      fr: { translation: translationFR }
+      fr: { translation: translationFR },
+      nl: { translation: translationNL }
     },
     fallbackLng: 'en',
     interpolation: {

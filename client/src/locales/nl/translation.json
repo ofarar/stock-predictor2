@@ -1,0 +1,1153 @@
+{
+  "header_golden_feed": "Gouden Feed",
+  "header_explore": "Verken",
+  "header_scoreboard": "Scorebord",
+  "header_make_prediction": "Doe een Voorspelling",
+  "header_my_profile": "Mijn Profiel",
+  "header_admin": "Admin",
+  "header_logout": "Uitloggen",
+  "header_login": "Inloggen",
+  "notifications_title": "Meldingen",
+  "notifications_none": "Geen nieuwe meldingen.",
+  "footer_about": "Over ons",
+  "footer_contact": "Contact",
+  "footer_terms": "Servicevoorwaarden",
+  "footer_privacy": "Privacybeleid",
+  "homepage_aim": "Voorspel de Markt. Houd je Nauwkeurigheid Bij.",
+  "about_title": "Over StockPredictorAI",
+  "about_mission_title": "Onze Missie",
+  "about_mission_text": "StockPredictorAI is opgericht vanuit het principe dat de collectieve wijsheid van geïnformeerde individuen een krachtig hulpmiddel kan zijn bij het navigeren op de financiële markten. Onze missie is om een platform te bieden waar zowel beginnende beleggers als ervaren professionals hun analytische vaardigheden kunnen testen, van de community kunnen leren en een transparant trackrecord van hun marktvoorspellingen kunnen opbouwen.",
+  "about_how_it_works_title": "Hoe het Werkt",
+  "about_how_it_works_predict_title": "1. Voorspel",
+  "about_how_it_works_predict_text": "Doe voorspellingen over duizenden activa met verschillende tijdskaders, van uurlijks tot jaarlijks.",
+  "about_how_it_works_compete_title": "2. Concurreer & Klim",
+  "about_how_it_works_compete_text": "Klim op de ranglijsten door nauwkeurige voorspellingen te doen en bewijs je vaardigheden aan de community.",
+  "about_how_it_works_follow_title": "3. Volg & Leer",
+  "about_how_it_works_follow_text": "Volg topvoorspellers om van hun strategieën te leren en ontvang meldingen over hun nieuwe marktacties.",
+  "about_how_it_works_golden_title": "4. Ga voor Goud",
+  "about_how_it_works_golden_text": "Word een Gouden Lid om exclusieve content aan je abonnees aan te bieden en je merk op te bouwen.",
+  "about_how_it_works_track_title": "5. Houd je Trackrecord Bij",
+  "about_how_it_works_track_text": "Bouw een transparant, langdurig trackrecord op van je prestaties over alle tijdskaders en activa.",
+  "header_watchlist": "Volglijst",
+  "header_ai_assist": "AI Portfolio Assistent",
+  "header_settings": "Instellingen",
+  "profile_followers": "Volgers",
+  "profile_following": "Volgend",
+  "profile_subscribers": "Abonnees",
+  "profile_subscriptions": "Abonnementen",
+  "profile_edit": "Profiel Bewerken",
+  "profile_get_verified": "Word Geverifieerd",
+  "profile_manage_gold": "Gouden Lidmaatschap Beheren",
+  "profile_become_golden": "Word Goud",
+  "profile_join_button": "Abonneren (${{price}}/mnd)",
+  "profile_subscribed_badge": "Geabonneerd",
+  "profile_subscriptions_paused": "Abonnementen Gepauzeerd",
+  "profile_follow_button": "Volgen",
+  "profile_following_button": "Volgend",
+  "profile_unfollow_button": "Ontvolgen",
+  "profile_overall_rank": "Algemene Rang",
+  "profile_avg_rating": "Gemiddelde Rating",
+  "profile_total_predictions": "Totaal Voorspellingen",
+  "profile_tab_profile": "Profiel",
+  "profile_tab_golden_feed": "Gouden Feed",
+  "profile_watchlist_title": "Volglijst",
+  "profile_watchlist_empty": "Deze gebruiker volgt nog geen aandelen.",
+  "profile_achievements_title": "Prestaties",
+  "profile_achievements_empty": "Nog geen prestaties. Blijf voorspellingen doen!",
+  "profile_achievements_how_work": "Hoe worden badges verdiend?",
+  "profile_active_predictions": "Actieve Voorspellingen",
+  "profile_prediction_history": "Voorspellingsgeschiedenis",
+  "profile_load_more": "Meer Laden",
+  "profile_no_active_predictions": "Geen actieve voorspellingen.",
+  "profile_no_prediction_history": "Nog geen voorspellingsgeschiedenis.",
+  "verified_tick_popover_title": "Geverifieerde Voorspeller",
+  "verified_tick_popover_text": "Deze gebruiker is een geverifieerd lid van de community, wat wijst op betrokkenheid bij het platform.",
+  "verified_modal_title": "Word een Geverifieerde Voorspeller",
+  "verified_modal_text": "Verkrijg geloofwaardigheid en zichtbaarheid in de community met een geverifieerde badge.",
+  "verified_modal_benefit1": "Ontvang een groen vinkje naast je naam op de hele site.",
+  "verified_modal_benefit2": "Je voorspellingen worden uitgelicht in het filter 'Alleen Geverifieerde' op de Verken-pagina.",
+  "verified_modal_benefit3": "Word aanbevolen als Geverifieerde Expert op relevante Volglijst-pagina's.",
+  "verified_modal_button": "Word Geverifieerd voor ${{price}}",
+  "verified_status_modal_title": "Je bent een Geverifieerde Voorspeller!",
+  "verified_status_modal_text": "Je hebt verhoogd vertrouwen en zichtbaarheid in de community.",
+  "verified_status_modal_close": "Sluiten",
+  "verified_status_modal_remove": "Verificatiestatus verwijderen",
+  "rating_explained_title": "Rating Uitleg",
+  "rating_explained_text1": "Ons platform gebruikt een **Proximiteits Ratingsysteem** om nauwkeurigheid te belonen. In plaats van een simpele \"correct\" of \"incorrect,\" is je rating gebaseerd op hoe dicht je voorspelling bij de daadwerkelijke uitkomst lag.",
+  "rating_explained_text2": "Als een aandeel bijvoorbeeld op $152 staat en je voorspelt $150, ontvang je een veel hogere rating dan iemand die $180 voorspelde. Dit systeem is ontworpen om doordachte analyse boven willekeurige gokken te belonen. De maximale rating voor een perfecte voorspelling is 100, waarbij de rating afneemt naarmate je voorspelling verder van de uiteindelijke prijs ligt.",
+  "aiwizard_coming_soon": "BINNENKORT BESCHIKBAAR",
+  "aiwizard_title": "AI Portfolio Assistent",
+  "aiwizard_description": "Ontvang gepersonaliseerde aandelenaanbevelingen op basis van de patronen van onze best presterende voorspellers.",
+  "aiwizard_how_it_works": "Hoe het Werkt",
+  "aiwizard_step1_title": "Definieer Je Stijl",
+  "aiwizard_step1_text": "Beantwoord een paar vragen over je investeringstijdlijn en interesses.",
+  "aiwizard_step2_title": "AI Analyseert Gegevens",
+  "aiwizard_step2_text": "Ons systeem vindt topvoorspellers die consistent winnen in jouw interessegebieden.",
+  "aiwizard_step3_title": "Ontvang Inzichten",
+  "aiwizard_step3_text": "Ontvang een samengestelde feed van aandelen die onze beste analisten volgen.",
+  "aiwizard_join_waitlist": "Word Lid van de Vroege Toegang Wachtlijst",
+  "aiwizard_checking_status": "Status controleren...",
+  "aiwizard_on_waitlist": "Je staat op de wachtlijst!",
+  "aiwizard_signin_to_join": "Meld je aan om op de Wachtlijst te Komen",
+  "aiwizard_early_access_note": "Wees de eerste die het weet wanneer het gelanceerd wordt. Vroege aanmelders krijgen tijdelijk gratis toegang!",
+  "aiwizard_legal_note": "**Juridische Opmerking:** De AI Portfolio Assistent biedt inzichten op basis van historische gebruikersgegevens en is uitsluitend bedoeld ter informatie. Het is geen financieel advies. Alle investeringsbeslissingen moeten worden genomen op basis van je eigen onderzoek en zorgvuldigheid.",
+  "aiwizard_joining": "Aanmelden...",
+  "aiwizard_join_success": "Je staat op de lijst! We zullen je op de hoogte stellen bij de lancering.",
+  "aiwizard_join_error": "Kon niet deelnemen aan de wachtlijst.",
+  "contact_title": "Neem Contact Met Ons Op",
+  "contact_get_in_touch": "Neem Contact Op",
+  "contact_intro_text": "Heb je een vraag, feedback of een partnerschapsaanvraag? We horen graag van je.",
+  "contact_fill_form_text": "Vul het formulier in en we nemen zo snel mogelijk contact met je op.",
+  "contact_urgent_text": "Voor dringende zaken kun je ons ook rechtstreeks bereiken via:",
+  "contact_email": "predictostock@gmail.com",
+  "contact_name_label": "Je Naam",
+  "contact_email_label": "Je E-mail",
+  "contact_message_label": "Bericht",
+  "contact_sending": "Verzenden...",
+  "contact_send_button": "Verstuur Bericht",
+  "contact_fill_all_fields_error": "Vul alle velden in.",
+  "contact_success_message": "Je bericht is verzonden!",
+  "contact_error_message": "Er is iets fout gegaan. Probeer het opnieuw.",
+  "editprofile_title": "Bewerk Je Profiel",
+  "editprofile_avatar_label": "Avatar",
+  "editprofile_change_avatar": "Avatar Wijzigen",
+  "editprofile_username_label": "Gebruikersnaam",
+  "editprofile_about_label": "Over Mij",
+  "editprofile_about_counter": "{{current}} / {{limit}}",
+  "editprofile_xlink_label": "X (Twitter) Link",
+  "editprofile_xlink_placeholder": "https://x.com/jouwprofiel",
+  "editprofile_youtube_label": "YouTube Link",
+  "editprofile_youtube_placeholder": "https://youtube.com/jouwkanaal",
+  "editprofile_save_changes": "Wijzigingen Opslaan",
+  "editprofile_saving": "Opslaan...",
+  "editprofile_cancel": "Annuleren",
+  "editprofile_success": "Profiel succesvol bijgewerkt!",
+  "editprofile_error": "Kon profiel niet bijwerken.",
+  "explore_title": "Voorspellingen Verkennen",
+  "explore_filter_stock": "Filter op Aandeel",
+  "explore_prediction_type": "Voorspellingstype",
+  "explore_sort_by": "Sorteren op",
+  "explore_sort_by_date": "Meest Recent",
+  "explore_sort_by_performance": "Best Presterend",
+  "explore_sort_by_votes": "Meest Gestemd",
+  "explore_sort_by_potential": "Hoogste Potentieel",
+  "explore_verified_only": "Toon Alleen Geverifieerde Voorspellers",
+  "explore_tab_active": "Actief",
+  "explore_tab_assessed": "Beoordeeld",
+  "explore_loading": "Voorspellingen laden...",
+  "explore_no_predictions": "Geen voorspellingen gevonden voor deze filters.",
+  "explore_predicts_price_of": "Voorspelt een prijs van",
+  "explore_by_deadline": "tegen {{date}}",
+  "explore_predicted": "Voorspeld",
+  "explore_actual_price": "Werkelijke Prijs",
+  "explore_view_rationale": "Bekijk Rationale",
+  "explore_agree": "Mee Eens",
+  "explore_disagree": "Niet Mee Eens",
+  "explore_vote_failed": "Stemmen mislukt.",
+  "followers_avg_score": "Gem. Rating",
+  "followers_subscribed_on": "Geabonneerd op {{date}}",
+  "followers_cancel_subscription": "Abonnement Annuleren",
+  "followers_could_not_load_lists": "Kon gebruikerslijsten niet laden.",
+  "followers_subscription_canceled": "Abonnement op {{username}} geannuleerd.",
+  "followers_failed_to_cancel": "Kon abonnement niet annuleren.",
+  "followers_tab_followers": "Volgers",
+  "followers_tab_following": "Volgend",
+  "followers_tab_subscribers": "Abonnees",
+  "followers_tab_subscriptions": "Abonnementen",
+  "followers_loading": "Laden...",
+  "followers_confirm_cancel_title": "Abonnement Annuleren",
+  "followers_confirm_cancel_message": "Weet je zeker dat je je abonnement op {{username}} wilt annuleren?",
+  "followers_no_users": "Geen gebruikers om in deze lijst weer te geven.",
+  "golden_feed_new_label": "NIEUW",
+  "golden_feed_failed_mark_read": "Kon feed niet markeren als gelezen.",
+  "golden_feed_failed_fetch": "Kon gouden feed niet ophalen",
+  "golden_feed_header": "Jouw Gouden Feed",
+  "golden_feed_create_post": "Plaatsen",
+  "golden_feed_filter_by_member": "Filter op Lid",
+  "golden_feed_all_subscriptions": "Alle Abonnementen",
+  "golden_feed_filter_by_stock": "Filter op Aandeel",
+  "golden_feed_prediction_type": "Voorspellingstype",
+  "golden_feed_loading": "Feed laden...",
+  "golden_feed_no_posts_title": "Geen berichten gevonden voor deze filters.",
+  "golden_feed_no_posts_subtitle": "Probeer je zoekcriteria te verbreden of je op meer Gouden Leden te abonneren.",
+  "loading_dashboard": "Dashboard laden...",
+  "welcome_message": "Welkom bij StockPredictorAI",
+  "description": "Meld je aan om te beginnen met voorspellen en bouw je virtuele portfolio op.",
+  "google_signin": "Aanmelden met Google",
+  "loading_settings": "Instellingen laden...",
+  "notification_settings_title": "Meldingsinstellingen",
+  "toggle_all_predictions_label": "Alle Voorspellingen van Gevolgde Gebruikers",
+  "toggle_all_predictions_description": "Ontvang een melding voor elke nieuwe voorspelling van gebruikers die je volgt.",
+  "toggle_short_term_label": "Belangrijke Korte Termijn Voorspellingen",
+  "toggle_short_term_description": "Ontvang een melding wanneer een gevolgde gebruiker een belangrijke Uurlijkse, Dagelijkse of Wekelijkse voorspelling doet.",
+  "toggle_long_term_label": "Belangrijke Lange Termijn Voorspellingen",
+  "toggle_long_term_description": "Ontvang een melding wanneer een gevolgde gebruiker een belangrijke Maandelijkse of langere voorspelling doet.",
+  "saving": "Opslaan...",
+  "save_changes": "Wijzigingen Opslaan",
+  "settings_saved_success": "Instellingen opgeslagen!",
+  "settings_saved_error": "Kon instellingen niet opslaan.",
+  "Awaiting Assessment": "Wacht op Beoordeling",
+  "...": "...",
+  "Could not load prediction details.": "Kon voorspellingsdetails niet laden.",
+  "Loading Prediction...": "Voorspelling laden...",
+  "Prediction not found.": "Voorspelling niet gevonden.",
+  "Live Rating": "Live Rating",
+  "Rating at Close": "Rating bij Sluiting",
+  "Current": "Huidig",
+  "Closing Price": "Sluitingsprijs",
+  "(Price journey visual is not available for this older prediction)": "(Prijsgeschiedenis is niet beschikbaar voor deze oudere voorspelling)",
+  "Target Price": "Doelprijs",
+  "View Rationale": "Bekijk Rationale",
+  "Final Rating": "Eindrating",
+  "Time Remaining": "Resterende Tijd",
+  "DO YOU AGREE?": "BEN JE HET EENS?",
+  "Agree": "Eens",
+  "Disagree": "Oneens",
+  "Predicted by": "Voorspeld door",
+  "Made on": "Gemaakt op",
+  "Prediction": "Voorspelling",
+  "privacy_title": "Privacybeleid",
+  "privacy_last_updated": "Laatst Bijgewerkt: 20 november 2025",
+  "privacy_intro_title": "1. Introductie",
+  "privacy_intro_text": "Welkom bij StockPredictorAI ('wij', 'ons', 'onze'). Wij zijn toegewijd aan de bescherming van uw persoonsgegevens. Dit Privacybeleid legt uit hoe wij uw informatie verzamelen, gebruiken, delen en beschermen wanneer u onze dienst gebruikt. Door StockPredictorAI te gebruiken, gaat u akkoord met het verzamelen en gebruiken van informatie in overeenstemming met dit beleid. Dit beleid is opgesteld in overeenstemming met de Algemene Verordening Gegevensbescherming (AVG/GDPR) van de EU.",
+  "info_collection_title": "2. Informatie die Wij Verzamelen",
+  "info_collection_a_title": "A. Informatie die U Verstrekt",
+  "info_collection_a_text": "Wij verzamelen informatie die u direct aan ons verstrekt, inclusief: \n • Accountinformatie: Wanneer u zich registreert met Google, ontvangen wij uw naam, e-mailadres en profielfoto zoals verstrekt door uw Google-account. Wanneer u uw profiel voltooit, verzamelen we ook uw gekozen gebruikersnaam en eventuele optionele informatie die u toevoegt, zoals uw 'Over Mij'-biografie en links naar sociale media. \n • Betalingsinformatie: Om betalingen voor de status 'Geverifieerde Voorspeller' of 'Gouden Lid' abonnementen te verwerken, vereisen wij uw betalingsinformatie. Dit wordt direct verzameld en verwerkt door onze betalingsverwerker, Stripe, en wordt nooit op onze servers opgeslagen. Wij bewaren alleen een record van uw abonnementsstatus en klant-ID. \n • Gebruikersinhoud: Wij verzamelen de inhoud die u creëert, zoals uw voorspellingen, rationales en Gouden Feed-berichten.",
+  "info_collection_b_title": "B. Informatie die Wij Automatisch Verzamelen",
+  "info_collection_b_text": " • Cookies en Sessiegegevens: Wij gebruiken cookies uitsluitend om uw sessie te behouden nadat u bent ingelogd. Een cookie is een klein stukje gegevens dat op uw computer wordt opgeslagen. Dit is essentieel voor de app om te weten wie u bent. \n • Gebruiksgegevens: Wij kunnen gegevens verzamelen over hoe u met de dienst interageert, zoals bezochte pagina's en gebruikte functies, om ons te helpen het platform te verbeteren.",
+  "use_info_title": "3. Hoe Wij Uw Informatie Gebruiken",
+  "use_info_text": "Wij gebruiken de verzamelde informatie voor de volgende doeleinden: \n • Om onze Dienst te leveren en te onderhouden, uw gebruikersprofiel aan te maken en uw voorspellingen weer te geven. \n • Om uw betalingen te verwerken en uw Abonnementen ('Geverifieerd' en 'Gouden Lid') te beheren. \n • Om met u te communiceren, inclusief het verzenden van transactionele e-mails (zoals betalingsbewijzen of wachtwoordresets) en meldingen waarvoor u zich hebt aangemeld. \n • Om het gebruik te analyseren ter verbetering van de Dienst. \n • Om onze Servicevoorwaarden af te dwingen en misbruik te voorkomen.",
+  "sharing_title": "4. Gegevens delen met Derden",
+  "sharing_text": "Wij verkopen uw persoonsgegevens niet. Wij delen uw gegevens alleen met de volgende externe dienstverleners (sub-verwerkers) die essentieel zijn voor de werking van onze Dienst:",
+  "sharing_list_a": "Betalingsverwerker: Wij delen uw e-mail, gebruikers-ID en transactiedetails met Stripe om alle betalingen veilig te verwerken en abonnementen te beheren.",
+  "sharing_list_b": "Authenticatieprovider: Wij gebruiken Google LLC om de gebruikersaanmelding en authenticatie af te handelen.",
+  "sharing_list_c": "E-mail Dienst: Wij gebruiken Brevo (voorheen Sendinblue) om essentiële transactionele e-mails (zoals kwitanties en meldingen) te verzenden.",
+  "sharing_list_d": "Wettelijke Naleving: Wij kunnen uw informatie openbaar maken indien wettelijk vereist of als reactie op geldige verzoeken van overheidsinstanties (bijv. een rechtbank of overheidsinstelling).",
+  "gdpr_title": "5. Uw Gegevensbeschermingsrechten (AVG/GDPR)",
+  "gdpr_intro": "Aangezien onze dienst gevestigd is in Nederland, heeft u specifieke rechten op gegevensbescherming onder de AVG. Wij zijn toegewijd aan het handhaven van deze rechten. U heeft:",
+  "gdpr_list_a": "Het Recht op Toegang: U heeft het recht om een kopie te vragen van de persoonsgegevens die wij over u bewaren.",
+  "gdpr_list_b": "Het Recht op Rectificatie: U heeft het recht om onjuiste of onvolledige gegevens te corrigeren. U kunt de meeste van uw profielinformatie direct bijwerken op uw 'Profiel Bewerken'-pagina.",
+  "gdpr_list_c": "Het Recht op Wissen (Recht om Vergeten te Worden): U heeft het recht om de verwijdering van uw persoonsgegevens te vragen. Houd er rekening mee dat wij mogelijk bepaalde informatie voor een periode moeten bewaren voor wettelijke of financiële archiveringsdoeleinden (bijv. administratie van betalingen).",
+  "gdpr_list_d": "Het Recht op Gegevensoverdraagbaarheid: U heeft het recht om te vragen dat wij de gegevens die wij over u hebben verzameld overdragen aan een andere organisatie, of direct aan u, in een machineleesbaar formaat.",
+  "gdpr_outro": "Om een van deze rechten uit te oefenen, kunt u contact opnemen met onze Functionaris voor Gegevensbescherming via predictostock@gmail.com. Wij zullen binnen 30 dagen op uw verzoek reageren.",
+  "retention_title": "6. Gegevensbewaring",
+  "retention_text": "Wij bewaren uw persoonsgegevens alleen zolang als nodig is voor de doeleinden die in dit Privacybeleid worden uiteengezet. Wij bewaren uw accountgegevens zolang uw account actief is. Als u uw account verwijdert, zullen wij stappen ondernemen om uw persoonsgegevens binnen een redelijke termijn te verwijderen, met uitzondering van gegevens die wij wettelijk verplicht zijn te bewaren (zoals betalingsgegevens voor belasting- en boekhoudkundige doeleinden).",
+  "cookies_title": "7. Cookiebeleid",
+  "cookies_text": "Wij gebruiken essentiële cookies om uw sessie te behouden nadat u bent ingelogd. Een cookie is een klein stukje gegevens dat op uw computer wordt opgeslagen. U kunt uw browser instrueren alle cookies te weigeren, maar als u dit doet, kunt u niet inloggen of onze Dienst gebruiken.",
+  "children_title": "8. Privacy van Kinderen",
+  "children_text": "Onze Dienst is niet bedoeld voor gebruik door personen jonger dan 16 jaar (in overeenstemming met de AVG). Wij verzamelen niet bewust persoonlijk identificeerbare informatie van kinderen jonger dan 16 jaar. Als u zich ervan bewust wordt dat een kind ons persoonsgegevens heeft verstrekt, neem dan contact met ons op. Als wij ons ervan bewust worden dat wij persoonsgegevens van een kind hebben verzameld zonder verificatie van ouderlijke toestemming, zullen wij stappen ondernemen om die informatie van onze servers te verwijderen.",
+  "security_title": "9. Beveiliging",
+  "security_text": "De beveiliging van uw gegevens is belangrijk voor ons. Wij gebruiken beveiligingsmaatregelen zoals sessie-encryptie (HTTPS) en veilige wachtwoordopslag (via Google) om uw informatie te beschermen. Houd er echter rekening mee dat geen enkele methode van overdracht via het internet of methode van elektronische opslag 100% veilig is. Wij kunnen de absolute veiligheid ervan niet garanderen.",
+  "updates_title": "10. Wijzigingen in Dit Privacybeleid",
+  "updates_text": "Wij kunnen ons Privacybeleid van tijd tot tijd bijwerken. Wij zullen u van eventuele wijzigingen op de hoogte stellen door het nieuwe Privacybeleid op deze pagina te plaatsen en de datum van 'Laatst Bijgewerkt' bovenaan bij te werken. Het wordt u aangeraden dit Privacybeleid regelmatig te controleren op wijzigingen.",
+  "contact_title_2": "11. Neem Contact Met Ons Op",
+  "contact_text": "Als u vragen of verzoeken heeft met betrekking tot dit Privacybeleid of uw persoonsgegevens, neem dan contact op met onze Functionaris voor Gegevensbescherming via: predictostock@gmail.com",
+  "profile_title": "Profiel",
+  "followers_label": "Volgers",
+  "following_label": "Volgend",
+  "subscribers_label": "Abonnees",
+  "subscriptions_label": "Abonnementen",
+  "manage_gold_label": "Gouden Lidmaatschap Beheren",
+  "become_golden_label": "Word Goud",
+  "edit_profile_label": "Profiel Bewerken",
+  "get_verified_label": "Word Geverifieerd",
+  "following_btn": "Volgend",
+  "follow_btn": "Volgen",
+  "subscribed_label": "Geabonneerd",
+  "join_label": "Abonneren (${{price}}/mnd)",
+  "subscriptions_paused_label": "Abonnementen Gepauzeerd",
+  "member_since_label": "Lid sinds {{date}}",
+  "no_bio_label": "Geen bio verstrekt.",
+  "active_predictions_title": "Actieve Voorspellingen",
+  "prediction_history_title": "Voorspellingsgeschiedenis",
+  "no_active_predictions_label": "Geen actieve voorspellingen.",
+  "no_prediction_history_label": "Nog geen voorspellingsgeschiedenis.",
+  "load_more_label": "Meer Laden",
+  "overall_rank_label": "Algemene Rang",
+  "average_score_label": "Gemiddelde Rating",
+  "total_points_label": "Totaal Punten",
+  "analyst_rating_label": "Analisten Rating",
+  "creator_pool_share_label": "Creator Pool Aandeel",
+  "creatorPoolModal.title": "Creator Pool Ranglijst",
+  "creatorPoolModal.description": "Deze ranglijst toont de verdeling van 'Analisten Rating'-punten over het platform. Een deel van de platforminkomsten wordt onder de topbijdragers verdeeld op basis van deze rating.",
+  "creatorPoolModal.totalRating": "Totale Analisten Rating op Platform",
+  "total_predictions_label": "Totaal Voorspellingen",
+  "profile_tab_label": "Profiel",
+  "golden_feed_tab_label": "Gouden Feed",
+  "create_golden_post_btn": "Gouden Bericht Maken",
+  "processing_verification_msg": "Verificatie verwerken...",
+  "verification_success_msg": "Verificatie succesvol!",
+  "verification_removed_success_msg": "Verificatiestatus verwijderd.",
+  "verification_failed_msg": "Verificatie mislukt.",
+  "cancel_verification_title": "Verificatie Annuleren",
+  "cancel_verification_msg": "Weet je het zeker? Je verliest je geverifieerde status en voordelen.",
+  "title_top_performers": "🏆 Top Presteerders",
+  "label_prediction_type": "Voorspellingstype",
+  "label_filter_by_stock": "Filter op Aandeel",
+  "text_avg_rating": "Gem. Rating",
+  "msg_loading_scoreboard_error": "Kon scorebordgegevens niet laden.",
+  "msg_no_users_found": "Geen gebruikers gevonden voor deze filters.",
+  "msg_try_broaden_search": "Probeer je zoekcriteria te verbreden.",
+  "loading_stock_data": "Aandelengegevens laden...",
+  "error_loading_stock_data": "Kon gegevens voor {{ticker}} niet laden.",
+  "could_not_load_stock_data": "Kon gegevens voor {{ticker}} niet laden. Probeer een ander symbool.",
+  "add_to_watchlist": "Toevoegen aan Volglijst",
+  "remove_from_watchlist": "Verwijderen van Volglijst",
+  "make_prediction": "Doe een Voorspelling",
+  "top_predictors_for": "Top Voorspellers voor {{ticker}}",
+  "avg_rating": "Gem. Rating",
+  "no_top_predictors": "Nog geen topvoorspellers voor dit filter.",
+  "active_predictions_on": "Actieve Voorspellingen op {{ticker}}",
+  "prediction_type": "{{type}} Voorspelling",
+  "target": "Doel: ${{targetPrice}}",
+  "no_active_predictions": "Nog geen actieve voorspellingen voor dit aandeel.",
+  "terms_page": {
+    "title": "Servicevoorwaarden",
+    "sections": {
+      "acceptance_of_terms": {
+        "title": "1. Acceptatie van de Voorwaarden",
+        "content": "Door de StockPredictorAI-website (\"Dienst\") te bezoeken of te gebruiken, stemt u ermee in gebonden te zijn aan deze Servicevoorwaarden. Als u het niet eens bent met enig deel van de voorwaarden, mag u de Dienst niet betreden."
+      },
+      "no_financial_advice": {
+        "title": "2. Geen Financieel Advies",
+        "content": "De informatie, voorspellingen en scores die op deze Dienst worden verstrekt, zijn uitsluitend bedoeld voor informatieve en amusementsdoeleinden. Niets op deze website vormt financieel, beleggings-, juridisch of fiscaal advies. U bent als enige verantwoordelijk voor uw eigen investeringsbeslissingen."
+      },
+      "user_conduct": {
+        "title": "3. Gebruikersgedrag",
+        "content": "U stemt ermee in de Dienst niet te gebruiken om materiaal te plaatsen of te verzenden dat kwaadaardig, lasterlijk is of anderszins in strijd is met enige wet. U bent verantwoordelijk voor alle voorspellingen en inhoud die onder uw account wordt geplaatst."
+      },
+      "limitation_of_liability": {
+        "title": "4. Beperking van Aansprakelijkheid",
+        "content": "In geen geval zal StockPredictorAI, noch haar directeuren of werknemers, aansprakelijk zijn voor enige indirecte, incidentele, speciale, gevolg- of punitieve schade, inclusief, maar niet beperkt tot, verlies van winst, gegevens of andere immateriële verliezen, die voortvloeien uit uw toegang tot of gebruik van de Dienst."
+      },
+      "golden_members": {
+        "title": "5. Gouden Lid Abonnementen en Platformkosten",
+        "content": "StockPredictorAI biedt een platform voor bepaalde gebruikers ('Gouden Leden') om abonnementsgebonden inhoud aan te bieden. Door uw Gouden Lid-status te activeren, stemt u ermee in deze diensten aan andere gebruikers aan te bieden. Ter dekking van de platformexploitatie, betalingsverwerking en administratieve kosten, zal StockPredictorAI een platformvergoeding van dertig procent (30%) inhouden op de bruto abonnementsinkomsten die door uw abonnees worden gegenereerd. De resterende zeventig procent (70%) wordt aan u uitbetaald via onze betalingsverwerker, Stripe. Deze vergoeding van 30% wordt automatisch van elke transactie afgetrokken. Door een Gouden Lid te worden, erkent en aanvaardt u deze 30% Platformvergoedingsstructuur."
+      },
+      "analyst_rating": {
+        "title": "6. Analisten Ratingsysteem",
+        "content": "De Dienst beschikt over een 'Analisten Rating'-systeem om hoogwaardige bijdragen te belonen. Gebruikers kunnen ratings verdienen voor verschillende activiteiten, inclusief, maar niet beperkt tot: het behalen van hoge scores op voorspellingen (bijv. >70% nauwkeurigheid), het verdienen van platformbadges, het bereiken van hoge rangen op het scorebord en het delen van platforminhoud. De specifieke activiteiten en ratingbedragen worden bepaald door StockPredictorAI en kunnen op elk moment worden gewijzigd. Deze rating is een promotionele functie en heeft geen directe geldwaarde."
+      },
+      "creator_pool": {
+        "title": "7. Creator Pool Uitbetalingen",
+        "content": "Als beloning voor onze topbijdragers wijst StockPredictorAI vijftig procent (50%) van zijn kwartaalnettowinst (inkomsten minus alle bedrijfskosten, belastingen en vergoedingen) toe aan een 'Creator Pool'. Dit fonds wordt verdeeld onder gebruikers op basis van hun 'Analisten Rating' als percentage van de totale Analisten Rating op het platform. Uitbetalingen worden per kwartaal berekend en verdeeld op basis van Net-30 (30 dagen na het einde van het kwartaal). Om in aanmerking te komen voor een uitbetaling, moet een gebruiker een minimaal opgebouwd uitbetalingssaldo van $100,00 USD hebben. Saldo's onder dit minimum worden doorgeschoven naar het volgende kwartaal. Alle gebruikers zijn verantwoordelijk voor hun eigen fiscale verplichtingen die voortvloeien uit eventuele uitbetalingen. StockPredictorAI behoudt zich het recht voor om het Creator Pool-programma op elk moment te wijzigen, te pauzeren of te beëindigen, met of zonder voorafgaande kennisgeving."
+      },
+      "payments_and_refunds": {
+        "title": "8. Betalingen, Abonnementen en Terugbetalingen",
+        "content": "Ons platform biedt betaalde diensten, waaronder de status 'Geverifieerde Voorspeller' en 'Gouden Lid'-abonnementen (gezamenlijk, 'Abonnementen'). Alle betalingen worden verwerkt via onze externe betalingsverwerker, Stripe. Wij slaan uw creditcardgegevens niet op en bewaren deze niet. Alle Abonnementen worden maandelijks gefactureerd. U kunt uw Abonnement op elk moment annuleren via uw gebruikersprofiel of het portaal van onze betalingsverwerker. Uw annulering gaat in aan het einde van de huidige factureringscyclus en u behoudt de toegang tot de betaalde functies tot die datum. Alle betalingen voor Abonnementen zijn definitief en worden niet terugbetaald. Wij verstrekken geen terugbetalingen of tegoeden voor gedeeltelijke abonnementsperioden of ongebruikte inhoud."
+      },
+      "content_and_ip": {
+        "title": "9. Gebruikersinhoud en Intellectuele Eigendomsrechten",
+        "content": "U behoudt alle eigendomsrechten op de inhoud die u op de Dienst creëert, inclusief uw profielinformatie, voorspellingsrationales en Gouden Feed-berichten ('Gebruikersinhoud'). Door Gebruikersinhoud te plaatsen, verleent u StockPredictorAI een niet-exclusieve, wereldwijde, royaltyvrije, eeuwigdurende licentie om uw Gebruikersinhoud te gebruiken, te hosten, weer te geven, te reproduceren en te distribueren uitsluitend ten behoeve van het exploiteren, promoten en verbeteren van de Dienst. U garandeert dat u de eigenaar bent van uw Gebruikersinhoud of alle noodzakelijke rechten heeft om deze te plaatsen en ons deze licentie te verlenen, en dat uw inhoud geen inbreuk maakt op de rechten van derden. Als u van mening bent dat uw auteursrecht is geschonden, neem dan onmiddellijk contact met ons op via predictostock@gmail.com met een DMCA Takedown Notice."
+      },
+      "termination": {
+        "title": "10. Accountbeëindiging",
+        "content": "StockPredictorAI behoudt zich het recht voor om uw account en toegang tot de Dienst naar eigen goeddunken op te schorten of te beëindigen, met of zonder voorafgaande kennisgeving, om welke reden dan ook, inclusief wegens schending van deze Voorwaarden. U kunt uw account ook op elk moment beëindigen door contact met ons op te nemen of door gebruik te maken van een in-app verwijderingsfunctie, indien beschikbaar. Na beëindiging door een van beide partijen, vervalt uw recht om de Dienst te gebruiken onmiddellijk. Alle vooruitbetaalde kosten voor Abonnementen worden niet terugbetaald en u komt niet in aanmerking voor een terugbetaling voor enig deel van uw resterende abonnementsperiode op het moment van beëindiging. Wij behouden ons het recht voor om uw Gebruikersinhoud na beëindiging te verwijderen, maar zijn daartoe niet verplicht."
+      },
+      "disputes": {
+        "title": "11. Geschillenbeslechting en Toepasselijk Recht",
+        "content": "Deze Servicevoorwaarden worden beheerst door en geïnterpreteerd in overeenstemming met de wetten van Nederland, zonder rekening te houden met de beginselen van conflicterend recht. U stemt ermee in elk geschil dat u heeft met StockPredictorAI uitsluitend op te lossen via bindende arbitrage in Den Haag, Nederland, en niet via een rechtbank. U en StockPredictorAI stemmen ermee in afstand te doen van enig recht om deel te nemen aan een collectieve rechtszaak of een klassikale arbitrage. Alle geschillen moeten in uw individuele hoedanigheid worden gebracht, en niet als eiser of klaslid in enige beweerde klassikale of representatieve procedure."
+      }
+    }
+  },
+  "watchlist_page": {
+    "title": "Mijn Volglijst",
+    "search_placeholder": "Zoek naar aandelen om te volgen (bijv. AAPL)...",
+    "empty_watchlist": {
+      "title": "Je volglijst is leeg.",
+      "subtitle": "Zoek hierboven naar een aandeel om het te gaan volgen."
+    },
+    "active_predictions_title": "Actieve Voorspellingen voor {{ticker}}",
+    "filter_by_type": "Filter op Type",
+    "sort_by": "Sorteren op",
+    "sort_options": {
+      "date": "Meest Recent",
+      "votes": "Meest Gestemd",
+      "potential": "Hoogste Potentieel"
+    },
+    "no_predictions": "Geen actieve voorspellingen voldoen aan je filters.",
+    "load_more": "Meer Laden",
+    "recommended_experts_title": "Aanbevolen Experts",
+    "no_recommended_experts": "Nog geen topvoorspellers voor dit aandeel.",
+    "avgScoreLabel": "Gem. Rating: ",
+    "followingButton": "Volgen",
+    "toast": {
+      "loadingAdd": "{{ticker}} toevoegen...",
+      "loadingRemove": "{{ticker}} verwijderen...",
+      "successUpdate": "Volglijst succesvol bijgewerkt.",
+      "errorUpdate": "Kon niet bijwerken.",
+      "errorLoadWatchlist": "Kon volglijst niet laden.",
+      "loadingFollow": "Gebruiker volgen...",
+      "successFollow": "Gebruiker gevolgd!",
+      "errorFollow": "Kon gebruiker niet volgen."
+    },
+    "editButton": "Bewerk Volgorde",
+    "doneButton": "Klaar",
+    "addStockModal": {
+      "title": "Aandeel Toevoegen aan Volglijst",
+      "searchLabel": "Zoek naar een aandeel",
+      "addButton": "Toevoegen"
+    },
+    "duplicateError": "{{ticker}} staat al in je volglijst."
+  },
+  "prediction_types": {
+    "Overall": "Algemeen",
+    "Hourly": "Uurlijks",
+    "Daily": "Dagelijks",
+    "Weekly": "Wekelijks",
+    "Monthly": "Maandelijks",
+    "Quarterly": "Per Kwartaal",
+    "Yearly": "Jaarlijks"
+  },
+  "avatarModal": {
+    "title": "Verander Je Avatar",
+    "styleLabel": "Stijl",
+    "shuffleButton": "Schudden",
+    "cancelButton": "Annuleren",
+    "saveButton": "Avatar Opslaan",
+    "styles": {
+      "adventurer": "Avonturier",
+      "lorelei": "Lorelei",
+      "miniavs": "Mini AV's",
+      "openPeeks": "Open Peeks",
+      "personas": "Personas",
+      "pixelArt": "Pixelkunst",
+      "notionists": "Notionisten",
+      "bottts": "Bottts",
+      "shapes": "Vormen",
+      "thumbs": "Duimen",
+      "funEmoji": "Leuke Emoji",
+      "identicon": "Identicon",
+      "initials": "Initialen",
+      "rings": "Ringen"
+    }
+  },
+  "badgeInfoModal": {
+    "title": "Uitleg Over Prestaties",
+    "loadingText": "Details laden...",
+    "ratingLabel": "Rating > {{rating}}",
+    "minPredictions": "Vereist minstens {{count}} voorspellingen.",
+    "closeButton": "Sluiten"
+  },
+  "badgeShowcase": {
+    "title": "Prestaties",
+    "noAchievements": "Nog geen prestaties. Blijf voorspellingen doen!",
+    "infoButtonTitle": "Hoe worden badges verdiend?",
+    "unknownBadge": "Onbekende Badge"
+  },
+  "communityFeed": {
+    "title": "Community Feed",
+    "noRecentPredictions": "Geen recente voorspellingen."
+  },
+  "confirmationModal": {
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "defaultTitle": "Weet je het zeker?",
+    "defaultMessage": "Deze actie kan niet ongedaan gemaakt worden."
+  },
+  "dailyLeaderboard": {
+    "title": "Top Presteerders van Vandaag",
+    "subtitle": "(Gebaseerd op de uurlijkse voorspellingen van vandaag)",
+    "noData": "Nog geen gegevens vandaag.",
+    "averageScoreSuffix": "Gem. Rating"
+  },
+  "descriptionModal": {
+    "title": "Rationale van de Voorspeller"
+  },
+  "famousStocks": {
+    "title": "Trending Voorspellingen",
+    "title_historical": "Trending (Laatste 7 Dagen)",
+    "predictionsText": "{{count}} voorspellingen vandaag",
+    "predictionsText_historical": "{{count}} voorspellingen (7d)",
+    "noData": "Geen trending aandelen op dit moment."
+  },
+  "share": {
+    "shareOnX": "Delen op X",
+    "ownerActive": "Ik voorspel dat ${{ticker}} ${{targetPrice}} zal bereiken tegen {{deadline}}. Bekijk mijn voorspelling en stem op StockPredictorAI!",
+    "ownerAssessed": "Mijn voorspelling voor ${{ticker}} eindigde met een rating van {{rating}}! Ik voorspelde {{targetPrice}} en het sloot op {{actualPrice}}. Bekijk het resultaat!",
+    "visitorActive": "Interessante voorspelling: {{username}} denkt dat ${{ticker}} ${{targetPrice}} zal bereiken tegen {{deadline}}. Wat denk jij?",
+    "visitorAssessed": "Bekijk dit resultaat: de voorspelling van {{username}} voor ${{ticker}} leverde een rating van {{rating}} op! Ze voorspelden {{targetPrice}} en het sloot op {{actualPrice}}."
+  },
+  "editprofile_telegram_label": "Telegram Link",
+  "editprofile_telegram_placeholder": "https://t.me/jouwgebruikersnaam",
+  "shareModal.title": "Delen",
+  "shareModal.shareOnX": "Delen op X (Twitter)",
+  "shareModal.shareOnTelegram": "Delen op Telegram",
+  "prediction.share_title": "Delen",
+  "badge.shareTitle": "Badge Delen",
+  "badge.shareButton": "Delen",
+  "footer": {
+    "about": "Over ons",
+    "contact": "Contact",
+    "terms": "Servicevoorwaarden",
+    "privacy": "Privacybeleid",
+    "copyright": "Alle rechten voorbehouden."
+  },
+  "globalSearch": {
+    "placeholder": "Zoek aandelen..."
+  },
+  "goldenFeed": {
+    "newTag": "NIEUW",
+    "attachedPrediction": "Bijgevoegde Voorspelling:",
+    "loading": "Feed laden...",
+    "exclusiveContentTitle": "Exclusieve Inhoud",
+    "exclusiveContentDescription": "Abonneer je op {{username}}'s Gouden Feed om hun privéfeed te bekijken, inclusief gedetailleerde rationales en marktanalyse.",
+    "joinButton": "Abonneren voor ${{price}}/mnd",
+    "noPosts": "{{username}} heeft nog geen exclusieve inhoud geplaatst."
+  },
+  "goldenMemberModal": {
+    "title": "Gouden Lid Instellingen",
+    "priceLabel": "Maandelijkse Prijs ($1 - $500)",
+    "descriptionLabel": "Beschrijving",
+    "defaultDescription": "Ontvang exclusieve inzichten en steun mijn voorspellingen!",
+    "acceptingNewLabel": "Accepteert Nieuwe Abonnees",
+    "updateSuccess": "Gouden Lid instellingen bijgewerkt!",
+    "updateFail": "Kon instellingen niet bijwerken.",
+    "deactivateSuccess": "Gouden Lid status gedeactiveerd.",
+    "deactivateFail": "Kon instellingen niet bijwerken.",
+    "updateButton": "Instellingen Bijwerken",
+    "activateButton": "Activeer Gouden Lidmaatschap",
+    "deactivateButton": "Deactiveren",
+    "onboarding": {
+      "actionRequired": "Actie Vereist: Voltooi Stripe Onboarding",
+      "connectPrompt": "Je moet je Stripe-account koppelen om betalingen van abonnees te ontvangen.",
+      "complete": "✅ Stripe-account Gekoppeld & Klaar voor Uitbetalingen",
+      "tooltip": "Voltooi de Stripe-onboarding voordat je de instellingen bijwerkt.",
+      "connectButton": "Koppelen met Stripe",
+      "processingButton": "Verwerken..."
+    }
+  },
+  "goldenPostForm": {
+    "title": "Gouden Bericht Maken",
+    "messagePlaceholder": "Deel je exclusieve analyse met je abonnees...",
+    "attachPredictionLabel": "Voorspelling Toevoegen",
+    "stockLabel": "Aandeel",
+    "targetPriceLabel": "Doelprijs",
+    "typeLabel": "Type",
+    "hourly": "Uurlijks",
+    "daily": "Dagelijks",
+    "weekly": "Wekelijks",
+    "monthly": "Maandelijks",
+    "quarterly": "Per Kwartaal",
+    "yearly": "Jaarlijks",
+    "cancelButton": "Annuleren",
+    "postingButton": "Plaatsen...",
+    "postButton": "Plaatsen",
+    "emptyMessageError": "Bericht mag niet leeg zijn.",
+    "fetchPriceError": "Kon prijs voor {{ticker}} niet ophalen.",
+    "createSuccess": "Gouden Bericht gepubliceerd!",
+    "createFail": "Kon bericht niet maken."
+  },
+  "header": {
+    "aiWizard": "AI Portfolio Assistent",
+    "watchlist": "Volglijst",
+    "goldenFeed": "Gouden Feed",
+    "explore": "Verken",
+    "scoreboard": "Scorebord",
+    "makePrediction": "Doe een Voorspelling",
+    "userMenu": {
+      "myProfile": "Mijn Profiel",
+      "invite": "Uitnodigen & Verdienen",
+      "settings": "Instellingen",
+      "admin": "Admin",
+      "logout": "Uitloggen"
+    },
+    "notifications": {
+      "title": "Meldingen",
+      "noNew": "Geen nieuwe meldingen.",
+      "clearAll": "Alles Wissen",
+      "clearSuccess": "Meldingen gewist!",
+      "clearError": "Wissen van meldingen mislukt."
+    },
+    "mobileMenu": {
+      "myProfile": "Mijn Profiel",
+      "watchlist": "Volglijst",
+      "goldenFeed": "Gouden Feed",
+      "explore": "Verken",
+      "scoreboard": "Scorebord",
+      "settings": "Instellingen",
+      "adminPanel": "Admin Paneel",
+      "logout": "Uitloggen",
+      "login": "Inloggen",
+      "aiWizard": "AI Portfolio Assistent"
+    },
+    "buttons": {
+      "login": "Inloggen",
+      "logout": "Uitloggen",
+      "makePrediction": "Doe een Voorspelling"
+    }
+  },
+  "notifications": {
+    "types": {
+      "newFollower": "Nieuwe Volger",
+      "badgeEarned": "Prestatie Verdiend",
+      "goldenPost": "Gouden Bericht",
+      "newPrediction": "Nieuwe Voorspelling"
+    },
+    "newPrediction": "{{username}} deed een {{predictionType}} voorspelling op {{stockTicker}}.",
+    "newFollower": "{{username}} is je begonnen te volgen.",
+    "goldenPost": "{{username}} heeft een nieuw Gouden Bericht geplaatst.",
+    "badgeEarnedSelf": "Gefeliciteerd! Je hebt de {{tier}} {{badgeName}} prestatie verdiend.",
+    "badgeEarnedFollower": "{{username}} heeft de {{tier}} {{badgeName}} prestatie verdiend!",
+    "predictionAssessed": "Je {{predictionType}} voorspelling op {{stockTicker}} leverde een {{rating}} rating op!",
+    "priceChange": "{{creatorName}}'s abonnementsprijs verandert van ${{oldPrice}} naar ${{newPrice}} op {{effectiveDate}}."
+  },
+  "hourlyWinnersFeed": {
+    "title": "Winnaars van het Afgelopen Uur",
+    "nextResults": "Volgende resultaten over: {{timeLeft}}",
+    "marketClosed": "Markt Gesloten",
+    "noPredictions": "Nog geen voorspellingen beoordeeld.",
+    "ratingSuffix": "+{{rating}} Rating"
+  },
+  "infoModal": {
+    "title": "Tijdbonus Uitleg",
+    "description": "Om vroege analyse te belonen, wordt een tijdgebonden straf toegepast op voorspellingen. De maximale score die je kunt behalen voor een voorspelling neemt af naarmate de deadline nadert.",
+    "hourlyPredictions": {
+      "title": "Uurlijkse Voorspellingen:",
+      "description": "De straf wordt minuut voor minuut toegepast. De eerste 10 minuten hebben geen straf (Max Rating: 100). De straf neemt lineair toe tot de laatste 10 minuten van het uur, waar de Max Rating 80 is."
+    },
+    "dailyPredictions": {
+      "title": "Dagelijkse Voorspellingen:",
+      "description": "De straf wordt gedurende de hele handelsdag toegepast. Voorspellingen die direct bij opening van de markt worden gedaan, hebben de hoogste potentiële rating."
+    },
+    "longerTermPredictions": {
+      "title": "Langere Termijn Voorspellingen:",
+      "description": "Voor Wekelijkse, Maandelijkse en langere voorspellingen is de straf evenredig aan het percentage van de voorspellingsperiode dat al is verstreken."
+    },
+    "closeButton": "Sluiten"
+  },
+  "joinGoldenModal": {
+    "title": "Word Abonee van {{username}}",
+    "pricePerMonth": "{{price}} / maand",
+    "whatYouGet": "Wat je krijgt:",
+    "noDescription": "Geen beschrijving verstrekt.",
+    "joinButton": "Nu Abonneren",
+    "joinButtonWithPrice": "Abonneren voor ${{price}}/mnd",
+    "cancelAnytime": "Je kunt op elk moment annuleren.",
+    "toast": {
+      "success": "Je bent nu geabonneerd op {{username}}!",
+      "error": "Aanmelden mislukt. Probeer het opnieuw."
+    },
+    "successTitle": "Abonnement Succesvol!",
+    "successDescription": "Je hebt nu toegang tot {{username}}'s exclusieve feed.",
+    "successButton": "Geweldig!"
+  },
+  "loginPromptModal": {
+    "title": "Word Lid van de Community",
+    "description": "Maak een account aan om voorspellingen te doen, topvoorspellers te volgen en de ranglijsten te beklimmen.",
+    "signUpWithGoogle": "Aanmelden met Google"
+  },
+  "longTermLeaders": {
+    "title": "Lange Termijn Leiders",
+    "description": "(Gebaseerd op nauwkeurigheid per Kwartaal & Jaar)",
+    "noData": "Nog geen gegevens.",
+    "accuracyLabel": "Gem. Rating"
+  },
+  "performanceChart": {
+    "title": "Prestatiegrafiek",
+    "filters": {
+      "overall": "Algemeen",
+      "hourly": "Uurlijks",
+      "daily": "Dagelijks",
+      "weekly": "Wekelijks",
+      "monthly": "Maandelijks",
+      "quarterly": "Per Kwartaal",
+      "yearly": "Jaarlijks"
+    },
+    "tooltip": {
+      "avgRating": "Gem. Rating: {{rating}}",
+      "predictions": "{{count}} Voorspellingen",
+      "stocks": "Aandelen: {{tickers}}"
+    },
+    "noData": "Geen prestatiegegevens voor dit filter.",
+    "avgRatingLabel": "Gem. Rating"
+  },
+  "performanceTabs": {
+    "shareOnX": "Delen op X",
+    "shareText": {
+      "byStock": "Ik sta op rang #{{rank}} voor mijn ${{ticker}}-voorspellingen op StockPredictorAI! Kijk of je beter kunt presteren.",
+      "byType": "Ik sta op rang #{{rank}} voor '{{type}}' voorspellingen op StockPredictorAI! Bekijk mijn statistieken."
+    },
+    "tabs": {
+      "byType": "Op Type",
+      "byStock": "Op Aandeel"
+    },
+    "statCard": {
+      "averageRating": "Gemiddelde Rating",
+      "rank": "RANG",
+      "topRankTitle": "Top {{rank}} Rang"
+    },
+    "noData": {
+      "byType": "Geen gegevens beschikbaar voor voorspellingstypes.",
+      "byStock": "Geen gegevens beschikbaar voor individuele aandelen."
+    }
+  },
+  "predictionJourney": {
+    "initial": "Initieel",
+    "target": "Doel",
+    "currentPriceTooltip": "{{value}} {{priceLabel}}"
+  },
+  "predictionModal": {
+    "confirmationTitle": "Weet je het zeker?",
+    "closeButtonAria": "Sluit venster"
+  },
+  "predictionTypes": {
+    "modalTitle": "Uitleg Over Voorspellingstypes",
+    "overall": "Algemeen",
+    "all": "Alle",
+    "hourly": "Uurlijks",
+    "hourlyDescription": "Voorspel de aandelenprijs voor het einde van het huidige of volgende handelsuur. Ideaal voor korte termijn volatiliteit.",
+    "daily": "Dagelijks",
+    "dailyDescription": "Voorspel de aandelenprijs voor het einde van de huidige of volgende handelsdag. Een klassiek tijdskader voor dagelijkse marktbewegingen.",
+    "weekly": "Wekelijks",
+    "weeklyDescription": "Voorspel de aandelenprijs voor het einde van de huidige handelsweek (vrijdag). Goed voor het volgen van wekelijkse trends.",
+    "monthly": "Maandelijks",
+    "monthlyDescription": "Voorspel de aandelenprijs voor het einde van de huidige kalendermaand. Het beste voor het vastleggen van maandelijks momentum.",
+    "quarterly": "Per Kwartaal",
+    "quarterlyDescription": "Voorspel de aandelenprijs voor het einde van het huidige financiële kwartaal (bijv. maart, juni, september, december).",
+    "yearly": "Jaarlijks",
+    "yearlyDescription": "Voorspel de aandelenprijs voor het einde van het huidige kalenderjaar. Een lange termijn voorspelling voor grote marktverschuivingen."
+  },
+  "common": {
+    "close": "Sluiten",
+    "rating": "Rating",
+    "dataDelayed": "Gegevens vertraagd tot 15 minuten"
+  },
+  "prediction": {
+    "makePrediction": "Doe een Voorspelling",
+    "searchPlaceholder": "Zoek naar een aandeel (bijv. AAPL)",
+    "searching": "Zoeken...",
+    "currentPrice": "Huidige Prijs",
+    "na": "N.V.T.",
+    "type": "Type",
+    "learnMore": "Meer informatie over voorspellingstypes",
+    "targetPrice": "Doelprijs",
+    "rationale": "Rationale (Optioneel)",
+    "rationalePlaceholder": "Wat is je beweegreden voor deze voorspelling?",
+    "placePrediction": "Plaats Voorspelling",
+    "maxScore": "Max Rating: {{rating}}",
+    "confirmationMessage": "Je voorspelling van {{price}} is een {{percent}} verandering, wat meer is dan de gebruikelijke {{limit}}% marge. Weet je het zeker?",
+    "limitReached": "Je hebt de dagelijkse voorspellingslimiet van {{limit}} bereikt.",
+    "submitFailed": "Voorspelling indienen mislukt.",
+    "priceDelayInfo": "Prijzen zijn vertraagd tot 15 minuten.",
+    "submitting": "Indienen...",
+    "submitSuccess": "Voorspelling voor {{symbol}} ingediend!",
+    "priceUnavailable": {
+      "title": "Live Prijsgegevens Niet Beschikbaar",
+      "description": "We konden de live prijs voor dit actief nu niet ophalen. Dit kan gebeuren tijdens hoge marktvolatiliteit of korte API-storingen.",
+      "button": "Probeer een Ander Aandeel"
+    },
+    "duplicateError": "Je hebt al een actieve {{type}} voorspelling voor {{ticker}}."
+  },
+  "scoreboard": {
+    "title": "Ranglijsten",
+    "trophy": "🏆",
+    "loadError": "Kon ranglijstgegevens niet laden.",
+    "predictionType": "Voorspellingstype",
+    "filterStock": "Filter op Aandeel",
+    "avgScore": "Gem. Rating",
+    "noUsers": "Geen gebruikers gevonden voor deze filters.",
+    "noUsersHint": "Probeer je zoekcriteria te verbreden.",
+    "rank": "Rang: {{number}}",
+    "currentPrice": "Huidige Prijs: ${{price}}"
+  },
+  "stockChart": {
+    "loading": "Grafiek laden...",
+    "priceLabel": "{{ticker}} Prijs"
+  },
+  "stockFilterSearch": {
+    "placeholder": "bijv. AAPL"
+  },
+  "stockSearch": {
+    "title": "Zoek Actief",
+    "placeholder": "Zoek naar aandelen, crypto...",
+    "loading": "Laden...",
+    "errorNoResults": "Geen resultaten gevonden.",
+    "errorFetchFailed": "Kon zoekresultaten niet ophalen.",
+    "errorQuoteFailed": "Kon aandeelkoers niet ophalen.",
+    "errorQuoteNotFound": "Kon koers voor {{symbol}} niet ophalen. Probeer een ander symbool.",
+    "dataDelayed": "Gegevens vertraagd tot 15 minuten"
+  },
+  "timePenaltyBar": {
+    "label": "Tijdbonus",
+    "infoAriaLabel": "Meer informatie over de Tijdbonus"
+  },
+  "topMovers": {
+    "loading": "Top Bewegers laden...",
+    "title": "Trending Aandelen"
+  },
+  "verificationModal": {
+    "title": "Word een Geverifieerde Voorspeller",
+    "description": "Verkrijg geloofwaardigheid en zichtbaarheid in de community met een geverifieerde badge.",
+    "benefits": {
+      "greenCheck": "Ontvang een groen vinkje naast je naam op de hele site.",
+      "verifiedFilter": "Je voorspellingen worden uitgelicht in het filter 'Alleen Geverifieerde' op de Verken-pagina.",
+      "verifiedExpert": "Word aanbevolen als Geverifieerde Expert op relevante Volglijst-pagina's."
+    },
+    "button": "Word Geverifieerd voor {{price}}",
+    "successDescriptionGeneric": "Je geverifieerde badge is nu actief."
+  },
+  "verifiedStatusModal": {
+    "title": "Je bent een Geverifieerde Voorspeller!",
+    "description": "Je hebt verhoogd vertrouwen en zichtbaarheid in de community.",
+    "closeButton": "Sluiten",
+    "removeButton": "Verificatiestatus verwijderen"
+  },
+  "verifiedTick": {
+    "ariaLabel": "Geverifieerde Voorspeller",
+    "title": "Geverifieerde Voorspeller",
+    "description": "Deze gebruiker is een geverifieerd lid van de community, wat wijst op betrokkenheid bij het platform."
+  },
+  "watchlistShowcase": {
+    "title": "Volglijst",
+    "viewStock": "Bekijk {{stock}}",
+    "noStocks": "Deze gebruiker volgt nog geen aandelen."
+  },
+  "watchlistPage": {
+    "loading": "Je volglijst laden...",
+    "predictionCardFooter": "{{type}} tegen {{date}}",
+    "title": "Mijn Volglijst",
+    "searchPlaceholder": "Zoek naar aandelen om te volgen (bijv. AAPL)...",
+    "emptyWatchlist": {
+      "title": "Je volglijst is leeg.",
+      "description": "Zoek hierboven naar een aandeel om het te gaan volgen."
+    },
+    "activePredictions": "Actieve Voorspellingen voor {{ticker}}",
+    "filterByTypeLabel": "Filter op Type",
+    "sortByLabel": "Sorteren op",
+    "sortOptions": {
+      "date": "Meest Recent",
+      "votes": "Meest Gestemd",
+      "potential": "Hoogste Potentieel"
+    },
+    "noPredictions": "Geen actieve voorspellingen voldoen aan je filters.",
+    "loadMore": "Meer Laden",
+    "recommendedPredictors": "Aanbevolen Voorspellers",
+    "noRecommendedUsers": "Nog geen topvoorspellers voor dit aandeel.",
+    "avgScoreLabel": "Gem. Rating: ",
+    "followingButton": "Volgen",
+    "toast": {
+      "loadingAdd": "{{ticker}} toevoegen...",
+      "loadingRemove": "{{ticker}} verwijderen...",
+      "successUpdate": "Volglijst succesvol bijgewerkt.",
+      "errorUpdate": "Kon niet bijwerken.",
+      "errorLoadWatchlist": "Kon volglijst niet laden.",
+      "loadingFollow": "Gebruiker volgen...",
+      "successFollow": "Gebruiker gevolgd!",
+      "errorFollow": "Kon gebruiker niet volgen."
+    },
+    "editButton": "Bewerk Volgorde",
+    "doneButton": "Klaar",
+    "addStockModal": {
+      "title": "Aandeel Toevoegen aan Volglijst",
+      "searchLabel": "Zoek naar een aandeel",
+      "addButton": "Toevoegen"
+    },
+    "duplicateError": "{{ticker}} staat al in je volglijst."
+  },
+  "watchlistStockCard": {
+    "removeButtonTitle": "Verwijder {{symbol}} van Volglijst"
+  },
+  "predictionWidgetMessages": {
+    "openingHourPrediction": "Voorspelling voor Openingsuur",
+    "marketClosed": "Markt is momenteel gesloten",
+    "forDate": "Voor {{date}}",
+    "maxRating": "Max Rating: {{rating}}",
+    "invalidType": "Selecteer een geldig voorspellingstype."
+  },
+  "profile": {
+    "loading": "Profiel laden...",
+    "userNotFound": "Gebruiker niet gevonden."
+  },
+  "predictionStatus": {
+    "Active": "Actief",
+    "Assessed": "Beoordeeld"
+  },
+  "editPredictionModal": {
+    "title": "Voorspelling Bewerken voor {{ticker}}",
+    "newTargetPriceLabel": "Nieuwe Doelprijs",
+    "reasonLabel": "Reden voor Update (Optioneel)",
+    "reasonPlaceholder": "Nieuwe informatie, marktverschuiving, etc.",
+    "cancelButton": "Annuleren",
+    "savingButton": "Opslaan...",
+    "saveButton": "Wijzigingen Opslaan",
+    "successToast": "Voorspelling succesvol bijgewerkt!",
+    "errorToast": "Kon voorspelling niet bijwerken."
+  },
+  "predictionHistoryModal": {
+    "title": "Bewerkingsgeschiedenis voor {{ticker}}",
+    "initialReason": "Initiële Voorspelling",
+    "chartLabelPredicted": "Voorspelde Prijs",
+    "chartLabelActual": "Werkelijke Prijs bij Update",
+    "tabHistory": "Geschiedenis",
+    "tabChart": "Grafiek"
+  },
+  "aggressiveness": {
+    "title": "Voorspellingsstijl",
+    "defensive": "Defensief",
+    "neutral": "Neutraal",
+    "offensive": "Offensief",
+    "noData": "Geen recente voorspellingen met voldoende gegevens."
+  },
+  "aggressivenessInfoModal": {
+    "title": "Voorspellingsstijl Begrijpen",
+    "description": "Deze meter analyseert het risiconiveau van de voorspellingen van een gebruiker. De drempels voor elke stijl veranderen op basis van het tijdskader van de voorspelling.",
+    "defensiveTitle": "Defensief",
+    "defensiveText": "Voorzichtige voorspellingen met kleine doelstellingen, gericht op consistentie (bijv. <3% voor Dagelijks, <15% voor Jaarlijks).",
+    "neutralTitle": "Neutraal",
+    "neutralText": "Redelijk ambitieuze voorspellingen die risico in evenwicht brengen met potentiële beloning.",
+    "offensiveTitle": "Offensief",
+    "offensiveText": "Gedurfde, risicovolle voorspellingen met grote doelstellingen (bijv. >7% voor Dagelijks, >35% voor Jaarlijks)."
+  },
+  "badges": {
+    "market_maven": {
+      "name": "Marktkenner",
+      "description": "Verdiend voor hoge algemene voorspellingsnauwkeurigheid over alle types."
+    },
+    "hourly_hotshot": {
+      "name": "Uurlijks Schot",
+      "description": "Meesterschap in korte termijn, uurlijkse voorspellingen."
+    },
+    "daily_oracle": {
+      "name": "Dagelijks Orakel",
+      "description": "Uitgeblonken in het voorspellen van de dagelijkse marktbewegingen."
+    },
+    "weekly_strategist": {
+      "name": "Wekelijkse Strateeg",
+      "description": "Bewezen vaardigheid in voorspellingen van een week lang."
+    },
+    "monthly_maven": {
+      "name": "Maandelijkse Kenner",
+      "description": "Bewezen vermogen om markttrends over een maand te voorspellen."
+    },
+    "quarterly_visionary": {
+      "name": "Kwartaal Visionair",
+      "description": "Vooruitziende blik in lange termijn, kwartaalvoorspellingen."
+    },
+    "yearly_legend": {
+      "name": "Jaarlijkse Legende",
+      "description": "Uitzonderlijke vaardigheid in het voorspellen van jaarlijkse marktuitkomsten."
+    },
+    "tiers": {
+      "Gold": "Goud",
+      "Silver": "Zilver",
+      "Bronze": "Brons"
+    }
+  },
+  "badgeDetailModal": {
+    "shareButton": "Delen",
+    "shareTweet": "Ik heb zojuist de {{tier}} '{{name}}' prestatie verdiend! {{icon}} Volg mijn voorspellingen: ",
+    "shareTelegram": "{{icon}} Ik heb zojuist de {{tier}} {{name}} prestatie verdiend op StockPredictorAI! Bekijk mijn profiel.",
+    "shareTelegramButton": "Delen op Telegram"
+  },
+  "market_watch": {
+    "title": "Markt Monitor",
+    "unavailable": "Live marktgegevens zijn tijdelijk niet beschikbaar."
+  },
+  "time": {
+    "days": "d",
+    "hours": "u",
+    "minutes": "m",
+    "seconds": "s"
+  },
+  "completeProfile": {
+    "title": "Kies Je Gebruikersnaam",
+    "subtitle": "De gebruikersnaam <1>{{username}}</1> is al bezet. Kies een andere om je registratie te voltooien.",
+    "usernameLabel": "Gebruikersnaam",
+    "completeButton": "Registratie Voltooien",
+    "savingButton": "Opslaan...",
+    "error": {
+      "empty": "Gebruikersnaam mag niet leeg zijn.",
+      "taken": "Deze gebruikersnaam is al bezet. Kies een andere.",
+      "generic": "Er is een fout opgetreden.",
+      "failed": "Kon registratie niet voltooien. Probeer het opnieuw."
+    }
+  },
+  "explore_load_more": "Meer Laden",
+  "find_member_wizard": {
+    "trigger_title": "Vind Je Perfecte Gouden Mentor",
+    "trigger_description": "Beantwoord een paar snelle vragen over je investeringsstijl en we bevelen Gouden Leden aan die het beste bij je passen.",
+    "trigger_button": "Start de Wizard",
+    "wizard_title": "Aanbevelingswizard",
+    "step1_title": "Stap 1: Interessegebieden",
+    "step1_description": "Vertel ons welke aandelen je het meest wilt volgen. Dit helpt ons experts te vinden die zich richten op wat jij belangrijk vindt.",
+    "stock_search_placeholder": "Zoek naar aandelen (bijv. AAPL, TSLA)...",
+    "step2_title": "Stap 2: Je Risicotolerantie",
+    "step2_description": "Hoeveel risico ben je bereid te nemen? Dit helpt ons je te matchen met voorspellers die jouw stijl delen.",
+    "step3_title": "Stap 3: Je Investeringstijdlijn",
+    "step3_description": "Ben je op zoek naar snelle transacties of langetermijninvesteringen?",
+    "horizon_short": "Korte termijn",
+    "horizon_long": "Lange termijn",
+    "horizon_all": "Alle Termijnen",
+    "step4_title": "Jouw Topaanbevelingen",
+    "step4_description": "Op basis van je antwoorden zijn dit de Gouden Leden die wij het meest waardevol voor je achten.",
+    "find_button": "Vind Aanbevelingen",
+    "loading_recommendations": "Gouden Leden analyseren...",
+    "error_recommendations": "Kon aanbevelingen niet ophalen. Probeer het later opnieuw.",
+    "no_recommendations": "Geen leden gevonden die voldoen aan je specifieke criteria. Probeer je zoekopdracht te verbreden.",
+    "match_rate": "Match",
+    "skip_step": "Overslaan",
+    "error_recommendations_generic": "Er is een fout opgetreden bij het genereren van aanbevelingen."
+  },
+  "common_cancel": "Annuleren",
+  "common_next": "Volgende",
+  "common_back": "Terug",
+  "common_close": "Sluiten",
+  "stockPage": {
+    "chart": {
+      "unavailableTitle": "Grafiekgegevens Niet Beschikbaar",
+      "unavailableDescription": "We konden de historische prijsgegevens op dit moment niet laden. Probeer het later opnieuw.",
+      "lazyTitle": "Toon 90-dagen prijsgeschiedenis",
+      "lazyButton": "Laad Grafiek"
+    }
+  },
+  "followers": {
+    "unfollowing": "Ontvolgen...",
+    "unfollowSuccess": "Gebruiker ontvolgd!",
+    "unfollowError": "Kon gebruiker niet ontvolgen."
+  },
+  "paymentSuccess": {
+    "toastSuccess": "Betaling succesvol! Je verificatie is nu actief.",
+    "errorSession": "Kon gebruikerssessie niet verifiëren.",
+    "errorFetchUser": "Fout bij ophalen gebruikersgegevens.",
+    "title": "Succes!",
+    "redirecting": "Je betaling is verwerkt. Je wordt doorgestuurd naar je profiel...",
+    "verifyingSession": "Sessie verifiëren...",
+    "goNow": "Ga nu"
+  },
+  "sentiment": {
+    "title": "Community Sentiment",
+    "subtitle": "Wat denkt het publiek?",
+    "based_on_count": "Gebaseerd op {{count}} voorspellingen",
+    "question": "Wat is de {{type}} doelprijs van de community voor {{ticker}}?",
+    "hourly": "Uurlijkse",
+    "daily": "Dagelijkse",
+    "weekly": "Wekelijkse",
+    "monthly": "Maandelijkse",
+    "quarterly": "Kwartaal",
+    "yearly": "Jaarlijkse"
+  },
+  "analystRating.pointsAwarded": "+5 Analisten Rating!",
+  "analystRatingInfo.title": "Analisten Rating Uitleg",
+  "analystRatingInfo.description": "Je 'Analisten Rating' is een maatstaf voor je waardevolle bijdragen aan het platform. Deze rating bepaalt je aandeel in de Creator Pool.",
+  "analystRatingInfo.section1.title": "1. Hoge Kwaliteit Voorspellingen (+2 tot +10 Rating)",
+  "analystRatingInfo.section1.text": "Je verdient Analisten Rating punten voor elke voorspelling die met hoge nauwkeurigheid wordt beoordeeld (Rating > 70). Hoe hoger je score, hoe meer punten je verdient. Dit beloont kwaliteit boven kwantiteit.",
+  "analystRatingInfo.section2.title": "2. Badges Verdienen (+100 tot +500 Rating)",
+  "analystRatingInfo.section2.text": "Wanneer je een nieuwe badge verdient (bijv. 'Wekelijkse Strateeg'), ontvang je een grote, eenmalige ratingbonus. Gouden badges bieden een grotere bonus dan Zilveren of Bronzen.",
+  "analystRatingInfo.section3.title": "3. Inhoud Delen (+5 Rating)",
+  "analystRatingInfo.section3.text": "Je ontvangt een kleine ratingbonus wanneer je je rangen of badges deelt. Dit is beperkt om spam te voorkomen.",
+  "analystRatingInfo.section4.title": "4. Ranglijsten",
+  "analystRatingInfo.section4.text": "Je verdient grote, periodieke bonussen voor het behalen van een Top 100-plaats op een ranglijst. Punten worden gewogen op basis van de concurrentie: een Top 10-rang op een populair aandeel (zoals $AAPL) is meer waard dan een Top 10-rang op een rustig aandeel. Uurlijkse/Dagelijkse rangen worden elke 15 minuten gecontroleerd; langere termijn rangen (Wekelijks, Maandelijks) worden gecontroleerd volgens hun respectievelijke schema's.",
+  "analystRatingInfo.section5.title": "5. Verwijzingen",
+  "analystRatingInfo.section5.text": "Je verdient een aanzienlijke ratingbonus voor het uitnodigen van nieuwe, actieve gebruikers voor het platform.",
+  "referralModal.title": "Uitnodigen & Verdienen",
+  "referralModal.description": "Nodig vrienden uit voor StockPredictorAI. Wanneer zij zich aanmelden, verdien je 500 Analisten Rating punten!",
+  "referralModal.copied": "Link gekopieerd naar klembord!",
+  "referralModal.copy": "Kopiëren",
+  "referralModal.share": "Delen op X",
+  "referralModal.shareTweet": "Word lid van StockPredictorAI en begin met het doen van marktvoorspellingen! We kunnen een deel van de platforminkomsten verdienen alleen al door nauwkeurig te zijn.",
+  "referralModal.shareOnTelegram": "Delen op Telegram",
+  "referralModal.shareTelegram": "Word lid van StockPredictorAI en begin met het doen van marktvoorspellingen! We kunnen een deel van de platforminkomsten verdienen alleen al door nauwkeurig te zijn.",
+  "analystRating.pie.predictions": "Van Voorspellingen",
+  "analystRating.pie.badges": "Van Badges",
+  "analystRating.pie.shares": "Van Delingen",
+  "analystRating.pie.ranks": "Van Rangen",
+  "analystRating.pie.referrals": "Van Verwijzingen",
+  "common.back": "Terug",
+  "sentiment.question": "Wat is de {{type}} doelprijs van de community voor {{ticker}}?",
+  "sentiment.based_on_count": "Gebaseerd op {{count}} voorspellingen",
+  "prediction_timeframes": {
+    "hourly": "het einde van het uur",
+    "daily": "het einde van de dag",
+    "weekly": "het einde van de week",
+    "monthly": "het einde van de maand",
+    "quarterly": "het einde van het kwartaal",
+    "yearly": "het einde van het jaar"
+  },
+  "creatorPoolModal.sharesBreakdownTitle": "Delen Rating Uitsplitsing",
+  "creatorPoolModal.clickShares": "Klik op een segment voor een gedetailleerde uitsplitsing.",
+  "creatorPoolModal.predictionsBreakdownTitle": "Voorspellingen Rating Uitsplitsing",
+  "creatorPoolModal.badgesBreakdownTitle": "Badges Rating Uitsplitsing",
+  "creatorPoolModal.ranksBreakdownTitle": "Rangen Rating Uitsplitsing",
+  "analystRating.pie.labels.frompredictions": "Van Voorspellingen",
+  "analystRating.pie.labels.frombadges": "Van Badges",
+  "analystRating.pie.labels.fromshares": "Van Delingen",
+  "analystRating.pie.labels.fromranks": "Van Rangen",
+  "analystRating.pie.labels.fromreferrals": "Van Verwijzingen",
+  "analystRating.pie.labels.market_maven": "Marktkenner",
+  "analystRating.pie.labels.daily_oracle": "Dagelijks Orakel",
+  "analystRating.pie.labels.hourly_hotshot": "Uurlijks Schot",
+  "analystRating.pie.labels.weekly_strategist": "Wekelijkse Strateeg",
+  "analystRating.pie.labels.monthly_maven": "Maandelijkse Kenner",
+  "analystRating.pie.labels.quarterly_visionary": "Kwartaal Visionair",
+  "analystRating.pie.labels.yearly_legend": "Jaarlijkse Legende",
+  "analystRating.pie.labels.overall": "Algemene Rang",
+  "analystRating.pie.labels.hourly": "Uurlijkse Rang",
+  "analystRating.pie.labels.daily": "Dagelijkse Rang",
+  "analystRating.pie.labels.weekly": "Wekelijkse Rang",
+  "analystRating.pie.labels.monthly": "Maandelijkse Rang",
+  "analystRating.pie.labels.quarterly": "Kwartaal Rang",
+  "analystRating.pie.labels.yearly": "Jaarlijkse Rang",
+  "creatorPoolModal.breakdownTitle": "Details Uitsplitsing",
+  "creatorPoolModal.loading": "Ranglijst laden...",
+  "notifications.newReferral": "{{username}} heeft zich aangemeld via jouw verwijzingslink! +{{points}} Analisten Rating.",
+  "notifications.types.NewReferral": "Nieuwe Verwijzing",
+  "header.dashboard": "Dashboard",
+  "aim.title": "Vind Bewezen Inzichten. <0>Monetiseer Je Marktvoorspellingen.</0>",
+  "promoBanner.creatorPoolText": "💰 <strong>Meld je aan als Vroege Gebruiker!</strong> Meld je nu aan om <1>+1.000 Analisten Rating</1> te verdienen en je deel van de platforminkomsten te ontvangen voor je bijdragen.",
+  "promoBanner.joinNow": "Nu Aanmelden",
+  "analystRating.pie.bonus": "Bonus",
+  "analystRating.pie.labels.frombonus": "Bonus",
+  "seo": {
+    "default": {
+      "title": "StockPredictorAI - Voorspel de Markt, Houd je Nauwkeurigheid Bij",
+      "description": "Word lid van de StockPredictorAI-community om aandeelvoorspellingen te doen, je nauwkeurigheid bij te houden en topleiders te volgen. Meld je aan om je trackrecord op te bouwen."
+    },
+    "explore_page": {
+      "title": "Verken Aandeelvoorspellingen & Top Presteerders | StockPredictorAI",
+      "description": "Verken de nieuwste actieve en beoordeelde aandeelvoorspellingen van de StockPredictorAI-community. Filter op aandeel, tijdskader en zie wie de best presterenden zijn."
+    },
+    "stock_page": {
+      "title": "{{name}} ({{ticker}}) Aandeelvoorspellingen & Sentiment | StockPredictorAI",
+      "description": "Bekijk de nieuwste community-voorspellingen en sentiment voor {{name}} ({{ticker}}). Neem deel aan het gesprek en doe je eigen aandeelvoorspelling op StockPredictorAI."
+    },
+    "prediction_page": {
+      "title": "{{username}}'s {{type}} voorspelling voor ${{ticker}} | StockPredictorAI",
+      "description": "Bekijk {{username}}'s {{type}} voorspelling voor ${{ticker}}. Ben je het eens of oneens? Stem op hun voorspelling en bekijk de volledige analyse op StockPredictorAI."
+    },
+    "profile_page": {
+      "title": "{{username}}'s Profiel & Voorspellingsrecord | StockPredictorAI",
+      "description": "Bekijk het volledige profiel, de voorspellingsgeschiedenis, badges en analisten rating van {{username}} op StockPredictorAI. Volg ze om updates te ontvangen over hun nieuwe voorspellingen."
+    }
+  },
+  "common.accept": "Accepteren",
+  "common.decline": "Weigeren",
+  "common.cookieConsent": "Deze website gebruikt cookies om de gebruikerservaring te verbeteren. Door te accepteren, ga je akkoord met ons gebruik van cookies voor analyse en verwijzingen.",
+  "promoBanner": {
+    "creatorPoolText": "💰 <strong>Meld je aan als Vroege Gebruiker!</strong> Meld je nu aan om <1>+1.000 Analisten Rating</1> te verdienen en je deel van de platforminkomsten te ontvangen.",
+    "joinNow": "Nu Aanmelden",
+    "whyJoin": "Waarom Lid Worden?"
+  },
+  "benefitsModal": {
+    "title": "Ontgrendel de Volledige Ervaring",
+    "subtitle": "Word lid van de community om te voorspellen, bij te houden en te verdienen.",
+    "predict": {
+      "title": "Doe Voorspellingen",
+      "desc": "Bouw een transparant trackrecord op en bewijs je vaardigheden."
+    },
+    "notify": {
+      "title": "Slimme Meldingen",
+      "desc": "Ontvang waarschuwingen wanneer je favoriete analisten een zet doen."
+    },
+    "watchlist": {
+      "title": "Aangepaste Volglijst",
+      "desc": "Volg specifieke aandelen en zie live community sentiment."
+    },
+    "earn": {
+      "title": "Inkomsten Verdienen",
+      "desc": "Top presteerders delen 50% van de platformwinst via de Creator Pool."
+    },
+    "footer": "Aanmelden is 100% gratis. Geen creditcard vereist."
+  },
+  "profile_views_label": "Weergaven"
+}
