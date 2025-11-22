@@ -1,5 +1,4 @@
-// server/jobs/assessment-job.js
-// --- ENTIRE FILE REPLACEMENT ---
+// server/jobs/assessment-job.js - MODIFIED
 
 const Prediction = require('../models/Prediction');
 const User = require('../models/User');
@@ -14,19 +13,15 @@ const { PREDICTION_MAX_RATING, PREDICTION_MAX_ERROR_PERCENTAGE, RATING_DIRECTION
  * Calculates a rating based on how close a prediction was to the actual price.
  */
 function calculateProximityRating(predictedPrice, actualPrice, priceAtCreation) {
-    // --- NEW: Direction Check ---
-    // If priceAtCreation isn't available (for very old predictions), skip this check
+    // --- Direction Check (Unchanged) ---
     if (typeof priceAtCreation === 'number' && priceAtCreation > 0) {
-        const predictedDirection = predictedPrice - priceAtCreation; // e.g., +10 (Up)
-        const actualDirection = actualPrice - priceAtCreation;     // e.g., -5 (Down)
-
-        // If the signs are different (one positive, one negative), they got the direction wrong.
-        // (predictedDirection * actualDirection < 0) is a clean way to check this.
+        const predictedDirection = predictedPrice - priceAtCreation;
+        const actualDirection = actualPrice - priceAtCreation;
         if (predictedDirection * actualDirection < 0) {
-            return 0; // Wrong direction = 0 points
+            return 0;
         }
     }
-    // --- END NEW ---
+    // --- End Direction Check ---
     const MAX_RATING = PREDICTION_MAX_RATING;
     const MAX_ERROR_PERCENTAGE = PREDICTION_MAX_ERROR_PERCENTAGE;
     if (actualPrice === 0) return 0;
@@ -40,8 +35,7 @@ function calculateProximityRating(predictedPrice, actualPrice, priceAtCreation) 
 }
 
 /**
- * Fetches the historical price for a date.
- * If it fails (weekend/holiday), it will "walk backwards" up to 4 days to find the last valid trading day.
+ * Fetches the historical price for a date. (Unchanged - uses full date/time)
  */
 async function getActualStockPrice(ticker, deadline) {
     try {
@@ -116,7 +110,7 @@ const runAssessmentJob = async () => {
 
     console.log('Starting assessment job...');
 
-    // Populate the full user object, including new fields
+    // 1. Query selects predictions past their FULL deadline time (e.g., Friday 21:00 UTC)
     const predictionsToAssess = await Prediction.find({
         status: 'Active',
         deadline: { $lte: new Date() }
@@ -129,28 +123,32 @@ const runAssessmentJob = async () => {
 
     console.log(`Found ${predictionsToAssess.length} predictions to assess.`);
 
+    // 2. Group only by Ticker to minimize API calls (The Fix)
     const predictionGroups = new Map();
     for (const prediction of predictionsToAssess) {
-        const dateKey = prediction.deadline.toISOString().split('T')[0];
-        const key = `${prediction.stockTicker}::${dateKey}`;
-
-        if (!predictionGroups.has(key)) {
-            predictionGroups.set(key, []);
+        const ticker = prediction.stockTicker;
+        if (!predictionGroups.has(ticker)) {
+            predictionGroups.set(ticker, { 
+                predictions: [], 
+                // Use the deadline of the first prediction in the group as the date to fetch price for.
+                // Since the predictions are eligible, this time is in the past.
+                deadline: prediction.deadline 
+            });
         }
-        predictionGroups.get(key).push(prediction);
+        predictionGroups.get(ticker).predictions.push(prediction);
     }
 
     console.log(`Grouped into ${predictionGroups.size} unique API calls.`);
 
-    for (const [key, predictions] of predictionGroups.entries()) {
-        const [ticker, dateKey] = key.split('::');
-        const deadline = new Date(dateKey);
+    for (const [ticker, group] of predictionGroups.entries()) {
+        const predictions = group.predictions;
+        const deadlineForAPI = group.deadline; // Use the full deadline time
 
         try {
-            const actualPrice = await getActualStockPrice(ticker, deadline);
+            const actualPrice = await getActualStockPrice(ticker, deadlineForAPI);
 
             if (actualPrice === null) {
-                console.error(`Could not get price for ${ticker} on ${dateKey} after retries. Skipping ${predictions.length} predictions.`);
+                console.error(`Could not get price for ${ticker} on ${deadlineForAPI.toISOString().split('T')[0]} after retries. Skipping ${predictions.length} predictions.`);
                 continue;
             }
 
@@ -183,6 +181,7 @@ const runAssessmentJob = async () => {
                     }
                     const currentUpdate = userUpdates.get(userId);
                     currentUpdate.rating += rating; // This is for user.totalRating
+                    currentUpdate.analystRating += analystRatingToAward; // Sum up analyst rating points
                     currentUpdate.stockTicker = prediction.stockTicker; // Store ticker
 
                     await new Notification({
@@ -220,7 +219,7 @@ const runAssessmentJob = async () => {
                 try {
                     const user = updates.user; // Get the populated user object
 
-                    // --- FIX: On-the-fly migration for old users ---
+                    // --- FIX: On-the-fly migration for old users (Unchanged) ---
                     if (typeof user.analystRating !== 'object' || user.analystRating === null) {
                         const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
                         user.analystRating = {
@@ -269,7 +268,7 @@ const runAssessmentJob = async () => {
             }
 
         } catch (outerError) {
-            console.error(`Failed to process group ${key}:`, outerError);
+            console.error(`Failed to process group ${ticker}:`, outerError);
         }
     }
 
