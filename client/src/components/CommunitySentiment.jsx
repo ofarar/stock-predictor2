@@ -20,7 +20,7 @@ const SentimentCard = ({ type, data, ticker, currentPrice, isUpdating }) => {
                     {t('sentiment.question', { type: t(`prediction_types.${type}`), ticker: ticker })}
                 </p>
             </div>
-            <div className="text-right">
+            <div className="text-end">
                 <div className="flex items-baseline justify-end gap-2">
                     {percentageChange !== null ? (
                         <p className={`text-sm font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>

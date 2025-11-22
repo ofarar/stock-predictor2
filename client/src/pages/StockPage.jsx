@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import StockChart from '../components/StockChart';
 import toast from 'react-hot-toast';
 import VerifiedTick from '../components/VerifiedTick';
-import { formatCurrency, formatPercentage } from '../utils/formatters';
+import { formatCurrency, formatPercentage, formatNumber } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
 import CommunitySentiment from '../components/CommunitySentiment';
 import { Helmet } from 'react-helmet-async';
@@ -166,7 +166,7 @@ const StockPage = ({ onPredictClick, settings }) => {
             {/* --- END --- */}
             {/* Header section (unchanged) */}
             <div className="grid grid-cols-[1fr,auto] gap-x-6 gap-y-2 items-end">
-                <div className="text-left min-w-0">
+                <div className="text-start min-w-0">
                     <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight truncate">
                         {quote?.longName || ticker}
                     </h1>
@@ -221,7 +221,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                                 return (
                                     <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
                                         <img src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
-                                        <div className="ml-3 flex-grow">
+                                        <div className="ms-3 flex-grow">
                                             <div className="flex items-center gap-2">
                                                 <p className="text-sm font-semibold text-white">{p.userId.username}</p>
                                                 {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
@@ -230,11 +230,11 @@ const StockPage = ({ onPredictClick, settings }) => {
                                                 {t('prediction_type', { type: t(`prediction_types.${p.predictionType}`) })}
                                             </p>
                                         </div>
-                                        <div className="text-right">
-                                            <p className="text-sm font-bold text-white">{t('target', { targetPrice: p.targetPrice?.toFixed(2) ?? '...' })}</p>
+                                        <div className="text-end">
+                                            <p className="text-sm font-bold text-white">{t('target', { targetPrice: formatNumber(p.targetPrice, i18n.language, 2, 2) })}</p>
                                             <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 {typeof percentageChange === 'number'
-                                                    ? `(${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%)`
+                                                    ? `(${percentageChange >= 0 ? '+' : ''}${formatNumber(percentageChange, i18n.language, 1, 1)}%)`
                                                     : '(...)'
                                                 }
                                             </p>
@@ -296,18 +296,18 @@ const StockPage = ({ onPredictClick, settings }) => {
                                     <img
                                         src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
                                         alt="avatar"
-                                        className={`w-10 h-10 rounded-full ml-2 sm:ml-4 border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                                        className={`w-10 h-10 rounded-full ms-2 sm:ml-4 border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                     />
-                                    <div className="flex items-center gap-2 ml-3 sm:ml-4">
+                                    <div className="flex items-center gap-2 ms-3 sm:ml-4">
                                         <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline">
                                             {user.username}
                                         </Link>
                                         {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
                                     </div>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-end">
                                     {/* --- BUG FIX: Use avgRating and text_avg_rating --- */}
-                                    <span className="font-bold text-green-400 text-lg">{user.avgRating.toFixed(1)}</span>
+                                    <span className="font-bold text-green-400 text-lg">{formatNumber(user.avgRating, i18n.language, 1, 1)}</span>
                                     <p className="text-xs text-gray-400">{t('text_avg_rating')}</p>
                                 </div>
                             </div>

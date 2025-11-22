@@ -117,7 +117,7 @@ const GoldenProgressBar = () => {
     return (
         <div className="text-center p-8">
             <div className="flex justify-center items-center mb-4">
-                <FaSpinner className="animate-spin text-yellow-400 text-2xl mr-3" />
+                <FaSpinner className="animate-spin text-yellow-400 text-2xl me-3" />
                 <p className="text-lg font-semibold text-gray-300">{t('find_member_wizard.loading_recommendations')}</p>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2.5">
@@ -151,7 +151,7 @@ const Step4Results = ({ recommendations, loading, error, onJoin, settings }) => 
                     <div key={user._id} className="relative">
                         {/* Pass onJoin and settings to UserCard */}
                         <UserCard user={user} onJoin={onJoin} settings={settings} />
-                        <div className={`absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded-full ${getMatchColor(user.matchPercentage)}`}>
+                        <div className={`absolute top-2 end-2 text-xs font-bold px-2 py-1 rounded-full ${getMatchColor(user.matchPercentage)}`}>
                             {user.matchPercentage}% {t('find_member_wizard.match_rate')}
                         </div>
                     </div>
@@ -278,19 +278,19 @@ const RecommendationWizard = ({ isOpen, onClose, settings }) => { // Add setting
                     <div className="flex justify-between mt-6 pt-4 border-t border-gray-700">
                         <div>
                             {step > 1 && step < 4 && (
-                                <button onClick={handleBack} className="text-gray-400 font-bold py-2 px-4 rounded mr-2 hover:bg-gray-700">{t('common_back')}</button>
+                                <button onClick={handleBack} className="text-gray-400 font-bold py-2 px-4 rounded me-2 hover:bg-gray-700">{t('common_back')}</button>
                             )}
                         </div>
                         <div>
                             {step === 1 && (
-                                <button onClick={handleNext} className="text-gray-400 font-bold py-2 px-4 rounded mr-2 hover:bg-gray-700">{t('find_member_wizard.skip_step')}</button>
+                                <button onClick={handleNext} className="text-gray-400 font-bold py-2 px-4 rounded me-2 hover:bg-gray-700">{t('find_member_wizard.skip_step')}</button>
                             )}
                             {step < 3 && (
                                 <button onClick={handleNext} className="bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded hover:bg-yellow-400">{t('common_next')}</button>
                             )}
                             {step === 3 && (
                                 <button onClick={handleFindRecommendations} className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 flex items-center">
-                                    <FaCheckCircle className="mr-2" /> {t('find_member_wizard.find_button')}
+                                    <FaCheckCircle className="me-2" /> {t('find_member_wizard.find_button')}
                                 </button>
                             )}
                             {step === 4 && (

@@ -214,7 +214,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const marketIsOpenNow = isMarketOpen(prediction.stockTicker, currentQuote?.marketState);
     const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close"));
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
-    const priceLabel = isAssessed ? t("Actual Price") : t("Current Price");
+    const priceLabel = isAssessed ? t("explore_actual_price") : t("prediction.currentPrice");
 
     let rating = isAssessed
         ? prediction.rating
@@ -337,7 +337,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                     <div className="mt-6 pt-6 border-t border-gray-700">
                         <div className="relative mb-4">
                             <h3 className="text-center text-sm text-gray-400 font-bold">{t("DO YOU AGREE?")}</h3>
-                            <div className="absolute right-0 top-0 text-sm text-gray-400 flex items-center gap-2">
+                            <div className="absolute end-0 top-0 text-sm text-gray-400 flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
                                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
                                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
@@ -359,7 +359,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
 
                     <div className="border-t border-gray-700 mt-6 pt-4 flex items-center">
                         <img src={prediction.userId.avatar} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
-                        <div className="ml-3">
+                        <div className="ms-3">
                             <p className="text-sm text-gray-400">{t("Predicted by")}</p>
                             <div className="flex items-center">
                                 <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline break-words">
@@ -367,7 +367,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                     <span style={{ whiteSpace: 'nowrap' }}>
                                         {' '}{prediction.userId.username.split(' ').slice(-1).join(' ')}
                                         {settings?.isVerificationEnabled && prediction.userId.isVerified && (
-                                            <span className="ml-1 inline-block align-middle">
+                                            <span className="ms-1 inline-block align-middle">
                                                 <VerifiedTick />
                                             </span>
                                         )}
@@ -375,7 +375,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                 </Link>
                             </div>
                         </div>
-                        <p className="ml-auto text-sm text-gray-500 text-right">{t("Made on")} {formatNumericDate(prediction.createdAt, i18n.language)}</p>
+                        <p className="ms-auto text-sm text-gray-500 text-end">{t("Made on")} {formatNumericDate(prediction.createdAt, i18n.language)}</p>
                     </div>
                 </div>
             </div>

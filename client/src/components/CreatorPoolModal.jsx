@@ -260,8 +260,8 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                                         >
                                             <span className="font-bold text-gray-400 w-8 text-center">{index + 1}</span>
                                             <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2" />
-                                            <span className="text-white font-semibold flex-grow text-left">{user.username}</span>
-                                            <div className="text-right">
+                                            <span className="text-white font-semibold flex-grow text-start">{user.username}</span>
+                                            <div className="text-end">
                                                 <p className="font-bold text-green-400">{user.analystRating.total.toLocaleString()}</p>
                                                 <p className="text-xs text-gray-400">
                                                     {formatSharePercentage(((user.analystRating.total / totalRating) * 100), i18n.language)}
@@ -277,7 +277,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
 
                 {/* --- VIEW 2: Pie Chart Detail View --- */}
                 {selectedUser && (
-                    <div className="animate-fade-in-fast max-h-[70vh] overflow-y-auto modern-scrollbar pr-2">
+                    <div className="animate-fade-in-fast max-h-[70vh] overflow-y-auto modern-scrollbar pe-2">
                         <div className="space-y-4">
                             {/* User Info */}
                             <div className="flex flex-col items-center">

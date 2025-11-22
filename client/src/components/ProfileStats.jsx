@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import AggressivenessProgressBar from './AggressivenessProgressBar';
-import { formatSharePercentage } from '../utils/formatters';
+import { formatSharePercentage, formatNumber } from '../utils/formatters';
 
 const StatCard = ({ label, value, isRank = false, onClick, onInfoClick }) => {
     const { t } = useTranslation();
@@ -15,7 +15,7 @@ const StatCard = ({ label, value, isRank = false, onClick, onInfoClick }) => {
             onClick={onClick}
             className={`bg-gray-800 p-4 rounded-lg text-center relative ${onClick ? 'hover:bg-gray-700 cursor-pointer' : ''}`}
         >
-            {isTopRank && (<span className="absolute top-2 right-2 text-2xl" title={t('performanceTabs.statCard.topRankTitle', { rank: value })}>⭐</span>)}
+            {isTopRank && (<span className="absolute top-2 end-2 text-2xl" title={t('performanceTabs.statCard.topRankTitle', { rank: value })}>⭐</span>)}
             <div className="flex items-center justify-center gap-1">
                 <p className="text-gray-400 text-sm font-medium">{label}</p>
                 {/* --- ADD INFO BUTTON --- */}
@@ -45,7 +45,7 @@ const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCr
             {/* Replaced 'Total Points' with 'Analyst Rating' */}
             <StatCard
                 label={t('analyst_rating_label')}
-                value={userRating.toLocaleString()} // <-- Use toLocaleString
+                value={formatNumber(userRating, i18n.language)} // <-- Use formatNumber
                 onInfoClick={onRatingInfoClick} // <-- PASS PROP
             />
 

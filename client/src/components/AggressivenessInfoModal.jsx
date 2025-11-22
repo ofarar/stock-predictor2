@@ -37,7 +37,7 @@ const AggressivenessInfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
 
-                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 modern-scrollbar">
+                <div className="space-y-4 max-h-[70vh] overflow-y-auto pe-2 modern-scrollbar">
                     <p className="text-gray-300">{t('aggressivenessInfoModal.description')}</p>
                     <InfoSection title={t('aggressivenessInfoModal.defensiveTitle')} text={t('aggressivenessInfoModal.defensiveText')} />
                     <InfoSection title={t('aggressivenessInfoModal.neutralTitle')} text={t('aggressivenessInfoModal.neutralText')} />

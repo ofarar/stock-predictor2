@@ -110,7 +110,7 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
 
                     <div className="flex items-center my-4">
                         <input type="checkbox" id="attachPrediction" checked={isAttachingPrediction} onChange={() => setIsAttachingPrediction(!isAttachingPrediction)} className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded" />
-                        <label htmlFor="attachPrediction" className="ml-2 text-sm font-medium text-gray-300">{t('goldenPostForm.attachPredictionLabel')}</label>
+                        <label htmlFor="attachPrediction" className="ms-2 text-sm font-medium text-gray-300">{t('goldenPostForm.attachPredictionLabel')}</label>
                     </div>
 
                     {isAttachingPrediction && (

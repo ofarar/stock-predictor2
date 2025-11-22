@@ -43,7 +43,7 @@ const AIWizardWaitlist = ({ settings }) => {
                             <div key={entry._id} className="bg-gray-700 p-3 rounded-lg flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     {/* Index Number */}
-                                    <span className="text-gray-400 w-6 text-right flex-shrink-0">{index + 1}.</span>
+                                    <span className="text-gray-400 w-6 text-end flex-shrink-0">{index + 1}.</span>
                                     {/* Avatar */}
                                     <img
                                         src={entry.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${entry.userId._id}`}
@@ -58,7 +58,7 @@ const AIWizardWaitlist = ({ settings }) => {
                                             <span>{lastWord}</span>
                                             {/* Conditionally render tick */}
                                             {settings?.isVerificationEnabled && entry.userId.isVerified && (
-                                                <span className="ml-1 inline-block align-middle">
+                                                <span className="ms-1 inline-block align-middle">
                                                     <VerifiedTick />
                                                 </span>
                                             )}
@@ -66,7 +66,7 @@ const AIWizardWaitlist = ({ settings }) => {
                                     </div>
                                 </div>
                                 {/* Joined Date */}
-                                <p className="text-sm text-gray-400 flex-shrink-0 ml-4">
+                                <p className="text-sm text-gray-400 flex-shrink-0 ms-4">
                                     Joined: {new Date(entry.createdAt).toLocaleDateString()}
                                 </p>
                             </div>

@@ -343,8 +343,8 @@ const WatchlistPage = ({ settings }) => {
                                                                 alt="avatar"
                                                                 className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                                             />
-                                                            <div className="flex items-center ml-2">
-                                                                <p className="font-semibold text-white text-sm mr-[2px]">
+                                                            <div className="flex items-center ms-2">
+                                                                <p className="font-semibold text-white text-sm me-[2px]">
                                                                     {p.userId.username}
                                                                 </p>
                                                                 {settings?.isVerificationEnabled && p.userId.isVerified && (
@@ -420,9 +420,9 @@ const WatchlistPage = ({ settings }) => {
                                                                 alt="avatar"
                                                                 className={`w-10 h-10 rounded-full border-2 flex-shrink-0 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                                             />
-                                                            <div className="ml-3 min-w-0">
+                                                            <div className="ms-3 min-w-0">
                                                                 <div className="flex items-center">
-                                                                    <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline truncate mr-[2px]">
+                                                                    <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline truncate me-[2px]">
                                                                         {user.username}
                                                                     </Link>
                                                                     {settings?.isVerificationEnabled && user.isVerified && (
@@ -431,13 +431,13 @@ const WatchlistPage = ({ settings }) => {
                                                                 </div>
                                                                 <p className="text-xs text-gray-400">
                                                                     {t('watchlistPage.avgScoreLabel')}
-                                                                    <span className="font-bold text-green-400 ml-1">{user.avgRating}</span>
+                                                                    <span className="font-bold text-green-400 ms-1">{user.avgRating}</span>
                                                                 </p>
                                                             </div>
                                                         </div>
 
                                                         {/* NEW: Container for buttons on the right */}
-                                                        <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
+                                                        <div className="flex flex-col items-end gap-2 ms-2 flex-shrink-0">
                                                             {/* --- Corrected Follow/Following Button Logic --- */}
                                                             {currentUser && currentUser._id !== user._id && (
                                                                 isFollowing ? (

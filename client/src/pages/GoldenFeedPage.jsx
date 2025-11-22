@@ -19,13 +19,13 @@ const CentralPostCard = ({ post, settings }) => {
     return (
         <div className="bg-gray-800 p-4 rounded-lg relative">
             {post.isNew && (
-                <span className="absolute top-3 right-3 text-xs bg-yellow-500 text-black font-bold px-2 py-1 rounded-full animate-pulse">
+                <span className="absolute top-3 end-3 text-xs bg-yellow-500 text-black font-bold px-2 py-1 rounded-full animate-pulse">
                     {t('golden_feed_new_label')}
                 </span>
             )}
             <div className="flex items-center mb-3">
                 <img src={post.userId.avatar} alt={t('author_avatar')} className={`w-8 h-8 rounded-full border-2 ${post.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
-                <span className="ml-3 font-semibold text-white mr-[2px]">{post.userId.username}</span>
+                <span className="ms-3 font-semibold text-white me-[2px]">{post.userId.username}</span>
                 {settings?.isVerificationEnabled && post.userId.isVerified && (
                     <div className="inline-block translate-y-[1px]">
                         <VerifiedTick />
@@ -52,7 +52,7 @@ const CentralPostCard = ({ post, settings }) => {
                     </div>
                 </div>
             )}
-            <p className="text-xs text-gray-500 text-right mt-3">
+            <p className="text-xs text-gray-500 text-end mt-3">
                 {formatDateTime(post.createdAt, i18n.language)}
             </p>
         </div>

@@ -38,7 +38,7 @@ const ContactPage = () => {
                     <p>{t('contact_fill_form_text')}</p>
                     <p>
                         {t('contact_urgent_text')}
-                        <a href="mailto:predictostock@gmail.com" className="font-bold text-green-400 hover:underline ml-2">
+                        <a href="mailto:predictostock@gmail.com" className="font-bold text-green-400 hover:underline ms-2">
                             {t('contact_email')}
                         </a>
                     </p>
@@ -58,7 +58,7 @@ const ContactPage = () => {
                             <label htmlFor="message" className="block text-sm font-medium text-gray-300">{t('contact_message_label')}</label>
                             <textarea name="message" id="message" rows="5" value={formData.message} onChange={handleChange} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"></textarea>
                         </div>
-                        <div className="text-right">
+                        <div className="text-end">
                              <button type="submit" disabled={isSubmitting} className="w-full sm:w-auto bg-green-500 text-white font-bold py-3 px-6 rounded-md hover:bg-green-600 disabled:bg-gray-500">
                                 {isSubmitting ? t('contact_sending') : t('contact_send_button')}
                             </button>

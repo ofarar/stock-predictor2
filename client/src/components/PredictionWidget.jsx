@@ -275,7 +275,7 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                         </div>
                         <div className="col-span-5 sm:col-span-3">
                             <label className="block text-xs font-bold text-gray-400 mb-1">{t('prediction.targetPrice')}</label>
-                            <div className="flex items-center gap-2 bg-gray-900 rounded-md pr-2">
+                            <div className="flex items-center gap-2 bg-gray-900 rounded-md pe-2">
                                 <input
                                     type="number"
                                     step="0.01"

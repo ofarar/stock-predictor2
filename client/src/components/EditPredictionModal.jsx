@@ -75,7 +75,7 @@ const EditPredictionModal = ({ isOpen, onClose, prediction, onUpdate }) => {
 
                         <div>
                             <label className="block text-xs font-bold text-gray-400 mb-1">{t('editPredictionModal.newTargetPriceLabel')}</label>
-                            <div className="flex items-center gap-2 bg-gray-900 rounded-md pr-2">
+                            <div className="flex items-center gap-2 bg-gray-900 rounded-md pe-2">
                                 <input type="number" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} className="w-full bg-transparent p-2 text-white focus:outline-none" />
                                 {/* Conditionally render the percentage */}
                                 {typeof percentageChange === 'number' ? (

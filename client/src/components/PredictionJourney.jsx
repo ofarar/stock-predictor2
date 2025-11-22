@@ -59,7 +59,7 @@ const PredictionJourney = ({ initial, target, current, priceLabel }) => {
         >
           <div className="w-4 h-4 rounded-full bg-blue-400 ring-4 ring-gray-800 transition-transform hover:scale-125"></div>
           {visibleTooltip === 'current' && (
-            <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
+            <span className="absolute top-full mt-2 start-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
               {t('predictionJourney.currentPriceTooltip', {
                 value: formatCurrency(current, i18n.language),
                 priceLabel
@@ -94,7 +94,7 @@ const PredictionJourney = ({ initial, target, current, priceLabel }) => {
               >
                 <div className="w-3 h-3 bg-gray-400 rounded-full ring-2 ring-gray-800 transition-transform hover:scale-125"></div>
                 {visibleTooltip === 'initial' && (
-                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
+                  <span className="absolute bottom-full mb-2 start-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
                     ${initial.toFixed(2)}
                   </span>
                 )}
@@ -122,7 +122,7 @@ const PredictionJourney = ({ initial, target, current, priceLabel }) => {
                     } rounded-full ring-2 ring-gray-800 transition-transform hover:scale-125`}
                 ></div>
                 {visibleTooltip === 'target' && (
-                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
+                  <span className="absolute bottom-full mb-2 start-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-2 py-1 text-xs font-bold text-white rounded">
                     ${target.toFixed(2)}
                   </span>
                 )}

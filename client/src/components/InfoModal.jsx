@@ -25,7 +25,7 @@ const InfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
 
-                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 modern-scrollbar">
+                <div className="space-y-4 max-h-[70vh] overflow-y-auto pe-2 modern-scrollbar">
                     <p>{t('infoModal.description')}</p>
                     
                     <InfoSection 

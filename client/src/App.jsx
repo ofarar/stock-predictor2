@@ -52,7 +52,7 @@ const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
 
 
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [user, setUser] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -65,6 +65,7 @@ function App() {
   // Fetch the current user once when the app loads
   const fetchUser = () => {
     setIsAuthLoading(true);
+
     axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true })
       .then(res => setUser(res.data || null))
       .catch(() => setUser(null))
@@ -82,6 +83,13 @@ function App() {
       localStorage.setItem(STORAGE_KEYS.REFERRAL_CODE, refCode);
     }
   }, [cookieConsent]);
+
+  // --- RTL Support ---
+  useEffect(() => {
+    const isRtl = i18n.language === 'ar';
+    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
 
   const requestLogin = () => setIsLoginPromptOpen(true);
 

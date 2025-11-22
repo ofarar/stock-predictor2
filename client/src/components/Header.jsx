@@ -50,14 +50,14 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                 />
             </button>
             {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-40">
+                <div className="absolute end-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-40">
                     <div className="px-4 py-2 text-sm text-green-400 border-b border-gray-700 flex items-center gap-2">
                         {user.username}
                         {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
                     </div>
                     <Link to={`/profile/${user._id}`} className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">{t('header.userMenu.myProfile')}</Link>
                     {/* 3. ADD "INVITE" LINK */}
-                    <button onClick={() => setIsReferralModalOpen(true)} className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
+                    <button onClick={() => setIsReferralModalOpen(true)} className="flex items-center w-full text-start px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
                         {t('header.userMenu.invite', 'Invite & Earn')}
                     </button>
                     {settings?.isAIWizardEnabled && (
@@ -67,7 +67,7 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                     )}
                     {user.isAdmin && (<Link to="/admin" className="flex items-center px-4 py-2 text-sm text-yellow-400 hover:bg-gray-700">{t('header.userMenu.admin')}</Link>)}
                     <div className="border-t border-gray-700 my-1"></div>
-                    <a href={`${import.meta.env.VITE_API_URL}/auth/logout`} className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">{t('header.userMenu.logout')}</a>
+                    <a href={`${import.meta.env.VITE_API_URL}/auth/logout`} className="flex items-center w-full text-start px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">{t('header.userMenu.logout')}</a>
                 </div>
             )}
         </div>
@@ -152,7 +152,7 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                                 <button onClick={() => onMakePredictionClick(null)} className="text-2xl bg-green-500 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-green-600" title={t('header.buttons.makePrediction')}>
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 </button>
-                                <div className="ml-2">
+                                <div className="ms-2">
                                     {user && <NotificationBell user={user} />}
                                 </div>
                                 <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">

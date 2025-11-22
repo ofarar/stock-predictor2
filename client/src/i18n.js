@@ -11,6 +11,7 @@ import translationZH from './locales/zh/translation.json';
 import translationRU from './locales/ru/translation.json';
 import translationFR from './locales/fr/translation.json';
 import translationNL from './locales/nl/translation.json';
+import translationAR from './locales/ar/translation.json';
 
 i18n
   .use(LanguageDetector)
@@ -24,14 +25,15 @@ i18n
       zh: { translation: translationZH },
       ru: { translation: translationRU },
       fr: { translation: translationFR },
-      nl: { translation: translationNL }
+      nl: { translation: translationNL },
+      ar: { translation: translationAR }
     },
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator'], // <-- Corrected order
+      order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
   });

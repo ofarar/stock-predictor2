@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { formatScorePercentage } from '../utils/formatters';
+import { formatPercentage } from '../utils/formatters';
 
 const AggressivenessProgressBar = ({ data, analyzedCount, onInfoClick }) => {
     const { t, i18n } = useTranslation();
@@ -18,7 +18,7 @@ const AggressivenessProgressBar = ({ data, analyzedCount, onInfoClick }) => {
 
     const { defensive, neutral, offensive } = data;
     const total = defensive + neutral + offensive;
-    
+
     let score = 0;
     if (total > 0) {
         const weightedTotal = (neutral * 50) + (offensive * 100);
@@ -36,7 +36,7 @@ const AggressivenessProgressBar = ({ data, analyzedCount, onInfoClick }) => {
                 </div>
                 {/* MODIFIED: Changed styling to be smaller and not bold */}
                 <p className="text-sm text-gray-400">
-                    {formatScorePercentage(score, i18n.language)}
+                    {formatPercentage(score, i18n.language)}
                 </p>
             </div>
 
@@ -46,7 +46,7 @@ const AggressivenessProgressBar = ({ data, analyzedCount, onInfoClick }) => {
                     style={{ width: `${score}%` }}
                 ></div>
             </div>
-            
+
             <div className="flex justify-between text-xs text-gray-400 mt-1 px-1">
                 <span>{t('aggressiveness.defensive')}</span>
                 <span>{t('aggressiveness.offensive')}</span>
@@ -56,13 +56,13 @@ const AggressivenessProgressBar = ({ data, analyzedCount, onInfoClick }) => {
 };
 
 AggressivenessProgressBar.propTypes = {
-  data: PropTypes.shape({
-    defensive: PropTypes.number.isRequired,
-    neutral: PropTypes.number.isRequired,
-    offensive: PropTypes.number.isRequired,
-  }).isRequired,
-  analyzedCount: PropTypes.number.isRequired,
-  onInfoClick: PropTypes.func.isRequired,
+    data: PropTypes.shape({
+        defensive: PropTypes.number.isRequired,
+        neutral: PropTypes.number.isRequired,
+        offensive: PropTypes.number.isRequired,
+    }).isRequired,
+    analyzedCount: PropTypes.number.isRequired,
+    onInfoClick: PropTypes.func.isRequired,
 };
 
 export default AggressivenessProgressBar;

@@ -34,7 +34,7 @@ const UserCard = ({ user, settings }) => {
                     </p>
                     {/* Conditionally render VerifiedTick based on BOTH settings and user status */}
                     {settings?.isVerificationEnabled && user.isVerified && (
-                        <span className="ml-1 inline-block align-middle flex-shrink-0">
+                        <span className="ms-1 inline-block align-middle flex-shrink-0">
                             <VerifiedTick />
                         </span>
                     )}

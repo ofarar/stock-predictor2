@@ -27,7 +27,7 @@ const PrivacyPage = () => {
                 <PrivacySection titleKey="privacy_intro_title" textKey="privacy_intro_text" />
                 
                 <PrivacySection titleKey="info_collection_title">
-                    <div className="pl-4 space-y-2">
+                    <div className="ps-4 space-y-2">
                         <h3 className="text-lg font-semibold text-gray-200">{t('info_collection_a_title')}</h3>
                         <p className="whitespace-pre-wrap">{t('info_collection_a_text')}</p>
                         <h3 className="text-lg font-semibold text-gray-200">{t('info_collection_b_title')}</h3>
@@ -38,7 +38,7 @@ const PrivacyPage = () => {
                 <PrivacySection titleKey="use_info_title" textKey="use_info_text" />
 
                 <PrivacySection titleKey="sharing_title" textKey="sharing_text">
-                    <ul className="list-disc list-inside pl-4 space-y-1">
+                    <ul className="list-disc list-inside ps-4 space-y-1">
                         <li>{t('sharing_list_a')}</li>
                         <li>{t('sharing_list_b')}</li>
                         <li>{t('sharing_list_c')}</li>
@@ -47,7 +47,7 @@ const PrivacyPage = () => {
                 </PrivacySection>
                 
                 <PrivacySection titleKey="gdpr_title" textKey="gdpr_intro">
-                    <ul className="list-disc list-inside pl-4 space-y-2">
+                    <ul className="list-disc list-inside ps-4 space-y-2">
                         <li>{t('gdpr_list_a')}</li>
                         <li>{t('gdpr_list_b')}</li>
                         <li>{t('gdpr_list_c')}</li>

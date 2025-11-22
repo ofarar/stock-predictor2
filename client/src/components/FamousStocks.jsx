@@ -52,7 +52,7 @@ const SentimentStockCard = ({ stock, isHistorical }) => { // <--- 1. Receive isH
                     <p className="font-bold text-white">{stock.quote.shortName || stock.ticker}</p>
                     <p className="text-sm text-gray-400">{stock.ticker}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-end">
                     <p className="font-bold text-lg text-white">{formatCurrency(stock.quote.regularMarketPrice, i18n.language, stock.quote.currency)}</p>
                     {typeof dailyChangePercent === 'number' && (
                         <p className={`text-sm font-bold ${isDailyUp ? 'text-green-400' : 'text-red-400'}`}>
@@ -74,7 +74,7 @@ const SentimentStockCard = ({ stock, isHistorical }) => { // <--- 1. Receive isH
                     {t('sentiment.question', { type: translatedType, ticker: stock.ticker })}
                 </p>
             </div>
-            <div className="text-right">
+            <div className="text-end">
                 {typeof targetPercentageChange === 'number' ? (
                     <p className={`text-sm font-bold ${isTargetUp ? 'text-green-400' : 'text-red-400'}`}>
                         {formatPercentage(targetPercentageChange, i18n.language)}

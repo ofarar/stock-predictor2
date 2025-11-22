@@ -102,10 +102,10 @@ const ScoreboardPage = ({ settings }) => {
                                         alt="avatar"
                                         className={`w-12 h-12 rounded-full border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                     />
-                                    <div className="flex items-center ml-4">
+                                    <div className="flex items-center ms-4">
                                         <Link
                                             to={`/profile/${user._id}`}
-                                            className="font-semibold text-white text-lg hover:underline mr-[2px]"
+                                            className="font-semibold text-white text-lg hover:underline me-[2px]"
                                         >
                                             {user.username}
                                         </Link>
@@ -117,7 +117,7 @@ const ScoreboardPage = ({ settings }) => {
                                     </div>
 
                                 </div>
-                                <div className="text-right">
+                                <div className="text-end">
                                     <span className="font-bold text-green-400 text-xl">{user.avgRating.toFixed(1)}</span>
                                     <p className="text-xs text-gray-400">{t('text_avg_rating')}</p>
                                 </div>

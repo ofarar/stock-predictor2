@@ -1,7 +1,7 @@
-// src/components/GoldenFeed.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { formatNumber, formatDateTime } from '../utils/formatters';
 
 const PostCard = ({ post, locale }) => {
     const { t } = useTranslation();
@@ -15,19 +15,18 @@ const PostCard = ({ post, locale }) => {
 
     // 🧠 format percentage properly for each locale
     const formatPercent = (value) => {
-        const formatter = new Intl.NumberFormat(locale, {
+        // Intl.NumberFormat returns "1.2%" for 0.012 -> so divide by 100
+        return formatNumber(value / 100, locale, {
             style: 'percent',
             minimumFractionDigits: 1,
             maximumFractionDigits: 1
         });
-        // Intl.NumberFormat returns "1.2%" for 0.012 -> so divide by 100
-        return formatter.format(value / 100);
     };
 
     return (
         <div className="bg-gray-700 p-4 rounded-lg relative">
             {post.isNew && (
-                <span className="absolute top-2 right-2 text-xs bg-green-500 bg-yellow-500 font-bold px-2 py-1 rounded-full animate-pulse">
+                <span className="absolute top-2 end-2 text-xs bg-green-500 bg-yellow-500 font-bold px-2 py-1 rounded-full animate-pulse">
                     {t('goldenFeed.newTag')}
                 </span>
             )}
@@ -41,7 +40,7 @@ const PostCard = ({ post, locale }) => {
                         <span className="font-semibold text-white">{post.attachedPrediction.stockTicker}</span>
                         <div className="flex items-baseline gap-2">
                             <span className="text-green-400 font-bold">
-                                ${post.attachedPrediction.targetPrice.toFixed(2)}
+                                ${formatNumber(post.attachedPrediction.targetPrice, locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                             {percentChange !== null && (
                                 <span
@@ -60,8 +59,8 @@ const PostCard = ({ post, locale }) => {
                 </div>
             )}
 
-            <p className="text-xs text-gray-500 text-right mt-3">
-                {new Date(post.createdAt).toLocaleString(locale)}
+            <p className="text-xs text-gray-500 text-end mt-3">
+                {formatDateTime(post.createdAt, locale)}
             </p>
         </div>
     );

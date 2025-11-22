@@ -880,7 +880,7 @@ router.put('/profile/language', async (req, res) => {
     const { language } = req.body;
 
     // Validate that the language is one of the supported codes
-    if (!['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr'].includes(language)) {
+    if (!['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr', 'nl', 'ar'].includes(language)) {
         return res.status(400).json({ message: 'Unsupported language.' });
     }
 

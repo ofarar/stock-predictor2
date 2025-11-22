@@ -20,20 +20,20 @@ const PromoBanner = () => {
             <SignupBenefitsModal isOpen={isBenefitsOpen} onClose={() => setIsBenefitsOpen(false)} />
             
             {/* 1. Reverted to 'justify-between' (Spread layout).
-                2. Added 'pr-12' (48px padding) to the right. 
+                2. Added 'pe-12' (48px padding) to the right. 
                    This forces the flex content to stop before hitting the corner, preventing overlap.
             */}
-            <div className="bg-gradient-to-r from-blue-600 to-green-600 text-center p-4 pr-12 rounded-lg mb-8 relative shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-gradient-to-r from-blue-600 to-green-600 text-center p-4 pe-12 rounded-lg mb-8 relative shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
                 
                 {/* Text Section */}
-                <div className="text-white font-medium text-left">
+                <div className="text-white font-medium text-start">
                     <p className="mb-0">
                         <Trans
                             i18nKey="promoBanner.creatorPoolText"
                             components={[
                                 <strong key="0" />, 
                                 <span className="font-bold text-yellow-300" key="1" />, 
-                                <a href={loginUrl} className="font-bold underline hover:text-white ml-2 whitespace-nowrap" key="2"></a> 
+                                <a href={loginUrl} className="font-bold underline hover:text-white ms-2 whitespace-nowrap" key="2"></a> 
                             ]}
                         />
                     </p>
@@ -58,7 +58,7 @@ const PromoBanner = () => {
                 {/* Close X Button - Pinned to the absolute top-right corner */}
                 <button
                     onClick={() => setIsVisible(false)}
-                    className="absolute top-0 right-0 p-2 text-white/60 hover:text-white text-xl leading-none hover:bg-black/10 rounded-tr-lg rounded-bl-lg transition-colors"
+                    className="absolute top-0 end-0 p-2 text-white/60 hover:text-white text-xl leading-none hover:bg-black/10 rounded-tr-lg rounded-bl-lg transition-colors"
                     aria-label="Close banner"
                 >
                     &times;

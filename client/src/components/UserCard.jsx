@@ -18,7 +18,7 @@ const UserCard = ({ user, onCancel, onJoin, isSubscription, showDate, settings, 
                 <div className="font-bold text-white flex items-center justify-center">
                     <span className="truncate">{user.username}</span>
                     {settings?.isVerificationEnabled && user.isVerified && (
-                        <span className="ml-1 flex-shrink-0"><VerifiedTick /></span>
+                        <span className="ms-1 flex-shrink-0"><VerifiedTick /></span>
                     )}
                 </div>
             </Link>

@@ -1,5 +1,7 @@
 // src/utils/formatters.js
 
+// src/utils/formatters.js
+
 /**
  * Formats a date into a short, numeric, locale-specific string.
  * @param {string | Date} dateInput - The date object or string to format.
@@ -14,6 +16,7 @@ export const formatNumericDate = (dateInput, locale) => {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
+        numberingSystem: 'latn'
     };
 
     return new Intl.DateTimeFormat(locale, options).format(date);
@@ -41,94 +44,6 @@ export const formatTimeLeft = (milliseconds, t) => {
  * Formats a score (0-100) into a locale-specific percentage string without a sign.
  * @param {number} value - The score value (e.g., 75 for 75%).
  * @param {string} locale - The language code (e.g., "en", "tr").
- * @returns {string} The formatted percentage string.
- */
-export const formatScorePercentage = (value, locale) => {
-    if (typeof value !== 'number') return '';
-
-    const decimalValue = value / 100;
-    const formatter = new Intl.NumberFormat(locale, {
-        style: 'percent',
-        maximumFractionDigits: 0,
-    });
-
-    return formatter.format(decimalValue);
-};
-
-/**
- * Formats a share percentage (e.g., 0.0521) into a locale-specific string.
- * @param {number} value - The percentage value (e.g., 0.0521 for 0.05%).
- * @param {string} locale - The language code (e.g., "en", "tr").
- * @returns {string} The formatted percentage string (e.g., "0.05%" or "%0,05").
- */
-export const formatSharePercentage = (value, locale) => {
-    if (typeof value !== 'number' || isNaN(value)) return '...';
-
-    // 1. Convert the percentage value (e.g., 0.0521) to its decimal equivalent (0.000521)
-    //    because Intl.NumberFormat with style: 'percent' expects a decimal.
-    const decimalValue = value / 100;
-
-    const formatter = new Intl.NumberFormat(locale, {
-        style: 'percent',
-        minimumFractionDigits: 2, // This will result in 0.05%
-        maximumFractionDigits: 2, // This will result in 0.05%
-    });
-
-    return formatter.format(decimalValue);
-};
-
-/**
- * Formats a number into a locale-specific percentage string (e.g., +10.5%, %-5,2).
- * @param {number} value - The percentage value (e.g., 25.5 for 25.5%).
- * @param {string} locale - The language code (e.g., "en", "tr").
- * @returns {string} The formatted percentage string.
- */
-export const formatPercentage = (value, locale) => {
-    if (typeof value !== 'number' || isNaN(value)) return '...';
-
-    const decimalValue = value / 100;
-
-    const formatter = new Intl.NumberFormat(locale, {
-        style: 'percent',
-        signDisplay: 'always', // Use the built-in sign display
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1,
-    });
-
-    let formatted = formatter.format(decimalValue);
-
-    // --- Special Fix for Turkish Negative Percentages ---
-    if (locale === 'tr' && value < 0) {
-        // Changes "-%2,5" to "%-2,5"
-        formatted = formatted.replace("-%", "%-");
-    }
-    // ---------------------------------------------------
-
-    return formatted;
-};
-
-/**
- * Formats a number into a locale-specific currency string (e.g., $245.50).
- * @param {number} value - The numerical value to format.
- * @param {string} locale - The language code (e.g., "en", "tr").
- * @returns {string} The formatted currency string.
- */
-export const formatCurrency = (value, locale, currency = 'USD') => {
-    // If value is not a valid number, return placeholder
-    if (typeof value !== 'number' || isNaN(value)) return '...';
-
-    const formatter = new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: currency, // <-- USE THE DYNAMIC CURRENCY
-    });
-
-    return formatter.format(value);
-};
-
-/**
- * Formats a date object into a locale-specific string (e.g., "Oct 12, 2025").
- * @param {Date} date - The date object to format.
- * @param {string} locale - The language code (e.g., "en", "tr").
  * @returns {string} The formatted date string.
  */
 export const formatDate = (date, locale) => {
@@ -138,6 +53,7 @@ export const formatDate = (date, locale) => {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
+        numberingSystem: 'latn'
     };
 
     return new Intl.DateTimeFormat(locale, options).format(date);
@@ -159,6 +75,7 @@ export const formatDateTime = (dateInput, locale) => {
         day: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
+        numberingSystem: 'latn'
     };
 
     return new Intl.DateTimeFormat(locale, options).format(date);
@@ -180,7 +97,46 @@ export const formatDateTimeShort = (dateInput, locale) => {
         day: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
+        numberingSystem: 'latn'
     };
 
     return new Intl.DateTimeFormat(locale, options).format(date);
+};
+
+/**
+ * Formats a number using Western Arabic numerals (0-9) regardless of locale.
+ * @param {number} value - The number to format.
+ * @param {string} locale - The language code.
+ * @param {object} options - Intl.NumberFormat options.
+ * @returns {string} The formatted number string.
+ */
+export const formatNumber = (value, locale, options = {}) => {
+    if (value === undefined || value === null) return '';
+    return new Intl.NumberFormat(locale, { ...options, numberingSystem: 'latn' }).format(value);
+};
+
+export const formatPercentage = (value, locale) => {
+    return formatNumber(value / 100, locale, {
+        style: 'percent',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+    });
+};
+
+export const formatCurrency = (value, locale, currency = 'USD') => {
+    return formatNumber(value, locale, {
+        style: 'currency',
+        currency: currency
+    });
+};
+
+/**
+ * Formats the Creator Pool Share percentage to XX.YY% precision.
+ */
+export const formatSharePercentage = (value, locale) => {
+    // FIX: Changed minimum and maximum fraction digits from 4 to 2
+    return formatNumber(value, locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }) + '%';
 };

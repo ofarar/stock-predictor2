@@ -28,7 +28,7 @@ const PredictionTypesModal = ({ isOpen, onClose }) => {
                 </div>
                 
                 {/* Scrollable Content Area */}
-                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                <div className="space-y-4 max-h-[70vh] overflow-y-auto pe-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                     {predictionTypes.map(pt => (
                         <div key={pt.name} className="bg-gray-700 p-3 rounded-md">
                             <h3 className="font-bold text-green-400">{t(pt.titleKey)}</h3>

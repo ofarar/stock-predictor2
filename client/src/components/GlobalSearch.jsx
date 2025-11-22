@@ -57,7 +57,7 @@ const GlobalSearch = () => {
                             onClick={() => handleSelect(r.symbol)}
                             className="px-4 py-2 hover:bg-green-500 cursor-pointer">
                             <span className="font-bold">{r.symbol}</span>
-                            <span className="text-sm text-gray-400 ml-2">{r.shortname}</span>
+                            <span className="text-sm text-gray-400 ms-2">{r.shortname}</span>
                         </li>
                     ))}
                 </ul>

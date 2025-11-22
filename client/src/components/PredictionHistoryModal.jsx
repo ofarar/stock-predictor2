@@ -70,7 +70,7 @@ const PredictionHistoryModal = ({ isOpen, onClose, prediction }) => {
                 </div>
 
                 {/* 6. Vertically Scrollable Content Area */}
-                <div className="flex-grow overflow-y-auto max-h-[60vh] pr-2 modern-scrollbar">
+                <div className="flex-grow overflow-y-auto max-h-[60vh] pe-2 modern-scrollbar">
                     {activeTab === 'list' && (
                         <div className="space-y-4">
                             {fullHistory.map((entry, index) => (

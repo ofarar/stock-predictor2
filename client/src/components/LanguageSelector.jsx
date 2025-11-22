@@ -12,6 +12,7 @@ const languages = [
     { code: 'ru', name: 'Русский', flag: '🇷🇺' },
     { code: 'zh', name: '中文', flag: '🇨🇳' },
     { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
 
 const LanguageSelector = ({ user }) => {

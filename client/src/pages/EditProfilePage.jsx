@@ -110,7 +110,7 @@ const EditProfilePage = ({ onProfileUpdate }) => {
                     <div>
                         <label htmlFor="about" className="block text-sm font-medium text-gray-300">{t('editprofile_about_label')}</label>
                         <textarea name="about" id="about" rows="4" value={formData.about} onChange={handleChange} maxLength={CHARACTER_LIMIT} className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"></textarea>
-                        <p className="text-right text-xs text-gray-400 mt-1">
+                        <p className="text-end text-xs text-gray-400 mt-1">
                             {t('editprofile_about_counter', { current: formData.about.length, limit: CHARACTER_LIMIT })}
                         </p>
                     </div>

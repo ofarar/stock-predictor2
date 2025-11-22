@@ -38,12 +38,12 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                 <div className="flex items-center mb-4">
                     <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
 
-                    <div className="ml-3 flex-grow">
+                    <div className="ms-3 flex-grow">
                         <div className="flex items-center">
                             <Link
                                 to={`/profile/${prediction.userId._id}`}
                                 onClick={(e) => e.stopPropagation()}
-                                className="font-bold text-white hover:underline mr-[2px]"
+                                className="font-bold text-white hover:underline me-[2px]"
                             >
                                 {prediction.userId.username}
                             </Link>
@@ -55,7 +55,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                         </div>
                         <p className="text-xs text-gray-400">{t('text_avg_rating')}: {prediction.userId.avgRating ? prediction.userId.avgRating.toFixed(1) : 'N/A'}</p>
                     </div>
-                    <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ml-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>
+                    <Link to={`/stock/${prediction.stockTicker}`} onClick={(e) => e.stopPropagation()} className="ms-auto text-lg font-bold text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-600">{prediction.stockTicker}</Link>
                 </div>
                 {isAssessed ? (
                     // FIX: Changed to 3 columns and added "Actual Price"
@@ -310,7 +310,7 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
                                 onChange={(e) => handleFilterChange('verifiedOnly', e.target.checked)}
                                 className="h-4 w-4 rounded bg-gray-700 text-green-500"
                             />
-                            <label htmlFor="verifiedOnly" className="ml-2 text-sm font-medium text-gray-300">{t('explore_verified_only')}</label>
+                            <label htmlFor="verifiedOnly" className="ms-2 text-sm font-medium text-gray-300">{t('explore_verified_only')}</label>
                         </div>
                     )}
                 </div>

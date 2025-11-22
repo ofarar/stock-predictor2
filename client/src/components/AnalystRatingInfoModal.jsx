@@ -41,7 +41,7 @@ const AnalystRatingInfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
 
-                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 modern-scrollbar">
+                <div className="space-y-4 max-h-[70vh] overflow-y-auto pe-2 modern-scrollbar">
                     <p className="text-gray-300">{t('analystRatingInfo.description')}</p>
                     <InfoSection title={t('analystRatingInfo.section1.title')} text={t('analystRatingInfo.section1.text')} />
                     <InfoSection title={t('analystRatingInfo.section2.title')} text={t('analystRatingInfo.section2.text')} />

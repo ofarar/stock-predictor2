@@ -8,7 +8,7 @@ const CommunityFeed = ({ feedItems = [], className = '' }) => {
     return (
         <div className={`bg-gray-800 p-6 rounded-lg shadow-lg ${className}`}>
             <div className="flex items-center mb-4">
-                <svg className="w-6 h-6 text-indigo-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-indigo-400 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V4a2 2 0 012-2h8a2 2 0 012 2v4z"></path>
                 </svg>
                 <h3 className="text-xl font-bold text-white">{t('communityFeed.title')}</h3>
@@ -21,9 +21,9 @@ const CommunityFeed = ({ feedItems = [], className = '' }) => {
                             alt="avatar"
                             className={`w-8 h-8 rounded-full border-2 ${item.user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                         />
-                        <div className="text-sm text-gray-300 ml-3">
+                        <div className="text-sm text-gray-300 ms-3">
                             <span>{item.text}</span>
-                            <span className={`ml-2 font-bold ${item.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                            <span className={`ms-2 font-bold ${item.percentage.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
                                 ({item.percentage})
                             </span>
                         </div>

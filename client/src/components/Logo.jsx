@@ -17,7 +17,7 @@ const Logo = () => {
                 <span className="hidden sm:inline font-bold text-2xl text-white">
                     Stock<span className="text-green-400">Predictor</span>
                     {/* --- NEW "AI" TEXT --- */}
-                    <span className="text-xl text-gray-300 ml-1">AI</span>
+                    <span className="text-xl text-gray-300 ms-1">AI</span>
                 </span>
                 
                 {/* Beta Tag (no change) */}

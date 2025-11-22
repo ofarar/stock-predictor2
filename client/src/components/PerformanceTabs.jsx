@@ -40,7 +40,7 @@ const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSele
                         {validAvgRating.toFixed(1)}
                     </span>
                 </div>
-                <div className="ml-4 flex-grow">
+                <div className="ms-4 flex-grow">
                     {isStock ? (
                         <Link to={`/stock/${label}`} className="font-bold text-white text-lg hover:underline" onClick={e => e.stopPropagation()}>{label}</Link>
                     ) : (
@@ -48,7 +48,7 @@ const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSele
                     )}
                     <p className="text-sm text-gray-400">{t('performanceTabs.statCard.averageRating')}</p>
                 </div>
-                <div className="relative flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ml-2 text-center w-20">
+                <div className="relative flex flex-col items-center justify-center bg-gray-800 rounded-md p-2 ms-2 text-center w-20">
                     {rank <= 3 && (<span className="absolute -top-2 -right-2 text-2xl" title={t('performanceTabs.statCard.topRankTitle', { rank })}>⭐</span>)}
                     <p className="text-xs text-blue-400 font-bold">{t('performanceTabs.statCard.rank')}</p>
                     <p className="text-xl font-bold text-white">#{rank}</p>

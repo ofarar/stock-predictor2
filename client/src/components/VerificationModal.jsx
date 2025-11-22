@@ -65,7 +65,7 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
                 {/* *** ADD CLOSE BUTTON ('X') *** */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                    className="absolute top-4 end-4 text-gray-400 hover:text-white"
                     aria-label="Close modal"
                 >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -75,7 +75,7 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
                     <>
                         <h2 className="text-2xl font-bold text-white mb-4">{t('verificationModal.title')}</h2>
                         <p className="text-gray-300 mb-6">{t('verificationModal.description')}</p>
-                        <ul className="text-left space-y-2 mb-8 text-gray-300 text-sm list-disc list-inside">
+                        <ul className="text-start space-y-2 mb-8 text-gray-300 text-sm list-disc list-inside">
                             {/* Added example benefits using translation keys */}
                             <li>{t('verificationModal.benefits.greenCheck')}</li>
                             <li>{t('verificationModal.benefits.verifiedFilter')}</li>
