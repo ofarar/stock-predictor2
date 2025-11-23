@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import AggressivenessProgressBar from './AggressivenessProgressBar';
 import { formatSharePercentage, formatNumber } from '../utils/formatters';
 
-const StatCard = ({ label, value, isRank = false, onClick, onInfoClick }) => {
+const StatCard = ({ label, value, isRank = false, onClick, onInfoClick, isAnimated }) => {
     const { t } = useTranslation();
     const isTopRank = isRank && value <= 3;
     const displayValue = isRank ? `#${value}` : value;
@@ -13,7 +13,7 @@ const StatCard = ({ label, value, isRank = false, onClick, onInfoClick }) => {
     return (
         <Component
             onClick={onClick}
-            className={`bg-gray-800 p-4 rounded-lg text-center relative ${onClick ? 'hover:bg-gray-700 cursor-pointer' : ''}`}
+            className={`bg-gray-800 p-4 rounded-lg text-center relative ${onClick ? 'hover:bg-gray-700 cursor-pointer' : ''} ${isAnimated ? 'ring-4 ring-yellow-400 animate-pulse' : ''}`}
         >
             {isTopRank && (<span className="absolute top-2 end-2 text-2xl" title={t('performanceTabs.statCard.topRankTitle', { rank: value })}>⭐</span>)}
             <div className="flex items-center justify-center gap-1">
@@ -30,7 +30,7 @@ const StatCard = ({ label, value, isRank = false, onClick, onInfoClick }) => {
     );
 };
 
-const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCreatorPoolClick, onRatingInfoClick }) => {
+const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCreatorPoolClick, onRatingInfoClick, isCreatorPoolAnimated }) => {
     const { t, i18n } = useTranslation();
 
     // Calculate share percentage, ensure it's a number
@@ -54,6 +54,7 @@ const ProfileStats = ({ user, performance, totalAnalystRating, onInfoClick, onCr
                 label={t('creator_pool_share_label')}
                 value={formatSharePercentage(sharePercent, i18n.language)}
                 onClick={onCreatorPoolClick}
+                isAnimated={isCreatorPoolAnimated}
             />
 
             {performance.aggressiveness && (

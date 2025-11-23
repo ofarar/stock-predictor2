@@ -71,6 +71,17 @@ router.post('/users/:id/view', viewLimiter, async (req, res) => {
     }
 });
 
+// POST: Mark creator pool animation as seen
+router.post('/users/mark-creator-pool-seen', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not logged in');
+    try {
+        await User.findByIdAndUpdate(req.user._id, { hasSeenCreatorPoolAnimation: true });
+        res.status(200).send();
+    } catch (err) {
+        res.status(500).send();
+    }
+});
+
 // GET: Get a user's profile by ID
 router.get('/users/:id', async (req, res) => {
     try {

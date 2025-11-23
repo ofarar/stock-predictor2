@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
 
     // --- NEWLY ADDED ENDPOINTS ---
     SHARE_ACTIVITY: '/api/activity/share',
+    MARK_CREATOR_POOL_SEEN: '/api/users/mark-creator-pool-seen',
 };
 
 export const STORAGE_KEYS = {

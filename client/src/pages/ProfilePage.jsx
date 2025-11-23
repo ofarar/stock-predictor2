@@ -58,6 +58,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isVerifiedJustNow, setIsVerifiedJustNow] = useState(false);
     const [isCreatorPoolModalOpen, setIsCreatorPoolModalOpen] = useState(false);
     const [isRatingInfoModalOpen, setIsRatingInfoModalOpen] = useState(false);
+    const [isCreatorPoolAnimated, setIsCreatorPoolAnimated] = useState(false);
 
     // --- NEW: Handle Profile View Counting ---
     useEffect(() => {
@@ -115,6 +116,22 @@ const ProfilePage = ({ settings, requestLogin }) => {
             return () => clearTimeout(timer);
         }
     }, [isVerifiedJustNow]);
+
+    // --- NEW: Handle Creator Pool Animation ---
+    useEffect(() => {
+        // Only run for own profile and if we have a current user loaded
+        if (currentUser?._id === userId) {
+            // Check if the user has ALREADY seen it (from DB)
+            if (!currentUser.hasSeenCreatorPoolAnimation) {
+                // If NOT seen, trigger animation
+                setIsCreatorPoolAnimated(true);
+
+                // And immediately mark as seen in DB (fire and forget)
+                axios.post(`${API_URL}${API_ENDPOINTS.MARK_CREATOR_POOL_SEEN}`, {}, { withCredentials: true })
+                    .catch(err => console.error("Failed to mark creator pool as seen", err));
+            }
+        }
+    }, [currentUser, userId]);
 
     useEffect(() => {
         const tab = searchParams.get(URL_PARAMS.TAB);
@@ -290,8 +307,12 @@ const ProfilePage = ({ settings, requestLogin }) => {
                     predictionCount={predictions.length}
                     totalAnalystRating={profileData.totalAnalystRating}
                     onInfoClick={() => setIsAggressivenessInfoOpen(true)}
-                    onCreatorPoolClick={() => setIsCreatorPoolModalOpen(true)}
+                    onCreatorPoolClick={() => {
+                        setIsCreatorPoolModalOpen(true);
+                        setIsCreatorPoolAnimated(false);
+                    }}
                     onRatingInfoClick={() => setIsRatingInfoModalOpen(true)}
+                    isCreatorPoolAnimated={isCreatorPoolAnimated}
                 />
 
                 <div className="flex border-b border-gray-700 mb-8">

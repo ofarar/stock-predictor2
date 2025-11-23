@@ -78,11 +78,12 @@ const UserSchema = new Schema({
         badgeId: { type: String, required: true },
         tier: { type: String, enum: ['Bronze', 'Silver', 'Gold'], required: true },
         achievedAt: { type: Date, default: Date.now }
-    }], default: [],
+    }],
     lastCheckedGoldenFeed: { type: Date, default: Date.now },
     dailyPredictionCount: { type: Number, default: 0 },
     profileViews: { type: Number, default: 0 },
     lastPredictionDate: { type: Date },
+    hasSeenCreatorPoolAnimation: { type: Boolean, default: false },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
