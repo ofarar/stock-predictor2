@@ -134,8 +134,20 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                         <div className="mt-6 pt-4 border-t border-gray-700 text-center">
                             {needsOnboarding && (
                                 <>
-                                    <p className="text-yellow-400 font-semibold mb-3">{t('goldenMemberModal.onboarding.actionRequired')}</p>
-                                    <p className="text-sm mb-2">{t('goldenMemberModal.onboarding.connectPrompt')}</p>
+                                    {/* Check if the restriction reason is present */}
+                                    {user.stripeConnectRestrictions ? (
+                                        // --- ACTION REQUIRED FOR DOCUMENTS ---
+                                        <>
+                                            <p className="text-xl font-bold text-red-500 mb-2">{t('goldenMemberModal.onboarding.documentTitle')}</p>
+                                            <p className="text-sm mb-4">{t('goldenMemberModal.onboarding.documentPrompt')}</p>
+                                        </>
+                                    ) : (
+                                        // --- STANDARD ONBOARDING PROMPT ---
+                                        <>
+                                            <p className="text-yellow-400 font-semibold mb-3">{t('goldenMemberModal.onboarding.actionRequired')}</p>
+                                            <p className="text-sm mb-2">{t('goldenMemberModal.onboarding.connectPrompt')}</p>
+                                        </>
+                                    )}
 
                                     {/* COPYABLE URL TIP */}
                                     <p className="text-xs text-yellow-400 mb-3">{t('goldenMemberModal.onboarding.websiteTip')}</p>

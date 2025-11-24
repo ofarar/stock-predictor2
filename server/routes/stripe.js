@@ -181,13 +181,20 @@ router.post('/connect/onboarding-link', async (req, res) => {
 });
 
 // Verify Connect Account Status (Synchronous check)
+// server/routes/stripe.js (inside router.post('/connect/verify-status', ...))
+
 router.post('/connect/verify-status', async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');
 
     try {
         const user = await User.findById(req.user.id);
         if (!user.stripeConnectAccountId) {
-            return res.json({ onboardingComplete: false, message: "No Connect account found." });
+            // Note: We don't have restriction data here since we don't have an account
+            return res.json({
+                onboardingComplete: false,
+                restrictionsActive: false,
+                message: "No Connect account found."
+            });
         }
 
         console.log(`Verifying Stripe Connect status for user ${user.id} (${user.stripeConnectAccountId})...`);
@@ -197,14 +204,33 @@ router.post('/connect/verify-status', async (req, res) => {
         const payoutsEnabled = account.payouts_enabled;
         const isOnboardingComplete = detailsSubmitted && payoutsEnabled;
 
-        // Update DB if status changed
-        if (user.stripeConnectOnboardingComplete !== isOnboardingComplete) {
-            user.stripeConnectOnboardingComplete = isOnboardingComplete;
-            await user.save();
-            console.log(`Verify Status: Updated onboarding complete to ${isOnboardingComplete} for user ${user.id}`);
+        // --- NEW: Retrieve Restriction Data from Stripe ---
+        const restrictionsActive = account.requirements?.current_deadline ? true : false;
+        const pendingRequirements = account.requirements?.currently_due || [];
+        // --- END NEW ---
+
+        // Prepare the update object
+        const updateData = {
+            stripeConnectOnboardingComplete: isOnboardingComplete,
+            stripeConnectRestrictions: restrictionsActive,
+            stripeConnectPendingFields: pendingRequirements,
+        };
+
+        let updatedUser = user;
+
+        // Perform the update only if a change in compliance status occurred
+        if (
+            user.stripeConnectOnboardingComplete !== isOnboardingComplete ||
+            user.stripeConnectRestrictions !== restrictionsActive
+        ) {
+            // Use findByIdAndUpdate to ensure the database record reflects the latest status
+            updatedUser = await User.findByIdAndUpdate(user.id, { $set: updateData }, { new: true });
+
+            console.log(`Verify Status: Compliance status updated for user ${user.id}. Restrictions Active: ${restrictionsActive}`);
 
             // If just completed and is Golden, ensure price exists
-            if (isOnboardingComplete && user.isGoldenMember && !user.goldenMemberPriceId) {
+            if (isOnboardingComplete && !restrictionsActive && user.isGoldenMember && !user.goldenMemberPriceId) {
+                // Note: We use 'user' (the non-updated version) here to check for existing price ID
                 try {
                     await createOrUpdateStripePriceForUser(user.id, user.goldenMemberPrice, user.username);
                 } catch (priceError) {
@@ -213,7 +239,11 @@ router.post('/connect/verify-status', async (req, res) => {
             }
         }
 
-        res.json({ onboardingComplete: isOnboardingComplete });
+        // Return the current status, including restrictions
+        res.json({
+            onboardingComplete: isOnboardingComplete,
+            restrictionsActive: restrictionsActive, // Critical for frontend warning banner
+        });
 
     } catch (error) {
         console.error(`Error verifying Connect status for user ${req.user.id}:`, error);
@@ -451,7 +481,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         }
 
         case 'account.updated': {
-            // Handles updates to Connected Accounts (e.g., onboarding completion)
+            // Handles updates to Connected Accounts (e.g., onboarding completion or restrictions)
             const account = event.data.object;
             console.log(`Webhook received: account.updated for Connect account: ${account.id}`);
 
@@ -459,32 +489,54 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
             const payoutsEnabled = account.payouts_enabled;
             const isOnboardingComplete = detailsSubmitted && payoutsEnabled;
 
+            // --- NEW: Extract Restriction Data ---
+            // If current_deadline exists, there is a restriction (true/false status)
+            const restrictionsActive = account.requirements?.current_deadline ? true : false;
+            const pendingRequirements = account.requirements?.currently_due || [];
+            // --- END NEW ---
+
             try {
-                const user = await User.findOne({ stripeConnectAccountId: account.id });
+                // Use findByIdAndUpdate to perform a single atomic update for compliance fields
+                const updateData = {
+                    stripeConnectOnboardingComplete: isOnboardingComplete,
+                    stripeConnectRestrictions: restrictionsActive,
+                    stripeConnectPendingFields: pendingRequirements,
+                };
+
+                const user = await User.findOneAndUpdate(
+                    { stripeConnectAccountId: account.id },
+                    { $set: updateData },
+                    { new: true } // Return the updated document
+                );
+
                 if (user) {
                     let needsPriceCreation = false;
-                    if (user.stripeConnectOnboardingComplete !== isOnboardingComplete) {
-                        user.stripeConnectOnboardingComplete = isOnboardingComplete;
-                        await user.save();
-                        console.log(`Webhook: Updated stripeConnectOnboardingComplete for user ${user.id} to ${isOnboardingComplete}`);
-                        // Check if we need to create the price *after* saving the onboarding status
-                        if (isOnboardingComplete && user.isGoldenMember && !user.goldenMemberPriceId) {
-                            needsPriceCreation = true;
-                        }
+
+                    // Log restriction status
+                    if (restrictionsActive) {
+                        console.warn(`Webhook: Restrictions ACTIVE for user ${user._id}. Pending fields: ${pendingRequirements.join(', ')}`);
                     } else {
-                        console.log(`Webhook: No change in onboarding status for user ${user.id} (${isOnboardingComplete}).`);
+                        console.log(`Webhook: Restrictions cleared for user ${user._id}.`);
+                    }
+
+                    // Check if we need to create the price *after* saving the onboarding status
+                    // This logic ensures the price is created only when onboarding is JUST completed
+                    if (isOnboardingComplete && user.isGoldenMember && !user.goldenMemberPriceId) {
+                        // Since findOneAndUpdate returns the document *after* update, 
+                        // we can safely check the new state for price creation.
+                        needsPriceCreation = true;
                     }
 
                     // Create Stripe Price if onboarding just completed and they are Golden
                     if (needsPriceCreation) {
-                        console.log(`Webhook: Onboarding complete for Golden Member ${user.id}. Creating initial Stripe Price.`);
+                        console.log(`Webhook: Onboarding complete for Golden Member ${user._id}. Creating initial Stripe Price.`);
                         try {
-                            await createOrUpdateStripePriceForUser(user.id, user.goldenMemberPrice, user.username);
+                            // This function is still needed to create the Stripe price object
+                            await createOrUpdateStripePriceForUser(user._id, user.goldenMemberPrice, user.username);
                         } catch (priceError) {
-                            console.error(`Webhook Error: Failed to create initial Stripe Price for user ${user.id} after onboarding:`, priceError);
+                            console.error(`Webhook Error: Failed to create initial Stripe Price for user ${user._id} after onboarding:`, priceError);
                         }
                     }
-
                 } else {
                     console.warn(`Webhook Warning: Received account.updated event for account ${account.id}, but no matching user found.`);
                 }

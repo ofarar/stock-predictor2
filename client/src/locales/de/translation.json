@@ -501,7 +501,10 @@
             "connectButton": "Mit Stripe verbinden",
             "processingButton": "Verarbeite...",
             "websiteTip": "Tipp: Stripe benötigt eine Geschäftswebsite. Sie können unten Ihre öffentliche Profil-URL verwenden.",
-            "copiedUrl": "Profil-URL kopiert!"
+            "copiedUrl": "Profil-URL kopiert!",
+            "documentTitle": "Identitätsprüfung erforderlich",
+            "documentPrompt": "Zur Einhaltung der Vorschriften benötigt Stripe ein Ausweisdokument (z. B. Reisepass oder Führerschein). Ihre Auszahlungen sind pausiert, bis Sie dieses vorlegen.",
+            "resolveRestrictions": "Erforderliche Dokumente hochladen"
         }
     },
     "goldenPostForm": {
@@ -845,7 +848,8 @@
     },
     "profile": {
         "loading": "Profil wird geladen...",
-        "userNotFound": "Benutzer nicht gefunden."
+        "userNotFound": "Benutzer nicht gefunden.",
+        "stripeActionRequired": "🚨 Aktion erforderlich: Ihre Auszahlungen wurden pausiert. Klicken Sie zur Behebung."
     },
     "predictionStatus": {
         "Active": "Aktiv",

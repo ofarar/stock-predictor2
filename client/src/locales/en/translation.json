@@ -500,7 +500,10 @@
       "connectButton": "Connect with Stripe",
       "processingButton": "Processing...",
       "websiteTip": "Tip: Stripe requires a business website. You can use your public profile URL below.",
-      "copiedUrl": "Profile URL copied!"
+      "copiedUrl": "Profile URL copied!",
+      "documentTitle": "Identity verification required",
+      "documentPrompt": "To maintain compliance, Stripe requires identity verification documents (e.g., passport or driver's license). Your payments have been paused until you provide this information.",
+      "resolveRestrictions": "Upload required documents"
     }
   },
   "goldenPostForm": {
@@ -846,7 +849,8 @@
   },
   "profile": {
     "loading": "Loading profile...",
-    "userNotFound": "User not found."
+    "userNotFound": "User not found.",
+    "stripeActionRequired": "🚨 Action Required: Your payouts have been paused. Click to resolve."
   },
   "predictionStatus": {
     "Active": "Active",

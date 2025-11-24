@@ -25,6 +25,10 @@ const UserSchema = new Schema({
     stripeConnectAccountId: { type: String, index: true }, // ID of their Express account
     stripeConnectOnboardingComplete: { type: Boolean, default: false }, // Has Stripe onboarding finished?
     goldenMemberPriceId: { type: String }, // Stripe Price ID specific to this member
+    // --- NEW: STRIPE RESTRICTIONS FIELDS ---
+    stripeConnectRestrictions: { type: Boolean, default: false }, // Indicates a restriction is active
+    stripeConnectPendingFields: { type: [String], default: [] },  // List of fields required by Stripe (e.g., ['verification.document'])
+    // --- END NEW ---
     // --- END STRIPE FIELDS ---
     totalRating: { type: Number, default: 0, index: true },
     analystRating: {

@@ -516,7 +516,10 @@
       "connectButton": "Koppelen met Stripe",
       "processingButton": "Verwerken...",
       "websiteTip": "Tip: Stripe vereist een zakelijke website. U kunt hieronder uw openbare profiel-URL gebruiken.",
-      "copiedUrl": "Profiel-URL gekopieerd!"
+      "copiedUrl": "Profiel-URL gekopieerd!",
+      "documentTitle": "Identiteitsverificatie vereist",
+      "documentPrompt": "Om te voldoen aan de regelgeving vereist Stripe een identiteitsdocument (bijv. paspoort of rijbewijs). Uw uitbetalingen zijn gepauzeerd totdat u dit aanlevert.",
+      "resolveRestrictions": "Upload de vereiste documenten"
     }
   },
   "goldenPostForm": {
@@ -862,7 +865,8 @@
   },
   "profile": {
     "loading": "Profiel laden...",
-    "userNotFound": "Gebruiker niet gevonden."
+    "userNotFound": "Gebruiker niet gevonden.",
+    "stripeActionRequired": "🚨 Actie vereist: Uw uitbetalingen zijn gepauzeerd. Klik om op te lossen."
   },
   "predictionStatus": {
     "Active": "Actief",

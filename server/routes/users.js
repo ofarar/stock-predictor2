@@ -216,7 +216,14 @@ router.get('/my-subscriptions', async (req, res) => {
 router.get('/profile/:userId', async (req, res) => {
     try {
         const isOwnProfile = req.user ? req.user.id === req.params.userId : false;
-        const user = await User.findById(req.params.userId).select('-googleId');
+        // Find the user and explicitly select the new Stripe fields.
+        const user = await User.findById(req.params.userId)
+            .select('-googleId')
+            // --- ADD THESE NEW FIELDS TO THE SELECTION ---
+            .select('stripeConnectRestrictions stripeConnectPendingFields')
+            // ---------------------------------------------
+            .exec(); // Execute the query
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

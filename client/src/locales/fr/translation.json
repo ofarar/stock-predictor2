@@ -501,7 +501,10 @@
             "connectButton": "Connecter avec Stripe",
             "processingButton": "Traitement...",
             "websiteTip": "Conseil : Stripe exige un site web d'entreprise. Vous pouvez utiliser votre URL de profil public ci-dessous.",
-            "copiedUrl": "URL du profil copiée !"
+            "copiedUrl": "URL du profil copiée !",
+            "documentTitle": "Vérification d'identité requise",
+            "documentPrompt": "Pour rester conforme, Stripe exige un document d'identité (ex: passeport ou permis). Vos paiements sont suspendus jusqu'à ce que vous le fournissiez.",
+            "resolveRestrictions": "Télécharger les documents requis"
         }
     },
     "goldenPostForm": {
@@ -845,7 +848,8 @@
     },
     "profile": {
         "loading": "Chargement du profil...",
-        "userNotFound": "Utilisateur non trouvé."
+        "userNotFound": "Utilisateur non trouvé.",
+        "stripeActionRequired": "🚨 Action requise: Vos paiements ont été suspendus. Cliquez pour résoudre."
     },
     "predictionStatus": {
         "Active": "Actif",

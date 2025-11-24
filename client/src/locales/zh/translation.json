@@ -501,7 +501,10 @@
             "connectButton": "连接 Stripe",
             "processingButton": "处理中...",
             "websiteTip": "提示: Stripe 需要一个商业网站。您可以使用下面您的公共个人资料 URL。",
-            "copiedUrl": "个人资料 URL 已复制！"
+            "copiedUrl": "个人资料 URL 已复制！",
+            "documentTitle": "身份验证必需",
+            "documentPrompt": "为了保持合规性，Stripe 要求提供身份证明文件（例如，护照或驾照）。您的付款已被暂停，直到您提供此信息。",
+            "resolveRestrictions": "上传所需文件"
         }
     },
     "goldenPostForm": {
@@ -845,7 +848,8 @@
     },
     "profile": {
         "loading": "正在加载个人资料...",
-        "userNotFound": "未找到用户。"
+        "userNotFound": "未找到用户。",
+        "stripeActionRequired": "🚨 必需操作：您的付款功能已被暂停。点击以解决。"
     },
     "predictionStatus": {
         "Active": "进行中",

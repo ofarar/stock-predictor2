@@ -501,7 +501,10 @@
       "connectButton": "Stripe ile Bağlan",
       "processingButton": "İşleniyor...",
       "websiteTip": "İpucu: Stripe bir işletme web sitesi gerektirir. Aşağıdaki herkese açık profil URL'nizi kullanabilirsiniz.",
-      "copiedUrl": "Profil URL'si kopyalandı!"
+      "copiedUrl": "Profil URL'si kopyalandı!",
+      "documentTitle": "Kimlik Doğrulaması Gerekli",
+      "documentPrompt": "Stripe ile uyumlu kalmak için bir kimlik belgesi (ör. pasaport veya ehliyet) gerektirir. Bunu sağlayana kadar ödemeleriniz duraklatılır.",
+      "resolveRestrictions": "Gerekli Belgeleri Yükle"
     }
   },
   "goldenPostForm": {
@@ -846,7 +849,8 @@
   },
   "profile": {
     "loading": "Profil yükleniyor...",
-    "userNotFound": "Kullanıcı bulunamadı."
+    "userNotFound": "Kullanıcı bulunamadı.",
+    "stripeActionRequired": "🚨 Eylem Gerekli: Ödemeleriniz duraklatıldı. Çözmek için tıklayın."
   },
   "predictionStatus": {
     "Active": "Aktif",

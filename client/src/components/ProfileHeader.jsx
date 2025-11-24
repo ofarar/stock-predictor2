@@ -14,9 +14,16 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
     const lastWord = usernameParts.pop() || ''; // Get last word, handle empty strings
     const usernameWithoutLastWord = usernameParts.join(' '); // Get the rest
     // --- End: Logic to split username ---
+    const hasRestrictions = user.stripeConnectRestrictions || false;
 
     return (
         <div className="relative flex flex-col sm:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
+            {/* NEW WARNING BANNER: Show only if it's the owner AND they have restrictions */}
+            {isOwnProfile && hasRestrictions && (
+                <div className="absolute top-0 start-0 end-0 bg-red-600 p-2 text-center text-white text-sm font-bold rounded-t-lg">
+                    {t('profile.stripeActionRequired')}
+                </div>
+            )}
             {/* Settings Icon (Top Right) - Only for own profile */}
             {isOwnProfile && (
                 <Link to="/settings/notifications" className="absolute top-4 end-4 sm:top-6 sm:end-6 text-gray-400 hover:text-white" title={t('header_settings')}>

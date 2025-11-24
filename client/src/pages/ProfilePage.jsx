@@ -166,6 +166,27 @@ const ProfilePage = ({ settings, requestLogin }) => {
         }
     }, [userId]);
 
+    const handleOpenGoldenModal = useCallback(async () => {
+        if (currentUser?.isGoldenMember) {
+            try {
+                // 1. Synchronize the compliance status (updates the DB fields)
+                await axios.post(`${API_URL}/api/stripe/connect/verify-status`, {}, { withCredentials: true });
+
+                // 2. Refetch the whole profile data to get the new restrictions status from DB
+                await fetchData();
+
+                // 3. Open the modal (it will read the updated 'user' state from profileData)
+                setIsGoldenModalOpen(true);
+
+            } catch (error) {
+                toast.error(t('Could not verify Stripe status. Please try again.'));
+            }
+        } else {
+            // For "Become Golden Member" button (non-owner mode)
+            setIsGoldenModalOpen(true);
+        }
+    }, [currentUser, fetchData, t]);
+
     useEffect(() => {
         fetchData();
     }, [fetchData]);
@@ -279,7 +300,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                         console.log("ProfileHeader button clicked, setting modal to open!");
                         setIsJoinModalOpen(true);
                     }}
-                    setIsGoldenModalOpen={setIsGoldenModalOpen}
+                    setIsGoldenModalOpen={handleOpenGoldenModal}
                     setIsVerificationModalOpen={setIsVerificationModalOpen}
                     setIsStatusModalOpen={setIsStatusModalOpen}
                     settings={settings}
