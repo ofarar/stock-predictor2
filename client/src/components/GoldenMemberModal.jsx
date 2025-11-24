@@ -127,7 +127,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                         {needsOnboarding && (
                             <>
                                 <p className="text-yellow-400 font-semibold mb-3">{t('goldenMemberModal.onboarding.actionRequired')}</p>
-                                <p className="text-sm mb-4">{t('goldenMemberModal.onboarding.connectStripe')}</p>
+                                <p className="text-sm mb-4">{t('goldenMemberModal.onboarding.connectPrompt')}</p>
                                 <button
                                     type="button"
                                     onClick={handleStartOnboarding}
