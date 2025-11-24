@@ -456,7 +456,7 @@
     "shareByTimeframe": "Share by Timeframe",
     "noPredictionsForTimeframe": "No active predictions for this timeframe.",
     "myUsername": "My",
-    "possessiveSuffix": "s"
+    "possessiveSuffix": "'s"
   },
   "editprofile_telegram_label": "Telegram Link",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",

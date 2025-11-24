@@ -451,7 +451,13 @@
     "ownerActive": "मैं भविष्यवाणी कर रहा हूँ कि ${{ticker}} {{deadline}} तक {{targetPrice}} तक पहुँचेगा। मेरी भविष्यवाणी देखें और StockPredictorAI पर वोट करें!",
     "ownerAssessed": "मेरे ${{ticker}} के लिए मेरी भविष्यवाणी {{rating}} की रेटिंग के साथ समाप्त हुई! मैंने {{targetPrice}} का अनुमान लगाया था, और यह {{actualPrice}} पर बंद हुआ। परिणाम देखें!",
     "visitorActive": "दिलचस्प भविष्यवाणी: {{username}} सोचता है कि ${{ticker}} {{deadline}} तक {{targetPrice}} तक पहुँचेगा। आप क्या सोचते हैं?",
-    "visitorAssessed": "इस परिणाम को देखें: {{username}} की ${{ticker}} के लिए भविष्यवाणी ने {{rating}} रेटिंग अर्जित की! उन्होंने {{targetPrice}} का अनुमान लगाया था, और यह {{actualPrice}} पर बंद हुआ।"
+    "visitorAssessed": "इस परिणाम को देखें: {{username}} की ${{ticker}} के लिए भविष्यवाणी ने {{rating}} रेटिंग अर्जित की! उन्होंने {{targetPrice}} का अनुमान लगाया था, और यह {{actualPrice}} पर बंद हुआ।",
+    "activePredictionsAggregated": "{{subject}} की {{count}} {{type}} भविष्यवाणियों का सारांश:\n\n{{predictionList}}...\n\nसटीकता {{accuracy}}%! मेरा पोर्टफोलियो अभी देखें! {{hashtags}} #स्टॉक_भविष्यवाणी",
+    "shareActivePredictions": "समय-सीमा के अनुसार साझा करें",
+    "shareByTimeframe": "समय-सीमा के अनुसार साझा करें",
+    "noPredictionsForTimeframe": "इस समय-सीमा के लिए कोई सक्रिय भविष्यवाणी नहीं है।",
+    "myUsername": "मेरा",
+    "possessiveSuffix": "का"
   },
   "editprofile_telegram_label": "टेलीग्राम लिंक",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",

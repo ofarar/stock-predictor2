@@ -41,10 +41,10 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                 }
 
                 const changePercent = ((p.targetPrice - currentPrice) / currentPrice) * 100;
-                const sign = changePercent >= 0 ? '+' : '';
+                const sign = changePercent > 0 ? '+' : (changePercent < 0 ? '-' : '');
 
-                // Create the attractive format: $TSLA: 245 (+%4.1)
-                return `$${p.stockTicker}: $${p.targetPrice.toFixed(2)} (${sign}%${Math.abs(changePercent).toFixed(1)})`;
+                // Create the attractive format: $TSLA: 245 (+%4.1) or $NVDA: 170 (-%4.2)
+                return `#${p.stockTicker}: $${p.targetPrice.toFixed(2)} (${sign}%${Math.abs(changePercent).toFixed(1)})`;
             }
             return null; // Ignore if currentPrice is missing
         }).filter(item => item !== null);
@@ -56,7 +56,7 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
         const accuracyText = accuracy.toFixed(0);
         const predictionCount = predictionsToShare.length;
         const subject = isOwnProfile
-            ? t('share.myUsername') // Will resolve to "My"
+            ? t('share.myUsername') // Owner path: "My" (correct)
             : (profileUsername || filteredPredictions[0]?.userId?.username || 'User') + t('share.possessiveSuffix', "'s");
 
         // Construct the hashtags string (Calculation MUST happen before line 68)

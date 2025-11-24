@@ -466,7 +466,13 @@
     "ownerActive": "Ik voorspel dat ${{ticker}} ${{targetPrice}} zal bereiken tegen {{deadline}}. Bekijk mijn voorspelling en stem op StockPredictorAI!",
     "ownerAssessed": "Mijn voorspelling voor ${{ticker}} eindigde met een rating van {{rating}}! Ik voorspelde {{targetPrice}} en het sloot op {{actualPrice}}. Bekijk het resultaat!",
     "visitorActive": "Interessante voorspelling: {{username}} denkt dat ${{ticker}} ${{targetPrice}} zal bereiken tegen {{deadline}}. Wat denk jij?",
-    "visitorAssessed": "Bekijk dit resultaat: de voorspelling van {{username}} voor ${{ticker}} leverde een rating van {{rating}} op! Ze voorspelden {{targetPrice}} en het sloot op {{actualPrice}}."
+    "visitorAssessed": "Bekijk dit resultaat: de voorspelling van {{username}} voor ${{ticker}} leverde een rating van {{rating}} op! Ze voorspelden {{targetPrice}} en het sloot op {{actualPrice}}.",
+    "activePredictionsAggregated": "Overzicht van {{subject}} {{count}} {{type}} voorspellingen:\n\n{{predictionList}}...\n\nNauwkeurigheid: %{{accuracy}}! Bekijk nu mijn portfolio! {{hashtags}} #AandelenAnalyse",
+    "shareActivePredictions": "Deel Actieve Voorspellingen",
+    "shareByTimeframe": "Op Tijdskader Delen",
+    "noPredictionsForTimeframe": "Geen actieve voorspellingen voor dit tijdsbestek.",
+    "myUsername": "Mijn",
+    "possessiveSuffix": "s"
   },
   "editprofile_telegram_label": "Telegram Link",
   "editprofile_telegram_placeholder": "https://t.me/jouwgebruikersnaam",

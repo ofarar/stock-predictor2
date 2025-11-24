@@ -451,7 +451,13 @@
         "ownerActive": "Predigo que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¡Mira mi predicción y vota en StockPredictorAI!",
         "ownerAssessed": "¡Mi predicción para ${{ticker}} terminó con una puntuación de {{rating}}! Predije {{targetPrice}} y cerró en {{actualPrice}}. ¡Mira el resultado!",
         "visitorActive": "Predicción interesante: {{username}} cree que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¿Qué opinas?",
-        "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{rating}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}."
+        "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{rating}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}.",
+        "activePredictionsAggregated": "Resumen de {{subject}} {{count}} predicciones {{type}}:\n\n{{predictionList}}...\n\nPrecisión: %{{accuracy}}! ¡Mira mi portafolio! {{hashtags}} #PronósticoBolsa",
+        "shareActivePredictions": "Compartir Predicciones Activas",
+        "shareByTimeframe": "Compartir por Marco de Tiempo",
+        "noPredictionsForTimeframe": "No hay predicciones activas para este marco.",
+        "myUsername": "Mi",
+        "possessiveSuffix": "s"
     },
     "editprofile_telegram_label": "Enlace de Telegram",
     "editprofile_telegram_placeholder": "https://t.me/tuusuario",

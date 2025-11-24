@@ -451,7 +451,13 @@
         "ownerActive": "Я прогнозирую, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. Посмотрите мой прогноз и проголосуйте на StockPredictorAI!",
         "ownerAssessed": "Мой прогноз по ${{ticker}} завершился с результатом {{rating}}! Я прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}. Посмотрите результат!",
         "visitorActive": "Интересный прогноз: {{username}} считает, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. А вы что думаете?",
-        "visitorAssessed": "Оцените результат: прогноз пользователя {{username}} по ${{ticker}} получил {{rating}} очков! Он/она прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}."
+        "visitorAssessed": "Оцените результат: прогноз пользователя {{username}} по ${{ticker}} получил {{rating}} очков! Он/она прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}.",
+        "activePredictionsAggregated": "Сводка {{subject}} {{count}} {{type}}-прогнозов:\n\n{{predictionList}}...\n\nТочность: %{{accuracy}}! Проверьте мой портфель! {{hashtags}} #ПрогнозАкций",
+        "shareActivePredictions": "Поделиться активными прогнозами",
+        "shareByTimeframe": "Поделиться по таймфрейму",
+        "noPredictionsForTimeframe": "Нет активных прогнозов для этого таймфрейма.",
+        "myUsername": "Мой",
+        "possessiveSuffix": "a"
     },
     "editprofile_telegram_label": "Ссылка на Telegram",
     "editprofile_telegram_placeholder": "https://t.me/vasheimya",

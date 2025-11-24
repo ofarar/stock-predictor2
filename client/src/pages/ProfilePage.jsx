@@ -345,6 +345,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                                 isOwnProfile={isOwnProfile}
                                 onEditClick={handleEditClick}
                                 emptyTextKey="no_active_predictions_label"
+                                profileUsername={user.username}
                             />
                             <PredictionList
                                 titleKey="prediction_history_title"
@@ -352,6 +353,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                                 isOwnProfile={isOwnProfile}
                                 onEditClick={handleEditClick}
                                 emptyTextKey="no_prediction_history_label"
+                                profileUsername={user.username}
                             />
                         </div>
                     </div>
