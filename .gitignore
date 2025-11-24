@@ -19,3 +19,8 @@ server/node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Utility Scripts
+server/check_account.js
+server/check_identity.js
+server/top_up_stripe.js
