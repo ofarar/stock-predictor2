@@ -180,6 +180,47 @@ router.post('/connect/onboarding-link', async (req, res) => {
     }
 });
 
+// Verify Connect Account Status (Synchronous check)
+router.post('/connect/verify-status', async (req, res) => {
+    if (!req.user) return res.status(401).send('Not authenticated');
+
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user.stripeConnectAccountId) {
+            return res.json({ onboardingComplete: false, message: "No Connect account found." });
+        }
+
+        console.log(`Verifying Stripe Connect status for user ${user.id} (${user.stripeConnectAccountId})...`);
+        const account = await stripe.accounts.retrieve(user.stripeConnectAccountId);
+
+        const detailsSubmitted = account.details_submitted;
+        const payoutsEnabled = account.payouts_enabled;
+        const isOnboardingComplete = detailsSubmitted && payoutsEnabled;
+
+        // Update DB if status changed
+        if (user.stripeConnectOnboardingComplete !== isOnboardingComplete) {
+            user.stripeConnectOnboardingComplete = isOnboardingComplete;
+            await user.save();
+            console.log(`Verify Status: Updated onboarding complete to ${isOnboardingComplete} for user ${user.id}`);
+
+            // If just completed and is Golden, ensure price exists
+            if (isOnboardingComplete && user.isGoldenMember && !user.goldenMemberPriceId) {
+                try {
+                    await createOrUpdateStripePriceForUser(user.id, user.goldenMemberPrice, user.username);
+                } catch (priceError) {
+                    console.error("Verify Status: Error creating price:", priceError);
+                }
+            }
+        }
+
+        res.json({ onboardingComplete: isOnboardingComplete });
+
+    } catch (error) {
+        console.error(`Error verifying Connect status for user ${req.user.id}:`, error);
+        res.status(500).json({ message: 'Error verifying account status.' });
+    }
+});
+
 // --- GOLDEN MEMBER SUBSCRIPTION CHECKOUT (User B subscribing to User A) ---
 router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
     if (!req.user) return res.status(401).send('Not authenticated');

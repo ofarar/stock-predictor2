@@ -90,21 +90,6 @@ const ProfilePage = ({ settings, requestLogin }) => {
     useEffect(() => {
         // Check if the success parameter exists
         if (searchParams.get(URL_PARAMS.SUBSCRIBE) === PARAM_VALUES.SUCCESS) {
-            toast.success(t('joinGoldenModal.toast.success', { username: profileData?.user?.username || 'member' }));
-            // Optionally remove the query parameter from the URL without reloading
-            searchParams.delete(URL_PARAMS.SUBSCRIBE);
-            setSearchParams(searchParams, { replace: true });
-        }
-        // Also handle onboarding redirect parameter if needed
-        if (searchParams.get(URL_PARAMS.ONBOARDING) === PARAM_VALUES.COMPLETE) {
-            toast.success("Stripe onboarding completed successfully!");
-            searchParams.delete(URL_PARAMS.ONBOARDING);
-            setSearchParams(searchParams, { replace: true });
-        }
-        if (searchParams.get(URL_PARAMS.ONBOARDING) === PARAM_VALUES.REFRESH) {
-            toast.success("Stripe onboarding link expired or invalid. Please try connecting again.");
-            searchParams.delete(URL_PARAMS.ONBOARDING);
-            setSearchParams(searchParams, { replace: true });
         }
     }, [searchParams, setSearchParams, t, profileData?.user?.username]);
 
