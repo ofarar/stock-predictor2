@@ -38,10 +38,11 @@ async function createOrUpdateStripePriceForUser(userId, priceInDollars, username
     const price = await stripe.prices.create({
         product: GOLDEN_MEMBERSHIP_PRODUCT_ID,
         unit_amount: priceInCents,
-        currency: 'eur', // Or determine dynamically based on user/platform settings
+        // --- THE FIX: Standardize on USD ---
+        currency: 'usd',
+        // ----------------------------------
         recurring: { interval: 'month' },
-        nickname: `Golden Sub for ${username} (${userId})`, // Helpful label in Stripe
-        // Add metadata if needed: metadata: { userId: userId },
+        nickname: `Golden Sub for ${username} (${userId})`,
     });
 
     console.log(`Stripe Price created: ${price.id} for user ${userId}`);

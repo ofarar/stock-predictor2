@@ -28,13 +28,14 @@ app.use(helmet({
             connectSrc: [
                 "'self'",
                 "https://connect-js.stripe.com",
-                "https://*.stripe.com", // <-- ADD THIS WILDCARD for full coverage
-                "https://*.stripe.global", // Stripe also uses this
+                "https://connect.stripe.com",
+                "https://*.stripe.com",
+                "https://*.stripe.global",
                 "https://api.stripe.com",
                 "https://b.stripecdn.com",
                 "https://c.stripe.com",
-                "ws://localhost:5001", // For local dev Socket.io
-                "wss://stockpredictorai-api.fly.dev" // For Fly.io production Socket.io (Update this with your actual Fly.io domain if different)
+                "ws://localhost:5001",
+                "wss://stockpredictorai-api.fly.dev"
             ],
             // Allow Stripe scripts
             scriptSrc: [
@@ -47,7 +48,8 @@ app.use(helmet({
             frameSrc: [
                 "'self'",
                 "https://js.stripe.com",
-                "https://connect.stripe.com"
+                "https://connect.stripe.com",
+                "https://*.stripe.com"
             ],
             // Allow avatars and images from external hosts
             imgSrc: ["'self'", "data:", "https://*"],
