@@ -12,6 +12,7 @@ import translationRU from './locales/ru/translation.json';
 import translationFR from './locales/fr/translation.json';
 import translationNL from './locales/nl/translation.json';
 import translationAR from './locales/ar/translation.json';
+import translationHI from './locales/hi/translation.json';
 
 i18n
   .use(LanguageDetector)
@@ -26,7 +27,8 @@ i18n
       ru: { translation: translationRU },
       fr: { translation: translationFR },
       nl: { translation: translationNL },
-      ar: { translation: translationAR }
+      ar: { translation: translationAR },
+      hi: { translation: translationHI }
     },
     fallbackLng: 'en',
     interpolation: {
