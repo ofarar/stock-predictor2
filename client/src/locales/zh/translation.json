@@ -499,7 +499,9 @@
             "complete": "✅ Stripe 账户已连接并准备好接收付款",
             "tooltip": "请在更新设置前完成 Stripe 注册流程。",
             "connectButton": "连接 Stripe",
-            "processingButton": "处理中..."
+            "processingButton": "处理中...",
+            "websiteTip": "提示: Stripe 需要一个商业网站。您可以使用下面您的公共个人资料 URL。",
+            "copiedUrl": "个人资料 URL 已复制！"
         }
     },
     "goldenPostForm": {
@@ -695,7 +697,10 @@
     "common": {
         "close": "关闭",
         "score": "评分",
-        "dataDelayed": "数据延迟最多15分钟"
+        "dataDelayed": "数据延迟最多15分钟",
+        "copy": "复制",
+        "copied": "已复制",
+        "copiedLink": "链接已复制!"
     },
     "prediction": {
         "makePrediction": "做出预测",

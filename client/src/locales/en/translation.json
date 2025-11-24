@@ -498,7 +498,9 @@
       "complete": "✅ Stripe Account Connected & Ready for Payouts",
       "tooltip": "Please complete Stripe onboarding before updating settings.",
       "connectButton": "Connect with Stripe",
-      "processingButton": "Processing..."
+      "processingButton": "Processing...",
+      "websiteTip": "Tip: Stripe requires a business website. You can use your public profile URL below.",
+      "copiedUrl": "Profile URL copied!"
     }
   },
   "goldenPostForm": {
@@ -695,7 +697,10 @@
   "common": {
     "close": "Close",
     "rating": "Rating",
-    "dataDelayed": "Data delayed up to 15 minutes"
+    "dataDelayed": "Data delayed up to 15 minutes",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copiedLink": "Link copied!"
   },
   "prediction": {
     "makePrediction": "Make a Prediction",

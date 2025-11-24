@@ -499,7 +499,9 @@
             "complete": "✅ Stripe-Konto verbunden & bereit für Auszahlungen",
             "tooltip": "Bitte schließen Sie das Stripe-Onboarding ab, bevor Sie die Einstellungen aktualisieren.",
             "connectButton": "Mit Stripe verbinden",
-            "processingButton": "Verarbeite..."
+            "processingButton": "Verarbeite...",
+            "websiteTip": "Tipp: Stripe benötigt eine Geschäftswebsite. Sie können unten Ihre öffentliche Profil-URL verwenden.",
+            "copiedUrl": "Profil-URL kopiert!"
         }
     },
     "goldenPostForm": {
@@ -695,7 +697,10 @@
     "common": {
         "close": "Schließen",
         "score": "Punktzahl",
-        "dataDelayed": "Daten bis zu 15 Minuten verzögert"
+        "dataDelayed": "Daten bis zu 15 Minuten verzögert",
+        "copy": "Kopieren",
+        "copied": "Kopiert",
+        "copiedLink": "Link kopiert!"
     },
     "prediction": {
         "makePrediction": "Prognose erstellen",

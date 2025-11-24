@@ -498,7 +498,9 @@
       "complete": "✅ تم ربط حساب Stripe وجاهز للمدفوعات",
       "tooltip": "يرجى إكمال إعداد Stripe قبل تحديث الإعدادات.",
       "connectButton": "الاتصال بـ Stripe",
-      "processingButton": "جاري المعالجة..."
+      "processingButton": "جاري المعالجة...",
+      "websiteTip": "نصيحة: يتطلب Stripe موقعًا إلكترونيًا تجاريًا. يمكنك استخدام رابط ملفك الشخصي العام أدناه.",
+      "copiedUrl": "تم نسخ رابط الملف الشخصي!"
     }
   },
   "goldenPostForm": {
@@ -695,7 +697,10 @@
   "common": {
     "close": "إغلاق",
     "rating": "تقييم",
-    "dataDelayed": "البيانات متأخرة لمدة تصل إلى 15 دقيقة"
+    "dataDelayed": "البيانات متأخرة لمدة تصل إلى 15 دقيقة",
+    "copy": "نسخ",
+    "copied": "نُسخ",
+    "copiedLink": "تم نسخ الرابط!"
   },
   "prediction": {
     "makePrediction": "قم بتوقع",

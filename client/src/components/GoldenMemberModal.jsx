@@ -31,6 +31,17 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
         setIsSaving(false); // Ensure saving state is reset
     }, [isOpen, user, t]); // Rerun effect when modal opens or user data changes
 
+    // --- NEW: Dynamic profile URL and Copy function ---
+    const profileUrl = `${window.location.origin}/profile/${user._id}`;
+    const [isCopied, setIsCopied] = useState(false);
+
+    const copyProfileUrl = () => {
+        navigator.clipboard.writeText(profileUrl);
+        setIsCopied(true);
+        toast.success(t('goldenMemberModal.onboarding.copiedUrl', 'Profile URL copied!'));
+        setTimeout(() => setIsCopied(false), 2000);
+    };
+
     if (!isOpen || !user) return null; // Don't render if not open or no user data
 
     // Handles Activate / Update settings
@@ -128,6 +139,24 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                             <>
                                 <p className="text-yellow-400 font-semibold mb-3">{t('goldenMemberModal.onboarding.actionRequired')}</p>
                                 <p className="text-sm mb-4">{t('goldenMemberModal.onboarding.connectPrompt')}</p>
+                                {/* --- START: COPYABLE URL TIP (The Fix) --- */}
+                                <p className="text-xs text-yellow-400 mb-3">{t('goldenMemberModal.onboarding.websiteTip')}</p>
+                                <div className="bg-gray-900 p-3 rounded-md flex items-center gap-2 mb-4">
+                                    <input
+                                        type="text"
+                                        value={profileUrl}
+                                        readOnly
+                                        className="bg-transparent text-gray-400 w-full outline-none text-sm"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={copyProfileUrl}
+                                        className={`text-sm font-bold py-1 px-3 rounded-md transition-colors ${isCopied ? 'bg-green-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
+                                    >
+                                        {isCopied ? t('common.copied', 'Copied') : t('common.copy', 'Copy')}
+                                    </button>
+                                </div>
+                                {/* --- END: COPYABLE URL TIP --- */}
                                 <button
                                     type="button"
                                     onClick={handleStartOnboarding}

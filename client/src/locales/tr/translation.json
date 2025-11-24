@@ -499,7 +499,9 @@
       "complete": "✅ Stripe Hesabı Bağlandı ve Ödemeler İçin Hazır",
       "tooltip": "Lütfen ayarları güncellemeden önce Stripe kaydını tamamlayın.",
       "connectButton": "Stripe ile Bağlan",
-      "processingButton": "İşleniyor..."
+      "processingButton": "İşleniyor...",
+      "websiteTip": "İpucu: Stripe bir işletme web sitesi gerektirir. Aşağıdaki herkese açık profil URL'nizi kullanabilirsiniz.",
+      "copiedUrl": "Profil URL'si kopyalandı!"
     }
   },
   "goldenPostForm": {
@@ -695,7 +697,10 @@
   "common": {
     "close": "Kapat",
     "score": "Puan",
-    "dataDelayed": "Veriler 15 dakikaya kadar gecikmeli olabilir"
+    "dataDelayed": "Veriler 15 dakikaya kadar gecikmeli olabilir",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "copiedLink": "Link kopyalandı!"
   },
   "prediction": {
     "makePrediction": "Tahmin Yap",

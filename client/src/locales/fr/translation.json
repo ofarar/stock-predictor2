@@ -499,7 +499,9 @@
             "complete": "✅ Compte Stripe connecté et prêt pour les virements",
             "tooltip": "Veuillez compléter l'intégration Stripe avant de mettre à jour les paramètres.",
             "connectButton": "Connecter avec Stripe",
-            "processingButton": "Traitement..."
+            "processingButton": "Traitement...",
+            "websiteTip": "Conseil : Stripe exige un site web d'entreprise. Vous pouvez utiliser votre URL de profil public ci-dessous.",
+            "copiedUrl": "URL du profil copiée !"
         }
     },
     "goldenPostForm": {
@@ -695,7 +697,10 @@
     "common": {
         "close": "Fermer",
         "score": "Note",
-        "dataDelayed": "Données retardées jusqu'à 15 minutes"
+        "dataDelayed": "Données retardées jusqu'à 15 minutes",
+        "copy": "Copier",
+        "copied": "Copié",
+        "copiedLink": "Lien copié !"
     },
     "prediction": {
         "makePrediction": "Faire une Prédiction",

@@ -499,7 +499,9 @@
             "complete": "✅ Cuenta de Stripe conectada y lista para recibir pagos",
             "tooltip": "Por favor, completa el registro en Stripe antes de actualizar la configuración.",
             "connectButton": "Conectar con Stripe",
-            "processingButton": "Procesando..."
+            "processingButton": "Procesando...",
+            "websiteTip": "Consejo: Stripe requiere un sitio web de negocios. Puede usar su URL de perfil público a continuación.",
+            "copiedUrl": "¡URL del perfil copiada!"
         }
     },
     "goldenPostForm": {
@@ -695,7 +697,10 @@
     "common": {
         "close": "Cerrar",
         "score": "Puntuación",
-        "dataDelayed": "Datos con hasta 15 minutos de retraso"
+        "dataDelayed": "Datos con hasta 15 minutos de retraso",
+        "copy": "Copiar",
+        "copied": "Copiado",
+        "copiedLink": "¡Enlace copiado!"
     },
     "prediction": {
         "makePrediction": "Hacer una Predicción",

@@ -21,7 +21,41 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5001;
 
 // Use Helmet to set various security headers
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            // CRITICAL FIX: Add the missing Stripe domain here
+            connectSrc: [
+                "'self'",
+                "https://connect-js.stripe.com",
+                "https://*.stripe.com", // <-- ADD THIS WILDCARD for full coverage
+                "https://*.stripe.global", // Stripe also uses this
+                "https://api.stripe.com",
+                "https://b.stripecdn.com",
+                "https://c.stripe.com",
+                "ws://localhost:5001", // For local dev Socket.io
+                "wss://stockpredictorai-api.fly.dev" // For Fly.io production Socket.io (Update this with your actual Fly.io domain if different)
+            ],
+            // Allow Stripe scripts
+            scriptSrc: [
+                "'self'",
+                "'unsafe-inline'", // Needed for React/Vite/Sentry
+                "https://js.stripe.com",
+                "https://connect.stripe.com"
+            ],
+            // Allow Stripe iframes (e.g., Connect onboarding popup)
+            frameSrc: [
+                "'self'",
+                "https://js.stripe.com",
+                "https://connect.stripe.com"
+            ],
+            // Allow avatars and images from external hosts
+            imgSrc: ["'self'", "data:", "https://*"],
+            // Default sources, usually fine with 'self'
+            defaultSrc: ["'self'"],
+        },
+    },
+}));
 
 // --- CORS Configuration ---
 // This tells your server to accept requests from your Vercel app.

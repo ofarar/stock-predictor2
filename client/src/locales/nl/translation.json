@@ -514,7 +514,9 @@
       "complete": "✅ Stripe-account Gekoppeld & Klaar voor Uitbetalingen",
       "tooltip": "Voltooi de Stripe-onboarding voordat je de instellingen bijwerkt.",
       "connectButton": "Koppelen met Stripe",
-      "processingButton": "Verwerken..."
+      "processingButton": "Verwerken...",
+      "websiteTip": "Tip: Stripe vereist een zakelijke website. U kunt hieronder uw openbare profiel-URL gebruiken.",
+      "copiedUrl": "Profiel-URL gekopieerd!"
     }
   },
   "goldenPostForm": {
@@ -711,7 +713,10 @@
   "common": {
     "close": "Sluiten",
     "rating": "Rating",
-    "dataDelayed": "Gegevens vertraagd tot 15 minuten"
+    "dataDelayed": "Gegevens vertraagd tot 15 minuten",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "copiedLink": "Link gekopieerd!"
   },
   "prediction": {
     "makePrediction": "Doe een Voorspelling",
