@@ -15,14 +15,7 @@ import ShareModal from '../components/ShareModal';
 import { Helmet } from 'react-helmet-async';
 import { isMarketOpen } from '../utils/timeHelpers';
 import PromoBanner from '../components/PromoBanner'; // <--- 1. NEW IMPORT
-
-// --- YOUR "GRAPH" SHARE ICON ---
-const ShareIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
-    </svg>
-);
-// --- END ICON ---
+import { FaShareAlt } from 'react-icons/fa';
 
 const calculateLiveScore = (predictedPrice, actualPrice, priceAtCreation) => {
     if (!actualPrice || actualPrice <= 0) return '...';
@@ -273,7 +266,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                 {t(`predictionStatus.${prediction.status}`)}
                             </div>
                             <button onClick={openShareModal} title={t('prediction.share_title')} className="text-gray-400 hover:text-white">
-                                <ShareIcon />
+                                <FaShareAlt className="w-5 h-5" />
                             </button>
                         </div>
                     </div>

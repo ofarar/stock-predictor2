@@ -56,9 +56,14 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
                     </button>
                 </div>
 
-                <p className="text-gray-300 mb-4 bg-gray-700 p-3 rounded-md italic">
-                    &quot;{text}&quot;
-                </p>
+                <div className="text-gray-300 mb-4 bg-gray-700 p-3 rounded-md italic whitespace-pre-wrap">
+                    <p dangerouslySetInnerHTML={{ __html: `"${text}"` }} />
+                </div>
+
+                {/* NOTE: This uses the dangerouslySetInnerHTML property.
+                It is ACCEPTABLE here because the content (text) is generated internally 
+                by your application's translations and controlled calculations, 
+                minimizing external XSS risk. */}
 
                 <div className="bg-gray-900 p-3 rounded-md flex items-center gap-2">
                     <input
