@@ -91,6 +91,7 @@ router.post('/create-checkout-session', async (req, res) => {
             cancel_url: `${YOUR_DOMAIN}/profile/${req.user.id}`, // Back to profile on cancel
             metadata: { userId: req.user.id }, // For identifying user in webhook
             subscription_data: { metadata: { userId: req.user.id } }, // Keep for redundancy
+            locale: 'auto',
         });
 
         console.log('Stripe Verification session created:', session.id);
