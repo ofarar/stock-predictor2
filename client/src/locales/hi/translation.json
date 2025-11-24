@@ -451,7 +451,7 @@
     "ownerActive": "मैं भविष्यवाणी कर रहा हूँ कि ${{ticker}} {{deadline}} तक {{targetPrice}} तक पहुँचेगा। मेरी भविष्यवाणी देखें और StockPredictorAI पर वोट करें!",
     "ownerAssessed": "मेरे ${{ticker}} के लिए मेरी भविष्यवाणी {{rating}} की रेटिंग के साथ समाप्त हुई! मैंने {{targetPrice}} का अनुमान लगाया था, और यह {{actualPrice}} पर बंद हुआ। परिणाम देखें!",
     "visitorActive": "दिलचस्प भविष्यवाणी: {{username}} सोचता है कि ${{ticker}} {{deadline}} तक {{targetPrice}} तक पहुँचेगा। आप क्या सोचते हैं?",
-    "visitorAssessed": "इस परिणाम को देखें: {{username}} की ${{ticker}} के लिए भविष्यवाणी ने {{rating}} रेटिंग अर्जित की! उन्होंने {{targetPrice}} का अनुमान लगाया था, और यह {{actualPrice}} पर बंद हुआ।",
+    "visitorAssessed": "इस परिणाम को देखें: {{username}} की ${{ticker}} के लिए भविष्यवाणी ने {{rating}} रेटिंग अर्जित की! उन्होंने {{targetPrice}} का अनुमान लगाया था, और यह {{actualPrice}} पर बंद हुआ।"
   },
   "editprofile_telegram_label": "टेलीग्राम लिंक",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -469,7 +469,7 @@
     "copyright": "सभी अधिकार सुरक्षित।"
   },
   "globalSearch": {
-    "placeholder": "स्टॉक खोजें...",
+    "placeholder": "स्टॉक खोजें..."
   },
   "goldenFeed": {
     "newTag": "नया",
@@ -478,7 +478,7 @@
     "exclusiveContentTitle": "विशेष सामग्री",
     "exclusiveContentDescription": "{{username}} के ग्राहकों में शामिल हों ताकि उनकी निजी फ़ीड देख सकें, जिसमें विस्तृत भविष्यवाणी तर्क और बाज़ार विश्लेषण शामिल है।",
     "joinButton": " ${{price}}/माह के लिए शामिल हों",
-    "noPosts": "{{username}} ने अभी तक कोई विशेष सामग्री पोस्ट नहीं की है।",
+    "noPosts": "{{username}} ने अभी तक कोई विशेष सामग्री पोस्ट नहीं की है।"
   },
   "goldenMemberModal": {
     "title": "गोल्डन सदस्य सेटिंग्स",
@@ -575,7 +575,7 @@
     "badgeEarnedSelf": "बधाई हो! आपने {{tier}} {{badgeName}} बैज अर्जित किया है।",
     "badgeEarnedFollower": "{{username}} ने {{tier}} {{badgeName}} बैज अर्जित किया है!",
     "predictionAssessed": "{{stockTicker}} पर आपकी {{predictionType}} भविष्यवाणी ने {{rating}} रेटिंग अर्जित की!",
-    "priceChange": "{{creatorName}} की सब्सक्रिप्शन कीमत {{effectiveDate}} को ${{oldPrice}} से ${{newPrice}} में बदल रही है।",
+    "priceChange": "{{creatorName}} की सब्सक्रिप्शन कीमत {{effectiveDate}} को ${{oldPrice}} से ${{newPrice}} में बदल रही है।"
   },
   "hourlyWinnersFeed": {
     "title": "पिछले घंटे के विजेता",
@@ -691,12 +691,12 @@
     "quarterly": "त्रैमासिक",
     "quarterlyDescription": "वर्तमान वित्तीय तिमाही (उदा. मार्च, जून, सितंबर, दिसंबर) के अंत के लिए स्टॉक मूल्य का अनुमान लगाएँ।",
     "yearly": "वार्षिक",
-    "yearlyDescription": "वर्तमान कैलेंडर वर्ष के अंत के लिए स्टॉक मूल्य का अनुमान लगाएँ। प्रमुख बाज़ार बदलावों के लिए एक दीर्घकालिक भविष्यवाणी।",
+    "yearlyDescription": "वर्तमान कैलेंडर वर्ष के अंत के लिए स्टॉक मूल्य का अनुमान लगाएँ। प्रमुख बाज़ार बदलावों के लिए एक दीर्घकालिक भविष्यवाणी।"
   },
   "common": {
     "close": "बंद करें",
     "rating": "रेटिंग",
-    "dataDelayed": "डेटा 15 मिनट तक विलंबित",
+    "dataDelayed": "डेटा 15 मिनट तक विलंबित"
   },
   "prediction": {
     "makePrediction": "भविष्यवाणी करें",
@@ -722,7 +722,7 @@
       "description": "हम इस समय इस संपत्ति के लिए लाइव मूल्य प्राप्त नहीं कर सके। यह उच्च बाज़ार अस्थिरता या संक्षिप्त एपीआई आउटेज के दौरान हो सकता है।",
       "button": "कोई अलग स्टॉक आज़माएँ"
     },
-    "duplicateError": "आपके पास पहले से ही {{ticker}} के लिए एक सक्रिय {{type}} भविष्यवाणी है।",
+    "duplicateError": "आपके पास पहले से ही {{ticker}} के लिए एक सक्रिय {{type}} भविष्यवाणी है।"
   },
   "scoreboard": {
     "title": "लीडरबोर्ड",
@@ -734,7 +734,7 @@
     "noUsers": "इन फ़िल्टरों के लिए कोई उपयोगकर्ता नहीं मिला।",
     "noUsersHint": "अपनी खोज मानदंड को व्यापक बनाने का प्रयास करें।",
     "rank": "रैंक: {{number}}",
-    "currentPrice": "वर्तमान मूल्य: ${{price}}",
+    "currentPrice": "वर्तमान मूल्य: ${{price}}"
   },
   "stockChart": {
     "loading": "चार्ट लोड हो रहा है...",
@@ -751,7 +751,7 @@
     "errorFetchFailed": "खोज परिणाम लाने में विफल।",
     "errorQuoteFailed": "स्टॉक कोट लाने में विफल।",
     "errorQuoteNotFound": "{{symbol}} के लिए कोट प्राप्त नहीं हो सका। कृपया कोई अन्य सिंबल आज़माएँ।",
-    "dataDelayed": "डेटा 15 मिनट तक विलंबित",
+    "dataDelayed": "डेटा 15 मिनट तक विलंबित"
   },
   "timePenaltyBar": {
     "label": "समय बोनस",
@@ -770,7 +770,7 @@
       "verifiedExpert": "प्रासंगिक वॉचलिस्ट पृष्ठों पर एक सत्यापित विशेषज्ञ के रूप में अनुशंसित हों।"
     },
     "button": " ${{price}} में सत्यापन करवाएं",
-    "successDescriptionGeneric": "आपका सत्यापित बैज अब सक्रिय है।",
+    "successDescriptionGeneric": "आपका सत्यापित बैज अब सक्रिय है।"
   },
   "verifiedStatusModal": {
     "title": "आप एक सत्यापित भविष्यवक्ता हैं!",
@@ -882,7 +882,7 @@
     "neutralTitle": "तटस्थ",
     "neutralText": "मध्यम रूप से महत्वाकांक्षी भविष्यवाणियाँ जो संभावित इनाम के साथ जोखिम को संतुलित करती हैं।",
     "offensiveTitle": "आक्रामक",
-    "offensiveText": "बड़े लक्ष्य मूल्यों के साथ साहसी, उच्च-जोखिम वाली भविष्यवाणियाँ (उदा. दैनिक के लिए >7%, वार्षिक के लिए >35%)।",
+    "offensiveText": "बड़े लक्ष्य मूल्यों के साथ साहसी, उच्च-जोखिम वाली भविष्यवाणियाँ (उदा. दैनिक के लिए >7%, वार्षिक के लिए >35%)।"
   },
   "badges": {
     "market_maven": {
