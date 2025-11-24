@@ -234,7 +234,11 @@ const StockPage = ({ onPredictClick, settings }) => {
                                             <p className="text-sm font-bold text-white">{t('target', { targetPrice: formatNumber(p.targetPrice, i18n.language, 2, 2) })}</p>
                                             <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 {typeof percentageChange === 'number'
-                                                    ? `(${percentageChange >= 0 ? '+' : ''}${formatNumber(percentageChange, i18n.language, 1, 1)}%)`
+                                                    ? `(${percentageChange >= 0 ? '+' : ''}${formatNumber(percentageChange, i18n.language, {
+                                                        // --- FIX: SET PRECISION TO 2 DIGITS ---
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2
+                                                    })}%)`
                                                     : '(...)'
                                                 }
                                             </p>
