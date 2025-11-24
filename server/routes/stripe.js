@@ -90,6 +90,19 @@ router.post('/create-checkout-session', async (req, res) => {
             success_url: `${YOUR_DOMAIN}/payment-success`, // Redirect to generic success page
             cancel_url: `${YOUR_DOMAIN}/profile/${req.user.id}`, // Back to profile on cancel
             metadata: { userId: req.user.id }, // For identifying user in webhook
+            // --- FIX: ADD LOCALIZATION & BILLING ADDRESS COLLECTION ---
+            // 1. Force collection of billing address (helps Stripe determine country)
+            billing_address_collection: 'required',
+
+            // 2. Allow user to update language/currency preference during checkout
+            customer_update: {
+                // Allows the user to select their country/language, which aids in display
+                address: 'auto',
+            },
+
+            // 3. Keep 'auto' locale, even if it wasn't working alone
+            locale: 'auto',
+            // -------------------------------------------------------------
             subscription_data: { metadata: { userId: req.user.id } }, // Keep for redundancy
             locale: 'auto',
         });
@@ -314,6 +327,19 @@ router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
             mode: 'subscription',
             success_url: `${YOUR_DOMAIN}/profile/${goldenMemberId}?subscribe=success`, // Redirect back to member's profile
             cancel_url: `${YOUR_DOMAIN}/profile/${goldenMemberId}`,
+            // --- FIX: ADD LOCALIZATION & BILLING ADDRESS COLLECTION ---
+            // 1. Force collection of billing address (helps Stripe determine country)
+            billing_address_collection: 'required',
+
+            // 2. Allow user to update language/currency preference during checkout
+            customer_update: {
+                // Allows the user to select their country/language, which aids in display
+                address: 'auto',
+            },
+
+            // 3. Keep 'auto' locale, even if it wasn't working alone
+            locale: 'auto',
+            // -------------------------------------------------------------
             subscription_data: {
                 application_fee_percent: 30, // Your 30% platform commission
                 transfer_data: {
