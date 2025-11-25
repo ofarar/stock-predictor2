@@ -294,7 +294,7 @@ router.post('/admin/health-check/:service', async (req, res) => {
 
         case 'config-env':
             return checkService(() => new Promise((resolve, reject) => {
-                const requiredVars = ['MONGO_URI', 'COOKIE_KEY', 'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GMAIL_USER', 'GMAIL_PASS'];
+                const requiredVars = ['MONGO_URI', 'COOKIE_KEY', 'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GMAIL_USER'];
                 const missingVars = requiredVars.filter(v => !process.env[v]);
                 if (missingVars.length > 0) {
                     reject(new Error(`Missing required environment variables: ${missingVars.join(', ')}`));
