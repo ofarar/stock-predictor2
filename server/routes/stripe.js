@@ -84,7 +84,7 @@ router.post('/create-checkout-session', async (req, res) => {
 
         const session = await stripe.checkout.sessions.create({
             customer: customerId,
-            payment_method_types: ['card', 'ideal'],
+            //payment_method_types: ['card', 'ideal'],
             line_items: [{ price: VERIFIED_PRICE_ID, quantity: 1 }],
             mode: 'subscription',
             success_url: `${YOUR_DOMAIN}/payment-success`, // Redirect to generic success page
@@ -319,7 +319,7 @@ router.post('/subscribe-to-member/:goldenMemberId', async (req, res) => {
 
         const session = await stripe.checkout.sessions.create({
             customer: payingUserCustomerId,
-            payment_method_types: ['card', 'ideal'],
+            //payment_method_types: ['card', 'ideal'],
             line_items: [{
                 price: targetGoldenMember.goldenMemberPriceId,
                 quantity: 1
