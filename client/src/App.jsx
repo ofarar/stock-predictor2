@@ -15,6 +15,9 @@ import LoginPromptModal from './components/LoginPromptModal';
 import Footer from './components/Footer';
 import FeatureRoute from './components/FeatureRoute';
 
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
 // --- CODE SPLITTING: Lazy Load Pages ---
 
 // Define a minimal loading component for Suspense fallback
@@ -50,6 +53,15 @@ const AIWizardPage = lazy(() => import('./pages/AIWizardPage'));
 const CompleteProfilePage = lazy(() => import('./pages/CompleteProfilePage'));
 const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
 
+// --- 1. LOAD STRIPE JS GLOBALLY (OUTSIDE THE COMPONENT) ---
+// This is best practice: it loads Stripe.js only once.
+const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
+// NOTE: Add a check to prevent crash if key is missing during build/deploy
+const stripePromise = STRIPE_PUBLISHABLE_KEY
+  ? loadStripe(STRIPE_PUBLISHABLE_KEY)
+  : Promise.resolve(null);
+// -------------------------------------------------------------
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -115,50 +127,53 @@ function App() {
       </Helmet>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
-      <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
-        <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} />
-        <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
-        <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
-        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
+      {/* --- 2. WRAP THE MAIN LAYOUT IN THE <ELEMENTS> PROVIDER --- */}
+      <Elements stripe={stripePromise}>
+        <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
+          <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} />
+          <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
+          <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
+          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
 
-          {/* --- WRAP ROUTES IN SUSPENSE --- */}
-          <Suspense fallback={<FallbackLoading />}>
-            <Routes>
-              {/* Note: Components are now rendered using the lazy-loaded versions */}
-              <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-              <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} />} />
-              <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
-              <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-              <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
-              <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} />} />
-              <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} />} />
-              <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
-              <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
-              <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-              <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-              <Route path={ROUTES.TERMS} element={<TermsPage />} />
-              <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
-              <Route path={ROUTES.ADMIN} element={<AdminPage />} />
-              <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
-              <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
-              <Route path={ROUTES.CONTACT} element={<ContactPage />} />
-              <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
-              <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
-              <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
-              <Route
-                path={ROUTES.AI_WIZARD}
-                element={
-                  <FeatureRoute settings={settings} featureFlag="isAIWizardEnabled">
-                    <AIWizardPage user={user} />
-                  </FeatureRoute>
-                }
-              />
-            </Routes>
-          </Suspense>
-          {/* --- END SUSPENSE WRAPPER --- */}
-        </main>
-        <Footer />
-      </div>
+            {/* --- WRAP ROUTES IN SUSPENSE --- */}
+            <Suspense fallback={<FallbackLoading />}>
+              <Routes>
+                {/* Note: Components are now rendered using the lazy-loaded versions */}
+                <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} />} />
+                <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
+                <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} />} />
+                <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} />} />
+                <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
+                <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
+                <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+                <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+                <Route path={ROUTES.TERMS} element={<TermsPage />} />
+                <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
+                <Route path={ROUTES.ADMIN} element={<AdminPage />} />
+                <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
+                <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
+                <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+                <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
+                <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
+                <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
+                <Route
+                  path={ROUTES.AI_WIZARD}
+                  element={
+                    <FeatureRoute settings={settings} featureFlag="isAIWizardEnabled">
+                      <AIWizardPage user={user} />
+                    </FeatureRoute>
+                  }
+                />
+              </Routes>
+            </Suspense>
+            {/* --- END SUSPENSE WRAPPER --- */}
+          </main>
+          <Footer />
+        </div>
+      </Elements>
       {/* --- Cookie Consent --- */}
       <CookieConsent
         location="bottom"
