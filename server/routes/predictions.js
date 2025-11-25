@@ -347,7 +347,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
             isGoldenMember: p.userId.isGoldenMember,
             isVerified: p.userId.isVerified,
             ticker: p.stockTicker,
-            rating: p.rating || p.score
+            rating: p.rating || p.score || 0.0
         }));
 
         res.json(formattedWinners);
