@@ -125,6 +125,24 @@ const ProfilePage = ({ settings, requestLogin }) => {
         }
     }, [searchParams]);
 
+    useEffect(() => {
+        // Check if the URL contains the specific anchor hash
+        if (window.location.hash === "#active") {
+            const element = document.getElementById("active");
+
+            // Ensure the element exists before attempting to scroll
+            if (element) {
+                // Wait briefly for all content (like the header) to render
+                setTimeout(() => {
+                    element.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }, 100); // Small delay for rendering safety
+            }
+        }
+    }, [userId, window.location.hash]); // Rerun when the profile ID or hash changes
+
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
@@ -346,6 +364,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                                 onEditClick={handleEditClick}
                                 emptyTextKey="no_active_predictions_label"
                                 profileUsername={user.username}
+                                id="active"
                             />
                             <PredictionList
                                 titleKey="prediction_history_title"

@@ -7,7 +7,7 @@ import ShareModal from './ShareModal';
 import { FaShareAlt } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
-const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditClick, emptyTextKey, profileUsername }) => {
+const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditClick, emptyTextKey, profileUsername, id }) => {
     const { t } = useTranslation();
     const [visibleCount, setVisibleCount] = useState(6);
     // NEW STATE: For the Share Modal
@@ -73,10 +73,17 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
             predictionList: stockListString,
             hashtags: hashtagString // Already contains #BABA #ADBE #HIMS
         });
+        // Define the unique anchor ID
+        const ACTIVE_PREDICTIONS_ANCHOR = "#active";
+        const baseUrl = window.location.origin + window.location.pathname;
+
+        // Construct the URL by combining the current page URL with the anchor ID
+        const shareUrl = baseUrl + ACTIVE_PREDICTIONS_ANCHOR;
+
         // 3. Open the Modal
         setShareData({
             text: shareText,
-            url: window.location.href,
+            url: shareUrl,
             shareContext: { context: 'activePredictions', type: timeframeType }
         });
         setIsShareModalOpen(true);
@@ -92,7 +99,7 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                 url={shareData.url}
                 shareContext={shareData.shareContext}
             />
-            <div className="bg-gray-800 p-6 rounded-lg">
+            <div id={id} className="bg-gray-800 p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold text-white">{t(titleKey)}</h3>
 
