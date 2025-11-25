@@ -13,6 +13,7 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
     // NEW STATE: For the Share Modal
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareData, setShareData] = useState({ text: '', url: '' });
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // NEW FUNCTION: Aggregates data and opens the modal
     const handleShareClick = (timeframeType) => {
@@ -103,24 +104,39 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold text-white">{t(titleKey)}</h3>
 
-                    {/* NEW SHARE DROPDOWN */}
+                    {/* NEW SHARE DROPDOWN (Click-Activated) */}
                     {predictions.length > 0 && quotes && (
-                        <div className="relative group">
-                            <button className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700">
+                        // --- FIX 2: Replace 'group' with manual 'isMenuOpen' control ---
+                        <div className="relative">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsMenuOpen(prev => !prev);
+                                }}
+                                className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700"
+                            >
                                 <FaShareAlt className="w-5 h-5" />
                             </button>
-                            <div className="absolute end-0 top-full mt-2 hidden group-hover:block bg-gray-800 rounded-md shadow-xl z-10 w-48">
-                                <p className="text-xs text-gray-500 p-2 border-b border-gray-700">{t('share.shareByTimeframe')}</p>
-                                {['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'].map(type => (
-                                    <button
-                                        key={type}
-                                        onClick={() => handleShareClick(type)}
-                                        className="block w-full text-start px-4 py-2 text-sm text-gray-300 hover:bg-green-600 hover:text-white"
-                                    >
-                                        {t(`predictionTypes.${type.toLowerCase()}`)} ({predictions.filter(p => p.predictionType === type).length})
-                                    </button>
-                                ))}
-                            </div>
+
+                            {/* --- FIX 3: Conditional Rendering controlled by state --- */}
+                            {isMenuOpen && (
+                                <div className="absolute end-0 top-full mt-2 bg-gray-800 rounded-md shadow-xl z-10 w-48">
+                                    <p className="text-xs text-gray-500 p-2 border-b border-gray-700">{t('share.shareByTimeframe')}</p>
+                                    {['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'].map(type => (
+                                        <button
+                                            key={type}
+                                            onClick={() => {
+                                                handleShareClick(type);
+                                                setIsMenuOpen(false); // Close menu after action
+                                            }}
+                                            className="block w-full text-start px-4 py-2 text-sm text-gray-300 hover:bg-green-600 hover:text-white"
+                                        >
+                                            {t(`predictionTypes.${type.toLowerCase()}`)} ({predictions.filter(p => p.predictionType === type).length})
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                            {/* --- END FIX 3 --- */}
                         </div>
                     )}
                 </div>
