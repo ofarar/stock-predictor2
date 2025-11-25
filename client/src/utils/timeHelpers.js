@@ -201,7 +201,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             break;
     }
 
-    message = message || t('predictionWidgetMessages.maxRating', { score: maxScore });
+    message = message || t('predictionWidgetMessages.maxRating', { rating: maxScore });
 
     // Final check for Hourly
     if (predictionType === 'Hourly' && !marketOpen && !preMarket) {
