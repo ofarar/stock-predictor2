@@ -10,7 +10,7 @@ const User = require('../models/User');
 
 async function resetStripeStatus() {
     console.log('--- Starting Stripe Status Reset for All Users ---');
-    
+
     if (!process.env.MONGO_URI) {
         console.error("CRITICAL ERROR: MONGO_URI is undefined. Cannot connect to database.");
         return;
@@ -25,14 +25,14 @@ async function resetStripeStatus() {
             isVerified: false,
             stripeSubscriptionStatus: null,
             stripeSubscriptionEndDate: null,
-            
+
             // Reset Golden Member Status Fields
             isGoldenMember: false,
             acceptingNewSubscribers: true,
             stripeConnectOnboardingComplete: false,
             stripeConnectRestrictions: false,
             stripeConnectPendingFields: [],
-            
+
             // Clear all social/subscription arrays (subscribers/subscriptions)
             goldenSubscribers: [],
             goldenSubscriptions: [],
@@ -41,27 +41,27 @@ async function resetStripeStatus() {
             followers: [],
             following: [],
         };
-        
+
         // Use $unset to remove old Stripe IDs completely, forcing a fresh sign-up flow
         const unsetOperation = {
-            stripeCustomerId: "",
-            stripeSubscriptionId: "",
-            stripeConnectAccountId: "",
-            goldenMemberPriceId: "",
+            stripeCustomerId: 1, // 1 signals to MongoDB to remove the field
+            stripeSubscriptionId: 1,
+            stripeConnectAccountId: 1,
+            goldenMemberPriceId: 1,
         };
 
         const result = await User.updateMany(
             {}, // Target all users
-            { 
+            {
                 $set: updateSetOperation,
                 $unset: unsetOperation
             }
         );
-        
+
         console.log(`\n✅ Reset Complete.`);
         console.log(`Updated ${result.modifiedCount} user documents.`);
         console.log('All verification, golden member statuses, and subscription data have been cleared.');
-        
+
     } catch (error) {
         console.error("Migration failed due to Mongoose or DB error:", error);
     } finally {
