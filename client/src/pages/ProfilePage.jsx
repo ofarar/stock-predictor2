@@ -11,6 +11,7 @@ import ProfileHeader from '../components/ProfileHeader';
 import ProfileStats from '../components/ProfileStats';
 import PredictionList from '../components/PredictionList';
 import AggressivenessInfoModal from '../components/AggressivenessInfoModal';
+import PromoBanner from '../components/PromoBanner';
 
 // Other required component imports
 import GoldenFeed from '../components/GoldenFeed';
@@ -319,6 +320,13 @@ const ProfilePage = ({ settings, requestLogin }) => {
             />
 
             <div className="animate-fade-in max-w-6xl mx-auto">
+                {/* --- NEW: Promo Banner displayed for guests if enabled in settings --- */}
+                {!currentUser && settings?.isPromoBannerActive && (
+                    <div className="mb-6">
+                        <PromoBanner />
+                    </div>
+                )}
+
                 <ProfileHeader
                     profileData={profileData}
                     currentUser={currentUser}
