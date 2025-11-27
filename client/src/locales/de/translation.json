@@ -452,7 +452,7 @@
         "ownerAssessed": "Meine Prognose für ${{ticker}} endete mit einer Punktzahl von {{rating}}! Ich hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}. Sieh dir das Ergebnis an!",
         "visitorActive": "Interessante Prognose: {{username}} glaubt, dass ${{ticker}} bis zum {{deadline}} {{targetPrice}} erreichen wird. Was denkst du?",
         "visitorAssessed": "Schau dir dieses Ergebnis an: Die Prognose von {{username}} für ${{ticker}} erzielte {{rating}} Punkte! Er/Sie hatte {{targetPrice}} prognostiziert, und der Schlusskurs war {{actualPrice}}.",
-        "activePredictionsAggregated": "Zusammenfassung von {{subject}} {{count}} {{type}}-Prognosen:\n\n{{predictionList}}...\n\nGenauigkeit: %{{accuracy}}! Jetzt mein Portfolio ansehen! {{hashtags}} #AktienPrognose",
+        "activePredictionsAggregated": "Zusammenfassung von {{subject}} {{count}} {{type}}-Prognosen:\n\n{{predictionList}}...\n\nGenauigkeit: %{{accuracy}}! Jetzt {{subject}} Portfolio ansehen! {{hashtags}} #AktienPrognose",
         "shareActivePredictions": "Aktive Vorhersagen teilen",
         "shareByTimeframe": "Nach Zeitrahmen teilen",
         "noPredictionsForTimeframe": "Keine aktiven Vorhersagen für diesen Zeitraum.",

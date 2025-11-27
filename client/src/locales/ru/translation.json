@@ -452,7 +452,7 @@
         "ownerAssessed": "Мой прогноз по ${{ticker}} завершился с результатом {{rating}}! Я прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}. Посмотрите результат!",
         "visitorActive": "Интересный прогноз: {{username}} считает, что ${{ticker}} достигнет {{targetPrice}} к {{deadline}}. А вы что думаете?",
         "visitorAssessed": "Оцените результат: прогноз пользователя {{username}} по ${{ticker}} получил {{rating}} очков! Он/она прогнозировал(а) {{targetPrice}}, а цена закрытия составила {{actualPrice}}.",
-        "activePredictionsAggregated": "Сводка {{subject}} {{count}} {{type}}-прогнозов:\n\n{{predictionList}}...\n\nТочность: %{{accuracy}}! Проверьте мой портфель! {{hashtags}} #ПрогнозАкций",
+        "activePredictionsAggregated": "Сводка {{subject}} {{count}} {{type}}-прогнозов:\n\n{{predictionList}}...\n\nТочность: %{{accuracy}}! Проверьте {{subject}} портфель! {{hashtags}} #ПрогнозАкций",
         "shareActivePredictions": "Поделиться активными прогнозами",
         "shareByTimeframe": "Поделиться по таймфрейму",
         "noPredictionsForTimeframe": "Нет активных прогнозов для этого таймфрейма.",

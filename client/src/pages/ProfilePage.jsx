@@ -126,22 +126,35 @@ const ProfilePage = ({ settings, requestLogin }) => {
     }, [searchParams]);
 
     useEffect(() => {
-        // Check if the URL contains the specific anchor hash
-        if (window.location.hash === "#active") {
+        // FIX: Check for profileData to ensure the data fetch has completed
+        // and the core profile owner's data is available.
+        if (profileData && window.location.hash === "#active") {
+
             const element = document.getElementById("active");
 
-            // Ensure the element exists before attempting to scroll
             if (element) {
-                // Wait briefly for all content (like the header) to render
+                const HEADER_HEIGHT = 64;
+
+                // Use a short delay to ensure the element is painted before scrolling
                 setTimeout(() => {
-                    element.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
+
+                    // Use standard window.scrollTo with offset for mobile header clearance
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    const targetPosition = elementPosition - HEADER_HEIGHT;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: "smooth"
                     });
-                }, 100); // Small delay for rendering safety
+
+                    // Clear the hash after scrolling
+                    window.history.replaceState(null, null, window.location.pathname + window.location.search);
+
+                }, 200);
             }
         }
-    }, [userId, window.location.hash]); // Rerun when the profile ID or hash changes
+        // FIX: Depend on profileData change (signaling data fetch success) and hash change
+    }, [profileData, window.location.hash]);
 
     const fetchData = useCallback(async () => {
         setLoading(true);

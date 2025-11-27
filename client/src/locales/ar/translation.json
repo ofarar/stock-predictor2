@@ -451,7 +451,7 @@
     "ownerAssessed": "انتهى توقعي لـ ${{ticker}} بتقييم {{rating}}! توقعت {{targetPrice}}، وأغلق عند {{actualPrice}}. شاهد النتيجة!",
     "visitorActive": "توقع مثير للاهتمام: {{username}} يعتقد أن ${{ticker}} سيصل إلى {{targetPrice}} بحلول {{deadline}}. ما رأيك؟",
     "visitorAssessed": "شاهد هذه النتيجة: توقع {{username}} لـ ${{ticker}} حصل على تقييم {{rating}}! توقعوا {{targetPrice}}، وأغلق عند {{actualPrice}}.",
-    "activePredictionsAggregated": "ملخص {{subject}} لـ {{count}} توقعات ({{type}}):\n\n{{predictionList}}...\n\nالدقة: %{{accuracy}}! شاهد محفظتي الآن! {{hashtags}} #توقعات_الأسهم",
+    "activePredictionsAggregated": "ملخص {{subject}} لـ {{count}} توقعات ({{type}}):\n\n{{predictionList}}...\n\nالدقة: %{{accuracy}}! شاهد {{subject}} محفظتي الآن! {{hashtags}} #توقعات_الأسهم",
     "shareActivePredictions": "مشاركة التوقعات النشطة",
     "shareByTimeframe": "مشاركة حسب الإطار الزمني",
     "noPredictionsForTimeframe": "لا توجد توقعات نشطة لهذا الإطار الزمني.",

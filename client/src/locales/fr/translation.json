@@ -452,7 +452,7 @@
         "ownerAssessed": "Ma prédiction pour ${{ticker}} s'est terminée avec un score de {{rating}} ! J'avais prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}. Voir le résultat !",
         "visitorActive": "Prédiction intéressante : {{username}} pense que ${{ticker}} atteindra {{targetPrice}} d'ici le {{deadline}}. Qu'en pensez-vous ?",
         "visitorAssessed": "Regardez ce résultat : la prédiction de {{username}} pour ${{ticker}} a obtenu un score de {{rating}} ! Il/elle avait prédit {{targetPrice}}, et le cours de clôture était de {{actualPrice}}.",
-        "activePredictionsAggregated": "Synthèse de {{subject}} {{count}} prédictions {{type}}:\n\n{{predictionList}}...\n\nPrécision : %{{accuracy}}! Consultez mon portefeuille! {{hashtags}} #PrédictionBourse",
+        "activePredictionsAggregated": "Synthèse de {{subject}} {{count}} prédictions {{type}}:\n\n{{predictionList}}...\n\nPrécision : %{{accuracy}}! Consultez {{subject}} portefeuille! {{hashtags}} #PrédictionBourse",
         "shareActivePredictions": "Partager les Prédictions Actives",
         "shareByTimeframe": "Partager par Horizon Temporel",
         "noPredictionsForTimeframe": "Aucune prédiction active pour cet horizon.",
