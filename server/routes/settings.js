@@ -65,6 +65,9 @@ router.put('/settings/admin', async (req, res) => {
         if (req.body.isFinanceApiEnabled !== undefined) {
             updateData.isFinanceApiEnabled = req.body.isFinanceApiEnabled;
         }
+        if (req.body.isEarningsBannerActive !== undefined) {
+            updateData.isEarningsBannerActive = req.body.isEarningsBannerActive;
+        }
 
         const updatedSettings = await Setting.findOneAndUpdate({},
             { $set: updateData },

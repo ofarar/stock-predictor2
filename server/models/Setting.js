@@ -25,13 +25,14 @@ const defaultBadgeSettings = {
 };
 
 const SettingSchema = new Schema({
-    isPromoBannerActive: { type: Boolean, default: true }, // <--- THIS IS THE KEY FIELD
-    badgeSettings: { type: Object, default: defaultBadgeSettings },
-    isVerificationEnabled: { type: Boolean, default: false },
-    verificationPrice: { type: Number, default: 4.99 },
-    isAIWizardEnabled: { type: Boolean, default: false },
-    maxPredictionsPerDay: { type: Number, default: 20 },
-    isFinanceApiEnabled: { type: Boolean, default: true }
+  isPromoBannerActive: { type: Boolean, default: true },
+  isEarningsBannerActive: { type: Boolean, default: true }, // <--- NEW: Controls Earnings Banner visibility
+  badgeSettings: { type: Object, default: defaultBadgeSettings },
+  isVerificationEnabled: { type: Boolean, default: false },
+  verificationPrice: { type: Number, default: 4.99 },
+  isAIWizardEnabled: { type: Boolean, default: false },
+  maxPredictionsPerDay: { type: Number, default: 20 },
+  isFinanceApiEnabled: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model('Setting', SettingSchema);

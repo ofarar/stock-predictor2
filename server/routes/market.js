@@ -60,6 +60,23 @@ const getSentimentForTicker = async (ticker) => {
     }
 };
 
+// GET: Weekly earnings calendar for all tracked stocks
+router.get('/market/earnings-calendar', async (req, res) => {
+    try {
+        // 1. Get the calendar data from the cache-optimized adapter
+        const calendar = await financeAPI.getEarningsCalendar();
+
+        // 2. Optionally filter down the calendar list to only include stocks the user tracks
+        // (You may skip this filtering on the backend if you prefer to send the full list to the frontend)
+
+        res.json(calendar);
+
+    } catch (error) {
+        console.error("Earnings Calendar API error:", error.message);
+        res.status(500).json({ message: "Failed to fetch earnings calendar" });
+    }
+});
+
 // GET: Search stock symbols
 router.get('/search/:keyword', async (req, res) => {
     const keyword = req.params.keyword.toLowerCase();

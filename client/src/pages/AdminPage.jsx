@@ -17,7 +17,8 @@ const AdminPage = () => {
         maxPredictionsPerDay: 10,
         badgeSettings: {},
         isFinanceApiEnabled: true,
-        isPromoBannerActive: true // <--- 1. Add default state
+        isPromoBannerActive: true,
+        isEarningsBannerActive: true // <--- 1. Add default state
     });
     const [loading, setLoading] = useState(true);
     const [badgeSettingsJson, setBadgeSettingsJson] = useState('');
@@ -62,7 +63,8 @@ const AdminPage = () => {
             maxPredictionsPerDay: parseInt(settings.maxPredictionsPerDay) || 20,
             badgeSettings: badgeSettings,
             isFinanceApiEnabled: settings.isFinanceApiEnabled,
-            isPromoBannerActive: settings.isPromoBannerActive // <--- 2. Include in save payload
+            isPromoBannerActive: settings.isPromoBannerActive,
+            isEarningsBannerActive: settings.isEarningsBannerActive // <--- 2. Include in save payload
         };
 
         const promise = axios.put(`${import.meta.env.VITE_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
@@ -101,6 +103,21 @@ const AdminPage = () => {
                         id="isPromoBannerActive"
                         checked={settings.isPromoBannerActive ?? true}
                         onChange={(e) => handleSettingsChange('isPromoBannerActive', e.target.checked)}
+                        className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500"
+                    />
+                </div>
+
+                {/* --- 4. NEW EARNINGS BANNER TOGGLE --- */}
+                <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
+                    <label htmlFor="isEarningsBannerActive" className="font-medium text-gray-300">
+                        Enable Earnings Banner
+                        <p className="text-xs text-gray-400">Show the scrolling earnings banner at the top of the app.</p>
+                    </label>
+                    <input
+                        type="checkbox"
+                        id="isEarningsBannerActive"
+                        checked={settings.isEarningsBannerActive ?? true}
+                        onChange={(e) => handleSettingsChange('isEarningsBannerActive', e.target.checked)}
                         className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500"
                     />
                 </div>

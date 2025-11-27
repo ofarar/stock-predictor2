@@ -303,6 +303,25 @@ router.post('/admin/health-check/:service', async (req, res) => {
                 }
             }));
 
+        case 'nasdaq-api':
+            return checkService(async () => {
+                const today = new Date().toISOString().split('T')[0];
+                const url = `https://api.nasdaq.com/api/calendar/earnings?date=${today}`;
+                const response = await axios.get(url, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                        'Accept': 'application/json, text/plain, */*',
+                        'Referer': 'https://www.nasdaq.com/'
+                    },
+                    timeout: 5000
+                });
+
+                if (response.data && response.data.status && response.data.status.rCode === 200) {
+                    return 'OK (NASDAQ API is reachable)';
+                }
+                throw new Error('NASDAQ API returned invalid status.');
+            });
+
         default:
             return res.status(404).json({ message: 'Unknown service check.' });
     }

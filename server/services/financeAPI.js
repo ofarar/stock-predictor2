@@ -1,7 +1,9 @@
 const yahooProvider = require('./financeProviders/yahooProvider');
 const currentProvider = yahooProvider;
-const Setting = require('../models/Setting'); // <-- 1. IMPORT SETTING MODEL
+const Setting = require('../models/Setting');
 const cryptoProvider = require('./financeProviders/cryptoProvider');
+const axios = require('axios');
+const { MARKET_CAP_THRESHOLD } = require('../constants');
 
 // --- NEW HELPER: Dynamically selects the correct provider ---
 const getProvider = (ticker) => {
@@ -22,6 +24,93 @@ const HISTORICAL_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 let financeApiEnabled = true;
 let settingLastChecked = 0;
 const SETTING_CACHE_TTL_MS = 60 * 1000; // 1 Minute
+
+// --- Configuration ---
+const BATCH_EARNINGS_CALENDAR_CACHE_KEY = 'batch:earnings:nasdaq';
+const EARNINGS_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // Cache for 24 hours
+
+/**
+ * Fetches earnings data from NASDAQ API for the next 7 days.
+ * Filters by Market Cap to show only "popular" stocks (> $100B).
+ * @returns {Promise<Array>} List of upcoming earnings events.
+ */
+const fetchNasdaqEarningsCalendar = async () => {
+    // Only call this function if the main finance API is enabled
+    if (!(await isFinanceApiEnabled())) {
+        return [];
+    }
+
+    // 1. Check batch cache
+    if (quoteCache.has(BATCH_EARNINGS_CALENDAR_CACHE_KEY)) {
+        const cacheEntry = quoteCache.get(BATCH_EARNINGS_CALENDAR_CACHE_KEY);
+        if (Date.now() - cacheEntry.timestamp < EARNINGS_CACHE_TTL_MS) {
+            console.log("Serving earnings calendar from NASDAQ cache.");
+            return cacheEntry.data;
+        }
+    }
+
+    console.log("Fetching earnings calendar from NASDAQ...");
+    const allEarnings = [];
+    const today = new Date();
+    // MARKET_CAP_THRESHOLD is imported from constants.js
+
+    // Loop for the next 7 days
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        try {
+            const url = `https://api.nasdaq.com/api/calendar/earnings?date=${dateString}`;
+            // NASDAQ API requires User-Agent header to look like a browser
+            const response = await axios.get(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Referer': 'https://www.nasdaq.com/'
+                },
+                timeout: 5000
+            });
+
+            if (response.data && response.data.data && response.data.data.rows) {
+                const rows = response.data.data.rows;
+
+                // Filter and Map
+                const dailyEarnings = rows.filter(row => {
+                    // Parse Market Cap: "$134,659,180,037" -> 134659180037
+                    if (!row.marketCap || row.marketCap === 'N/A') return false;
+                    const marketCapStr = row.marketCap.replace(/[$,]/g, '');
+                    const marketCap = parseFloat(marketCapStr);
+                    return marketCap >= MARKET_CAP_THRESHOLD;
+                }).map(row => ({
+                    ticker: row.symbol,
+                    earningsDate: dateString,
+                    time: row.time === 'time-not-supplied' ? 'N/A' : row.time, // NASDAQ often returns 'time-not-supplied'
+                    name: row.name,
+                    epsForecast: row.epsForecast
+                }));
+
+                allEarnings.push(...dailyEarnings);
+            }
+
+            // Be nice to the API
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+        } catch (error) {
+            console.error(`Failed to fetch NASDAQ earnings for ${dateString}:`, error.message);
+            // Continue to next day even if one fails
+        }
+    }
+
+    console.log(`Fetched ${allEarnings.length} earnings events from NASDAQ.`);
+
+    // Cache the results
+    if (allEarnings.length > 0) {
+        quoteCache.set(BATCH_EARNINGS_CALENDAR_CACHE_KEY, { data: allEarnings, timestamp: Date.now() });
+    }
+
+    return allEarnings;
+};
 
 /**
  * Checks if the finance API is enabled in settings.
@@ -179,10 +268,16 @@ const search = async (keyword) => {
     return currentProvider.search(keyword);
 };
 
+const getEarningsCalendar = async () => {
+    // This is now simplified to call the cached batch fetcher
+    return fetchNasdaqEarningsCalendar();
+};
+
 module.exports = {
     getQuote,
     getHistorical,
     search,
-    getApiCallStats
+    getApiCallStats,
+    getEarningsCalendar,
     // You can also export the typedefs if needed elsewhere, though usually not necessary
 };

@@ -21,6 +21,7 @@ const initialChecks = [
     { id: 'api-calls', name: 'Finance API Calls (Since Restart)', status: 'pending', result: null, selected: true },
     { id: 'finance-current', name: 'Finance API (Current Price)', status: 'pending', result: null, selected: true },
     { id: 'finance-historical', name: 'Finance API (Historical Data)', status: 'pending', result: null, selected: true },
+    { id: 'nasdaq-api', name: 'NASDAQ Earnings API', status: 'pending', result: null, selected: true },
     { id: 'avatar', name: 'Avatar API (DiceBear)', status: 'pending', result: null, selected: true },
 ];
 
@@ -36,6 +37,10 @@ const StatusIcon = ({ status }) => {
         default:
             return <div className="w-5 h-5 rounded-full bg-gray-600"></div>;
     }
+};
+
+StatusIcon.propTypes = {
+    status: PropTypes.string.isRequired,
 };
 
 const AdminHealthCheck = () => {
@@ -175,9 +180,4 @@ const AdminHealthCheck = () => {
     );
 };
 
-// --- ADD THIS BLOCK ---
-StatusIcon.propTypes = {
-    status: PropTypes.string.isRequired,
-};
-// --- END ---
 export default AdminHealthCheck;

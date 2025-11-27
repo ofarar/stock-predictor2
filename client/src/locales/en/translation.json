@@ -1148,5 +1148,11 @@
     },
     "footer": "It is 100% free to sign up. No credit card required."
   },
-  "profile_views_label": "Views"
+  "profile_views_label": "Views",
+  "earningsBanner": {
+    "headline": "BREAKING EARNINGS:",
+    "message": "Upcoming earning day for {{ticker}} is this {{day}}.",
+    "makePrediction": "Make a prediction",
+    "viewStock": "View {{ticker}} Stock Page"
+  }
 }

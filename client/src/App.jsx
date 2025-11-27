@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react'; // <-- ADDED lazy, Suspense
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CookieConsent from "react-cookie-consent";
 import axios from 'axios';
-import { Toaster, toast } from 'react-hot-toast'; // <-- FIX: Import 'toast'
+import { Toaster, toast } from 'react-hot-toast';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { API_URL, API_ENDPOINTS, STORAGE_KEYS, COOKIE_NAMES, URL_PARAMS, ROUTES, NUMERIC_CONSTANTS } from './constants';
 
-// Import Components (These remain static for immediate load)
+// Import Components
 import ScrollToTop from './components/ScrollToTop';
 import Header from './components/Header';
 import PredictionModal from './components/PredictionModal';
 import LoginPromptModal from './components/LoginPromptModal';
 import Footer from './components/Footer';
 import FeatureRoute from './components/FeatureRoute';
+import EarningsBanner from './components/EarningsBanner';
 
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -54,7 +55,6 @@ const CompleteProfilePage = lazy(() => import('./pages/CompleteProfilePage'));
 const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
 
 // --- 1. LOAD STRIPE JS GLOBALLY (OUTSIDE THE COMPONENT) ---
-// This is best practice: it loads Stripe.js only once.
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 // NOTE: Add a check to prevent crash if key is missing during build/deploy
@@ -62,6 +62,17 @@ const stripePromise = STRIPE_PUBLISHABLE_KEY
   ? loadStripe(STRIPE_PUBLISHABLE_KEY)
   : Promise.resolve(null);
 // -------------------------------------------------------------
+
+// --- TEST DATA FOR EARNINGS BANNER ---
+const TEST_EARNINGS_DATA = [
+  // Today is Thursday, Nov 27, 2025. Set dates relative to today.
+  { ticker: 'NVDA', earningsDate: '2025-11-28', time: 'AMC' }, // Tomorrow
+  { ticker: 'TSLA', earningsDate: '2025-12-02', time: 'BMO' }, // Next Monday
+  { ticker: 'MSFT', earningsDate: '2025-12-05', time: 'AMC' }, // Next Week Friday
+  { ticker: 'SBUX', earningsDate: '2025-12-09', time: 'BMO' }, // Two Weeks Out
+];
+// -------------------------------------
+
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -74,27 +85,97 @@ function App() {
   const [settings, setSettings] = useState(null);
   const [cookieConsent, setCookieConsent] = useState(false);
 
+  // --- NEW STATE: Global Earnings Calendar ---
+  const [earningsCalendar, setEarningsCalendar] = useState([]);
+  // ------------------------------------------
+
+
+  const handleOpenPredictionModal = useCallback((ticker = null) => {
+    if (user) {
+      setStockToPredict(ticker);
+      setIsPredictionModalOpen(true);
+    } else {
+      requestLogin();
+    }
+  }, [user]);
+
+  const handleCloseModal = useCallback(() => {
+    setIsPredictionModalOpen(false);
+    setStockToPredict(null);
+  }, []);
+
+  const requestLogin = () => setIsLoginPromptOpen(true);
+
   // Fetch the current user once when the app loads
-  const fetchUser = () => {
+  const fetchUser = useCallback(() => {
     setIsAuthLoading(true);
 
     axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true })
-      .then(res => setUser(res.data || null))
+      .then(res => {
+        setUser(res.data || null);
+        if (res.data?.language && res.data.language !== i18n.language) {
+          i18n.changeLanguage(res.data.language);
+        }
+      })
       .catch(() => setUser(null))
       .finally(() => setIsAuthLoading(false));
-  };
+  }, [i18n]);
+
+  const fetchSettings = useCallback(() => {
+    axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true })
+      .then(res => setSettings(res.data))
+      .catch((error) => console.error("Failed to fetch settings:", error));
+  }, []);
+
+  // --- EFFECT: Fetch Earnings Calendar (Runs Once) ---
+  useEffect(() => {
+    console.log("Earnings: Initiating fetch for calendar...");
+    axios.get(`${API_URL}${API_ENDPOINTS.EARNINGS_CALENDAR}`)
+      .then(res => {
+        const validCalendar = (res.data || []).filter(e => e.earningsDate).slice(0, 50);
+
+        // --- LOGIC 1: Check for Empty Results ---
+        if (validCalendar.length === 0 && import.meta.env.DEV) {
+          console.warn("Earnings: API returned 0 entries. Using DEV test data.");
+          setEarningsCalendar(TEST_EARNINGS_DATA);
+          return;
+        }
+        // ---------------------------------------
+
+        console.log(`Earnings: Successfully received ${validCalendar.length} valid entries.`);
+        if (validCalendar.length > 0) {
+          console.log("Earnings: First calendar entry:", validCalendar[0]);
+        }
+
+        setEarningsCalendar(validCalendar);
+      })
+      .catch(err => {
+        console.error("Earnings: Failed to fetch earnings calendar.", err.message);
+        // --- LOGIC 2: Fallback on API failure in DEV mode ---
+        if (import.meta.env.DEV) {
+          console.warn("Earnings: API failed. Using DEV test data for display.");
+          setEarningsCalendar(TEST_EARNINGS_DATA);
+        }
+        // ----------------------------------------------------
+      });
+  }, []);
+  // --- END EFFECT ---
+
 
   useEffect(() => {
     fetchUser();
-    axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true })
-      .then(res => setSettings(res.data));
+    fetchSettings();
+  }, [fetchUser, fetchSettings]);
 
-    const params = new URLSearchParams(window.location.search);
-    const refCode = params.get(URL_PARAMS.REF);
-    if (refCode && cookieConsent) {
-      localStorage.setItem(STORAGE_KEYS.REFERRAL_CODE, refCode);
+  useEffect(() => {
+    if (!isAuthLoading && cookieConsent) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get(URL_PARAMS.REF);
+      if (refCode) {
+        localStorage.setItem(STORAGE_KEYS.REFERRAL_CODE, refCode);
+      }
     }
-  }, [cookieConsent]);
+  }, [isAuthLoading, cookieConsent]);
 
   // --- RTL Support ---
   useEffect(() => {
@@ -103,34 +184,32 @@ function App() {
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
-  const requestLogin = () => setIsLoginPromptOpen(true);
-
-  const handleOpenPredictionModal = (stock = null) => {
-    if (user) {
-      setStockToPredict(stock);
-      setIsPredictionModalOpen(true);
-    } else {
-      requestLogin();
-    }
-  };
-
-  const handleCloseModal = () => {
-    setIsPredictionModalOpen(false);
-    setStockToPredict(null);
-  };
+  if (isAuthLoading || !settings) {
+    return <FallbackLoading />;
+  }
 
   return (
     <Router>
       <Helmet>
         <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
         <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
+        {/* --- HREFLANG tags should be added here dynamically in a full setup --- */}
       </Helmet>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
       {/* --- 2. WRAP THE MAIN LAYOUT IN THE <ELEMENTS> PROVIDER --- */}
       <Elements stripe={stripePromise}>
         <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
-          <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} />
+
+          {/* --- NEW: Earnings Banner Component --- */}
+          <EarningsBanner
+            calendar={earningsCalendar}
+            onMakePredictionClick={handleOpenPredictionModal}
+            isActive={settings?.isEarningsBannerActive} // <--- Pass admin setting
+          />
+          {/* ------------------------------------- */}
+
+          <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} onProfileUpdate={fetchUser} />
           <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
           <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
           <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
@@ -140,12 +219,12 @@ function App() {
               <Routes>
                 {/* Note: Components are now rendered using the lazy-loaded versions */}
                 <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-                <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} />} />
+                <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
                 <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
                 <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
                 <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
-                <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} />} />
-                <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} />} />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
+                <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
                 <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
                 <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
                 <Route path={ROUTES.LOGIN} element={<LoginPage />} />

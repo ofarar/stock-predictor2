@@ -1,5 +1,5 @@
 // src/pages/StockPage.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +12,10 @@ import CommunitySentiment from '../components/CommunitySentiment';
 import { Helmet } from 'react-helmet-async';
 import { isMarketOpen } from '../utils/timeHelpers';
 import { NUMERIC_CONSTANTS } from '../constants';
+import { DateTime } from 'luxon'; // Import Luxon for date handling
 
-const StockPage = ({ onPredictClick, settings }) => {
+// --- Accept new props: earningsCalendar, onPredictClick ---
+const StockPage = ({ onPredictClick, settings, earningsCalendar = [] }) => {
     const { t, i18n } = useTranslation();
     const { ticker } = useParams();
 
@@ -35,9 +37,33 @@ const StockPage = ({ onPredictClick, settings }) => {
 
     const predictionTypes = ['Overall', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
+    // --- NEW: Filter earnings calendar for the current stock ---
+    const earningsAlert = useMemo(() => {
+        if (!earningsCalendar || !ticker) return null;
+
+        // Find the matching entry for the current stock
+        const item = earningsCalendar.find(e => e.ticker === ticker.toUpperCase());
+
+        if (item) {
+            const earningsDate = DateTime.fromISO(item.earningsDate).setLocale(i18n.language);
+            const relativeDay = earningsDate.toFormat('cccc'); // e.g., Monday
+
+            return {
+                // Construct the full translated message
+                message: t('earningsBanner.message', { ticker: item.ticker, day: relativeDay, time: item.time }),
+                day: relativeDay,
+                date: earningsDate.toFormat('MMM d, yyyy')
+            };
+        }
+        return null;
+    }, [earningsCalendar, ticker, i18n.language, t]);
+    // ---------------------------------------------------------
+
+
     const fetchPageData = useCallback(async () => {
         setLoading(true);
         try {
+            // NOTE: The previous structure had issues. Fetch quote and user separately.
             const [quoteRes, userRes] = await Promise.all([
                 axios.get(`${import.meta.env.VITE_API_URL}/api/stock/${ticker}`),
                 axios.get(`${import.meta.env.VITE_API_URL}/auth/current_user`, { withCredentials: true }).catch(() => ({ data: null }))
@@ -81,6 +107,7 @@ const StockPage = ({ onPredictClick, settings }) => {
         finally { setLoadingActive(false); }
     }, [ticker]);
 
+
     useEffect(() => {
         fetchPageData();
         fetchActivePredictions(1);
@@ -90,26 +117,24 @@ const StockPage = ({ onPredictClick, settings }) => {
         fetchTopPredictors(1);
     }, [fetchTopPredictors]);
 
-    // --- NEW: Live Price Update Interval (Required for 24/7 assets like BTC) ---
+    // --- Live Price Update Interval (Required for 24/7 assets like BTC) ---
     useEffect(() => {
-        // 1. Ensure ticker is available
         if (!ticker) return;
 
-        // 2. Check market status. This returns TRUE 24/7 for BTC.
         if (isMarketOpen(ticker)) {
             const quoteTimer = setInterval(() => {
                 axios.get(`${import.meta.env.VITE_API_URL}/api/quote/${ticker}`)
                     .then(res => {
-                        // Update the main quote state with the fresh data
                         if (res.data) setQuote(res.data);
                     })
                     .catch(() => { /* fail silently if API drops */ });
             }, NUMERIC_CONSTANTS.QUOTE_REFRESH_INTERVAL_MS); // Refresh every 60 seconds
 
-            // 3. CRUCIAL: Cleanup function runs when component unmounts or ticker changes
             return () => clearInterval(quoteTimer);
         }
-    }, [ticker]); // <--- This dependency triggers the effect when the page loads or switches tickers
+    }, [ticker]);
+    // ----------------------------------------------------------------------
+
 
     const handleLoadMorePredictors = () => {
         if (!loadingPredictors && topPredictors.page < topPredictors.totalPages) {
@@ -145,7 +170,6 @@ const StockPage = ({ onPredictClick, settings }) => {
     const isWatching = currentUser?.watchlist?.includes(ticker);
     const currentPrice = quote?.regularMarketPrice;
 
-    // --- 2. CREATE DYNAMIC SEO CONTENT ---
     const pageTitle = t('seo.stock_page.title', {
         name: quote?.longName || ticker,
         ticker: ticker
@@ -154,19 +178,17 @@ const StockPage = ({ onPredictClick, settings }) => {
         name: quote?.longName || ticker,
         ticker: ticker
     });
-    // --- END --
 
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
-            {/* --- 3. ADD HELMET COMPONENT --- */}
             <Helmet>
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
             </Helmet>
-            {/* --- END --- */}
-            {/* Header section (unchanged) */}
-            <div className="grid grid-cols-[1fr,auto] gap-x-6 gap-y-2 items-end">
-                <div className="text-start min-w-0">
+
+            {/* --- BLOCK 1: MAIN INFO AND EARNINGS ALERT --- */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2 items-end">
+                <div className="md:col-span-2 text-start min-w-0">
                     <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight truncate">
                         {quote?.longName || ticker}
                     </h1>
@@ -180,7 +202,9 @@ const StockPage = ({ onPredictClick, settings }) => {
                         {priceChange >= 0 ? '+' : ''}{formatCurrency(priceChange, i18n.language, quote?.currency)} ({formatPercentage(percentChange, i18n.language)})
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+
+                {/* Watchlist and Prediction Buttons (Placed below quote for better mobile flow) */}
+                <div className="md:col-span-3 flex items-center gap-3 justify-start">
                     <button
                         onClick={handleWatchlistToggle}
                         className={`p-2 rounded-full transition-colors disabled:opacity-50 ${isWatching ? 'bg-red-500/20 text-red-500' : 'bg-gray-700 text-gray-400 hover:bg-gray-600'}`}
@@ -189,15 +213,35 @@ const StockPage = ({ onPredictClick, settings }) => {
                     >
                         <svg className="w-5 h-5" fill={isWatching ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </button>
+                    {/* FIX 2: Prediction button uses the onPredictClick handler, passing the full quote */}
                     <button
-                        onClick={() => onPredictClick(quote ? quote : { symbol: ticker })}
-                        className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 shadow-lg"
-                        title={t('make_prediction')}
+                        // Pass the quote object (contains symbol, price, etc.)
+                        onClick={() => onPredictClick(quote)}
+                        className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-400 transition"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" /></svg>
+                        {t('make_prediction')}
                     </button>
                 </div>
             </div>
+
+            {/* --- NEW: Earnings Alert Banner specific to this stock --- */}
+            {earningsAlert && (
+                <div className="p-3 bg-yellow-900/50 border border-yellow-600 rounded-lg flex justify-between items-center flex-wrap gap-2">
+                    <span className="text-yellow-300 font-semibold text-sm flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 2 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-2 0v1H4zm0 5a1 1 0 000 2h10a1 1 0 100-2H6z" clipRule="evenodd"></path></svg>
+                        {t('earningsBanner.headline')} {earningsAlert.message}
+                    </span>
+                    {/* The action button opens the prediction modal, passing the quote */}
+                    <button
+                        onClick={() => onPredictClick(quote)}
+                        className="bg-yellow-500 text-black text-xs font-bold py-1 px-3 rounded-md hover:bg-yellow-400 transition"
+                    >
+                        {t('earningsBanner.makePrediction')}
+                    </button>
+                </div>
+            )}
+            {/* --- END EARNINGS ALERT --- */}
+
 
             <CommunitySentiment ticker={ticker} currentPrice={currentPrice} />
 
@@ -235,7 +279,6 @@ const StockPage = ({ onPredictClick, settings }) => {
                                             <p className={`text-xs font-bold ${percentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 {typeof percentageChange === 'number'
                                                     ? `(${percentageChange >= 0 ? '+' : ''}${formatNumber(percentageChange, i18n.language, {
-                                                        // --- FIX: SET PRECISION TO 2 DIGITS ---
                                                         minimumFractionDigits: 2,
                                                         maximumFractionDigits: 2
                                                     })}%)`
@@ -258,7 +301,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                     {/* --- END BLOCK 1 --- */}
 
 
-                    {/* --- BLOCK 2: Stock Chart (Unchanged) --- */}
+                    {/* --- BLOCK 2: Stock Chart (Moved to Right Column) --- */}
                     <div className="lg:col-span-1">
                         {showChart ? (
                             <StockChart ticker={ticker} />
@@ -280,7 +323,7 @@ const StockPage = ({ onPredictClick, settings }) => {
                 {/* --- END NEW LAYOUT GRID --- */}
 
 
-                {/* --- BLOCK 3: Top Predictors (Moved Down) --- */}
+                {/* --- BLOCK 3: Top Predictors (Unchanged) --- */}
                 <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
                     <h3 className="text-xl font-bold text-white mb-4">{t('top_predictors_for', { ticker })}</h3>
                     <div className="flex flex-wrap border-b border-gray-700 mb-4">
@@ -310,7 +353,6 @@ const StockPage = ({ onPredictClick, settings }) => {
                                     </div>
                                 </div>
                                 <div className="text-end">
-                                    {/* --- BUG FIX: Use avgRating and text_avg_rating --- */}
                                     <span className="font-bold text-green-400 text-lg">{formatNumber(user.avgRating, i18n.language, 1, 1)}</span>
                                     <p className="text-xs text-gray-400">{t('text_avg_rating')}</p>
                                 </div>
