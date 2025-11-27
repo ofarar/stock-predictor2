@@ -1161,5 +1161,11 @@
         },
         "footer": "Registrarse es 100% gratuito. No se requiere tarjeta de crédito."
     },
-    "profile_views_label": "Vistas"
+    "profile_views_label": "Vistas",
+    "earningsBanner": {
+        "headline": "INFORME DE RESULTADOS:",
+        "message": "El próximo informe de resultados de {{ticker}} es este {{day}}.",
+        "makePrediction": "Hacer una predicción",
+        "viewStock": "Ver página de acciones de {{ticker}}"
+    }
 }

@@ -1164,5 +1164,11 @@
     },
     "footer": "Aanmelden is 100% gratis. Geen creditcard vereist."
   },
-  "profile_views_label": "Weergaven"
+  "profile_views_label": "Weergaven",
+  "earningsBanner": {
+    "headline": "BREAKING CIJFERS:",
+    "message": "De aankomende resultatendag voor {{ticker}} is deze {{day}}.",
+    "makePrediction": "Voorspelling maken",
+    "viewStock": "{{ticker}} Aandelenpagina bekijken"
+  }
 }

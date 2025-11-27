@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from 'react';
+
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
@@ -8,6 +9,7 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
     const { t, i18n } = useTranslation();
     const location = useLocation();
     const [isVisible, setIsVisible] = useState(true);
+    const isRTL = i18n.language === 'ar';
 
     // Refs for animation and interaction
     const containerRef = useRef(null);
@@ -56,20 +58,42 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
 
     const colorClass = currentTicker ? 'bg-yellow-700/80 border-b border-yellow-600' : 'bg-green-700/80 border-b border-green-600';
 
+    // Reset position when language changes to avoid jumpiness
+    useEffect(() => {
+        positionRef.current = 0;
+    }, [i18n.language]);
+
     // Animation Loop
     const animate = useCallback(() => {
         if (containerRef.current && contentRef.current) {
             const totalWidth = contentRef.current.scrollWidth;
             const singleSetWidth = totalWidth / 4;
 
-            positionRef.current -= speedRef.current;
+            if (isRTL) {
+                // RTL: Move Right (Positive)
+                positionRef.current += speedRef.current;
+                // If we've moved one full set to the right, snap back
+                // Note: In RTL flex, we are seeing the "left" side coming in.
+                // We need to ensure we don't run out of content.
+                // Actually, standard logic:
+                // Start at 0. Move +X.
+                // When X >= singleSetWidth, it means we have shifted one full set.
+                // We can reset to 0 because the visual state should match.
+                if (positionRef.current >= singleSetWidth) {
+                    positionRef.current -= singleSetWidth;
+                }
+            } else {
+                // LTR: Move Left (Negative)
+                positionRef.current -= speedRef.current;
+                if (positionRef.current <= -singleSetWidth) {
+                    positionRef.current += singleSetWidth;
+                }
+            }
 
-            if (positionRef.current <= -singleSetWidth) {
-                positionRef.current += singleSetWidth;
-            }
-            if (positionRef.current > 0) {
-                positionRef.current -= singleSetWidth;
-            }
+            // Boundary checks to prevent runaway values if tab is inactive
+            if (positionRef.current > totalWidth) positionRef.current = 0;
+            if (positionRef.current < -totalWidth) positionRef.current = 0;
+
 
             containerRef.current.style.transform = `translateX(${positionRef.current}px)`;
 
@@ -83,7 +107,7 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
             }
         }
         requestRef.current = requestAnimationFrame(animate);
-    }, []);
+    }, [isRTL]);
 
     useEffect(() => {
         if (isActive && isVisible && formattedMessages.length > 0) {
@@ -110,7 +134,23 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
         const deltaX = lastTouchX.current - currentX;
         lastTouchX.current = currentX;
 
-        speedRef.current += deltaX * 0.5;
+        // For RTL, dragging left (positive deltaX) should slow down or reverse? 
+        // Let's keep it simple: just boost speed regardless of direction for now, 
+        // or flip logic if needed. 
+        // Actually, deltaX is (Previous - Current). 
+        // Drag Left: Current < Previous -> Delta > 0.
+        // Drag Right: Current > Previous -> Delta < 0.
+
+        // If LTR (Moving Left): Dragging Left (Delta > 0) should boost speed (move faster left).
+        // If RTL (Moving Right): Dragging Right (Delta < 0) should boost speed (move faster right).
+
+        if (isRTL) {
+            // We want to boost if dragging Right (Delta < 0)
+            speedRef.current -= deltaX * 0.5;
+        } else {
+            speedRef.current += deltaX * 0.5;
+        }
+
         if (speedRef.current > 20) speedRef.current = 20;
         if (speedRef.current < 0) speedRef.current = 0;
     };
@@ -121,7 +161,7 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
     }
 
     return (
-        <div className="relative group">
+        <div className="relative group" dir={isRTL ? 'rtl' : 'ltr'}>
             <div
                 className={`w-full ${colorClass} text-white py-2 overflow-hidden flex-shrink-0 cursor-grab active:cursor-grabbing`}
                 onWheel={handleWheel}
@@ -131,6 +171,7 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
                 <div
                     ref={containerRef}
                     className="flex whitespace-nowrap will-change-transform"
+                    style={{ flexDirection: 'row' }} // Ensure row direction even in RTL
                 >
                     <div ref={contentRef} className="flex">
                         {displayList.map((item, index) => (
@@ -165,10 +206,10 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
                 </div>
             </div>
 
-            {/* Close Button - Absolute positioned on the right */}
+            {/* Close Button - Positioned based on direction */}
             <button
                 onClick={() => setIsVisible(false)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors z-10"
+                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors z-10`}
                 aria-label="Close banner"
             >
                 <FaTimes className="w-3 h-3" />

@@ -1161,5 +1161,11 @@
         },
         "footer": "Die Anmeldung ist zu 100 % kostenlos. Keine Kreditkarte erforderlich."
     },
-    "profile_views_label": "Aufrufe"
+    "profile_views_label": "Aufrufe",
+    "earningsBanner": {
+        "headline": "AKTUELLE ERGEBNISMITTEILUNG:",
+        "message": "Der bevorstehende Ergebnisbericht für {{ticker}} ist diesen {{day}}.",
+        "makePrediction": "Vorhersage treffen",
+        "viewStock": "{{ticker}} Aktienseite anzeigen"
+    }
 }

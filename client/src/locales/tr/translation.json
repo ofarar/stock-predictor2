@@ -1162,5 +1162,11 @@
     },
     "footer": "Kaydolmak %100 ücretsizdir. Kredi kartı gerekmez."
   },
-  "profile_views_label": "Görüntüleme"
+  "profile_views_label": "Görüntüleme",
+  "earningsBanner": {
+    "headline": "SON DAKİKA BİLANÇO:",
+    "message": "{{ticker}} için yaklaşan bilanço açıklama günü bu {{day}}.",
+    "makePrediction": "Tahmin Yap",
+    "viewStock": "{{ticker}} Hisse Sayfasını Gör"
+  }
 }

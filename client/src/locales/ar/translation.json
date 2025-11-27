@@ -1148,5 +1148,11 @@
     },
     "footer": "التسجيل مجاني 100%. لا حاجة لبطاقة ائتمان."
   },
-  "profile_views_label": "مشاهدات"
+  "profile_views_label": "مشاهدات",
+  "earningsBanner": {
+    "headline": "إعلان النتائج المالية:",
+    "message": "يوم صدور نتائج {{ticker}} سيكون يوم {{day}}.",
+    "makePrediction": "قم بعمل توقع",
+    "viewStock": "عرض صفحة أسهم {{ticker}}"
+  }
 }

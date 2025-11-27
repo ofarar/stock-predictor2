@@ -1161,5 +1161,11 @@
         },
         "footer": "L'inscription est 100 % gratuite. Aucune carte de crédit requise."
     },
-    "profile_views_label": "Vues"
+    "profile_views_label": "Vues",
+    "earningsBanner": {
+        "headline": "ANNONCE DES RÉSULTATS FINANCIERS :",
+        "message": "Le jour de publication des résultats pour {{ticker}} est ce {{day}}.",
+        "makePrediction": "Faire une prédiction",
+        "viewStock": "Voir la page d'actions {{ticker}}"
+    }
 }

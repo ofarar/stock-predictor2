@@ -1149,5 +1149,11 @@
     },
     "footer": "साइन अप करना 100% मुफ्त है। क्रेडिट कार्ड की आवश्यकता नहीं है।"
   },
-  "profile_views_label": "दृश्य"
+  "profile_views_label": "दृश्य",
+  "earningsBanner": {
+    "headline": "ताज़ा वित्तीय परिणाम:",
+    "message": "{{ticker}} के वित्तीय परिणाम जारी होने का दिन इस {{day}} को है।",
+    "makePrediction": "भविष्यवाणी करें",
+    "viewStock": "{{ticker}} स्टॉक पेज देखें"
+  }
 }

@@ -1161,5 +1161,11 @@
         },
         "footer": "注册完全免费。无需信用卡。"
     },
-    "profile_views_label": "浏览量"
+    "profile_views_label": "浏览量",
+    "earningsBanner": {
+        "headline": "突发财报：",
+        "message": "{{ticker}} 即将发布的财报日是本周 {{day}}。",
+        "makePrediction": "做出预测",
+        "viewStock": "查看 {{ticker}} 股票页面"
+    }
 }
