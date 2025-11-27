@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,7 @@ import AnalystRatingInfoModal from '../components/AnalystRatingInfoModal';
 const ProfilePage = ({ settings, requestLogin }) => {
     const { t } = useTranslation();
     const { userId } = useParams();
+    const location = useLocation();
     const [profileData, setProfileData] = useState(null);
     const [activePredictionQuotes, setActivePredictionQuotes] = useState({});
     const [loading, setLoading] = useState(true);
@@ -128,7 +129,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     useEffect(() => {
         // FIX: Check for profileData to ensure the data fetch has completed
         // and the core profile owner's data is available.
-        if (profileData && window.location.hash === "#active") {
+        if (profileData && location.hash === "#active") {
 
             const element = document.getElementById("active");
 
@@ -154,7 +155,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
             }
         }
         // FIX: Depend on profileData change (signaling data fetch success) and hash change
-    }, [profileData, window.location.hash]);
+    }, [profileData, location.hash]);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
