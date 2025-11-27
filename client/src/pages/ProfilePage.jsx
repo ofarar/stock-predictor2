@@ -133,25 +133,32 @@ const ProfilePage = ({ settings, requestLogin }) => {
         if (profileData && location.hash === "#active") {
             console.log("Autoscroll: Triggered for #active");
 
-            const element = document.getElementById("active");
-            console.log("Autoscroll: Element found?", !!element);
+            const ATTEMPT_INTERVAL_MS = 100;
+            const MAX_ATTEMPTS = 20; // 2 seconds total
+            let attempts = 0;
 
-            if (element) {
-                const HEADER_HEIGHT = 64;
+            const scrollInterval = setInterval(() => {
+                attempts++;
+                const element = document.getElementById("active");
+                console.log(`Autoscroll: Attempt ${attempts}, Element found?`, !!element);
 
-                // Use a short delay to ensure the element is painted before scrolling
-                setTimeout(() => {
-                    console.log("Autoscroll: Executing scrollIntoView");
+                if (element) {
+                    console.log("Autoscroll: Element found! Scrolling...");
                     // Use scrollIntoView which respects scroll-margin-top (added in PredictionList)
                     element.scrollIntoView({ behavior: "smooth", block: "start" });
 
                     // Clear the hash after scrolling
                     window.history.replaceState(null, null, window.location.pathname + window.location.search);
 
-                }, 500);
-            } else {
-                console.warn("Autoscroll: Element with id 'active' not found!");
-            }
+                    clearInterval(scrollInterval);
+                } else if (attempts >= MAX_ATTEMPTS) {
+                    console.warn("Autoscroll: Element with id 'active' not found after max attempts.");
+                    clearInterval(scrollInterval);
+                }
+            }, ATTEMPT_INTERVAL_MS);
+
+            // Cleanup interval on unmount or dependency change
+            return () => clearInterval(scrollInterval);
         }
         // FIX: Depend on profileData change (signaling data fetch success) and hash change
     }, [profileData, location.hash]);
