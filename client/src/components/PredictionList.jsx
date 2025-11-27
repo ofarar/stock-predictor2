@@ -100,7 +100,7 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                 url={shareData.url}
                 shareContext={shareData.shareContext}
             />
-            <div id={id} className="bg-gray-800 p-6 rounded-lg">
+            <div id={id} className="bg-gray-800 p-6 rounded-lg scroll-mt-24">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold text-white">{t(titleKey)}</h3>
 

@@ -131,28 +131,26 @@ const ProfilePage = ({ settings, requestLogin }) => {
         // FIX: Check for profileData to ensure the data fetch has completed
         // and the core profile owner's data is available.
         if (profileData && location.hash === "#active") {
+            console.log("Autoscroll: Triggered for #active");
 
             const element = document.getElementById("active");
+            console.log("Autoscroll: Element found?", !!element);
 
             if (element) {
                 const HEADER_HEIGHT = 64;
 
                 // Use a short delay to ensure the element is painted before scrolling
                 setTimeout(() => {
-
-                    // Use standard window.scrollTo with offset for mobile header clearance
-                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                    const targetPosition = elementPosition - HEADER_HEIGHT;
-
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: "smooth"
-                    });
+                    console.log("Autoscroll: Executing scrollIntoView");
+                    // Use scrollIntoView which respects scroll-margin-top (added in PredictionList)
+                    element.scrollIntoView({ behavior: "smooth", block: "start" });
 
                     // Clear the hash after scrolling
                     window.history.replaceState(null, null, window.location.pathname + window.location.search);
 
-                }, 200);
+                }, 500);
+            } else {
+                console.warn("Autoscroll: Element with id 'active' not found!");
             }
         }
         // FIX: Depend on profileData change (signaling data fetch success) and hash change
