@@ -28,4 +28,14 @@ const PredictionSchema = new Schema({
     views: { type: Number, default: 0, index: true },
 }, { timestamps: true });
 
+// --- PERFORMANCE INDEXES ---
+// 1. For Rank Jobs (filters by status='Assessed' and predictionType)
+PredictionSchema.index({ status: 1, predictionType: 1 });
+
+// 2. For Assessment Jobs (filters by status='Active' and deadline <= now)
+PredictionSchema.index({ status: 1, deadline: 1 });
+
+// 3. For User Stats Aggregation (frequently calculates avg rating for a user)
+PredictionSchema.index({ userId: 1, status: 1 });
+
 module.exports = mongoose.model('Prediction', PredictionSchema);

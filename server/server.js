@@ -9,6 +9,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo'); // <-- Import MongoStore
 const passport = require('passport');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit'); // <-- Added import
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
@@ -101,6 +102,16 @@ app.use(cors(corsOptions));
 // 3. Trust Proxy (for production environments like Render/Heroku)
 app.set('trust proxy', 1);
 
+// --- RATE LIMITING (High Traffic Protection) ---
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 300, // Limit each IP to 300 requests per `window`
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: "Too many requests from this IP, please try again later."
+});
+app.use(limiter);
+
 // 4. Session Management
 app.use(
     session({
@@ -137,14 +148,14 @@ app.use('/auth', require('./routes/auth'));
 
 // // --- SENTRY VERIFICATION SNIPPET (FROM DOCS) ---
 // // This will trigger an error shortly after server start to verify Sentry is working.
-// setTimeout(() => {
-//     try {
-//         foo(); // This function is undefined and will throw an error
-//     } catch (e) {
-//         console.log("Triggering Sentry Test Error...");
-//         Sentry.captureException(e);
-//     }
-// }, 5000); // Wait 5 seconds after start
+// // setTimeout(() => {
+// //     try {
+// //         foo(); // This function is undefined and will throw an error
+// //     } catch (e) {
+// //         console.log("Triggering Sentry Test Error...");
+// //         Sentry.captureException(e);
+// //     }
+// // }, 5000); // Wait 5 seconds after start
 
 // --- END CORRECT MIDDLEWARE ORDER ---
 
