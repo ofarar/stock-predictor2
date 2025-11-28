@@ -22,6 +22,7 @@ const initialChecks = [
     { id: 'finance-current', name: 'Finance API (Current Price)', status: 'pending', result: null, selected: true },
     { id: 'finance-historical', name: 'Finance API (Historical Data)', status: 'pending', result: null, selected: true },
     { id: 'nasdaq-api', name: 'NASDAQ Earnings API', status: 'pending', result: null, selected: true },
+    { id: 'crypto-api', name: 'Crypto API (CoinGecko)', status: 'pending', result: null, selected: true },
     { id: 'avatar', name: 'Avatar API (DiceBear)', status: 'pending', result: null, selected: true },
 ];
 

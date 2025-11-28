@@ -11,6 +11,7 @@ const axios = require('axios');
 const { transporter } = require('../services/email');
 const PredictionLog = require('../models/PredictionLog');
 const Setting = require('../models/Setting');
+const cryptoProvider = require('../services/financeProviders/cryptoProvider');
 
 // POST: Manually trigger assessment job
 router.post('/admin/evaluate', async (req, res) => {
@@ -320,6 +321,15 @@ router.post('/admin/health-check/:service', async (req, res) => {
                     return 'OK (NASDAQ API is reachable)';
                 }
                 throw new Error('NASDAQ API returned invalid status.');
+            });
+
+        case 'crypto-api':
+            return checkService(async () => {
+                const quote = await cryptoProvider.getQuote('BTC-USD');
+                if (quote && quote.price) {
+                    return `OK (BTC Price: ${quote.price} USD)`;
+                }
+                throw new Error('Crypto API returned no price data.');
             });
 
         default:
