@@ -69,6 +69,7 @@ router.get('/market/earnings-calendar', async (req, res) => {
         // 2. Optionally filter down the calendar list to only include stocks the user tracks
         // (You may skip this filtering on the backend if you prefer to send the full list to the frontend)
 
+        res.set('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
         res.json(calendar);
 
     } catch (error) {
@@ -368,6 +369,7 @@ router.get('/widgets/famous-stocks', async (req, res) => {
             }
         }
 
+        res.set('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
         res.json({ stocks, isHistorical });
 
     } catch (err) {
@@ -428,6 +430,7 @@ router.get('/market/key-assets', async (req, res) => {
             };
         }).filter(a => a !== null); // Filter out any missing quotes
 
+        res.set('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
         res.json(assets);
     } catch (err) {
         console.error("Key assets fetch error:", err.message);

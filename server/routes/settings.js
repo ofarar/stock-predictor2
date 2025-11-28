@@ -29,6 +29,7 @@ router.get('/settings', async (req, res) => {
             settings = await settings.save();
         }
 
+        res.set('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
         res.json(settings);
     } catch (err) {
         console.error("Error in GET /settings:", err);
