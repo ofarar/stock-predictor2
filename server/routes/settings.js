@@ -29,7 +29,9 @@ router.get('/settings', async (req, res) => {
             settings = await settings.save();
         }
 
-        res.set('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
+        // --- FIX 1: Explicitly disable caching for this critical fetch ---
+        // This ensures the browser always requests the latest version from the server.
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
         res.json(settings);
     } catch (err) {
         console.error("Error in GET /settings:", err);
@@ -81,6 +83,8 @@ router.put('/settings/admin', async (req, res) => {
             { $set: updateData },
             { new: true, upsert: true }
         );
+        // --- FIX 2: Clear cache headers on the response to ensure immediate client update ---
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
         res.json(updatedSettings);
     } catch (err) {
         console.error("Error updating settings:", err);
