@@ -1,18 +1,24 @@
+// src/components/Footer.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 
-const Footer = () => {
+// ASSUMPTION: Footer receives the settings prop
+const Footer = ({ settings }) => {
     const { t } = useTranslation();
     const currentYear = new Date().getFullYear();
+
+    // Check if the icon should be enabled
+    const showXIcon = settings?.isXIconEnabled ?? false;
+    const xUrl = settings?.xAccountUrl;
 
     return (
         <footer className="bg-gray-900 border-t border-gray-800 mt-12 md:mt-20">
             <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-                {/* Use flex for more natural layout control */}
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6 flex-wrap md:flex-nowrap">
-                    
+
                     {/* Left: Logo */}
                     <div className="flex-shrink-0">
                         <Logo />
@@ -24,6 +30,22 @@ const Footer = () => {
                         <Link to="/contact" className="hover:text-white">{t('footer.contact')}</Link>
                         <Link to="/terms" className="hover:text-white">{t('footer.terms')}</Link>
                         <Link to="/privacy" className="hover:text-white">{t('footer.privacy')}</Link>
+
+                        {/* --- NEW X ICON LINK --- */}
+                        {showXIcon && xUrl && (
+                            <a
+                                href={xUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-white ms-4"
+                                title="Follow us on X"
+                            >
+                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </a>
+                        )}
+                        {/* ------------------------- */}
                     </div>
 
                     {/* Right: Placeholder (language selector) */}

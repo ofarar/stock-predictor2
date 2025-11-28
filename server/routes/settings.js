@@ -69,6 +69,13 @@ router.put('/settings/admin', async (req, res) => {
         if (req.body.isEarningsBannerActive !== undefined) {
             updateData.isEarningsBannerActive = req.body.isEarningsBannerActive;
         }
+        // --- NEW FIELDS ---
+        if (req.body.isXIconEnabled !== undefined) {
+            updateData.isXIconEnabled = req.body.isXIconEnabled;
+        }
+        if (req.body.xAccountUrl !== undefined) {
+            updateData.xAccountUrl = req.body.xAccountUrl;
+        }
 
         const updatedSettings = await Setting.findOneAndUpdate({},
             { $set: updateData },

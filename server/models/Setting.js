@@ -32,7 +32,9 @@ const SettingSchema = new Schema({
   verificationPrice: { type: Number, default: 4.99 },
   isAIWizardEnabled: { type: Boolean, default: false },
   maxPredictionsPerDay: { type: Number, default: 20 },
-  isFinanceApiEnabled: { type: Boolean, default: true }
+  isFinanceApiEnabled: { type: Boolean, default: true },
+  isXIconEnabled: { type: Boolean, default: true }, // Should be 'true'
+  xAccountUrl: { type: String, default: 'https://x.com/SPredictor25790' }
 });
 
 module.exports = mongoose.model('Setting', SettingSchema);

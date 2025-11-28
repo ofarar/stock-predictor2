@@ -18,7 +18,9 @@ const AdminPage = () => {
         badgeSettings: {},
         isFinanceApiEnabled: true,
         isPromoBannerActive: true,
-        isEarningsBannerActive: true // <--- 1. Add default state
+        isEarningsBannerActive: true,
+        isXIconEnabled: true,
+        xAccountUrl: 'https://x.com/SPredictor25790'
     });
     const [loading, setLoading] = useState(true);
     const [badgeSettingsJson, setBadgeSettingsJson] = useState('');
@@ -64,7 +66,9 @@ const AdminPage = () => {
             badgeSettings: badgeSettings,
             isFinanceApiEnabled: settings.isFinanceApiEnabled,
             isPromoBannerActive: settings.isPromoBannerActive,
-            isEarningsBannerActive: settings.isEarningsBannerActive // <--- 2. Include in save payload
+            isEarningsBannerActive: settings.isEarningsBannerActive,
+            isXIconEnabled: settings.isXIconEnabled,
+            xAccountUrl: settings.xAccountUrl
         };
 
         const promise = axios.put(`${import.meta.env.VITE_API_URL}/api/settings/admin`, settingsToSave, { withCredentials: true });
@@ -91,8 +95,34 @@ const AdminPage = () => {
 
             <div className="bg-gray-800 p-6 rounded-lg">
                 <h2 className="text-xl font-bold text-white mb-4">General Settings</h2>
-
-                {/* --- 3. NEW PROMO BANNER TOGGLE --- */}
+                {/* --- X ICON TOGGLE (FIXED) --- */}
+                <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
+                    <label htmlFor="isXIconEnabled" className="font-medium text-gray-300">
+                        Show Global X/Twitter Icon
+                        <p className="text-xs text-gray-400">Controls the display of the X icon in the footer.</p>
+                    </label>
+                    <input
+                        type="checkbox"
+                        id="isXIconEnabled"
+                        checked={settings.isXIconEnabled ?? true}
+                        // --- FIX IS HERE: Add the onChange handler ---
+                        onChange={(e) => handleSettingsChange('isXIconEnabled', e.target.checked)}
+                        // ---------------------------------------------
+                        className="h-5 w-5 rounded bg-gray-900 text-green-500 border-gray-600 focus:ring-green-500"
+                    />
+                </div>
+                {/* --- X ACCOUNT URL INPUT (remains the same, already uses handler) --- */}
+                <div className='mb-4'>
+                    <label className="block text-sm font-medium text-gray-300">Official X Account URL</label>
+                    <input
+                        type="url"
+                        value={settings.xAccountUrl}
+                        onChange={(e) => handleSettingsChange('xAccountUrl', e.target.value)}
+                        className="mt-1 w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"
+                        placeholder="e.g., https://x.com/SPredictor25790"
+                    />
+                </div>
+                {/* --- NEW PROMO BANNER TOGGLE --- */}
                 <div className="flex items-center justify-between bg-gray-700 p-3 rounded-md mb-4">
                     <label htmlFor="isPromoBannerActive" className="font-medium text-gray-300">
                         Enable Promo Banner

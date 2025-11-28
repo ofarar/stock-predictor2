@@ -250,7 +250,7 @@ function App() {
             </Suspense>
             {/* --- END SUSPENSE WRAPPER --- */}
           </main>
-          <Footer />
+          <Footer settings={settings} />
         </div>
       </Elements>
       {/* --- Cookie Consent --- */}
