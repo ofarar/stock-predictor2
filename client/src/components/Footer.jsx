@@ -31,13 +31,14 @@ const Footer = ({ settings }) => {
                         <Link to="/terms" className="hover:text-white">{t('footer.terms')}</Link>
                         <Link to="/privacy" className="hover:text-white">{t('footer.privacy')}</Link>
 
-                        {/* --- NEW X ICON LINK --- */}
+                        {/* --- X ICON LINK (FIXED ALIGNMENT) --- */}
                         {showXIcon && xUrl && (
                             <a
                                 href={xUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white ms-4"
+                                // FIX: Use inline-flex items-center and remove ms-4 (margin-start)
+                                className="text-gray-400 hover:text-white inline-flex items-center"
                                 title="Follow us on X"
                             >
                                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
