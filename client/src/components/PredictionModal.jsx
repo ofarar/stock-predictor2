@@ -49,6 +49,9 @@ const PredictionModal = ({ isOpen, onClose, initialStock }) => {
                 onClick={onClose}
             >
                 <div
+                    id="prediction-modal"
+                    role="dialog"
+                    aria-modal="true"
                     className="relative bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl w-11/12 max-w-md"
                     onClick={e => e.stopPropagation()}
                 >

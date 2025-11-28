@@ -77,5 +77,28 @@ router.get('/logout', (req, res, next) => {
   });
 });
 
+// --- DEV ONLY: Backdoor login for Cypress ---
+// if (process.env.NODE_ENV !== 'production') {
+const User = require('../models/User');
+router.post('/dev/login', async (req, res) => {
+  console.log('Dev login attempt:', req.body.email);
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log('User not found:', email);
+      return res.status(404).json({ error: 'User not found' });
+    }
+    req.login(user, (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      console.log('Dev login success:', user.username);
+      return res.json(user);
+    });
+  } catch (err) {
+    console.log('Dev login error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+// }
 
 module.exports = router;

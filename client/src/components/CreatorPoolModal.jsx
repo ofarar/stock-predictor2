@@ -1,4 +1,5 @@
 // src/components/CreatorPoolModal.js
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -122,7 +123,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                     '#3b82f6', // blue
                     '#a855f7', // purple
                     '#ec4899', // pink
-                    '#f97316'  // <-- 3. ADD NEW COLOR (orange)
+                    '#f97316'  // orange
                 ],
                 borderColor: '#4b5563',
                 borderWidth: 1,
@@ -152,7 +153,6 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         responsive: true,
         plugins: {
             legend: { position: 'top', labels: { color: '#e5e7eb' } },
-            // --- THIS IS THE FIX ---
             tooltip: {
                 callbacks: {
                     label: function (context) {
@@ -164,7 +164,6 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                     }
                 }
             }
-            // --- END FIX ---
         },
         onClick: handlePieClick
     };
@@ -216,10 +215,14 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
-            <div className="bg-gray-800 p-6 rounded-lg w-full max-w-lg" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 pt-8" onClick={onClose}>
+            <div
+                className="bg-gray-800 p-6 rounded-lg w-full max-w-lg max-h-[95vh] flex flex-col"
+                onClick={e => e.stopPropagation()}
+                data-testid="creator-pool-modal"
+            >
                 {/* --- HEADER --- */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 flex-shrink-0">
                     {selectedUser ? (
                         <button onClick={handleBackClick} className="text-gray-400 hover:text-white flex items-center gap-1 text-sm font-medium">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
@@ -237,15 +240,15 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
 
                 {/* --- VIEW 1: Leaderboard List --- */}
                 {!selectedUser && (
-                    <div className="animate-fade-in-fast">
+                    <div className="animate-fade-in-fast flex-grow overflow-y-auto">
                         <p className="text-gray-400 text-sm mb-4">
                             {t('creatorPoolModal.description')}
                         </p>
-                        <div className="bg-gray-700 p-3 rounded-md text-center mb-4">
+                        <div className="bg-gray-700 p-3 rounded-md text-center mb-4 flex-shrink-0">
                             <p className="text-gray-300 text-sm">{t('creatorPoolModal.totalRating')}</p>
                             <p className="text-2xl font-bold text-white">{totalRating.toLocaleString()}</p>
                         </div>
-                        <div className="space-y-2 max-h-[60vh] overflow-y-auto px-2 py-1 modern-scrollbar">
+                        <div className="space-y-2 max-h-[calc(95vh-250px)] overflow-y-auto px-2 py-1 modern-scrollbar">
                             {loading ? (
                                 <p className="text-gray-400 text-center">{t('explore_loading')}</p>
                             ) : (
@@ -277,10 +280,10 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
 
                 {/* --- VIEW 2: Pie Chart Detail View --- */}
                 {selectedUser && (
-                    <div className="animate-fade-in-fast max-h-[70vh] overflow-y-auto modern-scrollbar pe-2">
+                    <div className="animate-fade-in-fast flex-grow overflow-y-auto pe-2 modern-scrollbar" data-testid="creator-pool-detail-view">
                         <div className="space-y-4">
                             {/* User Info */}
-                            <div className="flex flex-col items-center">
+                            <div className="flex flex-col items-center flex-shrink-0">
                                 <img src={selectedUser.avatar} alt="avatar" className="w-16 h-16 rounded-full" />
                                 <Link
                                     to={`/profile/${selectedUser._id}`}
@@ -293,12 +296,12 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                             </div>
 
                             {/* Main Pie Chart */}
-                            <div className="w-full max-w-xs mx-auto">
+                            <div className="w-full max-w-xs mx-auto flex-shrink-0">
                                 <Pie data={totalPieData} options={totalPieOptions} />
                             </div>
 
                             {/* Drilldown Buttons */}
-                            <div className="space-y-2 pt-4 border-t border-gray-700">
+                            <div className="space-y-2 pt-4 border-t border-gray-700 flex-shrink-0">
                                 <h4 className="text-sm font-bold text-gray-400 uppercase text-center">{t('creatorPoolModal.breakdownTitle', 'Breakdown Details')}</h4>
                                 <div className="flex flex-wrap justify-center gap-2">
                                     {predictionBreakdownData && (
@@ -332,8 +335,8 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                     </div>
                 )}
 
-                {/* --- FOOTER --- */}
-                <div className="flex justify-end mt-6 pt-4 border-t border-gray-700">
+                {/* --- FOOTER (fixed to bottom) --- */}
+                <div className="flex justify-end mt-6 pt-4 border-t border-gray-700 flex-shrink-0">
                     <button onClick={onClose} className="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-700">
                         {t('common.close')}
                     </button>

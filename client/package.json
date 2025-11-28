@@ -31,7 +31,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "cypress open",
+    "test:e2e:run": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -56,6 +58,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.19",
     "cross-env": "^10.1.0",
+    "cypress": "^15.7.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.5.0",

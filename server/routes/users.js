@@ -781,6 +781,35 @@ router.get('/leaderboard/rating', async (req, res) => {
     }
 });
 
+// PUT: Update watchlist (add/remove)
+router.put('/watchlist', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated.' });
+    }
+    const { ticker, action } = req.body;
+
+    if (!ticker || !['add', 'remove'].includes(action)) {
+        return res.status(400).json({ message: 'Invalid request.' });
+    }
+
+    try {
+        const update = action === 'add'
+            ? { $addToSet: { watchlist: ticker } }
+            : { $pull: { watchlist: ticker } };
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            update,
+            { new: true }
+        );
+
+        res.json({ watchlist: updatedUser.watchlist });
+    } catch (err) {
+        console.error("Error updating watchlist:", err);
+        res.status(500).json({ message: 'Error updating watchlist.' });
+    }
+});
+
 // GET: Fetch user's watchlist with live data
 // GET: Fetch user's watchlist with live data
 router.get('/watchlist', async (req, res) => {

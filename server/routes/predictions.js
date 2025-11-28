@@ -715,4 +715,30 @@ router.put('/predictions/:id/edit', async (req, res) => {
     }
 });
 
+// DELETE: Dev-only endpoint to delete a prediction (for testing)
+router.delete('/dev/predictions', async (req, res) => {
+    if (process.env.NODE_ENV !== 'development') {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+    if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
+
+    const { stockTicker } = req.body;
+    if (!stockTicker) {
+        return res.status(400).json({ message: 'Stock ticker required' });
+    }
+
+    try {
+        await Prediction.deleteMany({
+            userId: req.user._id,
+            stockTicker: stockTicker.toUpperCase(),
+            status: 'Active'
+        });
+        res.json({ message: 'Prediction deleted' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting prediction' });
+    }
+});
+
 module.exports = router;

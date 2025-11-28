@@ -108,7 +108,8 @@ const limiter = rateLimit({
     limit: 300, // Limit each IP to 300 requests per `window`
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    message: "Too many requests from this IP, please try again later."
+    message: "Too many requests from this IP, please try again later.",
+    skip: (req, res) => process.env.NODE_ENV === 'development' // Skip in dev
 });
 app.use(limiter);
 

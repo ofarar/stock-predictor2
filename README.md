@@ -159,6 +159,24 @@ Top analysts can monetize their exclusive research and signals directly by becom
 ***
 -----
 
+## 🧪 Testing Strategy
+
+We maintain a robust End-to-End (E2E) testing suite to ensure critical user flows and application stability.
+
+### 1. Testing Framework
+*   **Cypress:** Our primary tool for E2E testing. It allows us to simulate real user interactions, intercept network requests, and verify UI states in a reliable, browser-based environment.
+
+### 2. Test Approach
+*   **Critical Flows:** We focus on testing high-value user journeys such as:
+    *   **Authentication:** Login, Registration, and Session persistence.
+    *   **Predictions:** Creating, viewing, and interacting with stock predictions.
+    *   **Creator Pool:** Verifying modal interactions, leaderboard rendering, and chart visualizations.
+    *   **Navigation:** Ensuring seamless transitions between pages (Dashboard, Profile, Market).
+*   **API Mocking:** We utilize `cy.intercept()` to mock backend API responses. This ensures tests are deterministic, faster, and isolated from external dependencies (like live market data or third-party APIs).
+*   **Visual Verification:** Assertions are used to verify styling (e.g., special borders for top creators), visibility of elements, and correct data rendering.
+
+-----
+
 ## 🚀 Getting Started (Local Development)
 
 1.  **Clone the repository.**
