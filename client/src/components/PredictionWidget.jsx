@@ -1,3 +1,5 @@
+// src/components/PredictionWidget.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -13,9 +15,10 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    // State to hold the final quote object
     const [selectedStock, setSelectedStock] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(''); // For search errors
+    const [error, setError] = useState('');
     const [target, setTarget] = useState('');
     const [description, setDescription] = useState('');
     const [predictionType, setPredictionType] = useState('Weekly');
@@ -25,49 +28,89 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
     });
     const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    // Auto-select initial stock if provided
-    useEffect(() => {
-        // Check if initialStock exists and has a symbol
-        if (initialStock && initialStock.symbol) {
-            // Set the selected stock using the provided data
-            setSelectedStock(initialStock);
+    // --- NEW: Function to fetch quote and set state ---
+    const fetchAndSetStock = async (symbol) => {
+        setIsLoading(true);
+        setError('');
+        setSearchResults([]); // Crucial to clear results before fetch
 
-            // If the price exists and is valid, pre-fill the target
-            // Use the v3 field name
-            if (initialStock.price != null && typeof initialStock.price === 'number') {
-                setTarget(initialStock.price.toFixed(2));
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/quote/${symbol}`);
+            if (res.data && res.data.price != null && typeof res.data.price === 'number') {
+                setSelectedStock(res.data);
+                setTarget(res.data.price.toFixed(2));
             } else {
-                // Price is missing, show the warning toast but keep the stock selected
-                setTarget(''); // Clear target price
+                // Price is missing/invalid, set partial data
+                setSelectedStock({
+                    symbol: symbol,
+                    price: null,
+                    longName: res.data?.longName,
+                    currency: res.data?.currency || 'USD',
+                    marketState: res.data?.marketState || 'CLOSED'
+                });
+                setTarget('');
+            }
+            // CRITICAL FIX: Do NOT set searchTerm here, rely solely on selectedStock.
+
+        } catch (err) {
+            setError(t('prediction.quoteFetchError', 'Could not fetch quote.'));
+            setSelectedStock(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Auto-select initial stock and fetch price if needed
+    useEffect(() => {
+        if (initialStock && initialStock.symbol) {
+            if (initialStock.price != null && typeof initialStock.price === 'number') {
+                // Case 1: Full quote exists (e.g., from StockPage)
+                setSelectedStock(initialStock);
+                setTarget(initialStock.price.toFixed(2));
+                // CRITICAL FIX: Set searchTerm only if we AREN'T rendering the stock form yet
+                // For a smooth transition, we must clear the search term if we have a stock.
+                setSearchTerm('');
+            } else {
+                // Case 2: Only symbol exists (e.g., from EarningsBanner) - needs fetch
+                fetchAndSetStock(initialStock.symbol);
+                // Temporarily set a mock stock to bypass the search view immediately
+                setSelectedStock({ symbol: initialStock.symbol, price: null, isFetching: true });
             }
         } else {
-            // If no valid initialStock, reset to search state
+            // Case 3: No stock provided (initial state)
             setSelectedStock(null);
             setTarget('');
+            setSearchTerm('');
         }
-    }, [initialStock, t]); // Dependency array remains the same
+    }, [initialStock, t]);
+
 
     // Handle search input
     useEffect(() => {
-        if (!searchTerm) { setSearchResults([]); return; }
-        setIsLoading(true);
-        setError(''); // Clear previous search errors
+        // Only run search if a stock is NOT currently selected.
+        if (selectedStock || !searchTerm) {
+            setSearchResults([]);
+            return;
+        }
+
+        // setIsLoading(true); // Moved inside timeout to prevent immediate UI lock
+        setError('');
         const delayDebounceFn = setTimeout(() => {
+            setIsLoading(true);
             axios.get(`${import.meta.env.VITE_API_URL}/api/search/${searchTerm}`)
                 .then(res => setSearchResults(res.data.quotes || []))
-                .catch(() => setError(t('prediction.searchFailed', 'Search failed.'))) // Use translation key
+                .catch(() => setError(t('prediction.searchFailed', 'Search failed.')))
                 .finally(() => setIsLoading(false));
         }, NUMERIC_CONSTANTS.SEARCH_DEBOUNCE_MS);
         return () => clearTimeout(delayDebounceFn);
-    }, [searchTerm, t]);
+    }, [searchTerm, selectedStock, t]); // Now depends on selectedStock
 
-    // Update time penalty bar
+    // Update time penalty bar (unchanged)
     useEffect(() => {
         if (!selectedStock) return;
-        // --- FIX: Pass the entire stock object ---
         const details = getPredictionDetails(predictionType, t, i18n, selectedStock);
         setFormState(details);
-        // We can simplify the interval check because getPredictionDetails now handles the logic
+
         if (predictionType === 'Hourly' || predictionType === 'Daily') {
             const timer = setInterval(() => {
                 const updatedDetails = getPredictionDetails(predictionType, t, i18n, selectedStock);
@@ -77,35 +120,11 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         }
     }, [predictionType, selectedStock, t, i18n]);
 
+
     const handleSelectStock = (symbol) => {
-        setIsLoading(true);
-        setError('');
-        setSearchTerm('');
         setSearchResults([]);
-        axios.get(`${import.meta.env.VITE_API_URL}/api/quote/${symbol}`)
-            .then(res => {
-                // Backend sends null on failure
-                if (res.data && res.data.price != null && typeof res.data.price === 'number') {
-                    setSelectedStock(res.data);
-                    setTarget(res.data.price.toFixed(2));
-                } else {
-                    // Price is missing or invalid
-                    setSelectedStock({
-                        symbol: symbol,
-                        price: null, // <-- Use v3 field
-                        longName: res.data?.longName, // Still try to get name
-                        currency: res.data?.currency || 'USD', // Use default currency
-                        marketState: res.data?.marketState || 'CLOSED'
-                    });
-                    setTarget('');
-                    // Show the warning toast
-                }
-            })
-            .catch(() => {
-                setError(t('prediction.quoteFetchError', 'Could not fetch quote.'));
-                setSelectedStock(null); // Reset fully on critical error
-            })
-            .finally(() => setIsLoading(false));
+        setSearchTerm(symbol);
+        fetchAndSetStock(symbol);
     };
 
     // Resilient handleSubmit
@@ -186,9 +205,9 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
             });
     };
 
-    // Resilient percentage calculation for display only
+    // Resilient percentage calculation for display only (unchanged)
     let displayPercentageChange = null;
-    const currentPriceForDisplay = selectedStock?.price; // <-- Use v3 field
+    const currentPriceForDisplay = selectedStock?.price;
     if (typeof currentPriceForDisplay === 'number' && currentPriceForDisplay > 0 && target) {
         const targetValue = parseFloat(target);
         if (!isNaN(targetValue)) {
@@ -196,10 +215,14 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         }
     }
 
-    // --- RENDER LOGIC ---
 
-    if (!selectedStock) {
-        // Initial search view
+    // --- RENDER LOGIC: THE FINAL FIX ---
+
+    // New check for loading state during fetch from banner/search
+    const isFetchingStock = selectedStock?.isFetching || isLoading;
+
+    if (!selectedStock || isFetchingStock) {
+        // Show initial search view or a loading placeholder
         return (
             <div className="w-full">
                 <h2 className="text-2xl font-bold text-white mb-6">{t('prediction.makePrediction')}</h2>
@@ -210,8 +233,10 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value.toUpperCase())}
                         className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white"
+                    // Disable input while a fetch is running
+                    // disabled={isFetchingStock} 
                     />
-                    {isLoading && <p className="text-center text-gray-400 py-4">{t('prediction.searching')}</p>}
+                    {isFetchingStock && <p className="text-center text-gray-400 py-4">{t('prediction.searching')}</p>}
                     {error && <p className="text-center text-red-400 py-4">{error}</p>}
                     {searchResults.length > 0 && (
                         <ul className="absolute z-10 w-full bg-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
@@ -227,18 +252,18 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
         );
     }
 
-    // Main prediction form (shown even if price is null)
+    // Main prediction form (only shown when selectedStock is definitively set)
     return (
         <div className="w-full">
             <h2 className="text-2xl font-bold text-white mb-6">{t('prediction.makePrediction')}</h2>
             <div className="animate-fade-in">
+                {/* --- Stock Display and Quick Change --- */}
                 <div className="text-center mb-4">
                     <p className="text-xl font-bold text-white">{selectedStock.symbol}</p>
                     <div className="text-gray-400 flex items-center justify-center">
                         {t('prediction.currentPrice')}:&nbsp;
                         <span className="font-semibold text-white">
                             <Tooltip text={t('prediction.priceDelayInfo')}>
-                                {/* Use formatCurrency which handles null gracefully */}
                                 {formatCurrency(selectedStock.price, i18n.language, selectedStock.currency)}
                             </Tooltip>
                         </span>
@@ -285,13 +310,11 @@ const PredictionWidget = ({ onClose, initialStock, onInfoClick, onTypesInfoClick
                                     className="w-full bg-transparent p-2 text-white disabled:opacity-50 focus:outline-none"
                                     placeholder={selectedStock.price === null ? t('prediction.enterTargetManually', 'Enter Target') : ''}
                                 />
-                                {/* Resilient percentage display */}
                                 {typeof displayPercentageChange === 'number' ? (
                                     <span className={`font-bold text-sm flex-shrink-0 ${displayPercentageChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                         {formatPercentage(displayPercentageChange, i18n.language)}
                                     </span>
                                 ) : (
-                                    // Show placeholder only if a stock is selected
                                     selectedStock && <span className="font-bold text-sm text-gray-500">...</span>
                                 )}
                             </div>

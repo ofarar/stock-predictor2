@@ -201,13 +201,13 @@ function App() {
       <Elements stripe={stripePromise}>
         <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
 
-          {/* --- NEW: Earnings Banner Component --- */}
           <EarningsBanner
             calendar={earningsCalendar}
-            onMakePredictionClick={handleOpenPredictionModal}
-            isActive={settings?.isEarningsBannerActive} // <--- Pass admin setting
+            // MODIFIED: Ensure the object passed is structured like a quote object, 
+            // but only contains the symbol, forcing the widget to fetch the price.
+            onMakePredictionClick={(stock) => handleOpenPredictionModal({ symbol: stock.symbol })}
+            isActive={settings?.isEarningsBannerActive}
           />
-          {/* ------------------------------------- */}
 
           <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} onProfileUpdate={fetchUser} />
           <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
