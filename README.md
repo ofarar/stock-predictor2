@@ -35,6 +35,7 @@
 | **Logtail (BetterStack)** | Log management and production error tracking | [betterstack.com/logtail](https://betterstack.com/logtail) |
 | **Yahoo Finance (v3)** | Market data provider (via `yahoo-finance2`) | [npm/yahoo-finance2](https://www.npmjs.com/package/yahoo-finance2) |
 | **CoinGecko** | Dedicated Crypto Spot Price Provider (Used to bypass stale data from Yahoo for BTC/ETH) | [coingecko.com/api](https://www.coingecko.com/api) |
+| **NASDAQ Earnings Calendar API** | Used for Earnings Banner (Next 7 days, High Cap stocks) | [nasdaq.com](https://www.nasdaq.com/market-activity/earnings) |
 | **Google OAuth** | Secure user authentication (Passport.js) | [developers.google.com](https://developers.google.com/identity) |
 
 -----
