@@ -1150,23 +1150,22 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
                 return res.status(400).json({ message: "Invalid emails array" });
             }
 
+            // 1. Find users to get their IDs
+            const users = await User.find({ email: { $in: emails } });
+            const userIds = users.map(u => u._id);
+
+            // 2. Delete their predictions
+            if (userIds.length > 0) {
+                await Prediction.deleteMany({ userId: { $in: userIds } });
+            }
+
+            // 3. Delete the users
             const result = await User.deleteMany({ email: { $in: emails } });
-            // Also clean up related data if necessary (predictions, notifications, etc.)
-            // For now, just deleting the user is the main request.
-            // But let's be thorough and delete their predictions too.
-            const users = await User.find({ email: { $in: emails } }); // Wait, they are deleted now.
-            // Better to find IDs first if we want to delete related data.
 
-            // Re-doing logic:
-            // 1. Find users
-            // 2. Delete related data
-            // 3. Delete users
-
-            // Actually, let's just stick to deleting users for now as per "clean db for test users". 
-            // Mongoose middleware might handle cascading deletes if configured, but likely not.
-            // Let's just delete the users as requested.
-
-            res.json({ message: `Deleted ${result.deletedCount} users`, deletedCount: result.deletedCount });
+            res.json({
+                message: `Cleaned up ${result.deletedCount} users and their predictions`,
+                deletedUsers: result.deletedCount
+            });
         } catch (error) {
             console.error("Error cleaning up test users:", error);
             res.status(500).json({ message: "Error cleaning up test users" });
