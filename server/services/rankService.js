@@ -65,6 +65,36 @@ const awardPointsForCategory = async (categoryName, categoryQuery) => {
             }
         });
 
+        // --- STRUCTURED LOGGING FOR WINNERS ---
+        // Log the top 5 winners for visibility
+        const top5 = top100.slice(0, 5);
+        if (top5.length > 0) {
+            console.log(`\n--- Top 5 Winners for '${categoryName}' ---`);
+            for (const [i, winner] of top5.entries()) {
+                try {
+                    // Fetch the specific predictions that contributed to this score
+                    // Note: This re-queries to get details, which is fine for just 5 users
+                    const winnerPredictions = await Prediction.find({
+                        userId: winner._id,
+                        status: 'Assessed',
+                        ...categoryQuery
+                    }).select('stockTicker createdAt rating').lean();
+
+                    const distinctStocks = [...new Set(winnerPredictions.map(p => p.stockTicker))];
+                    const predictionCount = winnerPredictions.length;
+
+                    console.log(`Rank #${i + 1}: User ${winner._id} (Avg: ${winner.avgRating.toFixed(2)})`);
+                    console.log(`   - Stocks: ${distinctStocks.join(', ')}`);
+                    console.log(`   - Count: ${predictionCount}`);
+                    console.log(`   - Time Range: All Assessed in '${categoryName}' category`);
+                } catch (err) {
+                    console.error(`   - Error fetching details for winner ${winner._id}: ${err.message}`);
+                }
+            }
+            console.log('-------------------------------------------\n');
+        }
+        // --- END STRUCTURED LOGGING ---
+
         if (updates.size === 0) {
             console.log(`Rank Job: No points to award for '${categoryName}'.`);
             return;

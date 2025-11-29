@@ -1,6 +1,4 @@
 // server/services/badgeService.js
-// --- ENTIRE FILE REPLACEMENT ---
-
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting');
@@ -89,38 +87,39 @@ const awardBadges = async (user) => {
             if (earnedTier) {
                 const existingTier = existingBadges.get(badgeId);
                 if (!existingTier || (earnedTier === 'Gold' && existingTier !== 'Gold') || (earnedTier === 'Silver' && existingTier === 'Bronze')) {
+
+                    // --- FIX: Ensure analystRating is an object (Migration) ---
                     if (typeof user.analystRating !== 'object' || user.analystRating === null) {
                         const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
-                        // --- FIX: On-the-fly migration for analystRating ---
                         user.analystRating = {
                             total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
                             fromBonus: 0, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
                         };
-                        // --- END FIX ---
-
-                        user.badges = user.badges.filter(b => b.badgeId !== badgeId);
-                        user.badges.push({ badgeId, tier: earnedTier });
-                        earnedBadges.push({ badgeId, tier: earnedTier });
-
-                        // --- NEW RATING LOGIC ---
-                        let ratingToAward = 0;
-                        if (earnedTier === 'Bronze') ratingToAward = 100;
-                        if (earnedTier === 'Silver') ratingToAward = 250;
-                        if (earnedTier === 'Gold') ratingToAward = 500;
-
-                        user.analystRating.total = (user.analystRating.total || 0) + ratingToAward;
-                        user.analystRating.fromBadges = (user.analystRating.fromBadges || 0) + ratingToAward;
-                        console.log(`   ==> AWARDING new/upgraded badge: ${definition.name} (${earnedTier}) and +${ratingToAward} Rating`);
-                        // --- NEW: Update badgeBreakdown ---
-                        const badgeKey = definition.name.replace(/\./g, '_');
-                        if (!user.analystRating.badgeBreakdown) {
-                            user.analystRating.badgeBreakdown = new Map();
-                        }
-                        const currentBadgeRating = user.analystRating.badgeBreakdown.get(badgeKey) || 0;
-                        user.analystRating.badgeBreakdown.set(badgeKey, currentBadgeRating + ratingToAward);
-                        // --- END NEW ---
-                        // --- END NEW RATING LOGIC ---
                     }
+                    // --- END FIX ---
+
+                    user.badges = user.badges.filter(b => b.badgeId !== badgeId);
+                    user.badges.push({ badgeId, tier: earnedTier });
+                    earnedBadges.push({ badgeId, tier: earnedTier });
+
+                    // --- NEW RATING LOGIC ---
+                    let ratingToAward = 0;
+                    if (earnedTier === 'Bronze') ratingToAward = 100;
+                    if (earnedTier === 'Silver') ratingToAward = 250;
+                    if (earnedTier === 'Gold') ratingToAward = 500;
+
+                    user.analystRating.total = (user.analystRating.total || 0) + ratingToAward;
+                    user.analystRating.fromBadges = (user.analystRating.fromBadges || 0) + ratingToAward;
+                    console.log(`   ==> AWARDING new/upgraded badge: ${definition.name} (${earnedTier}) and +${ratingToAward} Rating`);
+                    // --- NEW: Update badgeBreakdown ---
+                    const badgeKey = definition.name.replace(/\./g, '_');
+                    if (!user.analystRating.badgeBreakdown) {
+                        user.analystRating.badgeBreakdown = new Map();
+                    }
+                    const currentBadgeRating = user.analystRating.badgeBreakdown.get(badgeKey) || 0;
+                    user.analystRating.badgeBreakdown.set(badgeKey, currentBadgeRating + ratingToAward);
+                    // --- END NEW ---
+                    // --- END NEW RATING LOGIC ---
                 }
             }
         }
