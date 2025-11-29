@@ -45,7 +45,7 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                 const sign = changePercent > 0 ? '+' : (changePercent < 0 ? '-' : '');
 
                 // Create the attractive format: $TSLA: 245 (+%4.1) or $NVDA: 170 (-%4.2)
-                return `#${p.stockTicker}: $${p.targetPrice.toFixed(2)} (${sign}%${Math.abs(changePercent).toFixed(1)})`;
+                return `$${p.stockTicker}: $${p.targetPrice.toFixed(2)} (${sign}%${Math.abs(changePercent).toFixed(1)})`;
             }
             return null; // Ignore if currentPrice is missing
         }).filter(item => item !== null);
