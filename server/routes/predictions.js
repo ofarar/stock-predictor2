@@ -20,6 +20,7 @@ const predictLimiter = rateLimit({
     windowMs: PREDICT_WINDOW_MS, // 1 hour
     max: PREDICT_LIMIT, // Max 100 predictions per hour per IP (adjust as needed)
     message: 'You have made too many predictions, please try again after an hour',
+    skip: (req, res) => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 });
 
 const viewLimiter = rateLimit({
@@ -738,6 +739,34 @@ router.delete('/dev/predictions', async (req, res) => {
         res.json({ message: 'Prediction deleted' });
     } catch (err) {
         res.status(500).json({ message: 'Error deleting prediction' });
+    }
+});
+
+router.post('/dev/clear-predictions', async (req, res) => {
+    if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    const { email } = req.body;
+
+    try {
+        let userId;
+        if (email) {
+            const user = await User.findOne({ email });
+            if (user) userId = user._id;
+        } else if (req.user) {
+            userId = req.user._id;
+        }
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User not found or not specified' });
+        }
+
+        await Prediction.deleteMany({ userId });
+        res.json({ message: 'All predictions cleared for user' });
+    } catch (err) {
+        console.error("Error clearing predictions:", err);
+        res.status(500).json({ message: 'Error clearing predictions' });
     }
 });
 

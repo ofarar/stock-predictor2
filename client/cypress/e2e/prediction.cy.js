@@ -91,7 +91,7 @@ describe('Prediction Flows', () => {
 
         // Ensure we are on the profile page
         // The username might be split in the UI, so we check for the h1 that contains it
-        cy.get('h1').should('contain', 'Stock Predictor');
+        cy.get('h1').should('contain', 'TestUser1');
 
         // Click "Active" tab if needed (it's usually default, but good to be explicit if tabs exist)
         // Based on translation.json: "profile_active_predictions": "Active Predictions"

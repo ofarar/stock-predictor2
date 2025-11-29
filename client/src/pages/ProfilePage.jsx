@@ -68,19 +68,9 @@ const ProfilePage = ({ settings, requestLogin }) => {
 
         const logView = () => {
             try {
-                // Use localStorage to debounce views (1 view per hour per profile)
-                const viewedProfiles = JSON.parse(localStorage.getItem(STORAGE_KEYS.VIEWED_PROFILES) || '{}');
-                const now = Date.now();
-
-                // If never viewed OR viewed more than 1 hour ago
-                if (!viewedProfiles[userId] || (now - viewedProfiles[userId] > NUMERIC_CONSTANTS.ONE_HOUR_MS)) {
-                    // Fire and forget
-                    axios.post(`${API_URL}${API_ENDPOINTS.USER_VIEW(userId)}`);
-
-                    // Update local storage
-                    viewedProfiles[userId] = now;
-                    localStorage.setItem(STORAGE_KEYS.VIEWED_PROFILES, JSON.stringify(viewedProfiles));
-                }
+                axios.post(`${API_URL}/api/users/${userId}/view`).catch(err => {
+                    // Ignore 401s (not logged in) or other errors
+                });
             } catch (error) {
                 console.error("Failed to log profile view", error);
             }
@@ -88,7 +78,6 @@ const ProfilePage = ({ settings, requestLogin }) => {
 
         logView();
     }, [userId]);
-
     useEffect(() => {
         // Check if the success parameter exists
         if (searchParams.get(URL_PARAMS.SUBSCRIBE) === PARAM_VALUES.SUCCESS) {

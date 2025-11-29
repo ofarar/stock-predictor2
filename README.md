@@ -182,18 +182,6 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
     *   **Utility Functions:** Testing isolated helper functions to ensure correctness before integration.
     *   **Jobs:** Validating background job logic (like assessment jobs) in a controlled environment.
 
------
-
-## 🚀 Getting Started (Local Development)
-
-1.  **Clone the repository.**
-2.  **Install Dependencies:**
-    ```bash
-    npm install          # Root (Server)
-    *   **Jobs:** Validating background job logic (like assessment jobs) in a controlled environment.
-
------
-
 ## 🚀 Getting Started (Local Development)
 
 1.  **Clone the repository.**
