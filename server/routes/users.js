@@ -17,6 +17,7 @@ const {
     VIEW_LIMIT, VIEW_WINDOW_MS,
     ACTION_LIMIT, ACTION_WINDOW_MS
 } = require('../constants'); // <-- NEW IMPORT
+const { calculateAggressiveness } = require('../utils/calculations');
 
 // Limiters
 const contactLimiter = rateLimit({
@@ -332,34 +333,12 @@ router.get('/profile/:userId', async (req, res) => {
             };
         }).sort((a, b) => b.avgRating - a.avgRating);
 
-        const aggressivenessData = { defensive: 0, neutral: 0, offensive: 0 };
-        let totalAbsoluteChange = 0;
-        let analyzedCount = 0;
-
-        assessedPredictions.forEach(p => {
-            if (p.priceAtCreation > 0) {
-                analyzedCount++;
-                const absoluteChange = Math.abs((p.targetPrice - p.priceAtCreation) / p.priceAtCreation) * 100;
-                totalAbsoluteChange += absoluteChange;
-
-                const typeThresholds = thresholds[p.predictionType] || { def: 5, neu: 15 };
-
-                if (absoluteChange <= typeThresholds.def) {
-                    aggressivenessData.defensive++;
-                } else if (absoluteChange <= typeThresholds.neu) {
-                    aggressivenessData.neutral++;
-                } else {
-                    aggressivenessData.offensive++;
-                }
-            }
-        });
-
-        const overallAggressiveness = analyzedCount > 0 ? totalAbsoluteChange / analyzedCount : 0;
+        const aggressivenessResult = calculateAggressiveness(assessedPredictions);
 
         performance.aggressiveness = {
-            distribution: aggressivenessData,
-            overallScore: parseFloat(overallAggressiveness.toFixed(1)),
-            analyzedCount: analyzedCount
+            distribution: aggressivenessResult.distribution,
+            overallScore: aggressivenessResult.overallScore,
+            analyzedCount: aggressivenessResult.analyzedCount
         };
 
         const rankPromisesByType = formattedPerfByType.map(p => getGlobalRank('predictionType', p.type, p.avgRating));

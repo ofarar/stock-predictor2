@@ -176,6 +176,22 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
 *   **API Mocking:** We utilize `cy.intercept()` to mock backend API responses. This ensures tests are deterministic, faster, and isolated from external dependencies (like live market data or third-party APIs).
 *   **Visual Verification:** Assertions are used to verify styling (e.g., special borders for top creators), visibility of elements, and correct data rendering.
 
+### 3. Backend Testing
+*   **Jest:** Used for unit and integration testing of complex backend logic, specifically:
+    *   **Calculation Logic:** Verifying the accuracy of prediction ratings, time penalties, and aggressiveness scores.
+    *   **Utility Functions:** Testing isolated helper functions to ensure correctness before integration.
+    *   **Jobs:** Validating background job logic (like assessment jobs) in a controlled environment.
+
+-----
+
+## 🚀 Getting Started (Local Development)
+
+1.  **Clone the repository.**
+2.  **Install Dependencies:**
+    ```bash
+    npm install          # Root (Server)
+    *   **Jobs:** Validating background job logic (like assessment jobs) in a controlled environment.
+
 -----
 
 ## 🚀 Getting Started (Local Development)
@@ -192,6 +208,19 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
 4.  **Run Application:**
       * **Server:** `npm run dev` (starts Node server on port 5001).
       * **Client:** `npm run dev` (starts Vite server on port 5173).
+5.  **Run Tests:**
+      * **Cypress (E2E):**
+        ```bash
+        cd client
+        npx cypress open   # Opens the interactive Test Runner
+        # OR
+        npx cypress run    # Runs tests headlessly
+        ```
+      * **Jest (Backend):**
+        ```bash
+        cd server
+        npm test           # Runs all backend tests
+        ```
 
 -----
 
