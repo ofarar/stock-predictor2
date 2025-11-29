@@ -46,7 +46,7 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                 <img
                     src={user?.avatar || `https://avatar.iran.liara.run/public/boy?username=${user?._id}`}
                     alt="Avatar"
-                    className={`w-10 h-10 rounded-full border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'} hover:border-green-500`}
+                    className={`w-10 h-10 rounded-full border-2 ${user?.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'} hover:border-green-500`}
                 />
             </button>
             {isUserMenuOpen && (

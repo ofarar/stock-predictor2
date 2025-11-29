@@ -31,7 +31,7 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                 </Link>
             )}
             <div className="relative mt-8 sm:mt-0">
-                <img src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`} alt="avatar" className={`w-24 h-24 rounded-full border-4 ${avatarBorder} transition-colors`} />
+                <img src={user?.avatar || `https://avatar.iran.liara.run/public/boy?username=${user?._id}`} alt="avatar" className={`w-24 h-24 rounded-full border-4 ${avatarBorder} transition-colors`} />
                 {isOwnProfile && (
                     <Link to="/profile/edit" className="absolute -bottom-1 -end-1 bg-gray-700 p-2 rounded-full text-white hover:bg-gray-600" title={t('edit_profile_label')}>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l10.732-10.732z"></path></svg>

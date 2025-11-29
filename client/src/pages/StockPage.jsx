@@ -265,11 +265,11 @@ const StockPage = ({ onPredictClick, settings, earningsCalendar = [] }) => {
 
                                 return (
                                     <Link to={`/prediction/${p._id}`} key={p._id} className="flex items-center bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
-                                        <img src={p.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
+                                        <img src={p.userId?.avatar || `https://avatar.iran.liara.run/public/boy?username=${p.userId?._id}`} alt="avatar" className={`w-8 h-8 rounded-full border-2 ${p.userId?.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                                         <div className="ms-3 flex-grow">
                                             <div className="flex items-center gap-2">
-                                                <p className="text-sm font-semibold text-white">{p.userId.username}</p>
-                                                {settings?.isVerificationEnabled && p.userId.isVerified && <VerifiedTick />}
+                                                <p className="text-sm font-semibold text-white">{p.userId?.username || 'Unknown'}</p>
+                                                {settings?.isVerificationEnabled && p.userId?.isVerified && <VerifiedTick />}
                                             </div>
                                             <p className="text-xs text-gray-400">
                                                 {t('prediction_type', { type: t(`prediction_types.${p.predictionType}`) })}
@@ -342,15 +342,15 @@ const StockPage = ({ onPredictClick, settings, earningsCalendar = [] }) => {
                                 <div className="flex items-center">
                                     <span className="text-xl font-bold w-8 sm:w-10 text-center text-gray-400">{index + 1}</span>
                                     <img
-                                        src={user.avatar || `https://avatar.iran.liara.run/public/boy?username=${user._id}`}
+                                        src={user?.avatar || `https://avatar.iran.liara.run/public/boy?username=${user?._id}`}
                                         alt="avatar"
-                                        className={`w-10 h-10 rounded-full ms-2 sm:ml-4 border-2 ${user.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
+                                        className={`w-10 h-10 rounded-full ms-2 sm:ml-4 border-2 ${user?.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`}
                                     />
                                     <div className="flex items-center gap-2 ms-3 sm:ml-4">
-                                        <Link to={`/profile/${user._id}`} className="font-semibold text-white hover:underline">
-                                            {user.username}
+                                        <Link to={`/profile/${user?._id}`} className="font-semibold text-white hover:underline">
+                                            {user?.username || 'Unknown'}
                                         </Link>
-                                        {settings?.isVerificationEnabled && user.isVerified && <VerifiedTick />}
+                                        {settings?.isVerificationEnabled && user?.isVerified && <VerifiedTick />}
                                     </div>
                                 </div>
                                 <div className="text-end">
