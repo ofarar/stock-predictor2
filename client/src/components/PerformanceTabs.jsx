@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaShareAlt } from 'react-icons/fa';
 import ShareModal from './ShareModal';
+import LoadMoreButton from './LoadMoreButton';
 
 const MiniAggressivenessBar = ({ score }) => (
     <div className="w-full bg-gray-900 rounded-full h-1.5 mt-2">
@@ -77,6 +78,7 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
 
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareData, setShareData] = useState({ text: '', url: '' });
+    const [visibleStockCount, setVisibleStockCount] = useState(10); // Start with 10 visible items
 
     if (!performance) return null;
 
@@ -110,6 +112,18 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
         setShareData({ text: shareText, url: shareUrl, context: shareContext }); // <-- 4. Save context
         setIsShareModalOpen(true);
     };
+
+    // Reset visibility count when switching tabs
+    const handleTabChange = (newTab) => {
+        setActiveTab(newTab);
+        setSelectedFilter(null);
+        onFilterChange(performance);
+        setVisibleStockCount(10); // Reset count on tab switch
+    }
+
+    // 3. Prepare the sliced list for ByStock
+    const displayedStocks = performance.byStock.slice(0, visibleStockCount);
+    const hasMoreStocks = performance.byStock.length > visibleStockCount;
 
     return (
         <>
@@ -147,12 +161,13 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                 )}
                 {activeTab === 'ByStock' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
-                        {performance.byStock?.length > 0 ? performance.byStock.map(s => (
+                        {/* 2. CRITICAL FIX: Map over the sliced list (displayedStocks) */}
+                        {displayedStocks.length > 0 ? displayedStocks.map(s => (
                             <StatCard
                                 key={s.ticker}
                                 label={s.ticker}
                                 avgRating={s.avgRating}
-                                isStock={true} // <-- You set it to 'true' here
+                                isStock={true}
                                 rank={s.rank}
                                 aggressivenessScore={s.aggressivenessScore}
                                 isSelected={selectedFilter === s.ticker}
@@ -160,6 +175,15 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                                 onShareClick={() => openShareModal(s, 'ByStock')}
                             />
                         )) : <p className="md:col-span-2 text-gray-500 text-center py-4">{t('performanceTabs.noData.byStock')}</p>}
+
+                        {/* 3. Load More Button (remains the same) */}
+                        <div className="md:col-span-2">
+                            <LoadMoreButton
+                                onClick={() => setVisibleStockCount(prev => prev + 10)}
+                                isLoading={false}
+                                hasMore={hasMoreStocks}
+                            />
+                        </div>
                     </div>
                 )}
             </div>
