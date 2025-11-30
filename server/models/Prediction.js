@@ -16,6 +16,7 @@ const PredictionSchema = new Schema({
     currency: { type: String, default: 'USD' },
     description: { type: String, maxLength: 500 },
     initialDescription: { type: String, maxLength: 500 },
+    targetHit: { type: Boolean, default: false }, // Track if the target was hit before/at deadline
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dislikes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     history: [{

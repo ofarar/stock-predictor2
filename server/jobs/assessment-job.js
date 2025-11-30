@@ -7,7 +7,7 @@ const JobLog = require('../models/JobLog');
 const Notification = require('../models/Notification');
 const { awardBadges } = require('../services/badgeService');
 const financeAPI = require('../services/financeAPI');
-const { PREDICTION_MAX_RATING, PREDICTION_MAX_ERROR_PERCENTAGE, RATING_DIRECTION_CHECK_ENABLED, RATING_AWARDS } = require('../constants');
+const { PREDICTION_MAX_RATING, PREDICTION_MAX_ERROR_PERCENTAGE, RATING_DIRECTION_CHECK_ENABLED, RATING_AWARDS, TARGET_HIT_WEIGHTS } = require('../constants');
 const { calculateProximityRating } = require('../utils/calculations');
 
 /**
@@ -82,6 +82,33 @@ async function getActualStockPrice(ticker, deadline) {
     }
 }
 
+/**
+ * NEW: Checks if the target price was reached during the prediction window.
+ */
+async function checkTargetHit(ticker, targetPrice, createdAt, deadline) {
+    try {
+        const queryOptions = {
+            period1: createdAt.toISOString().split('T')[0],
+            period2: deadline.toISOString().split('T')[0], // End date is deadline date
+            interval: '1d'
+        };
+
+        // Yahoo historical data includes High and Low prices for the day.
+        const history = await financeAPI.getHistorical(ticker, queryOptions);
+
+        for (const day of history) {
+            // Check if the target price falls within the daily high/low range
+            if (day.high >= targetPrice && day.low <= targetPrice) {
+                // Target hit!
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        console.error(`Target Hit Check failed for ${ticker}:`, error.message);
+        return false; // Assume not hit on error
+    }
+}
 
 const runAssessmentJob = async () => {
     try {
@@ -154,6 +181,18 @@ const runAssessmentJob = async () => {
                     historicalPrice = await getActualStockPrice(ticker, deadlineForAPI);
                 }
 
+                // --- NEW CRITICAL STEP: Run Target Hit Check ONCE per group ---
+                // We use the first prediction's target and creation date for the check
+                // as an approximation for the group's target hit status.
+                const oldestPrediction = predictions.reduce((min, p) => p.createdAt < min.createdAt ? p : min);
+
+                const targetWasHit = await checkTargetHit(
+                    ticker,
+                    oldestPrediction.targetPrice,
+                    oldestPrediction.createdAt,
+                    deadlineForAPI
+                );
+
 
                 const userUpdates = new Map();
 
@@ -184,6 +223,9 @@ const runAssessmentJob = async () => {
                         const maxAllowedRating = prediction.maxRatingAtCreation || 100;
                         const rating = Math.min(rawRating, maxAllowedRating); // Capping the score here
 
+                        // Set the new field in the DB
+                        prediction.targetHit = targetWasHit;
+
                         // --- STRUCTURED LOGGING ---
                         const logEntry = {
                             user: prediction.userId.username,
@@ -193,6 +235,8 @@ const runAssessmentJob = async () => {
                             timePenaltyMaxRating: maxAllowedRating,
                             currentPrice: actualPrice,
                             ratingCalculated: rating,
+                            targetHitStatus: targetWasHit, // True/False status of the target hit
+                            targetHitBonus: targetWasHit ? (RATING_AWARDS.BASE_TARGET_HIT_BONUS * (TARGET_HIT_WEIGHTS[prediction.predictionType] || 1.0)) : 0,
                             assessmentTime: new Date(),
                             timeType: 'UTC'
                         };
@@ -204,6 +248,18 @@ const runAssessmentJob = async () => {
                         if (rating > 90) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_90;
                         else if (rating > 80) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_80;
                         else if (rating > 70) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_70;
+
+                        // 4. Award Weighted Target Hit Bonus
+                        if (targetWasHit) {
+                            const weight = TARGET_HIT_WEIGHTS[prediction.predictionType] || 1.0;
+
+                            // Calculate final bonus: Base Points * Weight
+                            const bonusPoints = RATING_AWARDS.BASE_TARGET_HIT_BONUS * weight;
+
+                            // Add bonus points to the analyst's reputation total
+                            analystRatingToAward += bonusPoints;
+                            console.log(`   --> Awarded +${bonusPoints.toFixed(1)} bonus points for Target Hit (${prediction.predictionType})`);
+                        }
 
                         prediction.status = 'Assessed';
                         prediction.rating = rating;

@@ -12,31 +12,6 @@ Your journey begins here. The **Home Page** is now your central hub for market i
 ![Community Feed](./images/02_community_feed.png)
 
 ---
-
-## 2. 📋 Watch Your Favorites: Watchlist
-Keep a close eye on the assets that matter to you. The **Watchlist** allows you to track specific stocks and see their latest performance and community sentiment at a glance.
-
-![Watchlist](./images/20_watchlist.png)
-
----
-
-## 3. 🔥 Pulse of the Market: Hourly Winners
-Stay updated with the **Last Hour's Winners**. This real-time feed highlights the top-performing predictions from the community, giving you instant insight into who's making the right calls *right now*.
-
-![Hourly Winners](./images/03_prediction_cards_dashboard.png)
-
----
-
-## 4. 🏆 Rise to the Top: Scoreboard
-Competition drives excellence. Our **Scoreboard** ranks the top predictors across various timeframes. See where you stand against the best and strive for the #1 spot to earn exclusive badges and recognition.
-
-![Scoreboard](./images/04_scoreboard.png)
-
----
-
-## 5. 👤 Your Brand: Profile Overview
-Your profile is your portfolio. Showcase your stats, bio, and social links. The **Profile Overview** gives followers a snapshot of your performance and credibility as a predictor.
-
 ![Profile Overview](./images/05_profile_overview.png)
 
 ### 📈 Active Predictions

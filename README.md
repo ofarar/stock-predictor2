@@ -135,6 +135,19 @@ Milestones are awarded automatically via the `badgeService` based on strict perf
   * **Tiers:** Bronze (70+ Avg), Silver (80+ Avg), Gold (90+ Avg).
   * **Specializations:** There are specific milestones for different analytical timeframes (e.g., "Hourly Specialist", "Macro Strategist").
 
+### 5\. Weighted Target Hit Bonus
+
+To ensure fair play and incentivize deep analysis, the bonus for hitting a target price is weighted by the prediction duration.
+
+| Prediction Type | Effort/Risk | Multiplier | Reward for Hitting Target | Misuse Mitigation |
+| :--- | :--- | :--- | :--- | :--- |
+| **Hourly** | Very Low | **0.5x** | **2.5** points | Discourages spamming low-effort predictions. |
+| **Daily** | Low | **1.0x** | **5.0** points | Standard reward. |
+| **Weekly** | Medium | **2.0x** | **10.0** points | Increased reward for medium-term accuracy. |
+| **Monthly** | High | **4.0x** | **20.0** points | Significant reward for sustained accuracy. |
+| **Quarterly** | Very High | **6.0x** | **30.0** points | Major reward for quarterly forecasting. |
+| **Yearly** | Very High | **10.0x** | **50.0** points | Heavily incentivizes deep, long-term analysis.
+
 -----
 
 ### 💳 Monetization & Revenue Models
@@ -209,7 +222,15 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
         cd server
         npm test           # Runs all backend tests
         ```
+6.  **Generate Documentation:**
+      * **PDFs (Walkthrough & Whitepaper):**
+        ```bash
+        cd client
+        node scripts/generate-docs.js
+        ```
+        The generated PDFs will be located in `client/docs/`.
 
 -----
 
 *© 2025 StockPredictorAI. All rights reserved.*
+```

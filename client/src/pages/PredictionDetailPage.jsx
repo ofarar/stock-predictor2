@@ -208,6 +208,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const ratingLabel = isAssessed ? t("Final Rating") : (marketIsOpenNow ? t("Live Rating") : t("Rating at Close"));
     const currentPrice = isAssessed ? prediction.actualPrice : currentQuote?.displayPrice;
     const priceLabel = isAssessed ? t("explore_actual_price") : t("prediction.currentPrice");
+    const targetHitStatus = isAssessed && prediction.targetHit;
 
     let rating = isAssessed
         ? prediction.rating
@@ -265,6 +266,13 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                             <div className={`text-sm px-3 py-1 rounded-full font-semibold ${isAssessed ? 'bg-gray-700 text-gray-300' : 'bg-blue-500 text-white'}`}>
                                 {t(`predictionStatus.${prediction.status}`)}
                             </div>
+                            {/* --- NEW: TARGET HIT STATUS BADGE --- */}
+                            {targetHitStatus && (
+                                <div className="text-sm px-3 py-1 rounded-full font-semibold bg-green-700 text-green-300">
+                                    {t('prediction.targetHit', '🎯 Target Hit')}
+                                </div>
+                            )}
+                            {/* ------------------------------------ */}
                             <button onClick={openShareModal} title={t('prediction.share_title')} className="text-gray-400 hover:text-white">
                                 <FaShareAlt className="w-5 h-5" />
                             </button>

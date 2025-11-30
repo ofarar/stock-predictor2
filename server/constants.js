@@ -5,24 +5,6 @@ exports.PREDICTION_MAX_RATING = 100;
 exports.PREDICTION_MAX_ERROR_PERCENTAGE = 0.20; // 20% deviation is 0 score
 exports.RATING_DIRECTION_CHECK_ENABLED = true;
 
-// --- ANALYST RATING AWARDS (Total Points) ---
-exports.RATING_AWARDS = {
-    // Core Incentives
-    EARLY_USER_BONUS: 1000,
-    REFERRAL_SUCCESS: 500,
-    SHARE_ACTIVITY: 5,
-
-    // Prediction Accuracy Tiers
-    ACCURACY_TIER_90: 10, // Awarded for rating > 90
-    ACCURACY_TIER_80: 5,  // Awarded for rating > 80
-    ACCURACY_TIER_70: 2,  // Awarded for rating > 70
-
-    // Bug Bounty Tiers (For Admin award)
-    BUG_BOUNTY_CRITICAL: 500,
-    BUG_BOUNTY_NORMAL: 100,
-    BUG_BOUNTY_MINOR: 25,
-};
-
 // --- BADGE RATING AWARDS (Used in badgeService.js) ---
 exports.BADGE_POINTS = {
     GOLD: 500,
@@ -87,6 +69,17 @@ exports.RATING_AWARDS = {
     BUG_BOUNTY_CRITICAL: 500,
     BUG_BOUNTY_NORMAL: 100,
     BUG_BOUNTY_MINOR: 25,
+
+    BASE_TARGET_HIT_BONUS: 5, // Base points awarded for hitting the target
+};
+
+exports.TARGET_HIT_WEIGHTS = {
+    Hourly: 0.5,     // Low reward: 5 * 0.5 = 2.5 points
+    Daily: 1.0,      // Base reward: 5 * 1.0 = 5.0 points
+    Weekly: 2.0,     // Increased reward for medium-term accuracy
+    Monthly: 4.0,
+    Quarterly: 6.0,
+    Yearly: 10.0,    // Highest reward multiplier for long-term forecast
 };
 
 // --- BADGE RATING AWARDS (Used in badgeService.js) ---
