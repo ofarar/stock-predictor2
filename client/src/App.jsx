@@ -53,6 +53,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AIWizardPage = lazy(() => import('./pages/AIWizardPage'));
 const CompleteProfilePage = lazy(() => import('./pages/CompleteProfilePage'));
 const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
+const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage'));
 
 // --- 1. LOAD STRIPE JS GLOBALLY (OUTSIDE THE COMPONENT) ---
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -238,6 +239,7 @@ function App() {
                 <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
                 <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
                 <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
+                <Route path={ROUTES.WHITEPAPER} element={<WhitepaperPage />} />
                 <Route
                   path={ROUTES.AI_WIZARD}
                   element={

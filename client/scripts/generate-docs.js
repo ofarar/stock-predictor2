@@ -6,10 +6,16 @@ const SCREENSHOTS_DIR = path.join(__dirname, '../cypress/screenshots');
 const IMAGES_DIR = path.join(__dirname, '../docs/images');
 
 const WALKTHROUGH_MD = path.join(__dirname, '../docs/StockPredictorAI_Walkthrough.md');
-const WALKTHROUGH_PDF = path.join(__dirname, '../docs/StockPredictorAI_Walkthrough.pdf');
+const WALKTHROUGH_PDF = path.join(__dirname, '../public/docs/StockPredictorAI_Walkthrough.pdf');
 
 const WHITEPAPER_MD = path.join(__dirname, '../docs/StockPredictorAI_WhitePaper.md');
-const WHITEPAPER_PDF = path.join(__dirname, '../docs/StockPredictorAI_WhitePaper.pdf');
+const WHITEPAPER_PDF = path.join(__dirname, '../public/docs/StockPredictorAI_WhitePaper.pdf');
+
+// Ensure public docs directory exists
+const PUBLIC_DOCS_DIR = path.join(__dirname, '../public/docs');
+if (!fs.existsSync(PUBLIC_DOCS_DIR)) {
+    fs.mkdirSync(PUBLIC_DOCS_DIR, { recursive: true });
+}
 
 // Ensure images directory exists
 if (!fs.existsSync(IMAGES_DIR)) {

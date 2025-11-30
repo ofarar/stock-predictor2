@@ -172,7 +172,7 @@
   "golden_feed_no_posts_subtitle": "Probeer je zoekcriteria te verbreden of je op meer Gouden Leden te abonneren.",
   "loading_dashboard": "Dashboard laden...",
   "welcome_message": "Welkom bij StockPredictorAI",
-  "description": "Meld je aan om te beginnen met voorspellen en bouw je virtuele portfolio op.",
+  "description": "Log in om uw marktinzichten te valideren, een verifieerbare staat van dienst op te bouwen en uw analyse te delen.",
   "google_signin": "Aanmelden met Google",
   "loading_settings": "Instellingen laden...",
   "notification_settings_title": "Meldingsinstellingen",
@@ -487,7 +487,8 @@
     "contact": "Contact",
     "terms": "Servicevoorwaarden",
     "privacy": "Privacybeleid",
-    "copyright": "Alle rechten voorbehouden."
+    "copyright": "Alle rechten voorbehouden.",
+    "whitepaper": "Whitepaper"
   },
   "globalSearch": {
     "placeholder": "Zoek aandelen..."
@@ -751,7 +752,8 @@
       "description": "We konden de live prijs voor dit actief nu niet ophalen. Dit kan gebeuren tijdens hoge marktvolatiliteit of korte API-storingen.",
       "button": "Probeer een Ander Aandeel"
     },
-    "duplicateError": "Je hebt al een actieve {{type}} voorspelling voor {{ticker}}."
+    "duplicateError": "Je hebt al een actieve {{type}} voorspelling voor {{ticker}}.",
+    "targetHit": "🎯 Doel Bereikt"
   },
   "scoreboard": {
     "title": "Ranglijsten",

@@ -19,6 +19,7 @@ module.exports = {
   plugins: [
     // Scrollbar styling plugin (Tailwind v3 compatible)
     require('tailwind-scrollbar')({ nocompatible: true }),
+    require('@tailwindcss/typography'),
   ],
   variants: {
     scrollbar: ['rounded', 'hover'],

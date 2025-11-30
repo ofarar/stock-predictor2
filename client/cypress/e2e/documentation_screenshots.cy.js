@@ -1,6 +1,6 @@
 describe('Documentation Screenshots', () => {
     const email = 'ofarar@gmail.com';
-    const password = 'a63R34a41R.*.*';
+    const password = Cypress.env('password');
 
     beforeEach(() => {
         cy.viewport(1200, 900);

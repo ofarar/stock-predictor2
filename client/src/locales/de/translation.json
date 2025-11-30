@@ -173,7 +173,7 @@
     "golden_feed_no_posts_subtitle": "Erweitern Sie Ihre Suchkriterien oder abonnieren Sie mehr Gold-Mitglieder.",
     "loading_dashboard": "Dashboard wird geladen...",
     "welcome_message": "Willkommen bei StockPredictorAI",
-    "description": "Melden Sie sich an, um Vorhersagen zu treffen und Ihr virtuelles Portfolio aufzubauen.",
+    "description": "Melden Sie sich an, um Ihre Markteinblicke zu validieren, eine verifizierbare Erfolgsbilanz aufzubauen und Ihre Analysen zu teilen.",
     "google_signin": "Mit Google anmelden",
     "loading_settings": "Einstellungen werden geladen...",
     "notification_settings_title": "Benachrichtigungseinstellungen",
@@ -472,7 +472,8 @@
         "contact": "Kontakt",
         "terms": "Nutzungsbedingungen",
         "privacy": "Datenschutzrichtlinie",
-        "copyright": "Alle Rechte vorbehalten."
+        "copyright": "Alle Rechte vorbehalten.",
+        "whitepaper": "Whitepaper"
     },
     "globalSearch": {
         "placeholder": "Aktien suchen..."
@@ -735,7 +736,8 @@
             "description": "Wir konnten den Live-Preis für diesen Vermögenswert im Moment nicht abrufen. Dies kann bei hoher Marktvolatilität oder kurzen API-Ausfällen vorkommen.",
             "button": "Andere Aktie versuchen"
         },
-        "prediction.duplicateError": "Sie haben bereits eine aktive {{type}}-Prognose für {{ticker}}."
+        "duplicateError": "Sie haben bereits eine aktive {{type}}-Prognose für {{ticker}}.",
+        "targetHit": "🎯 Ziel erreicht"
     },
     "scoreboard": {
         "title": "Bestenlisten",

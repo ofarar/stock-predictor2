@@ -173,7 +173,7 @@
   "golden_feed_no_posts_subtitle": "Arama kriterlerinizi genişletmeyi veya daha fazla Altın Üyeye abone olmayı deneyin.",
   "loading_dashboard": "Pano yükleniyor...",
   "welcome_message": "StockPredictorAI'a Hoş Geldiniz",
-  "description": "Tahmin yapmaya başlamak ve sanal portföyünüzü oluşturmak için giriş yapın.",
+  "description": "Piyasa içgörülerinizi doğrulamak, doğrulanabilir bir geçmiş oluşturmak ve analizinizi paylaşmak için giriş yapın.",
   "google_signin": "Google ile Giriş Yap",
   "loading_settings": "Ayarlar Yükleniyor...",
   "notification_settings_title": "Bildirim Ayarları",
@@ -472,7 +472,8 @@
     "contact": "İletişim",
     "terms": "Hizmet Şartları",
     "privacy": "Gizlilik Politikası",
-    "copyright": "Tüm hakları saklıdır."
+    "copyright": "Tüm hakları saklıdır.",
+    "whitepaper": "Teknik Rapor"
   },
   "globalSearch": {
     "placeholder": "Hisse senedi ara..."
@@ -735,7 +736,8 @@
       "description": "Bu varlık için anlık fiyatı şu anda alamadık. Bu durum, piyasanın yoğun olduğu zamanlarda veya kısa süreli API kesintilerinde yaşanabilir.",
       "button": "Farklı Bir Hisse Dene"
     },
-    "duplicateError": "{{ticker}} için zaten aktif bir {{type}} tahmininiz var."
+    "duplicateError": "{{ticker}} için zaten aktif bir {{type}} tahmininiz var.",
+    "targetHit": "🎯 Hedefe Ulaştı"
   },
   "scoreboard": {
     "title": "Liderler Tablosu",

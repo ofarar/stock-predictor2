@@ -63,6 +63,7 @@ export const ROUTES = {
     NOTIFICATIONS: '/settings/notifications',
     PAYMENT_SUCCESS: '/payment-success',
     AI_WIZARD: '/ai-wizard',
+    WHITEPAPER: '/whitepaper',
 };
 
 export const PREDICTION_STATUS = {

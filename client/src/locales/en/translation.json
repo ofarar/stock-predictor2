@@ -172,7 +172,7 @@
   "golden_feed_no_posts_subtitle": "Try broadening your search criteria or subscribing to more Golden Members.",
   "loading_dashboard": "Loading dashboard...",
   "welcome_message": "Welcome to StockPredictorAI",
-  "description": "Sign in to start making predictions and build your virtual portfolio.",
+  "description": "Sign in to validate your market insights, build a verifiable track record, and share your analysis.",
   "google_signin": "Sign in with Google",
   "loading_settings": "Loading Settings...",
   "notification_settings_title": "Notification Settings",
@@ -471,7 +471,8 @@
     "contact": "Contact",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
-    "copyright": "All rights reserved."
+    "copyright": "All rights reserved.",
+    "whitepaper": "Whitepaper"
   },
   "globalSearch": {
     "placeholder": "Search stocks..."
@@ -735,7 +736,8 @@
       "description": "We couldn't retrieve the live price for this asset right now. This can happen during high market volatility or brief API outages.",
       "button": "Try a Different Stock"
     },
-    "duplicateError": "You already have an active {{type}} prediction for {{ticker}}."
+    "duplicateError": "You already have an active {{type}} prediction for {{ticker}}.",
+    "targetHit": "🎯 Target Hit"
   },
   "scoreboard": {
     "title": "Leaderboards",

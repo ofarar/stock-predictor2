@@ -30,6 +30,7 @@ const Footer = ({ settings }) => {
                         <Link to="/contact" className="hover:text-white">{t('footer.contact')}</Link>
                         <Link to="/terms" className="hover:text-white">{t('footer.terms')}</Link>
                         <Link to="/privacy" className="hover:text-white">{t('footer.privacy')}</Link>
+                        <Link to="/whitepaper" className="hover:text-white">{t('footer.whitepaper')}</Link>
 
                         {/* --- X ICON LINK (FIXED ALIGNMENT) --- */}
                         {showXIcon && xUrl && (

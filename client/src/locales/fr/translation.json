@@ -173,7 +173,7 @@
     "golden_feed_no_posts_subtitle": "Essayez d'élargir vos critères de recherche ou de vous abonner à plus de Membres Or.",
     "loading_dashboard": "Chargement du tableau de bord...",
     "welcome_message": "Bienvenue sur StockPredictorAI",
-    "description": "Connectez-vous pour commencer à faire des prédictions et construire votre portefeuille virtuel.",
+    "description": "Connectez-vous pour valider vos connaissances du marché, établir un historique vérifiable et partager votre analyse.",
     "google_signin": "Se connecter avec Google",
     "loading_settings": "Chargement des paramètres...",
     "notification_settings_title": "Paramètres de Notification",
@@ -472,7 +472,8 @@
         "contact": "Contact",
         "terms": "Conditions d'Utilisation",
         "privacy": "Politique de Confidentialité",
-        "copyright": "Tous droits réservés."
+        "copyright": "Tous droits réservés.",
+        "whitepaper": "Livre Blanc"
     },
     "globalSearch": {
         "placeholder": "Rechercher des actions..."
@@ -735,7 +736,8 @@
             "description": "Nous n'avons pas pu récupérer le prix en direct de cet actif pour le moment. Cela peut se produire en cas de forte volatilité du marché ou de brèves pannes de l'API.",
             "button": "Essayer une autre action"
         },
-        "duplicateError": "Vous avez déjà une prédiction {{type}} active pour {{ticker}}."
+        "duplicateError": "Vous avez déjà une prédiction {{type}} active pour {{ticker}}.",
+        "targetHit": "🎯 Objectif Atteint"
     },
     "scoreboard": {
         "title": "Classements",

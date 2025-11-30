@@ -228,7 +228,7 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
         cd client
         node scripts/generate-docs.js
         ```
-        The generated PDFs will be located in `client/docs/`.
+        The generated PDFs will be located in `client/public/docs/`.
 
 -----
 
