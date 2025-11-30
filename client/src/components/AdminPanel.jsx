@@ -24,6 +24,18 @@ const AdminPanel = () => {
         }
     };
 
+    const handleCleanupOrphans = () => {
+        if (globalThis.confirm("Are you sure you want to delete ALL predictions that belong to non-existent users? This cannot be undone.")) {
+            const promise = axios.post(`${import.meta.env.VITE_API_URL}/api/admin/cleanup-orphans`, {}, { withCredentials: true });
+
+            toast.promise(promise, {
+                loading: 'Scanning and deleting orphaned data...',
+                success: (res) => `Cleanup complete! ${res.data.deletedCount} items removed.`,
+                error: 'Failed to run cleanup job.'
+            });
+        }
+    };
+
     // --- NEW: Sentry Test Function ---
     const handleTestSentry = () => {
         // We call the backend endpoint directly. 
@@ -57,7 +69,14 @@ const AdminPanel = () => {
                 >
                     Recalculate All Analytics
                 </button>
-                
+
+                <button
+                    onClick={handleCleanupOrphans}
+                    className="bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-500"
+                >
+                    Cleanup Orphaned Predictions
+                </button>
+
                 {/* --- NEW BUTTON --- */}
                 <button
                     onClick={handleTestSentry}

@@ -13,6 +13,22 @@ const PredictionLog = require('../models/PredictionLog');
 const Setting = require('../models/Setting');
 const cryptoProvider = require('../services/financeProviders/cryptoProvider');
 
+// --- NEW UTILITY FUNCTION: Deletes predictions without matching users ---
+async function cleanupOrphanedPredictions() {
+    // 1. Get all valid User IDs
+    // Lean() and select('_id') are used for performance as we only need the IDs
+    const allUserIds = await User.find().select('_id').lean().exec();
+    const validIds = allUserIds.map(user => user._id);
+
+    // 2. Delete all Prediction documents whose userId is NOT in the list of valid IDs ($nin)
+    const result = await Prediction.deleteMany({
+        userId: { $nin: validIds }
+    });
+
+    // 3. Return the count of deleted documents
+    return result.deletedCount;
+}
+
 // POST: Manually trigger assessment job
 router.post('/admin/evaluate', async (req, res) => {
     if (!req.user || !req.user.isAdmin) {
@@ -104,6 +120,24 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
     } catch (error) {
         console.error("Error during badge recalculation:", error);
         res.status(500).send('An error occurred during recalculation.');
+    }
+});
+
+router.post('/admin/cleanup-orphans', async (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).send('Forbidden: Admins only.');
+    }
+    try {
+        console.log('Admin triggered cleanup of orphaned predictions...');
+        const deletedCount = await cleanupOrphanedPredictions();
+
+        res.status(200).json({
+            message: `${deletedCount} orphaned predictions deleted successfully.`,
+            deletedCount: deletedCount
+        });
+    } catch (error) {
+        console.error("Error during orphan cleanup:", error);
+        res.status(500).send('Failed to run orphan cleanup job.');
     }
 });
 
