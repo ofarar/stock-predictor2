@@ -17,6 +17,8 @@ async function getActualStockPrice(ticker, deadline) {
     try {
         // Helper function to format date to 'YYYY-MM-DD'
         const toYYYYMMDD = (date) => date.toISOString().split('T')[0];
+        const todayYYYYMMDD = toYYYYMMDD(new Date());
+        const deadlineYYYYMMDD = toYYYYMMDD(deadline);
 
         // Helper function to make the API call (uses v3-compatible period1/period2)
         const fetchPrice = async (date) => {
@@ -40,6 +42,14 @@ async function getActualStockPrice(ticker, deadline) {
 
         let price = await fetchPrice(deadline);
         if (price !== null) return price; // Got it on the first try
+
+        // --- FIX: If the deadline is TODAY, do NOT fall back to yesterday. ---
+        // If data is missing for today, it just means the API hasn't updated yet.
+        // We should skip assessment and try again later.
+        if (deadlineYYYYMMDD === todayYYYYMMDD) {
+            console.warn(`No price data for ${ticker} on TODAY (${todayYYYYMMDD}). Skipping assessment until data is available.`);
+            return null;
+        }
 
         // 1st Retry (T-1)
         console.warn(`No price data for ${ticker} on ${toYYYYMMDD(deadline)}. Retrying for T-1.`);
@@ -75,190 +85,229 @@ async function getActualStockPrice(ticker, deadline) {
 
 const runAssessmentJob = async () => {
     try {
-        await JobLog.findOneAndUpdate(
-            { jobId: 'assessment-job' },
-            { lastAttemptedRun: new Date() },
-            { upsert: true }
-        );
-    } catch (err) {
-        console.error("CRITICAL: Could not update cron job heartbeat.", err);
-    }
-
-    console.log('Starting assessment job...');
-
-    // 1. Query selects predictions past their FULL deadline time (e.g., Friday 21:00 UTC)
-    const predictionsToAssess = await Prediction.find({
-        status: 'Active',
-        deadline: { $lte: new Date() }
-    }).populate('userId');
-
-    if (predictionsToAssess.length === 0) {
-        console.log('No predictions to assess.');
-        return;
-    }
-
-    console.log(`Found ${predictionsToAssess.length} predictions to assess.`);
-
-    // 2. Group only by Ticker to minimize API calls
-    const predictionGroups = new Map();
-    for (const prediction of predictionsToAssess) {
-        const ticker = prediction.stockTicker;
-        if (!predictionGroups.has(ticker)) {
-            predictionGroups.set(ticker, {
-                predictions: [],
-                // Use the deadline of the first prediction in the group as the date to fetch price for.
-                deadline: prediction.deadline
-            });
-        }
-        predictionGroups.get(ticker).predictions.push(prediction);
-    }
-
-    console.log(`Grouped into ${predictionGroups.size} unique API calls.`);
-
-    for (const [ticker, group] of predictionGroups.entries()) {
-        const predictions = group.predictions;
-        const deadlineForAPI = group.deadline;
-
         try {
-            const actualPrice = await getActualStockPrice(ticker, deadlineForAPI);
+            await JobLog.findOneAndUpdate(
+                { jobId: 'assessment-job' },
+                { lastAttemptedRun: new Date() },
+                { upsert: true }
+            );
+        } catch (err) {
+            console.error("CRITICAL: Could not update cron job heartbeat.", err);
+        }
 
-            if (actualPrice === null) {
-                console.error(`Could not get price for ${ticker} on ${deadlineForAPI.toISOString().split('T')[0]} after retries. Skipping ${predictions.length} predictions.`);
-                continue;
+        console.log('Starting assessment job...');
+
+        // 1. Query selects predictions past their FULL deadline time (e.g., Friday 21:00 UTC)
+        const predictionsToAssess = await Prediction.find({
+            status: 'Active',
+            deadline: { $lte: new Date() }
+        }).populate('userId');
+
+        if (predictionsToAssess.length === 0) {
+            console.log('No predictions to assess.');
+            return;
+        }
+
+        console.log(`Found ${predictionsToAssess.length} predictions to assess.`);
+
+        // 2. Group only by Ticker to minimize API calls
+        const predictionGroups = new Map();
+        for (const prediction of predictionsToAssess) {
+            const ticker = prediction.stockTicker;
+            if (!predictionGroups.has(ticker)) {
+                predictionGroups.set(ticker, {
+                    predictions: [],
+                    // Use the deadline of the first prediction in the group as the date to fetch price for.
+                    deadline: prediction.deadline
+                });
             }
+            predictionGroups.get(ticker).predictions.push(prediction);
+        }
 
-            const userUpdates = new Map();
+        console.log(`Grouped into ${predictionGroups.size} unique API calls.`);
 
-            for (const prediction of predictions) {
-                try {
-                    // 1. Calculate the raw rating (up to 100)
-                    const rawRating = calculateProximityRating(prediction.targetPrice, actualPrice, prediction.priceAtCreation);
+        for (const [ticker, group] of predictionGroups.entries()) {
+            const predictions = group.predictions;
+            const deadlineForAPI = group.deadline;
 
-                    // 2. Apply Time Penalty Cap
-                    const maxAllowedRating = prediction.maxRatingAtCreation || 100;
-                    const rating = Math.min(rawRating, maxAllowedRating); // Capping the score here
+            try {
+                // --- FIX: Determine price based on prediction type ---
+                // We'll calculate 'actualPrice' differently for Hourly vs Daily/Weekly.
 
-                    // --- STRUCTURED LOGGING ---
-                    const logEntry = {
-                        user: prediction.userId.username,
-                        stock: prediction.stockTicker,
-                        type: prediction.predictionType,
-                        predictionTime: prediction.createdAt,
-                        timePenaltyMaxRating: maxAllowedRating,
-                        currentPrice: actualPrice,
-                        ratingCalculated: rating,
-                        assessmentTime: new Date(),
-                        timeType: 'UTC'
-                    };
-                    console.log('[Assessment Log]', JSON.stringify(logEntry));
-                    // --- END STRUCTURED LOGGING ---
+                // Optimization: Check if ANY prediction in this group is 'Hourly'.
+                // If so, we need the CURRENT real-time quote.
+                const hasHourly = predictions.some(p => p.predictionType === 'Hourly');
+                let realTimePrice = null;
 
-                    // 3. The rest of the assessment logic uses the capped 'rating'
-                    let analystRatingToAward = 0;
-                    if (rating > 90) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_90;
-                    else if (rating > 80) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_80;
-                    else if (rating > 70) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_70;
-
-                    prediction.status = 'Assessed';
-                    prediction.rating = rating;
-                    prediction.actualPrice = actualPrice;
-                    await prediction.save();
-
-                    const userId = prediction.userId._id.toString();
-                    if (!userUpdates.has(userId)) {
-                        // Store the populated user object from the prediction
-                        userUpdates.set(userId, { rating: 0, analystRating: 0, user: prediction.userId, stockTicker: prediction.stockTicker });
+                if (hasHourly) {
+                    const quote = await financeAPI.getQuote(ticker);
+                    if (quote && quote.price) {
+                        realTimePrice = quote.price;
                     }
-                    const currentUpdate = userUpdates.get(userId);
-                    currentUpdate.rating += rating; // This is for user.totalRating
-                    currentUpdate.analystRating += analystRatingToAward; // Sum up analyst rating points
-                    currentUpdate.stockTicker = prediction.stockTicker; // Store ticker
+                }
 
-                    await new Notification({
-                        recipient: prediction.userId._id,
-                        type: 'PredictionAssessed',
-                        messageKey: 'notifications.predictionAssessed',
-                        metadata: {
+                // For Daily/Weekly, we need historical (or today's close if available).
+                // We'll fetch it once for the group, ONLY if needed.
+                const hasNonHourly = predictions.some(p => p.predictionType !== 'Hourly');
+                let historicalPrice = null;
+                if (hasNonHourly) {
+                    historicalPrice = await getActualStockPrice(ticker, deadlineForAPI);
+                }
+
+
+                const userUpdates = new Map();
+
+                for (const prediction of predictions) {
+                    try {
+                        let actualPrice = null;
+
+                        if (prediction.predictionType === 'Hourly') {
+                            // Use real-time price for Hourly
+                            actualPrice = realTimePrice;
+                            if (actualPrice === null) {
+                                console.warn(`Skipping Hourly assessment for ${ticker}: No real-time quote available.`);
+                                continue;
+                            }
+                        } else {
+                            // Use historical price for others
+                            actualPrice = historicalPrice;
+                            if (actualPrice === null) {
+                                // Error already logged in getActualStockPrice
+                                continue;
+                            }
+                        }
+
+                        // 1. Calculate the raw rating (up to 100)
+                        const rawRating = calculateProximityRating(prediction.targetPrice, actualPrice, prediction.priceAtCreation);
+
+                        // 2. Apply Time Penalty Cap
+                        const maxAllowedRating = prediction.maxRatingAtCreation || 100;
+                        const rating = Math.min(rawRating, maxAllowedRating); // Capping the score here
+
+                        // --- STRUCTURED LOGGING ---
+                        const logEntry = {
+                            user: prediction.userId.username,
+                            stock: prediction.stockTicker,
+                            type: prediction.predictionType,
+                            predictionTime: prediction.createdAt,
+                            timePenaltyMaxRating: maxAllowedRating,
+                            currentPrice: actualPrice,
+                            ratingCalculated: rating,
+                            assessmentTime: new Date(),
+                            timeType: 'UTC'
+                        };
+                        console.log('[Assessment Log]', JSON.stringify(logEntry));
+                        // --- END STRUCTURED LOGGING ---
+
+                        // 3. The rest of the assessment logic uses the capped 'rating'
+                        let analystRatingToAward = 0;
+                        if (rating > 90) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_90;
+                        else if (rating > 80) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_80;
+                        else if (rating > 70) analystRatingToAward = RATING_AWARDS.ACCURACY_TIER_70;
+
+                        prediction.status = 'Assessed';
+                        prediction.rating = rating;
+                        prediction.actualPrice = actualPrice;
+                        await prediction.save();
+
+                        const userId = prediction.userId._id.toString();
+                        if (!userUpdates.has(userId)) {
+                            // Store the populated user object from the prediction
+                            userUpdates.set(userId, { rating: 0, analystRating: 0, user: prediction.userId, stockTicker: prediction.stockTicker });
+                        }
+                        const currentUpdate = userUpdates.get(userId);
+                        currentUpdate.rating += rating; // This is for user.totalRating
+                        currentUpdate.analystRating += analystRatingToAward; // Sum up analyst rating points
+                        currentUpdate.stockTicker = prediction.stockTicker; // Store ticker
+
+                        await new Notification({
+                            recipient: prediction.userId._id,
+                            type: 'PredictionAssessed',
+                            messageKey: 'notifications.predictionAssessed',
+                            metadata: {
+                                stockTicker: prediction.stockTicker,
+                                predictionType: prediction.predictionType,
+                                rating: rating
+                            },
+                            link: `/prediction/${prediction._id}`
+                        }).save();
+
+                        await new PredictionLog({
+                            predictionId: prediction._id,
+                            userId: prediction.userId._id,
+                            username: prediction.userId.username,
                             stockTicker: prediction.stockTicker,
                             predictionType: prediction.predictionType,
-                            rating: rating
-                        },
-                        link: `/prediction/${prediction._id}`
-                    }).save();
+                            predictedPrice: prediction.targetPrice,
+                            actualPrice: actualPrice,
+                            rating: rating,
+                        }).save();
 
-                    await new PredictionLog({
-                        predictionId: prediction._id,
-                        userId: prediction.userId._id,
-                        username: prediction.userId.username,
-                        stockTicker: prediction.stockTicker,
-                        predictionType: prediction.predictionType,
-                        predictedPrice: prediction.targetPrice,
-                        actualPrice: actualPrice,
-                        rating: rating,
-                    }).save();
+                        console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} earned a ${rating} rating.`);
 
-                    console.log(`Assessed prediction for ${ticker}. User ${prediction.userId.username} earned a ${rating} rating.`);
-
-                } catch (innerError) {
-                    console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
-                }
-            }
-
-            // 5. Now, update all users in this group (Batch DB update)
-            for (const [userId, updates] of userUpdates.entries()) {
-                try {
-                    const user = updates.user; // Get the populated user object
-
-                    // --- FIX: On-the-fly migration for old users ---
-                    if (typeof user.analystRating !== 'object' || user.analystRating === null) {
-                        const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
-                        user.analystRating = {
-                            total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
-                            fromBonus: 0, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
-                        };
+                    } catch (innerError) {
+                        console.error(`Failed to assess (inner loop) prediction ${prediction._id}:`, innerError);
                     }
+                }
 
-                    // Apply updates
-                    user.totalRating = (user.totalRating || 0) + updates.rating; // <-- Use totalRating
-                    user.analystRating.total = (user.analystRating.total || 0) + updates.analystRating;
-                    user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.analystRating;
+                // 5. Now, update all users in this group (Batch DB update)
+                for (const [userId, updates] of userUpdates.entries()) {
+                    try {
+                        const user = updates.user; // Get the populated user object
 
-                    // --- Update predictionBreakdownByStock ---
-                    if (updates.analystRating > 0 && updates.stockTicker) {
-                        const stockKey = updates.stockTicker.replace(/\./g, '_'); // Sanitize for Map keys
-                        if (!user.analystRating.predictionBreakdownByStock) {
-                            user.analystRating.predictionBreakdownByStock = new Map();
+                        // --- FIX: On-the-fly migration for old users ---
+                        if (typeof user.analystRating !== 'object' || user.analystRating === null) {
+                            const oldPoints = typeof user.analystRating === 'number' ? user.analystRating : 0;
+                            user.analystRating = {
+                                total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0,
+                                fromBonus: 0, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {}, shareBreakdown: {}
+                            };
                         }
-                        const currentStockRating = user.analystRating.predictionBreakdownByStock.get(stockKey) || 0;
-                        user.analystRating.predictionBreakdownByStock.set(stockKey, currentStockRating + updates.analystRating);
+
+                        // Apply updates
+                        user.totalRating = (user.totalRating || 0) + updates.rating; // <-- Use totalRating
+                        user.analystRating.total = (user.analystRating.total || 0) + updates.analystRating;
+                        user.analystRating.fromPredictions = (user.analystRating.fromPredictions || 0) + updates.analystRating;
+
+                        // --- Update predictionBreakdownByStock ---
+                        if (updates.analystRating > 0 && updates.stockTicker) {
+                            const stockKey = updates.stockTicker.replace(/\./g, '_'); // Sanitize for Map keys
+                            if (!user.analystRating.predictionBreakdownByStock) {
+                                user.analystRating.predictionBreakdownByStock = new Map();
+                            }
+                            const currentStockRating = user.analystRating.predictionBreakdownByStock.get(stockKey) || 0;
+                            user.analystRating.predictionBreakdownByStock.set(stockKey, currentStockRating + updates.analystRating);
+                        }
+
+                        await user.save();
+
+                        // --- RECALCULATE AND SAVE AVG RATING ---
+                        const stats = await Prediction.aggregate([
+                            { $match: { userId: user._id, status: 'Assessed' } },
+                            { $group: { _id: null, avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }
+                        ]);
+
+                        if (stats[0]) {
+                            await User.findByIdAndUpdate(user._id, { avgRating: stats[0].avgRating });
+                        }
+
+                        // Award badges with the now-updated user object
+                        await awardBadges(user);
+
+                    } catch (userUpdateError) {
+                        console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
                     }
-
-                    await user.save();
-
-                    // --- RECALCULATE AND SAVE AVG RATING ---
-                    const stats = await Prediction.aggregate([
-                        { $match: { userId: user._id, status: 'Assessed' } },
-                        { $group: { _id: null, avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }
-                    ]);
-
-                    if (stats[0]) {
-                        await User.findByIdAndUpdate(user._id, { avgRating: stats[0].avgRating });
-                    }
-
-                    // Award badges with the now-updated user object
-                    await awardBadges(user);
-
-                } catch (userUpdateError) {
-                    console.error(`Failed to update score or award badges for user ${userId}:`, userUpdateError);
                 }
+
+            } catch (outerError) {
+                console.error(`Failed to process group ${ticker}:`, outerError);
             }
-
-        } catch (outerError) {
-            console.error(`Failed to process group ${ticker}:`, outerError);
         }
-    }
 
-    console.log('Assessment job finished.');
+        console.log('Assessment job finished.');
+    } catch (fatalError) {
+        console.error('FATAL ERROR in assessment job:', fatalError);
+    }
 };
 
 module.exports = runAssessmentJob;
