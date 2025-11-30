@@ -1,22 +1,22 @@
-# 🚀 Stock Predictor: The Future of Social Trading
+# 🚀 StockPredictorAI
 
-Welcome to **Stock Predictor**, the ultimate platform where financial insight meets social competition. Whether you're a seasoned analyst or a rising star, our platform empowers you to predict market movements, climb the leaderboards, and monetize your expertise.
+Welcome to **StockPredictorAI**, the ultimate platform where financial insight meets social competition. Whether you're a seasoned analyst or a rising star, our platform empowers you to predict market movements, climb the leaderboards, and monetize your expertise.
 
 This walkthrough showcases the core features of our application, designed to provide a seamless and engaging experience for all users.
 
 ---
 
-## 1. 🏠 The Hub: Homepage
-Your journey begins here. The Homepage provides an instant overview of the market and your personal dashboard. It's clean, intuitive, and designed to get you to the action fast.
+## 1. 🏠 The Hub: Community Feed
+Your journey begins here. The **Home Page** is now your central hub for market intelligence, featuring the **Live Community Feed**. See real-time predictions from all users, filter by "Active" to see live calls, or "Assessed" to see past performance. It's the best place to find new trading ideas immediately upon login.
 
-![Homepage](./images/01_homepage.png)
+![Community Feed](./images/02_community_feed.png)
 
 ---
 
-## 2. 🔮 Make Your Move: Prediction Widget
-At the heart of our platform is the **Prediction Widget**. Search for any stock (like AAPL, TSLA, or BTC), analyze the current price, and cast your vote: **Buy** or **Sell**. Set your target price and time frame, and let the community see your conviction.
+## 2. 📋 Watch Your Favorites: Watchlist
+Keep a close eye on the assets that matter to you. The **Watchlist** allows you to track specific stocks and see their latest performance and community sentiment at a glance.
 
-![Prediction Widget](./images/02_prediction_widget.png)
+![Watchlist](./images/20_watchlist.png)
 
 ---
 
@@ -68,17 +68,24 @@ Analyze your impact. The **Creator Detail View** breaks down your performance me
 
 ---
 
-## 7. ✨ Go Premium: Golden Membership
+## 7. 🌟 Exclusive Content: Golden Posts
+Deliver value to your subscribers. As a Golden Member, you can create **Golden Posts**—exclusive predictions and insights visible only to your paying subscribers. This feature allows you to monetize your unique market analysis directly.
+
+![Golden Post Creation](./images/11_golden_post_modal_filled.png)
+
+---
+
+## 8. ✨ Go Premium: Golden Membership
 Unlock the full potential. **Golden Membership** offers exclusive perks, including advanced analytics, priority support, and a distinctive badge that sets you apart.
 
 ![Golden Membership](./images/11_golden_membership_modal.png)
 
----
+### 🧙‍♂️ Find Your Match: Subscription Wizard
+Discover the perfect analysts to follow. Our **Subscription Wizard** guides you through a personalized selection process, matching you with Golden Members who align with your investment style, risk tolerance, and horizon.
 
-## 8. 🤖 Smart Insights: AI Wizard
-Leverage the power of AI. The **AI Wizard** (Waitlist) promises to bring cutting-edge machine learning insights to your trading strategy, helping you make data-driven decisions.
+![Subscription Wizard Start](./images/18_subscription_wizard_start.png)
 
-![AI Wizard](./images/12_ai_wizard.png)
+![Subscription Wizard Results](./images/19_subscription_wizard_results.png)
 
 ---
 
@@ -92,13 +99,28 @@ Who knows AAPL best? See the **Top Predictors** for each specific stock to find 
 
 ![Stock Top Predictors](./images/14_stock_page_top_predictors.png)
 
+### 🎯 Making a Prediction
+Seize the opportunity. The **Prediction Modal** makes it easy to set your target price, choose a timeframe, and add your rationale. Once submitted, your prediction is tracked in real-time on the **Prediction Detail Page**.
+
+![Prediction Modal](./images/16_prediction_modal_filled.png)
+
+![Prediction Detail](./images/17_prediction_detail.png)
+
 ---
 
 ## 10. 🔔 Stay Connected: Notifications
 Never miss a beat. Our **Notification System** keeps you alerted on prediction outcomes, new followers, and market movements that matter to you.
 
-![Notifications](./images/15_notifications.png)
+![Notifications](./images/21_notifications.png)
+
+---
+
+## 11. 🤖 Smart Insights: AI Wizard
+Leverage the power of AI. The **AI Wizard** (Waitlist) promises to bring cutting-edge machine learning insights to your trading strategy, helping you make data-driven decisions.
+
+![AI Wizard](./images/12_ai_wizard.png)
 
 ---
 
 **Ready to predict the future? Join us today!**
+[https://stockpredictorai.com](https://stockpredictorai.com)

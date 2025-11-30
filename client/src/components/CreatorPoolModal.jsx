@@ -92,6 +92,18 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         }
     }, [isOpen, loading, selectedUser, currentProfileId]);
 
+    // Close on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
+
+
     if (!isOpen) return null;
 
     // --- Main Pie Chart (Total Breakdown) ---

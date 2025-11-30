@@ -248,6 +248,17 @@ const RecommendationWizard = ({ isOpen, onClose, settings }) => { // Add setting
         setUserToJoin(null);
     };
 
+    // Close on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                handleClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
+
     if (!isOpen) return null;
 
     const renderStep = () => {

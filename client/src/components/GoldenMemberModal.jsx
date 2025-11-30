@@ -41,6 +41,17 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
         setIsSaving(false);
     }, [isOpen, user, t]);
 
+    // Close on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
+
     // Handles Activate / Update settings
     const handleSaveSettings = async (willBeGolden) => {
         setIsSaving(true);
