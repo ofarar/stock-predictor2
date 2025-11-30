@@ -111,17 +111,53 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
 
             // --- START FIX: Determine if the deadline should be today or shifted ---
 
-            // 1. A prediction targets TODAY's close ONLY if it's a weekday AND the current time is before close.
-            const shouldBeToday = now.weekday <= 5 && now < closeTime;
+            // 1. A prediction targets TODAY's close ONLY if:
+            //    a) It's a weekday
+            //    b) The market is currently OPEN (or Pre-Market) according to API
+            //    c) We are before the closing time
 
-            // 2. If it shouldn't be today (i.e., past close or a weekend), bump the date.
+            // If we have explicit market state, use it. 'REGULAR' means open.
+            // If marketState is 'CLOSED' (e.g. Holiday or Half-Day close passed), then it's NOT today.
+            let isMarketActiveToday = false;
+            if (marketState) {
+                isMarketActiveToday = (marketState === 'REGULAR' || marketState === 'PRE');
+            } else {
+                // Fallback if no state provided (e.g. no quote yet):
+                if (config.is247) {
+                    isMarketActiveToday = true; // Crypto is always open
+                } else if (config.is245) {
+                    // Forex: Open Sun 5PM - Fri 5PM.
+                    // Reuse isMarketOpen fallback logic essentially, but we need it for "Today" determination.
+                    isMarketActiveToday = isMarketOpen(ticker, null);
+                } else {
+                    // Standard Market: Weekday & within hours
+                    isMarketActiveToday = (now.weekday <= 5 && now < closeTime);
+                }
+            }
+
+            // However, even if marketState is REGULAR, if we are past close time, it's not today.
+            // (Though usually API would say POST or CLOSED if past close).
+            // We double check time just to be safe for the "before close" condition.
+            // Exception: Crypto (is247) doesn't really "close" in a way that prevents daily predictions, 
+            // but for "Daily" type, we usually target the end of the current day.
+            // If it's 23:59:59, it's still today.
+            if (!config.is247 && now >= closeTime) {
+                isMarketActiveToday = false;
+            }
+
+            const shouldBeToday = isMarketActiveToday;
+
+            // 2. If it shouldn't be today (i.e., past close, holiday, or weekend), bump the date.
             if (!shouldBeToday) {
                 deadline = deadline.plus({ days: 1 });
             }
 
             // 3. Skip any resulting weekend days
-            while (deadline.weekday > 5) {
-                deadline = deadline.plus({ days: 1 });
+            // EXCEPTION: Crypto (is247) includes weekends.
+            if (!config.is247) {
+                while (deadline.weekday > 5) {
+                    deadline = deadline.plus({ days: 1 });
+                }
             }
 
             // 4. Set the time to the close of the calculated date
@@ -135,6 +171,7 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
                 const totalMinutes = closeTime.diff(openTime, 'minutes').minutes;
                 const elapsedMinutes = Math.max(0, now.diff(openTime, 'minutes').minutes);
 
+                // For Crypto, totalMinutes is 24*60 = 1440.
                 const penalty = Math.floor(elapsedMinutes / (totalMinutes / 20));
                 maxScore = 100 - penalty;
                 barWidth = 100 - (elapsedMinutes / totalMinutes * 100);
@@ -145,7 +182,6 @@ export const getPredictionDetails = (predictionType, t, i18n, stock) => {
             }
             break;
         }
-        // ... (Weekly, Monthly, Quarterly, Yearly are unchanged) ...
         case 'Weekly': {
             deadline = now.set({ weekday: 5 }).set(config.close); // Set to this Friday's close
             if (now > deadline) {
