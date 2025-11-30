@@ -68,14 +68,7 @@ Analyze your impact. The **Creator Detail View** breaks down your performance me
 
 ---
 
-## 7. 🌟 Exclusive Content: Golden Posts
-Deliver value to your subscribers. As a Golden Member, you can create **Golden Posts**—exclusive predictions and insights visible only to your paying subscribers. This feature allows you to monetize your unique market analysis directly.
-
-![Golden Post Creation](./images/11_golden_post_modal_filled.png)
-
----
-
-## 8. ✨ Go Premium: Golden Membership
+## 7. ✨ Go Premium: Golden Membership
 Unlock the full potential. **Golden Membership** offers exclusive perks, including advanced analytics, priority support, and a distinctive badge that sets you apart.
 
 ![Golden Membership](./images/11_golden_membership_modal.png)
@@ -86,6 +79,13 @@ Discover the perfect analysts to follow. Our **Subscription Wizard** guides you 
 ![Subscription Wizard Start](./images/18_subscription_wizard_start.png)
 
 ![Subscription Wizard Results](./images/19_subscription_wizard_results.png)
+
+---
+
+## 8. 🌟 Exclusive Content: Golden Posts
+Deliver value to your subscribers. As a Golden Member, you can create **Golden Posts**—exclusive predictions and insights visible only to your paying subscribers. This feature allows you to monetize your unique market analysis directly.
+
+![Golden Post Creation](./images/11_golden_post_modal_filled.png)
 
 ---
 
