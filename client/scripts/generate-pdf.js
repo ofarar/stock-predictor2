@@ -4,8 +4,8 @@ const { mdToPdf } = require('md-to-pdf');
 
 const SCREENSHOTS_DIR = path.join(__dirname, '../cypress/screenshots');
 const IMAGES_DIR = path.join(__dirname, '../docs/images');
-const MARKDOWN_FILE = path.join(__dirname, '../docs/APP_WALKTHROUGH.md');
-const PDF_FILE = path.join(__dirname, '../docs/APP_WALKTHROUGH.pdf');
+const MARKDOWN_FILE = path.join(__dirname, '../docs/StockPredictorAI_Walkthrough.md');
+const PDF_FILE = path.join(__dirname, '../docs/StockPredictorAI_Walkthrough.pdf');
 
 // Ensure images directory exists
 if (!fs.existsSync(IMAGES_DIR)) {
