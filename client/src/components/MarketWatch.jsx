@@ -23,7 +23,7 @@ const MarketWatch = () => {
     return (
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-bold text-white mb-4">{t('market_watch.title')}</h3>
-            
+
             {loading ? (
                 <div className="text-center text-gray-400 py-4">{t('topMovers.loading')}</div>
             ) : assets.length > 0 ? (
@@ -39,7 +39,7 @@ const MarketWatch = () => {
                                 </Tooltip>
                             </div>
                             <span className={`font-semibold px-2 py-1 rounded-md text-sm ${asset.isUp ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                                {formatPercentage(asset.percentChange, i18n.language)}
+                                {formatPercentage(asset.percentChange, i18n.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                         </div>
                     ))}

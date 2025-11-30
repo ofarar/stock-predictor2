@@ -1,7 +1,5 @@
 // src/utils/formatters.js
 
-// src/utils/formatters.js
-
 /**
  * Formats a date into a short, numeric, locale-specific string.
  * @param {string | Date} dateInput - The date object or string to format.
@@ -115,18 +113,20 @@ export const formatNumber = (value, locale, options = {}) => {
     return new Intl.NumberFormat(locale, { ...options, numberingSystem: 'latn' }).format(value);
 };
 
-export const formatPercentage = (value, locale) => {
+export const formatPercentage = (value, locale, options = {}) => {
     return formatNumber(value / 100, locale, {
         style: 'percent',
         minimumFractionDigits: 1,
-        maximumFractionDigits: 1
+        maximumFractionDigits: 1,
+        ...options
     });
 };
 
-export const formatCurrency = (value, locale, currency = 'USD') => {
+export const formatCurrency = (value, locale, currency = 'USD', options = {}) => {
     return formatNumber(value, locale, {
         style: 'currency',
-        currency: currency
+        currency: currency,
+        ...options
     });
 };
 

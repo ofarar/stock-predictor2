@@ -199,7 +199,7 @@ const StockPage = ({ onPredictClick, settings, earningsCalendar = [] }) => {
                         {formatCurrency(quote?.regularMarketPrice, i18n.language, quote?.currency)}
                     </p>
                     <p className={`font-semibold text-base ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {priceChange >= 0 ? '+' : ''}{formatCurrency(priceChange, i18n.language, quote?.currency)} ({formatPercentage(percentChange, i18n.language)})
+                        {priceChange >= 0 ? '+' : ''}{formatCurrency(priceChange, i18n.language, quote?.currency, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({formatPercentage(percentChange, i18n.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                     </p>
                 </div>
 
