@@ -1,5 +1,18 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
+// --- SEO Component ---
+const CanonicalTag = () => {
+  const location = useLocation();
+  const canonicalUrl = `https://www.stockpredictorai.com${location.pathname === '/' ? '' : location.pathname}`;
+  return (
+    <Helmet>
+      <link rel="canonical" href={canonicalUrl} />
+      <link rel="alternate" href={canonicalUrl} hreflang="x-default" />
+    </Helmet>
+  );
+};
+// ---------------------
 import CookieConsent from "react-cookie-consent";
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
@@ -198,6 +211,7 @@ function App() {
       </Helmet>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
+      <CanonicalTag />
       {/* --- 2. WRAP THE MAIN LAYOUT IN THE <ELEMENTS> PROVIDER --- */}
       <Elements stripe={stripePromise}>
         <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /api
+Disallow: /payment-success
+
+Sitemap: https://www.stockpredictorai.com/sitemap.xml

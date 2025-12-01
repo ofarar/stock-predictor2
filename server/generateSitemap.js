@@ -41,9 +41,19 @@ async function generateSitemap() {
         const smStream = new SitemapStream({ hostname: hostname });
 
         // 1. Add Static Routes
+        const today = new Date().toISOString();
         STATIC_ROUTES.forEach(route => {
-            // Note: lastmod is not strictly necessary for truly static routes
-            smStream.write({ url: route, changefreq: 'daily', priority: 0.7 });
+            let priority = 0.7;
+            if (route === '/') priority = 1.0;
+            if (route === '/explore') priority = 0.9;
+            if (route === '/scoreboard') priority = 0.8;
+
+            smStream.write({
+                url: route,
+                changefreq: 'daily',
+                priority: priority,
+                lastmod: today
+            });
         });
 
         // 2. Add Dynamic Stock Routes (Including lastmod)
