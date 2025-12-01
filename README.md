@@ -232,5 +232,35 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
 
 -----
 
+## 🗺️ Sitemap & SEO
+
+### 1. Generating the Sitemap
+The sitemap is dynamically generated based on static routes, active stock tickers, and user profiles. To regenerate the `sitemap.xml` file:
+
+```bash
+cd server
+node generateSitemap.js
+```
+
+This script will:
+1.  Fetch all active stocks and user profiles from the database.
+2.  Generate URLs for all supported languages (e.g., `?lang=tr`, `?lang=de`).
+3.  Add `hreflang` tags for SEO optimization.
+4.  Save the file to `client/public/sitemap.xml`.
+
+### 2. Submitting to Google Search Console
+1.  Go to **[Google Search Console](https://search.google.com/search-console)**.
+2.  Select your property (preferably the **Domain Property** `stockpredictorai.com`).
+3.  Navigate to **Sitemaps** in the left sidebar.
+4.  Enter the full URL of your sitemap:
+    ```
+    https://www.stockpredictorai.com/sitemap.xml
+    ```
+5.  Click **Submit**.
+
+*Note: You should resubmit the sitemap whenever significant changes are made to the site structure or supported languages.*
+
+-----
+
 *© 2025 StockPredictorAI. All rights reserved.*
 ```
