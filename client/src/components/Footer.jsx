@@ -37,7 +37,7 @@ const Footer = ({ settings }) => {
                             <a
                                 href={xUrl}
                                 target="_blank"
-                                rel="noopener noreferrer"
+                                rel="noopener noreferrer nofollow"
                                 // FIX: Use inline-flex items-center and remove ms-4 (margin-start)
                                 className="text-gray-400 hover:text-white inline-flex items-center"
                                 title="Follow us on X"

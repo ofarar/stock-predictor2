@@ -36,7 +36,7 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
         >
             <div className="p-4 flex-grow">
                 <div className="flex items-center mb-4">
-                    <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
+                    <img src={prediction.userId.avatar || `https://avatar.iran.liara.run/public/boy?username=${prediction.userId._id}`} alt="avatar" loading="lazy" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
 
                     <div className="ms-3 flex-grow">
                         <div className="flex items-center">
