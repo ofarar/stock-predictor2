@@ -27,3 +27,8 @@ server/check_account.js
 server/check_identity.js
 server/top_up_stripe.js
 server/check_specific_account.js
+
+# Android Keystore
+*.keystore
+*.jks
+*.aab

@@ -230,6 +230,24 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
         ```
         The generated PDFs will be located in `client/public/docs/`.
 
+7.  **Mobile Development:**
+      * **Setup:**
+        ```bash
+        cd client
+        npm install
+        npx cap sync
+        ```
+      * **Run on Android:**
+        ```bash
+        npm run mobile:open:android
+        ```
+        This will open Android Studio. From there, you can run the app on an emulator or connected device.
+      * **Run on iOS (macOS only):**
+        ```bash
+        npm run mobile:open:ios
+        ```
+        This will open Xcode.
+
 -----
 
 ## 🗺️ Sitemap & SEO
@@ -263,4 +281,3 @@ This script will:
 -----
 
 *© 2025 StockPredictorAI. All rights reserved.*
-```

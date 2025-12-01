@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">StockPredictorAI</string>
+    <string name="title_activity_main">StockPredictorAI</string>
+    <string name="package_name">com.stockpredictorai.app</string>
+    <string name="custom_url_scheme">com.stockpredictorai.app</string>
+</resources>
