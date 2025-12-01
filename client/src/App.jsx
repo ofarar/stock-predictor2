@@ -1,22 +1,9 @@
-import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-
-// --- SEO Component ---
-const CanonicalTag = () => {
-  const location = useLocation();
-  const canonicalUrl = `https://www.stockpredictorai.com${location.pathname === '/' ? '' : location.pathname}`;
-  return (
-    <Helmet>
-      <link rel="canonical" href={canonicalUrl} />
-      <link rel="alternate" href={canonicalUrl} hreflang="x-default" />
-    </Helmet>
-  );
-};
-// ---------------------
-import CookieConsent from "react-cookie-consent";
-import axios from 'axios';
-import { Toaster, toast } from 'react-hot-toast';
 import { Helmet } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
+import CookieConsent from 'react-cookie-consent';
+import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { API_URL, API_ENDPOINTS, STORAGE_KEYS, COOKIE_NAMES, URL_PARAMS, ROUTES, NUMERIC_CONSTANTS } from './constants';
 
@@ -87,6 +74,36 @@ const TEST_EARNINGS_DATA = [
 ];
 // -------------------------------------
 
+const CanonicalTag = () => {
+  const location = useLocation();
+  const { i18n } = useTranslation();
+
+  // Base URL without query params
+  const baseUrl = `https://www.stockpredictorai.com${location.pathname === '/' ? '' : location.pathname}`;
+
+  // Current URL with language param if it's not default
+  const currentLang = i18n.language || 'en';
+  const canonicalUrl = currentLang === 'en'
+    ? baseUrl
+    : `${baseUrl}?lang=${currentLang}`;
+
+  const languages = ['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr', 'nl', 'ar', 'hi'];
+
+  return (
+    <Helmet>
+      <link rel="canonical" href={canonicalUrl} />
+      {languages.map(lang => (
+        <link
+          key={lang}
+          rel="alternate"
+          hreflang={lang}
+          href={lang === 'en' ? baseUrl : `${baseUrl}?lang=${lang}`}
+        />
+      ))}
+      <link rel="alternate" hreflang="x-default" href={baseUrl} />
+    </Helmet>
+  );
+};
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -175,7 +192,6 @@ function App() {
   }, []);
   // --- END EFFECT ---
 
-
   useEffect(() => {
     fetchUser();
     fetchSettings();
@@ -190,6 +206,17 @@ function App() {
       }
     }
   }, [isAuthLoading, cookieConsent]);
+
+  // --- Language Query Param Support ---
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    if (langParam && ['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr', 'nl', 'ar', 'hi'].includes(langParam)) {
+      if (i18n.language !== langParam) {
+        i18n.changeLanguage(langParam);
+      }
+    }
+  }, [i18n]);
 
   // --- RTL Support ---
   useEffect(() => {

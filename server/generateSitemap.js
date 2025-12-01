@@ -23,6 +23,8 @@ const STATIC_ROUTES = [
     '/ai-wizard'
 ];
 
+const LANGUAGES = ['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr', 'nl', 'ar', 'hi'];
+
 async function generateSitemap() {
     try {
         // --- A. Create Target Directory if missing ---
@@ -40,6 +42,31 @@ async function generateSitemap() {
         // --- C. Generate URLs ---
         const smStream = new SitemapStream({ hostname: hostname });
 
+        // Helper to add language variants
+        const addUrlWithLanguages = (url, priority, changefreq, lastmod) => {
+            LANGUAGES.forEach(lang => {
+                // Construct the URL for this language
+                // Default language (en) uses the base URL, others use ?lang=xx
+                const pageUrl = lang === 'en' ? url : `${url}?lang=${lang}`;
+
+                // Construct hreflang links for this entry
+                const links = LANGUAGES.map(l => ({
+                    lang: l,
+                    url: l === 'en' ? `${hostname}${url}` : `${hostname}${url}?lang=${l}`
+                }));
+                // Add x-default pointing to English
+                links.push({ lang: 'x-default', url: `${hostname}${url}` });
+
+                smStream.write({
+                    url: pageUrl,
+                    changefreq,
+                    priority,
+                    lastmod,
+                    links
+                });
+            });
+        };
+
         // 1. Add Static Routes
         const today = new Date().toISOString();
         STATIC_ROUTES.forEach(route => {
@@ -48,50 +75,32 @@ async function generateSitemap() {
             if (route === '/explore') priority = 0.9;
             if (route === '/scoreboard') priority = 0.8;
 
-            smStream.write({
-                url: route,
-                changefreq: 'daily',
-                priority: priority,
-                lastmod: today
-            });
+            addUrlWithLanguages(route, priority, 'daily', today);
         });
 
         // 2. Add Dynamic Stock Routes (Including lastmod)
-        // Goal: Get distinct tickers and the max(updatedAt) for each one.
         const stockUpdates = await Prediction.aggregate([
             {
                 $group: {
                     _id: '$stockTicker',
-                    lastMod: { $max: '$updatedAt' } // Use the most recent activity on this ticker
+                    lastMod: { $max: '$updatedAt' }
                 }
             }
         ]);
 
         stockUpdates.forEach(stock => {
-            smStream.write({
-                url: `/stock/${stock._id}`,
-                changefreq: 'daily',
-                priority: 0.9,
-                lastmod: stock.lastMod // Add the last modified timestamp
-            });
+            addUrlWithLanguages(`/stock/${stock._id}`, 0.9, 'daily', stock.lastMod);
         });
 
         // 3. Add Dynamic Profile Routes (Including lastmod)
-        // Goal: Get active users and their last modified time (from the document itself).
         const activeUsers = await User.find({
             'analystRating.total': { $gt: 0 }
         })
-            // Select the ID and the built-in updatedAt timestamp
             .select('_id updatedAt')
-            .lean(); // Use lean() for performance
+            .lean();
 
         activeUsers.forEach(user => {
-            smStream.write({
-                url: `/profile/${user._id}`,
-                changefreq: 'weekly',
-                priority: 0.8,
-                lastmod: user.updatedAt // Add the user's last modified timestamp
-            });
+            addUrlWithLanguages(`/profile/${user._id}`, 0.8, 'weekly', user.updatedAt);
         });
 
         // 4. End the stream
@@ -105,7 +114,6 @@ async function generateSitemap() {
         fs.writeFileSync(sitemapPath, sitemapBuffer);
 
         console.log(`Sitemap successfully generated at ${sitemapPath}`);
-
 
     } catch (e) {
         console.error('Sitemap Generator Error:', e);
