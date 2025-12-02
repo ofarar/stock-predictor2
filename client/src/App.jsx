@@ -115,11 +115,8 @@ function App() {
   const [stockToPredict, setStockToPredict] = useState(null);
   const [settings, setSettings] = useState(null);
   const [cookieConsent, setCookieConsent] = useState(false);
-
-  // --- NEW STATE: Global Earnings Calendar ---
   const [earningsCalendar, setEarningsCalendar] = useState([]);
-  // ------------------------------------------
-
+  const [error, setError] = useState(null);
 
   const handleOpenPredictionModal = useCallback((ticker = null) => {
     if (user) {
@@ -137,10 +134,8 @@ function App() {
 
   const requestLogin = () => setIsLoginPromptOpen(true);
 
-  // Fetch the current user once when the app loads
   const fetchUser = useCallback(() => {
     setIsAuthLoading(true);
-
     axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true })
       .then(res => {
         setUser(res.data || null);
@@ -155,42 +150,33 @@ function App() {
   const fetchSettings = useCallback(() => {
     axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true })
       .then(res => setSettings(res.data))
-      .catch((error) => console.error("Failed to fetch settings:", error));
+      .catch((error) => {
+        console.error("Failed to fetch settings:", error);
+        setError(error.message || "Failed to load settings");
+      });
   }, []);
 
-  // --- EFFECT: Fetch Earnings Calendar (Runs Once) ---
   useEffect(() => {
     console.log("Earnings: Initiating fetch for calendar...");
     axios.get(`${API_URL}${API_ENDPOINTS.EARNINGS_CALENDAR}`)
       .then(res => {
         const validCalendar = (res.data || []).filter(e => e.earningsDate).slice(0, 50);
-
-        // --- LOGIC 1: Check for Empty Results ---
         if (validCalendar.length === 0 && import.meta.env.DEV) {
           console.warn("Earnings: API returned 0 entries. Using DEV test data.");
           setEarningsCalendar(TEST_EARNINGS_DATA);
           return;
         }
-        // ---------------------------------------
-
         console.log(`Earnings: Successfully received ${validCalendar.length} valid entries.`);
-        if (validCalendar.length > 0) {
-          console.log("Earnings: First calendar entry:", validCalendar[0]);
-        }
-
         setEarningsCalendar(validCalendar);
       })
       .catch(err => {
         console.error("Earnings: Failed to fetch earnings calendar.", err.message);
-        // --- LOGIC 2: Fallback on API failure in DEV mode ---
         if (import.meta.env.DEV) {
           console.warn("Earnings: API failed. Using DEV test data for display.");
           setEarningsCalendar(TEST_EARNINGS_DATA);
         }
-        // ----------------------------------------------------
       });
   }, []);
-  // --- END EFFECT ---
 
   useEffect(() => {
     fetchUser();
@@ -207,7 +193,6 @@ function App() {
     }
   }, [isAuthLoading, cookieConsent]);
 
-  // --- Language Query Param Support ---
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const langParam = urlParams.get('lang');
@@ -218,12 +203,26 @@ function App() {
     }
   }, [i18n]);
 
-  // --- RTL Support ---
   useEffect(() => {
     const isRtl = i18n.language === 'ar';
     document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+        <h1 className="text-xl font-bold text-red-500 mb-2">Application Error</h1>
+        <p className="text-gray-300 mb-4">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   if (isAuthLoading || !settings) {
     return <FallbackLoading />;
@@ -234,32 +233,23 @@ function App() {
       <Helmet>
         <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
         <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
-        {/* --- HREFLANG tags should be added here dynamically in a full setup --- */}
       </Helmet>
       <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
       <ScrollToTop />
       <CanonicalTag />
-      {/* --- 2. WRAP THE MAIN LAYOUT IN THE <ELEMENTS> PROVIDER --- */}
       <Elements stripe={stripePromise}>
         <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
-
           <EarningsBanner
             calendar={earningsCalendar}
-            // MODIFIED: Ensure the object passed is structured like a quote object, 
-            // but only contains the symbol, forcing the widget to fetch the price.
             onMakePredictionClick={(stock) => handleOpenPredictionModal({ symbol: stock.symbol })}
             isActive={settings?.isEarningsBannerActive}
           />
-
           <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} onProfileUpdate={fetchUser} />
           <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
           <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
           <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
-
-            {/* --- WRAP ROUTES IN SUSPENSE --- */}
             <Suspense fallback={<FallbackLoading />}>
               <Routes>
-                {/* Note: Components are now rendered using the lazy-loaded versions */}
                 <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
                 <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
                 <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
@@ -291,12 +281,10 @@ function App() {
                 />
               </Routes>
             </Suspense>
-            {/* --- END SUSPENSE WRAPPER --- */}
           </main>
           <Footer settings={settings} />
         </div>
       </Elements>
-      {/* --- Cookie Consent --- */}
       <CookieConsent
         location="bottom"
         buttonText={t('common.accept', 'Accept')}
