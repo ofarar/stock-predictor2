@@ -20,6 +20,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 const FallbackLoading = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
@@ -193,9 +194,17 @@ function App() {
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
-  // Mobile Deep Link Handler
+  // Mobile Deep Link Handler & Google Auth Init
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
+      import('@codetrix-studio/capacitor-google-auth').then(({ GoogleAuth }) => {
+        GoogleAuth.initialize({
+          clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          scopes: ['profile', 'email'],
+          grantOfflineAccess: true,
+        });
+      });
+
       CapacitorApp.addListener('appUrlOpen', data => {
         const url = new URL(data.url);
         if (url.protocol === 'stockpredictorai:' && url.host === 'auth-success') {
@@ -216,32 +225,28 @@ function App() {
   // --- PUSH NOTIFICATIONS SETUP ---
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
-      import('@capacitor/push-notifications').then(({ PushNotifications }) => {
-        PushNotifications.requestPermissions().then(result => {
-          if (result.receive === 'granted') {
-            PushNotifications.register();
-          }
-        });
+      PushNotifications.requestPermissions().then(result => {
+        if (result.receive === 'granted') {
+          PushNotifications.register();
+        }
+      });
 
-        PushNotifications.addListener('registration', (token) => {
-          console.log('Push Registration Token:', token.value);
-          axios.post(`${API_URL}/api/notifications/register-token`, { token: token.value }, { withCredentials: true })
-            .catch(err => console.error("Failed to register push token", err));
-        });
+      PushNotifications.addListener('registration', (token) => {
+        console.log('Push Registration Token:', token.value);
+        axios.post(`${API_URL}/api/notifications/register-token`, { token: token.value }, { withCredentials: true })
+          .catch(err => console.error("Failed to register push token", err));
+      });
 
-        PushNotifications.addListener('registrationError', (error) => {
-          console.error('Push Registration Error:', error);
-        });
+      PushNotifications.addListener('registrationError', (error) => {
+        console.error('Push Registration Error:', error);
+      });
 
-        PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('Push Received:', notification);
-        });
+      PushNotifications.addListener('pushNotificationReceived', (notification) => {
+        console.log('Push Received:', notification);
+      });
 
-        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-          console.log('Push Action:', notification);
-        });
-      }).catch(err => {
-        console.warn('Push Notifications plugin not found or failed to load:', err);
+      PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+        console.log('Push Action:', notification);
       });
     }
   }, []);
