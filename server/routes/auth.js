@@ -167,6 +167,10 @@ router.post('/dev/login', async (req, res) => {
 
 // GET: Logout
 router.get('/logout', (req, res, next) => {
+  const baseURL =
+    process.env.NODE_ENV === 'production'
+      ? 'https://www.stockpredictorai.com'
+      : 'http://localhost:5173';
   req.logout((err) => {
     if (err) { return next(err); }
 
@@ -178,12 +182,17 @@ router.get('/logout', (req, res, next) => {
       }
 
       // Clear the session cookie
-      res.clearCookie('connect.sid');
+      res.clearCookie('connect.sid', {
+        path: '/',
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        httpOnly: true
+      });
 
       if (req.query.type === 'json') {
         return res.json({ success: true });
       }
-      res.redirect('/');
+      res.redirect(baseURL);
     });
   });
 });

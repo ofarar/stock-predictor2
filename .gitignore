@@ -32,3 +32,4 @@ server/check_specific_account.js
 *.keystore
 *.jks
 *.aab
+server/service-account.json
