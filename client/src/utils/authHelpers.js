@@ -10,6 +10,9 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
     if (Capacitor.isNativePlatform()) {
         try {
             const user = await GoogleAuth.signIn();
+            console.log('Native Google Sign-In success:', user);
+            console.log('Sending ID token to:', `${import.meta.env.VITE_API_URL}/auth/google/native`);
+
             // Send ID token to backend for verification and session creation
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google/native`, {
                 idToken: user.authentication.idToken,

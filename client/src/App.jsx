@@ -119,9 +119,12 @@ function App() {
 
   const fetchUser = useCallback(async () => {
     try {
+      console.log('Fetching user from:', `${API_URL}${API_ENDPOINTS.CURRENT_USER}`);
       const res = await axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true });
+      console.log('Fetch user response:', res.status, res.data);
       setUser(res.data);
     } catch (err) {
+      console.error('Fetch user error:', err);
       setUser(null);
     } finally {
       setIsAuthLoading(false);
