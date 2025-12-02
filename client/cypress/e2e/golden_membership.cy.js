@@ -228,7 +228,7 @@ describe('Golden Membership & Profile Flow', () => {
         // We can just check the text on the button if we were NOT subscribed.
         // But User 1 IS subscribed.
         // Let's create User 3? Or just check as a guest (logout).
-        cy.request('GET', 'http://localhost:5001/auth/logout'); // Logout
+        cy.request('GET', 'http://localhost:5001/auth/logout?type=json'); // Logout
 
         // Intercept the profile fetch for the guest user
         cy.intercept('GET', `/api/profile/${user2Id}`, (req) => {

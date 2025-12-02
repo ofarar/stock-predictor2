@@ -9,6 +9,7 @@ const { awardBadges } = require('../services/badgeService');
 const financeAPI = require('../services/financeAPI');
 const { PREDICTION_MAX_RATING, PREDICTION_MAX_ERROR_PERCENTAGE, RATING_DIRECTION_CHECK_ENABLED, RATING_AWARDS, TARGET_HIT_WEIGHTS } = require('../constants');
 const { calculateProximityRating } = require('../utils/calculations');
+const { sendPushToUser } = require('../services/pushNotificationService');
 
 /**
  * Fetches the historical price for a date.
@@ -287,6 +288,14 @@ const runAssessmentJob = async () => {
                             },
                             link: `/prediction/${prediction._id}`
                         }).save();
+
+                        // Send Push Notification
+                        sendPushToUser(
+                            prediction.userId._id,
+                            "Prediction Assessed",
+                            `Your prediction for ${prediction.stockTicker} has been assessed. You earned a ${rating.toFixed(1)} rating!`,
+                            { url: `/prediction/${prediction._id}` }
+                        );
 
                         await new PredictionLog({
                             predictionId: prediction._id,

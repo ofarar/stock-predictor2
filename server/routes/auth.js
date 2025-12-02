@@ -142,30 +142,11 @@ router.post('/mobile-exchange', async (req, res) => {
 });
 // -------------------------------------------
 
-// Route to check current user
-router.get('/current_user', (req, res) => {
-  res.send(req.user); // req.user is automatically added by Passport
-});
-
-router.get('/logout', (req, res, next) => {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-
-    const redirectURL =
-      process.env.NODE_ENV === 'production'
-        ? 'https://www.stockpredictorai.com'
-        : 'http://localhost:5173';
-
-    res.redirect(redirectURL);
-  });
-});
-
-// --- DEV ONLY: Backdoor login for Cypress ---
-// if (process.env.NODE_ENV !== 'production') {
+// POST: Dev Login (Only for development)
 router.post('/dev/login', async (req, res) => {
-  console.log('Dev login attempt:', req.body.email);
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ error: 'Not allowed in production' });
+  }
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
@@ -183,6 +164,33 @@ router.post('/dev/login', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-// }
+
+// GET: Logout
+router.get('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) { return next(err); }
+
+    // Explicitly destroy the session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+        return next(err);
+      }
+
+      // Clear the session cookie
+      res.clearCookie('connect.sid');
+
+      if (req.query.type === 'json') {
+        return res.json({ success: true });
+      }
+      res.redirect('/');
+    });
+  });
+});
+
+// GET: Current User
+router.get('/current_user', (req, res) => {
+  res.send(req.user);
+});
 
 module.exports = router;

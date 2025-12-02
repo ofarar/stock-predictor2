@@ -116,26 +116,25 @@ function App() {
 
   const requestLogin = () => setIsLoginPromptOpen(true);
 
-  const fetchUser = useCallback(() => {
-    setIsAuthLoading(true);
-    axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true })
-      .then(res => {
-        setUser(res.data || null);
-        if (res.data?.language && res.data.language !== i18n.language) {
-          i18n.changeLanguage(res.data.language);
-        }
-      })
-      .catch(() => setUser(null))
-      .finally(() => setIsAuthLoading(false));
-  }, [i18n]);
+  const fetchUser = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true });
+      setUser(res.data);
+    } catch (err) {
+      setUser(null);
+    } finally {
+      setIsAuthLoading(false);
+    }
+  }, []);
 
-  const fetchSettings = useCallback(() => {
-    axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true })
-      .then(res => setSettings(res.data))
-      .catch((error) => {
-        console.error("Failed to fetch settings:", error);
-        setError(error.message || "Failed to load settings");
-      });
+  const fetchSettings = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true });
+      setSettings(res.data);
+    } catch (err) {
+      console.error("Failed to fetch settings", err);
+      setSettings({}); // Fallback to empty object to allow render
+    }
   }, []);
 
   // Fetch Earnings Calendar
@@ -202,7 +201,6 @@ function App() {
         if (url.protocol === 'stockpredictorai:' && url.host === 'auth-success') {
           const token = url.searchParams.get('token');
           if (token) {
-            // FIX: Added { withCredentials: true } to ensure session cookie is saved
             axios.post(`${API_URL}/auth/mobile-exchange`, { token }, { withCredentials: true })
               .then(() => {
                 fetchUser();
@@ -214,6 +212,39 @@ function App() {
       });
     }
   }, [fetchUser]);
+
+  // --- PUSH NOTIFICATIONS SETUP ---
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      import('@capacitor/push-notifications').then(({ PushNotifications }) => {
+        PushNotifications.requestPermissions().then(result => {
+          if (result.receive === 'granted') {
+            PushNotifications.register();
+          }
+        });
+
+        PushNotifications.addListener('registration', (token) => {
+          console.log('Push Registration Token:', token.value);
+          axios.post(`${API_URL}/api/notifications/register-token`, { token: token.value }, { withCredentials: true })
+            .catch(err => console.error("Failed to register push token", err));
+        });
+
+        PushNotifications.addListener('registrationError', (error) => {
+          console.error('Push Registration Error:', error);
+        });
+
+        PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          console.log('Push Received:', notification);
+        });
+
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+          console.log('Push Action:', notification);
+        });
+      }).catch(err => {
+        console.warn('Push Notifications plugin not found or failed to load:', err);
+      });
+    }
+  }, []);
 
   if (error) {
     return (

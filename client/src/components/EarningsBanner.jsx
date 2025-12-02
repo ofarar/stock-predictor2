@@ -187,13 +187,15 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
             </div>
 
             {/* Close Button */}
-            <button
-                onClick={() => setIsVisible(false)}
-                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors z-10 mt-[env(safe-area-inset-top)]`}
-                aria-label="Close banner"
-            >
-                <FaTimes className="w-3 h-3" />
-            </button>
+            <div className={`absolute top-0 bottom-0 ${isRTL ? 'left-2' : 'right-2'} z-30 flex items-center pt-[env(safe-area-inset-top)] pointer-events-none`}>
+                <button
+                    onClick={() => setIsVisible(false)}
+                    className="bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors pointer-events-auto"
+                    aria-label="Close banner"
+                >
+                    <FaTimes className="w-3 h-3" />
+                </button>
+            </div>
         </div>
     );
 };

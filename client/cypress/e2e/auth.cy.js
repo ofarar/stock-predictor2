@@ -19,8 +19,7 @@ describe('Authentication Flows', () => {
         cy.visit('/dashboard');
 
         // 1. Open mobile menu by clicking the hamburger icon
-        // NotificationBell also has p-2, so we need the last one (Hamburger)
-        cy.get('nav button.p-2').last().click();
+        cy.get('[data-testid="mobile-menu-button"]').click();
         cy.wait(500); // Wait for animation
 
         // Force English to avoid language switching issues
@@ -28,9 +27,8 @@ describe('Authentication Flows', () => {
             win.localStorage.setItem('i18nextLng', 'en');
         });
 
-        // 2. FIX: Find the visible logout link and click the first one with force
-        // Scoping to 'nav' or 'div' to be safer, and using .first()
-        cy.get('body').contains('Logout').filter(':visible').first().click({ force: true });
+        // 2. Click the logout button using data-testid
+        cy.get('[data-testid="mobile-logout-button"]').click();
 
         // Verify redirect
         cy.contains('Log In').should('exist');

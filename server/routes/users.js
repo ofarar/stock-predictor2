@@ -18,6 +18,7 @@ const {
     ACTION_LIMIT, ACTION_WINDOW_MS
 } = require('../constants'); // <-- NEW IMPORT
 const { calculateAggressiveness } = require('../utils/calculations');
+const { sendPushToUser } = require('../services/pushNotificationService');
 
 // Limiters
 const contactLimiter = rateLimit({
@@ -546,6 +547,13 @@ router.put('/profile/golden-member', async (req, res) => {
                                     }
                                 }).save();
 
+                                // Send Push Notification
+                                sendPushToUser(
+                                    subscriber._id,
+                                    "Price Change Alert",
+                                    `${userToUpdate.username} changed their subscription price from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)}.`
+                                );
+
                                 await stripe.subscriptions.update(sub.id, {
                                     items: [{
                                         id: sub.items.data[0].id,
@@ -613,6 +621,14 @@ router.post('/users/:userId/follow', actionLimiter, async (req, res) => {
                 username: req.user.username
             }
         }).save();
+
+        // Send Push Notification
+        sendPushToUser(
+            followedUserId,
+            "New Follower",
+            `${req.user.username} started following you!`,
+            { url: `/profile/${currentUserId}` }
+        );
 
         res.status(200).send('Successfully followed user.');
     } catch (error) {

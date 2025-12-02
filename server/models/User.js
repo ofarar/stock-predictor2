@@ -88,6 +88,7 @@ const UserSchema = new Schema({
     profileViews: { type: Number, default: 0 },
     lastPredictionDate: { type: Date },
     hasSeenCreatorPoolAnimation: { type: Boolean, default: false },
+    fcmTokens: [{ type: String }], // For Push Notifications
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

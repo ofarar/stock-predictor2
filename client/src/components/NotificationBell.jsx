@@ -5,6 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage } from '../utils/formatters';
+import { API_URL } from '../constants';
 
 // (getNotificationIcon function is unchanged)
 const getNotificationIcon = (type) => {
@@ -38,10 +39,14 @@ const NotificationBell = ({ user }) => {
 
     useEffect(() => {
         if (user) {
-            axios.get(`${import.meta.env.VITE_API_URL}/api/notifications`, { withCredentials: true })
+            axios.get(`${API_URL}/api/notifications`, { withCredentials: true })
                 .then(res => {
                     setNotifications(res.data);
                     // Mark initial mount as "done" ONLY after the first fetch
+                    isInitialMount.current = false;
+                })
+                .catch(err => {
+                    console.error("Failed to fetch notifications", err);
                     isInitialMount.current = false;
                 });
         } else {

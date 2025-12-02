@@ -1,5 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
+import axios from 'axios';
 
 export const handleGoogleLogin = async (redirectPath = '/') => {
     const refCode = localStorage.getItem('referralCode');
@@ -15,5 +16,17 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
         await Browser.open({ url });
     } else {
         window.location.href = url;
+    }
+};
+
+export const handleLogout = async () => {
+    try {
+        await axios.get(`${import.meta.env.VITE_API_URL}/auth/logout?type=json`, { withCredentials: true });
+        window.location.href = '/';
+    } catch (error) {
+        console.error("Logout failed", error);
+        alert(`Logout failed: ${error.message}`);
+        // Fallback to hard redirect if API fails
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/logout`;
     }
 };
