@@ -100,106 +100,60 @@ router.get(
         // -------------------
 
         const redirectPath = state.path || '/';
-        return res.redirect(baseURL + redirectPath);
-      });
-    })(req, res, next);
-  }
-);
-
-// --- NEW: Mobile Token Exchange Endpoint ---
-router.post('/mobile-exchange', async (req, res) => {
-  const { token } = req.body;
-
-  if (!token || !mobileAuthTokens.has(token)) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
-  }
-
-  const data = mobileAuthTokens.get(token);
-
-  // Double check expiration
-  if (data.expires < Date.now()) {
-    mobileAuthTokens.delete(token);
-    return res.status(401).json({ error: 'Token expired' });
-  }
-
-  // Consume token (One-time use)
-  mobileAuthTokens.delete(token);
-
-  try {
-    const user = await User.findById(data.userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Log the user in (creates session cookie)
-    req.logIn(user, (err) => {
-      if (err) return res.status(500).json({ error: 'Login failed' });
-      return res.json({ success: true, user });
-    });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
-});
-// -------------------------------------------
-
-// POST: Dev Login (Only for development)
-router.post('/dev/login', async (req, res) => {
-  if (process.env.NODE_ENV === 'production') {
-    return res.status(403).json({ error: 'Not allowed in production' });
-  }
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      console.log('User not found:', email);
-      return res.status(404).json({ error: 'User not found' });
-    }
-    req.login(user, (err) => {
-      if (err) return res.status(500).json({ error: err.message });
-      console.log('Dev login success:', user.username);
-      return res.json(user);
-    });
-  } catch (err) {
-    console.log('Dev login error:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// GET: Logout
-router.get('/logout', (req, res, next) => {
-  const baseURL =
-    process.env.NODE_ENV === 'production'
-      ? 'https://www.stockpredictorai.com'
-      : 'http://localhost:5173';
-  req.logout((err) => {
-    if (err) { return next(err); }
-
-    // Explicitly destroy the session
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Session destroy error:', err);
-        return next(err);
       }
-
-      // Clear the session cookie
-      res.clearCookie('connect.sid', {
-        path: '/',
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        httpOnly: true
-      });
-
-      if (req.query.type === 'json') {
-        return res.json({ success: true });
+  try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+          console.log('User not found:', email);
+          return res.status(404).json({ error: 'User not found' });
+        }
+        req.login(user, (err) => {
+          if (err) return res.status(500).json({ error: err.message });
+          console.log('Dev login success:', user.username);
+          return res.json(user);
+        });
+      } catch (err) {
+        console.log('Dev login error:', err);
+        res.status(500).json({ error: err.message });
       }
-      res.redirect(baseURL);
     });
-  });
-});
 
-// GET: Current User
-router.get('/current_user', (req, res) => {
-  res.send(req.user);
-});
+    // GET: Logout
+    router.get('/logout', (req, res, next) => {
+      const baseURL =
+        process.env.NODE_ENV === 'production'
+          ? 'https://www.stockpredictorai.com'
+          : 'http://localhost:5173';
+      req.logout((err) => {
+        if (err) { return next(err); }
 
-module.exports = router;
+        // Explicitly destroy the session
+        req.session.destroy((err) => {
+          if (err) {
+            console.error('Session destroy error:', err);
+            return next(err);
+          }
+
+          // Clear the session cookie
+          res.clearCookie('connect.sid', {
+            path: '/',
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            httpOnly: true
+          });
+
+          if (req.query.type === 'json') {
+            return res.json({ success: true });
+          }
+          res.redirect(baseURL);
+        });
+      });
+    });
+
+    // GET: Current User
+    router.get('/current_user', (req, res) => {
+      res.send(req.user);
+    });
+
+    module.exports = router;
