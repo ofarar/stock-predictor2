@@ -12,7 +12,8 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
             const user = await GoogleAuth.signIn();
             // Send ID token to backend for verification and session creation
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google/native`, {
-                idToken: user.authentication.idToken
+                idToken: user.authentication.idToken,
+                refCode: refCode // <-- Send referral code
             }, { withCredentials: true });
 
             if (response.data.success) {

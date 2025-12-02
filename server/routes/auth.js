@@ -3,6 +3,9 @@ const passport = require('passport');
 const crypto = require('crypto'); // Built-in Node.js crypto
 const User = require('../models/User'); // Ensure User model is imported for exchange
 const { sendWelcomeEmail } = require('../services/email');
+const { OAuth2Client } = require('google-auth-library');
+const Notification = require('../models/Notification');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // In-memory store for mobile one-time tokens (Production should use Redis)
 // Map<token, { userId: string, expires: number }>
@@ -105,6 +108,111 @@ router.get(
     })(req, res, next);
   }
 );
+
+// POST: Native Google Sign-In (Android/iOS)
+router.post('/google/native', async (req, res) => {
+  const { idToken, refCode } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const googleId = payload.sub;
+    const email = payload.email;
+    const name = payload.name;
+    const picture = payload.picture;
+
+    let user = await User.findOne({ googleId });
+
+    if (!user) {
+      // Check if username is taken (simple check, might need more robust logic if name collision is high)
+      let newUsername = name;
+      const existingUsername = await User.findOne({ username: newUsername });
+      if (existingUsername) {
+        // Simple collision resolution for native flow: append random string
+        newUsername = `${name}_${crypto.randomBytes(2).toString('hex')}`;
+      }
+
+      const defaultAvatar = picture || `https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(newUsername)}`;
+
+      // --- NEW: Add Early User Bonus Points ---
+      const earlyUserBonus = 1000;
+      const analystRatingObject = {
+        total: earlyUserBonus,
+        fromPredictions: 0,
+        fromBadges: 0,
+        fromShares: 0,
+        fromReferrals: 0,
+        fromRanks: 0,
+        fromBonus: earlyUserBonus,
+        shareBreakdown: {},
+        predictionBreakdownByStock: {},
+        badgeBreakdown: {},
+        rankBreakdown: {}
+      };
+      // --- END NEW ---
+
+      user = await new User({
+        googleId,
+        username: newUsername,
+        email,
+        avatar: defaultAvatar,
+        analystRating: analystRatingObject
+      }).save();
+
+      // --- REFERRAL LOGIC ---
+      if (refCode) {
+        try {
+          const inviter = await User.findById(refCode);
+          if (inviter) {
+            const pointsToAward = 500;
+            if (typeof inviter.analystRating !== 'object' || inviter.analystRating === null) {
+              const oldPoints = typeof inviter.analystRating === 'number' ? inviter.analystRating : 0;
+              inviter.analystRating = { total: oldPoints, fromPredictions: oldPoints, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, fromBonus: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
+            }
+            inviter.analystRating.total += pointsToAward;
+            inviter.analystRating.fromReferrals += pointsToAward;
+            inviter.referrals.push(user._id);
+            await inviter.save();
+
+            user.invitedBy = inviter._id;
+            await user.save();
+
+            await new Notification({
+              recipient: inviter._id,
+              sender: user._id,
+              type: 'NewReferral',
+              messageKey: 'notifications.newReferral',
+              link: `/profile/${user._id}`,
+              metadata: {
+                username: user.username,
+                points: pointsToAward
+              }
+            }).save();
+          }
+        } catch (err) {
+          console.error("Referral award error (native):", err);
+        }
+      }
+
+      sendWelcomeEmail(user.email, user.username);
+    }
+
+    // Log the user in
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: 'Login failed' });
+      }
+      return res.json({ success: true, user });
+    });
+
+  } catch (error) {
+    console.error('Native Google Auth Error:', error);
+    res.status(401).json({ success: false, message: 'Invalid token' });
+  }
+});
 
 // Dev login route
 router.post('/dev_login', async (req, res) => {
