@@ -2,6 +2,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { handleGoogleLogin } from '../utils/authHelpers';
 
 const BenefitItem = ({ icon, title, description }) => (
     <div className="flex items-start gap-4 bg-gray-700 p-4 rounded-lg">
@@ -17,7 +18,6 @@ const BenefitItem = ({ icon, title, description }) => (
 
 const SignupBenefitsModal = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
-    const loginUrl = `${import.meta.env.VITE_API_URL}/auth/google`;
 
     if (!isOpen) return null;
 
@@ -55,12 +55,12 @@ const SignupBenefitsModal = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="text-center">
-                    <a
-                        href={loginUrl}
+                    <button
+                        onClick={() => handleGoogleLogin()}
                         className="inline-block w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-transform hover:scale-105"
                     >
                         {t('loginPromptModal.signUpWithGoogle', 'Sign Up with Google')}
-                    </a>
+                    </button>
                     <p className="mt-4 text-sm text-green-400 font-medium">
                         {t('benefitsModal.footer', 'It is 100% free to sign up. No credit card required.')}
                     </p>

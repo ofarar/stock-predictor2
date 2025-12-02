@@ -12,18 +12,17 @@ import ScrollToTop from './components/ScrollToTop';
 import Header from './components/Header';
 import PredictionModal from './components/PredictionModal';
 import LoginPromptModal from './components/LoginPromptModal';
+import EarningsBanner from './components/EarningsBanner';
 import Footer from './components/Footer';
 import FeatureRoute from './components/FeatureRoute';
-import EarningsBanner from './components/EarningsBanner';
-
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { Capacitor } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
 
-// --- CODE SPLITTING: Lazy Load Pages ---
-
-// Define a minimal loading component for Suspense fallback
 const FallbackLoading = () => (
-  <div className="text-center py-20 text-gray-400">
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
     <svg className="animate-spin h-8 w-8 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -32,7 +31,7 @@ const FallbackLoading = () => (
   </div>
 );
 
-// Lazy-loaded components (All pages are now dynamically imported)
+// Lazy-loaded components
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ScoreboardPage = lazy(() => import('./pages/ScoreboardPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -55,50 +54,33 @@ const CompleteProfilePage = lazy(() => import('./pages/CompleteProfilePage'));
 const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
 const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage'));
 
-// --- 1. LOAD STRIPE JS GLOBALLY (OUTSIDE THE COMPONENT) ---
+// --- 1. LOAD STRIPE JS GLOBALLY ---
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-
-// NOTE: Add a check to prevent crash if key is missing during build/deploy
 const stripePromise = STRIPE_PUBLISHABLE_KEY
   ? loadStripe(STRIPE_PUBLISHABLE_KEY)
   : Promise.resolve(null);
-// -------------------------------------------------------------
 
 // --- TEST DATA FOR EARNINGS BANNER ---
 const TEST_EARNINGS_DATA = [
-  // Today is Thursday, Nov 27, 2025. Set dates relative to today.
-  { ticker: 'NVDA', earningsDate: '2025-11-28', time: 'AMC' }, // Tomorrow
-  { ticker: 'TSLA', earningsDate: '2025-12-02', time: 'BMO' }, // Next Monday
-  { ticker: 'MSFT', earningsDate: '2025-12-05', time: 'AMC' }, // Next Week Friday
-  { ticker: 'SBUX', earningsDate: '2025-12-09', time: 'BMO' }, // Two Weeks Out
+  { ticker: 'NVDA', earningsDate: '2025-11-28', time: 'AMC' },
+  { ticker: 'TSLA', earningsDate: '2025-12-02', time: 'BMO' },
+  { ticker: 'MSFT', earningsDate: '2025-12-05', time: 'AMC' },
+  { ticker: 'SBUX', earningsDate: '2025-12-09', time: 'BMO' },
 ];
-// -------------------------------------
 
 const CanonicalTag = () => {
   const location = useLocation();
   const { i18n } = useTranslation();
-
-  // Base URL without query params
   const baseUrl = `https://www.stockpredictorai.com${location.pathname === '/' ? '' : location.pathname}`;
-
-  // Current URL with language param if it's not default
   const currentLang = i18n.language || 'en';
-  const canonicalUrl = currentLang === 'en'
-    ? baseUrl
-    : `${baseUrl}?lang=${currentLang}`;
-
+  const canonicalUrl = currentLang === 'en' ? baseUrl : `${baseUrl}?lang=${currentLang}`;
   const languages = ['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr', 'nl', 'ar', 'hi'];
 
   return (
     <Helmet>
       <link rel="canonical" href={canonicalUrl} />
       {languages.map(lang => (
-        <link
-          key={lang}
-          rel="alternate"
-          hreflang={lang}
-          href={lang === 'en' ? baseUrl : `${baseUrl}?lang=${lang}`}
-        />
+        <link key={lang} rel="alternate" hreflang={lang} href={lang === 'en' ? baseUrl : `${baseUrl}?lang=${lang}`} />
       ))}
       <link rel="alternate" hreflang="x-default" href={baseUrl} />
     </Helmet>
@@ -156,6 +138,7 @@ function App() {
       });
   }, []);
 
+  // Fetch Earnings Calendar
   useEffect(() => {
     console.log("Earnings: Initiating fetch for calendar...");
     axios.get(`${API_URL}${API_ENDPOINTS.EARNINGS_CALENDAR}`)
@@ -166,23 +149,23 @@ function App() {
           setEarningsCalendar(TEST_EARNINGS_DATA);
           return;
         }
-        console.log(`Earnings: Successfully received ${validCalendar.length} valid entries.`);
         setEarningsCalendar(validCalendar);
       })
       .catch(err => {
         console.error("Earnings: Failed to fetch earnings calendar.", err.message);
         if (import.meta.env.DEV) {
-          console.warn("Earnings: API failed. Using DEV test data for display.");
           setEarningsCalendar(TEST_EARNINGS_DATA);
         }
       });
   }, []);
 
+  // Initial Fetch
   useEffect(() => {
     fetchUser();
     fetchSettings();
   }, [fetchUser, fetchSettings]);
 
+  // Referral Code
   useEffect(() => {
     if (!isAuthLoading && cookieConsent) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -193,6 +176,7 @@ function App() {
     }
   }, [isAuthLoading, cookieConsent]);
 
+  // Language Param
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const langParam = urlParams.get('lang');
@@ -203,23 +187,40 @@ function App() {
     }
   }, [i18n]);
 
+  // RTL Support
   useEffect(() => {
     const isRtl = i18n.language === 'ar';
     document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
+  // Mobile Deep Link Handler
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      CapacitorApp.addListener('appUrlOpen', data => {
+        const url = new URL(data.url);
+        if (url.protocol === 'stockpredictorai:' && url.host === 'auth-success') {
+          const token = url.searchParams.get('token');
+          if (token) {
+            // FIX: Added { withCredentials: true } to ensure session cookie is saved
+            axios.post(`${API_URL}/auth/mobile-exchange`, { token }, { withCredentials: true })
+              .then(() => {
+                fetchUser();
+                Browser.close();
+              })
+              .catch(err => console.error('Mobile auth failed', err));
+          }
+        }
+      });
+    }
+  }, [fetchUser]);
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
         <h1 className="text-xl font-bold text-red-500 mb-2">Application Error</h1>
         <p className="text-gray-300 mb-4">{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
-        >
-          Retry
-        </button>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">Retry</button>
       </div>
     );
   }
@@ -294,12 +295,8 @@ function App() {
         buttonStyle={{ color: "#4e503b", fontSize: "13px", background: "#EAB308", borderRadius: "5px" }}
         declineButtonStyle={{ color: "#FFF", fontSize: "13px", background: "#4B5563", borderRadius: "5px" }}
         expires={NUMERIC_CONSTANTS.COOKIE_EXPIRY_DAYS}
-        onAccept={() => {
-          setCookieConsent(true);
-        }}
-        onDecline={() => {
-          setCookieConsent(false);
-        }}
+        onAccept={() => setCookieConsent(true)}
+        onDecline={() => setCookieConsent(false)}
       >
         {t('common.cookieConsent', 'This website uses cookies to enhance the user experience. By accepting, you agree to our use of cookies for analytics and referrals.')}
       </CookieConsent>

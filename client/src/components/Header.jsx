@@ -8,6 +8,7 @@ import VerifiedTick from './VerifiedTick';
 import NotificationBell from './NotificationBell'; // <-- Import the new component
 import LanguageSelector from './LanguageSelector';
 import ReferralModal from './ReferralModal'; // <-- 1. IMPORT
+import { handleGoogleLogin } from '../utils/authHelpers';
 
 const Header = ({ user, onMakePredictionClick, settings }) => {
     const { t, i18n } = useTranslation();
@@ -73,18 +74,6 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
         </div>
     );
 
-    // --- NEW: Dynamic Login URL ---
-    const getLoginUrl = () => {
-        const refCode = localStorage.getItem('referralCode');
-        // We don't know the current path here, so just redirect to home
-        let url = `${import.meta.env.VITE_API_URL}/auth/google?redirect=/`;
-        if (refCode) {
-            url += `&ref=${refCode}`;
-        }
-        return url;
-    };
-    // --- END NEW ---
-
     return (
         <>
             {/* 4. ADD THE MODAL (it's hidden by default) */}
@@ -143,7 +132,7 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                                         <UserMenu />
                                     </>
                                 ) : (
-                                    <a href={getLoginUrl()} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">{t('header.buttons.login')}</a>
+                                    <button onClick={() => handleGoogleLogin()} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">{t('header.buttons.login')}</button>
                                 )}
                             </div>
 
@@ -186,7 +175,7 @@ const Header = ({ user, onMakePredictionClick, settings }) => {
                                 <LanguageSelector user={user} />
                             </div>
                             <div className="mt-2">
-                                {user ? <a href={`${import.meta.env.VITE_API_URL}/auth/logout`} className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">{t('header.mobileMenu.logout')}</a> : <a href={getLoginUrl()} className="block w-full text-center py-2 px-4 text-sm bg-blue-600 rounded text-center">{t('header.mobileMenu.login')}</a>}
+                                {user ? <a href={`${import.meta.env.VITE_API_URL}/auth/logout`} className="block w-full text-center py-2 px-4 text-sm bg-red-600 rounded">{t('header.mobileMenu.logout')}</a> : <button onClick={() => handleGoogleLogin()} className="block w-full text-center py-2 px-4 text-sm bg-blue-600 rounded text-center">{t('header.mobileMenu.login')}</button>}
                             </div>
                         </div>
                     )}

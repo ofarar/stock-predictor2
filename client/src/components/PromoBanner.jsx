@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import SignupBenefitsModal from './SignupBenefitsModal';
+import { handleGoogleLogin } from '../utils/authHelpers';
 
 const PromoBanner = () => {
     const { t } = useTranslation();
@@ -13,27 +14,25 @@ const PromoBanner = () => {
         return null;
     }
 
-    const loginUrl = `${import.meta.env.VITE_API_URL}/auth/google`;
-
     return (
         <>
             <SignupBenefitsModal isOpen={isBenefitsOpen} onClose={() => setIsBenefitsOpen(false)} />
-            
+
             {/* 1. Reverted to 'justify-between' (Spread layout).
                 2. Added 'pe-12' (48px padding) to the right. 
                    This forces the flex content to stop before hitting the corner, preventing overlap.
             */}
             <div className="bg-gradient-to-r from-blue-600 to-green-600 text-center p-4 pe-12 rounded-lg mb-8 relative shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-                
+
                 {/* Text Section */}
                 <div className="text-white font-medium text-start">
                     <p className="mb-0">
                         <Trans
                             i18nKey="promoBanner.creatorPoolText"
                             components={[
-                                <strong key="0" />, 
-                                <span className="font-bold text-yellow-300" key="1" />, 
-                                <a href={loginUrl} className="font-bold underline hover:text-white ms-2 whitespace-nowrap" key="2"></a> 
+                                <strong key="0" />,
+                                <span className="font-bold text-yellow-300" key="1" />,
+                                <button onClick={() => handleGoogleLogin()} className="font-bold underline hover:text-white ms-2 whitespace-nowrap bg-transparent border-0 p-0 cursor-pointer" key="2"></button>
                             ]}
                         />
                     </p>
@@ -47,12 +46,12 @@ const PromoBanner = () => {
                     >
                         {t('promoBanner.whyJoin', 'Why Join?')}
                     </button>
-                    <a 
-                        href={loginUrl}
+                    <button
+                        onClick={() => handleGoogleLogin()}
                         className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 text-sm font-bold py-2 px-4 rounded-md shadow-md transition-transform hover:scale-105 whitespace-nowrap"
                     >
                         {t('promoBanner.joinNow', 'Join Now')}
-                    </a>
+                    </button>
                 </div>
 
                 {/* Close X Button - Pinned to the absolute top-right corner */}

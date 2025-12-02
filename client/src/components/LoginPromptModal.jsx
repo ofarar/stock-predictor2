@@ -1,18 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { handleGoogleLogin } from '../utils/authHelpers';
 
 const LoginPromptModal = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
 
-    const getLoginUrl = () => {
-        const refCode = localStorage.getItem('referralCode');
-        let url = `${import.meta.env.VITE_API_URL}/auth/google?redirect=${window.location.pathname}`;
-        if (refCode) {
-            url += `&ref=${refCode}`;
-        }
-        return url;
+    const handleLogin = () => {
+        handleGoogleLogin(window.location.pathname);
     };
-    // --- END NEW ---
 
     if (!isOpen) return null;
 
@@ -24,12 +19,12 @@ const LoginPromptModal = ({ isOpen, onClose }) => {
                 </button>
                 <h2 className="text-2xl font-bold text-white mb-4">{t('loginPromptModal.title')}</h2>
                 <p className="text-gray-300 mb-6">{t('loginPromptModal.description')}</p>
-                <a
-                    href={getLoginUrl()}
+                <button
+                    onClick={handleLogin}
                     className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center space-x-3 hover:bg-blue-700 transition"
                 >
                     <span>{t('loginPromptModal.signUpWithGoogle')}</span>
-                </a>
+                </button>
             </div>
         </div>
     );

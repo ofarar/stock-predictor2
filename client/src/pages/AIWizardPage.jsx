@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { handleGoogleLogin } from '../utils/authHelpers';
 
 const AIWizardPage = ({ user }) => {
     const { t } = useTranslation();
@@ -87,9 +88,9 @@ const AIWizardPage = ({ user }) => {
                     </button>
                 ) : (
 
-                    <a href={`${import.meta.env.VITE_API_URL}/auth/google?redirect=/ai-wizard`} className="bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-blue-700 ...">
+                    <button onClick={() => handleGoogleLogin('/ai-wizard')} className="bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-blue-700 transition-transform hover:scale-105">
                         {t('aiwizard_signin_to_join')}
-                    </a>
+                    </button>
                 )}
                 <p className="text-sm text-gray-500 mt-4">
                     {t('aiwizard_early_access_note')}

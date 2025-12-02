@@ -1,20 +1,44 @@
 const router = require('express').Router();
 const passport = require('passport');
-
+const crypto = require('crypto'); // Built-in Node.js crypto
+const User = require('../models/User'); // Ensure User model is imported for exchange
 const { sendWelcomeEmail } = require('../services/email');
+
+// In-memory store for mobile one-time tokens (Production should use Redis)
+// Map<token, { userId: string, expires: number }>
+const mobileAuthTokens = new Map();
+
+// Cleanup expired tokens every 10 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, data] of mobileAuthTokens.entries()) {
+    if (data.expires < now) {
+      mobileAuthTokens.delete(token);
+    }
+  }
+}, 10 * 60 * 1000);
 
 // Auth with Google
 router.get('/google', (req, res, next) => {
   const redirectPath = req.query.redirect || '/';
   const referralCode = req.query.ref;
+  const isMobile = req.query.mobile === 'true'; // Check for mobile flag
+
   // --- NEW: Save the referral code in the session ---
   if (referralCode) {
     req.session.referralCode = referralCode;
   }
   // --- END NEW ---
+
+  // Construct state object
+  const state = JSON.stringify({
+    path: redirectPath,
+    mobile: isMobile
+  });
+
   const authenticator = passport.authenticate('google', {
     scope: ['profile', 'email'],
-    state: redirectPath // Pass the path in the state parameter
+    state: state // Pass JSON state
   });
   authenticator(req, res, next);
 });
@@ -25,9 +49,18 @@ router.get(
     passport.authenticate('google', { failureRedirect: '/' }, (err, user, info) => {
       if (err) { return next(err); }
 
+      // Parse state
+      let state = {};
+      try {
+        state = JSON.parse(req.query.state || '{}');
+      } catch (e) {
+        // Fallback for old simple string state
+        state = { path: req.query.state || '/' };
+      }
+
       const baseURL =
         process.env.NODE_ENV === 'production'
-          ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
+          ? 'https://www.stockpredictorai.com'
           : 'http://localhost:5173';
 
       // Handle case where username is taken
@@ -37,11 +70,10 @@ router.get(
       }
 
       if (!user) {
-        // A generic failure case
         return res.redirect('/');
       }
 
-      // Manually log the user in for a successful login/signup
+      // Manually log the user in
       req.logIn(user, (err) => {
         if (err) { return next(err); }
 
@@ -50,12 +82,65 @@ router.get(
           sendWelcomeEmail(user.email, user.username);
         }
 
-        const redirectPath = req.query.state || '/';
+        // --- MOBILE FLOW ---
+        if (state.mobile) {
+          // Generate a secure random token
+          const token = crypto.randomBytes(32).toString('hex');
+
+          // Store token with 5-minute expiration
+          mobileAuthTokens.set(token, {
+            userId: user._id.toString(),
+            expires: Date.now() + 5 * 60 * 1000
+          });
+
+          // Redirect to custom scheme
+          // stockpredictorai://auth-success?token=...
+          return res.redirect(`stockpredictorai://auth-success?token=${token}`);
+        }
+        // -------------------
+
+        const redirectPath = state.path || '/';
         return res.redirect(baseURL + redirectPath);
       });
     })(req, res, next);
   }
 );
+
+// --- NEW: Mobile Token Exchange Endpoint ---
+router.post('/mobile-exchange', async (req, res) => {
+  const { token } = req.body;
+
+  if (!token || !mobileAuthTokens.has(token)) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  const data = mobileAuthTokens.get(token);
+
+  // Double check expiration
+  if (data.expires < Date.now()) {
+    mobileAuthTokens.delete(token);
+    return res.status(401).json({ error: 'Token expired' });
+  }
+
+  // Consume token (One-time use)
+  mobileAuthTokens.delete(token);
+
+  try {
+    const user = await User.findById(data.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Log the user in (creates session cookie)
+    req.logIn(user, (err) => {
+      if (err) return res.status(500).json({ error: 'Login failed' });
+      return res.json({ success: true, user });
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+// -------------------------------------------
 
 // Route to check current user
 router.get('/current_user', (req, res) => {
@@ -70,7 +155,7 @@ router.get('/logout', (req, res, next) => {
 
     const redirectURL =
       process.env.NODE_ENV === 'production'
-        ? 'https://www.stockpredictorai.com'  // or 'https://stock-predictor2.pages.dev' if still using Pages domain
+        ? 'https://www.stockpredictorai.com'
         : 'http://localhost:5173';
 
     res.redirect(redirectURL);
@@ -79,7 +164,6 @@ router.get('/logout', (req, res, next) => {
 
 // --- DEV ONLY: Backdoor login for Cypress ---
 // if (process.env.NODE_ENV !== 'production') {
-const User = require('../models/User');
 router.post('/dev/login', async (req, res) => {
   console.log('Dev login attempt:', req.body.email);
   try {

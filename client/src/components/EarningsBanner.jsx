@@ -1,5 +1,4 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from 'react';
-
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
@@ -72,13 +71,6 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
             if (isRTL) {
                 // RTL: Move Right (Positive)
                 positionRef.current += speedRef.current;
-                // If we've moved one full set to the right, snap back
-                // Note: In RTL flex, we are seeing the "left" side coming in.
-                // We need to ensure we don't run out of content.
-                // Actually, standard logic:
-                // Start at 0. Move +X.
-                // When X >= singleSetWidth, it means we have shifted one full set.
-                // We can reset to 0 because the visual state should match.
                 if (positionRef.current >= singleSetWidth) {
                     positionRef.current -= singleSetWidth;
                 }
@@ -93,7 +85,6 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
             // Boundary checks to prevent runaway values if tab is inactive
             if (positionRef.current > totalWidth) positionRef.current = 0;
             if (positionRef.current < -totalWidth) positionRef.current = 0;
-
 
             containerRef.current.style.transform = `translateX(${positionRef.current}px)`;
 
@@ -134,18 +125,7 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
         const deltaX = lastTouchX.current - currentX;
         lastTouchX.current = currentX;
 
-        // For RTL, dragging left (positive deltaX) should slow down or reverse? 
-        // Let's keep it simple: just boost speed regardless of direction for now, 
-        // or flip logic if needed. 
-        // Actually, deltaX is (Previous - Current). 
-        // Drag Left: Current < Previous -> Delta > 0.
-        // Drag Right: Current > Previous -> Delta < 0.
-
-        // If LTR (Moving Left): Dragging Left (Delta > 0) should boost speed (move faster left).
-        // If RTL (Moving Right): Dragging Right (Delta < 0) should boost speed (move faster right).
-
         if (isRTL) {
-            // We want to boost if dragging Right (Delta < 0)
             speedRef.current -= deltaX * 0.5;
         } else {
             speedRef.current += deltaX * 0.5;
@@ -161,9 +141,9 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
     }
 
     return (
-        <div className="relative group" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="relative group pt-[env(safe-area-inset-top)] bg-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
             <div
-                className={`w-full ${colorClass} text-white py-2 overflow-hidden flex-shrink-0 cursor-grab active:cursor-grabbing`}
+                className={`w-full ${colorClass} text-white py-2 overflow-hidden flex-shrink-0 cursor-grab active:cursor-grabbing relative z-20`}
                 onWheel={handleWheel}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
@@ -171,7 +151,7 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
                 <div
                     ref={containerRef}
                     className="flex whitespace-nowrap will-change-transform"
-                    style={{ flexDirection: 'row' }} // Ensure row direction even in RTL
+                    style={{ flexDirection: 'row' }}
                 >
                     <div ref={contentRef} className="flex">
                         {displayList.map((item, index) => (
@@ -206,10 +186,10 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
                 </div>
             </div>
 
-            {/* Close Button - Positioned based on direction */}
+            {/* Close Button */}
             <button
                 onClick={() => setIsVisible(false)}
-                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors z-10`}
+                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors z-10 mt-[env(safe-area-inset-top)]`}
                 aria-label="Close banner"
             >
                 <FaTimes className="w-3 h-3" />
