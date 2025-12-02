@@ -20,6 +20,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 const FallbackLoading = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
@@ -187,106 +188,156 @@ function App() {
   }, [i18n]);
 
   // RTL Support
-  PushNotifications.requestPermissions().then(result => {
-    if (result.receive === 'granted') {
-      PushNotifications.register();
+  useEffect(() => {
+    const isRtl = i18n.language === 'ar';
+    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
+
+  // Mobile Deep Link Handler & Google Auth Init
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      import('@codetrix-studio/capacitor-google-auth').then(({ GoogleAuth }) => {
+        GoogleAuth.initialize({
+          clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          scopes: ['profile', 'email'],
+          grantOfflineAccess: true,
+        });
+      });
+
+      CapacitorApp.addListener('appUrlOpen', data => {
+        const url = new URL(data.url);
+        if (url.protocol === 'stockpredictorai:' && url.host === 'auth-success') {
+          const token = url.searchParams.get('token');
+          if (token) {
+            axios.post(`${API_URL}/auth/mobile-exchange`, { token }, { withCredentials: true })
+              .then(() => {
+                fetchUser();
+                Browser.close();
+              })
+              .catch(err => console.error('Mobile auth failed', err));
+          }
+        }
+      });
     }
-  });
+  }, [fetchUser]);
 
-  PushNotifications.addListener('registration', (token) => {
-    console.log('Push Registration Token:', token.value);
-    axios.post(`${API_URL}/api/notifications/register-token`, { token: token.value }, { withCredentials: true })
-      .catch(err => console.error("Failed to register push token", err));
-  });
+  // --- PUSH NOTIFICATIONS SETUP ---
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      PushNotifications.requestPermissions().then(result => {
+        if (result.receive === 'granted') {
+          PushNotifications.register();
+        }
+      });
 
-  PushNotifications.addListener('registrationError', (error) => {
-    console.error('Push Registration Error:', error);
-  });
+      PushNotifications.addListener('registration', (token) => {
+        console.log('Push Registration Token:', token.value);
+        axios.post(`${API_URL}/api/notifications/register-token`, { token: token.value }, { withCredentials: true })
+          .catch(err => console.error("Failed to register push token", err));
+      });
 
-  PushNotifications.addListener('pushNotificationReceived', (notification) => {
-    console.log('Push Received:', notification);
-  });
+      PushNotifications.addListener('registrationError', (error) => {
+        console.error('Push Registration Error:', error);
+      });
 
-  PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-    console.log('Push Action:', notification);
-  });
-}).catch (err => {
-  console.warn('Push Notifications plugin not found or failed to load:', err);
-});
+      PushNotifications.addListener('pushNotificationReceived', (notification) => {
+        console.log('Push Received:', notification);
+      });
+
+      PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+        console.log('Push Action:', notification);
+      });
     }
   }, []);
 
-if (error) {
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+        <h1 className="text-xl font-bold text-red-500 mb-2">Application Error</h1>
+        <p className="text-gray-300 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">Retry</button>
+      </div>
+    );
+  }
+
+  if (isAuthLoading || !settings) {
+    return <FallbackLoading />;
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-xl font-bold text-red-500 mb-2">Application Error</h1>
-      <p className="text-gray-300 mb-4">{error}</p>
-      <button onClick={() => window.location.reload()} className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">Retry</button>
-    </div>
+    <Router>
+      <Helmet>
+        <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
+        <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
+      </Helmet>
+      <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
+      <ScrollToTop />
+      <CanonicalTag />
+      <Elements stripe={stripePromise}>
+        <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
+          <EarningsBanner
+            calendar={earningsCalendar}
+            onMakePredictionClick={(stock) => handleOpenPredictionModal({ symbol: stock.symbol })}
+            isActive={settings?.isEarningsBannerActive}
+          />
+          <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} onProfileUpdate={fetchUser} />
+          <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
+          <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
+          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
+            <Suspense fallback={<FallbackLoading />}>
+              <Routes>
+                <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
+                <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
+                <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
+                <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
+                <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
+                <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
+                <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+                <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+                <Route path={ROUTES.TERMS} element={<TermsPage />} />
+                <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
+                <Route path={ROUTES.ADMIN} element={<AdminPage />} />
+                <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
+                <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
+                <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+                <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
+                <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
+                <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
+                <Route path={ROUTES.WHITEPAPER} element={<WhitepaperPage />} />
+                <Route
+                  path={ROUTES.AI_WIZARD}
+                  element={
+                    <FeatureRoute settings={settings} featureFlag="isAIWizardEnabled">
+                      <AIWizardPage user={user} />
+                    </FeatureRoute>
+                  }
+                />
+              </Routes>
+            </Suspense>
+          </main>
+          <Footer settings={settings} />
+        </div>
+      </Elements>
+      <CookieConsent
+        location="bottom"
+        buttonText={t('common.accept', 'Accept')}
+        declineButtonText={t('common.decline', 'Decline')}
+        cookieName={COOKIE_NAMES.CONSENT}
+        style={{ background: "#2B374A" }}
+        buttonStyle={{ color: "#4e503b", fontSize: "13px", background: "#EAB308", borderRadius: "5px" }}
+        declineButtonStyle={{ color: "#FFF", fontSize: "13px", background: "#4B5563", borderRadius: "5px" }}
+        expires={NUMERIC_CONSTANTS.COOKIE_EXPIRY_DAYS}
+        onAccept={() => setCookieConsent(true)}
+        onDecline={() => setCookieConsent(false)}
+      >
+        {t('common.cookieConsent', 'This website uses cookies to enhance the user experience. By accepting, you agree to our use of cookies for analytics and referrals.')}
+      </CookieConsent>
+    </Router>
   );
 }
 
-if (isAuthLoading || !settings) {
-  return <FallbackLoading />;
-}
-
-return (
-  <Router>
-    <Helmet>
-      <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
-      <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
-    </Helmet>
-    <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
-    <ScrollToTop />
-    <CanonicalTag />
-    <Elements stripe={stripePromise}>
-      <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
-        <EarningsBanner
-          calendar={earningsCalendar}
-          onMakePredictionClick={(stock) => handleOpenPredictionModal({ symbol: stock.symbol })}
-          isActive={settings?.isEarningsBannerActive}
-        />
-        <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} onProfileUpdate={fetchUser} />
-        <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
-        <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
-        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
-          <Suspense fallback={<FallbackLoading />}>
-            <Routes>
-              <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-              <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
-              <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
-              <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-              <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
-              <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
-              <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
-              <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
-              <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
-              <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-              <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-              <Route path={ROUTES.TERMS} element={<TermsPage />} />
-              <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
-              <Route path={ROUTES.ADMIN} element={<AdminPage />} />
-              <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
-              <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
-              <Route path={ROUTES.CONTACT} element={<ContactPage />} />
-              <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
-              <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
-              <CookieConsent
-                location="bottom"
-                buttonText={t('common.accept', 'Accept')}
-                declineButtonText={t('common.decline', 'Decline')}
-                cookieName={COOKIE_NAMES.CONSENT}
-                style={{ background: "#2B374A" }}
-                buttonStyle={{ color: "#4e503b", fontSize: "13px", background: "#EAB308", borderRadius: "5px" }}
-                declineButtonStyle={{ color: "#FFF", fontSize: "13px", background: "#4B5563", borderRadius: "5px" }}
-                expires={NUMERIC_CONSTANTS.COOKIE_EXPIRY_DAYS}
-                onAccept={() => setCookieConsent(true)}
-                onDecline={() => setCookieConsent(false)}
-              >
-                {t('common.cookieConsent', 'This website uses cookies to enhance the user experience. By accepting, you agree to our use of cookies for analytics and referrals.')}
-              </CookieConsent>
-            </Router>
-            );
-}
-
-            export default App;
+export default App;
