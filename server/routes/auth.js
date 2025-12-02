@@ -70,7 +70,7 @@ router.get(
       }
 
       if (!user) {
-        return res.redirect('/');
+        return res.redirect(baseURL);
       }
 
       // Manually log the user in
@@ -100,60 +100,67 @@ router.get(
         // -------------------
 
         const redirectPath = state.path || '/';
-      }
-  try {
-        const { email } = req.body;
-        const user = await User.findOne({ email });
-        if (!user) {
-          console.log('User not found:', email);
-          return res.status(404).json({ error: 'User not found' });
-        }
-        req.login(user, (err) => {
-          if (err) return res.status(500).json({ error: err.message });
-          console.log('Dev login success:', user.username);
-          return res.json(user);
-        });
-      } catch (err) {
-        console.log('Dev login error:', err);
-        res.status(500).json({ error: err.message });
-      }
-    });
-
-    // GET: Logout
-    router.get('/logout', (req, res, next) => {
-      const baseURL =
-        process.env.NODE_ENV === 'production'
-          ? 'https://www.stockpredictorai.com'
-          : 'http://localhost:5173';
-      req.logout((err) => {
-        if (err) { return next(err); }
-
-        // Explicitly destroy the session
-        req.session.destroy((err) => {
-          if (err) {
-            console.error('Session destroy error:', err);
-            return next(err);
-          }
-
-          // Clear the session cookie
-          res.clearCookie('connect.sid', {
-            path: '/',
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            httpOnly: true
-          });
-
-          if (req.query.type === 'json') {
-            return res.json({ success: true });
-          }
-          res.redirect(baseURL);
-        });
+        res.redirect(`${baseURL}${redirectPath}`);
       });
-    });
+    })(req, res, next);
+  }
+);
 
-    // GET: Current User
-    router.get('/current_user', (req, res) => {
-      res.send(req.user);
+// Dev login route
+router.post('/dev_login', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log('User not found:', email);
+      return res.status(404).json({ error: 'User not found' });
+    }
+    req.login(user, (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      console.log('Dev login success:', user.username);
+      return res.json(user);
     });
+  } catch (err) {
+    console.log('Dev login error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    module.exports = router;
+// GET: Logout
+router.get('/logout', (req, res, next) => {
+  const baseURL =
+    process.env.NODE_ENV === 'production'
+      ? 'https://www.stockpredictorai.com'
+      : 'http://localhost:5173';
+  req.logout((err) => {
+    if (err) { return next(err); }
+
+    // Explicitly destroy the session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+        return next(err);
+      }
+
+      // Clear the session cookie
+      res.clearCookie('connect.sid', {
+        path: '/',
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        httpOnly: true
+      });
+
+      if (req.query.type === 'json') {
+        return res.json({ success: true });
+      }
+      res.redirect(baseURL);
+    });
+  });
+});
+
+// GET: Current User
+router.get('/current_user', (req, res) => {
+  res.send(req.user);
+});
+
+module.exports = router;
