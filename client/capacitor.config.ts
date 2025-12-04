@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'StockPredictorAI',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'http',
+    cleartext: true
   },
   plugins: {
     GoogleAuth: {

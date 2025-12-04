@@ -22,8 +22,14 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { PushNotifications } from '@capacitor/push-notifications';
 
+// DEBUG: Global Error Handler for Mobile
+window.onerror = function (msg, url, lineNo, columnNo, error) {
+  alert('Error: ' + msg + '\nLine: ' + lineNo);
+  return false;
+};
+
 const FallbackLoading = () => (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+  <div className="flex flex-col items-center justify-center min-h-screen bg-red-900 text-white">
     <svg className="animate-spin h-8 w-8 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -120,11 +126,11 @@ function App() {
   const fetchUser = useCallback(async () => {
     try {
       console.log('Fetching user from:', `${API_URL}${API_ENDPOINTS.CURRENT_USER}`);
-      const res = await axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true });
+      const res = await axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true, timeout: 5000 });
       console.log('Fetch user response:', res.status, res.data);
       setUser(res.data);
     } catch (err) {
-      console.error('Fetch user error:', err);
+      console.error('Fetch user error:', err.message, err.code, err.response?.status);
       setUser(null);
     } finally {
       setIsAuthLoading(false);
@@ -133,10 +139,10 @@ function App() {
 
   const fetchSettings = useCallback(async () => {
     try {
-      const res = await axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true });
+      const res = await axios.get(`${API_URL}${API_ENDPOINTS.SETTINGS}`, { withCredentials: true, timeout: 5000 });
       setSettings(res.data);
     } catch (err) {
-      console.error("Failed to fetch settings", err);
+      console.error("Failed to fetch settings", err.message, err.code, err.response?.status);
       setSettings({}); // Fallback to empty object to allow render
     }
   }, []);
