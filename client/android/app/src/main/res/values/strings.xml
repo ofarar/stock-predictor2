@@ -4,4 +4,5 @@
     <string name="title_activity_main">StockPredictorAI</string>
     <string name="package_name">com.stockpredictorai.app</string>
     <string name="custom_url_scheme">com.stockpredictorai.app</string>
+    <string name="server_client_id">645392634302-8ig38o9ujs82m5qob8t06vm1qrmiu0vk.apps.googleusercontent.com</string>
 </resources>

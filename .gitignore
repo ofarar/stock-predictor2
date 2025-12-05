@@ -32,6 +32,7 @@ server/check_specific_account.js
 *.keystore
 *.jks
 *.aab
+*.pem
 server/service-account.json
 
 # Android Secrets

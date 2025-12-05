@@ -230,23 +230,56 @@ We maintain a robust End-to-End (E2E) testing suite to ensure critical user flow
         ```
         The generated PDFs will be located in `client/public/docs/`.
 
-7.  **Mobile Development:**
-      * **Setup:**
-        ```bash
-        cd client
-        npm install
-        npx cap sync
+## 📱 Android Developer Guide
+
+This section covers how to build, test, and release the Android application using the terminal (without opening Android Studio).
+
+### 1. Prerequisites
+*   **Java Development Kit (JDK) 17:** Required for Gradle.
+    *   *Tip:* If you have Android Studio installed, you can use its embedded JDK by setting `JAVA_HOME` in PowerShell:
+        ```powershell
+        $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
         ```
-      * **Run on Android:**
-        ```bash
-        npm run mobile:open:android
-        ```
-        This will open Android Studio. From there, you can run the app on an emulator or connected device.
-      * **Run on iOS (macOS only):**
-        ```bash
-        npm run mobile:open:ios
-        ```
-        This will open Xcode.
+
+### 2. Syncing Changes
+Whenever you make changes to the web code (`client/src`), you must build the web assets and sync them to the Android project:
+
+```bash
+cd client
+npm run build
+npx cap sync
+```
+
+### 3. Running on Device (Debug Mode)
+To build and install the app directly on a connected Android device:
+
+1.  **Build & Install:**
+    ```powershell
+    cd client/android
+    ./gradlew installDebug
+    ```
+2.  **Launch the App:**
+    ```powershell
+    adb shell am start -n com.stockpredictorai.app/com.stockpredictorai.app.MainActivity
+    ```
+    *(Note: Ensure `adb` is in your PATH, or use the full path: `& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" ...`)*
+
+### 4. Creating a Signed Release Bundle
+To generate the `.aab` file for the Google Play Store:
+
+1.  **Build the Bundle:**
+    ```powershell
+    cd client/android
+    ./gradlew bundleRelease
+    ```
+2.  **Locate the Artifact:**
+    The signed bundle will be generated at:
+    `client/android/app/build/outputs/bundle/release/app-release.aab`
+
+### 5. Google Play App Signing
+*   **Upload Key:** The app is signed with `upload-keystore.jks`.
+*   **SHA-1 Fingerprint:** `67:72:36:44:3B:7D:32:3A:55:F:64:C0:9D:F3:B9:8D:47:BB:6C:87:BB`
+*   **Important:** If you reset your upload key, you must upload the `upload_certificate.pem` to the Google Play Console under **Setup > App signing**.
 
 -----
 
