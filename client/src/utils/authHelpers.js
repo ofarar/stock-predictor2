@@ -9,8 +9,6 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
 
     if (Capacitor.isNativePlatform()) {
         try {
-            alert("Step A: Starting handleGoogleLogin");
-
             // Check if plugin is available
             if (!GoogleAuth) {
                 alert("CRITICAL: GoogleAuth object is undefined!");
