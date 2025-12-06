@@ -213,7 +213,6 @@ function App() {
           grantOfflineAccess: true,
         });
         console.log('GoogleAuth initialized');
-        alert('GoogleAuth initialized in App.jsx');
       });
 
       CapacitorApp.addListener('appUrlOpen', data => {

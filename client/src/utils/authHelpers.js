@@ -17,22 +17,16 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
                 return;
             }
 
-            alert("Step B: Calling GoogleAuth.signIn()...");
-
             const user = await GoogleAuth.signIn();
 
-            alert("Step C: GoogleAuth.signIn() returned!");
-
             if (!user) {
-                alert("Step C-ERROR: User object is null/undefined");
+                console.error("GoogleAuth.signIn() returned null/undefined user");
                 return;
             }
 
-            alert(`Step D: Received User:\nEmail: ${user.email}\nID Token Length: ${user.authentication?.idToken?.length}`);
             console.log('Native Google Sign-In success:', user);
 
             const apiUrl = `${import.meta.env.VITE_API_URL}/auth/google/native`;
-            alert(`Step E: Preparing to POST to: ${apiUrl}`);
 
             // Send ID token to backend for verification and session creation
             const response = await axios.post(apiUrl, {
@@ -40,17 +34,14 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
                 refCode: refCode
             }, { withCredentials: true });
 
-            alert(`Step F: Axios Response Status: ${response.status}`);
             console.log('Backend response:', response.data);
 
             if (response.data.success) {
-                alert("Step G: Success! Redirecting...");
                 window.location.href = redirectPath;
             } else {
-                alert(`Step G-FAIL: Backend Success=false\nMsg: ${response.data.message}`);
+                console.error(`Backend verification failed: ${response.data.message}`);
             }
         } catch (error) {
-            alert(`CATCH BLOCK:\nMsg: ${error.message}\nStack: ${error.stack}`);
             console.error("Google Sign-In failed", error);
 
             const errorDetails = {
@@ -59,10 +50,6 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
                 data: error.response?.data,
                 url: `${import.meta.env.VITE_API_URL}/auth/google/native`
             };
-            // Fallback manual alert for axios errors
-            if (error.response) {
-                alert(`Axios Error:\nStatus: ${error.response.status}\nData: ${JSON.stringify(error.response.data)}`);
-            }
         }
     } else {
         // Web Fallback
