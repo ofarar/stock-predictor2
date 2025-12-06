@@ -208,10 +208,12 @@ function App() {
     if (Capacitor.isNativePlatform()) {
       import('@codetrix-studio/capacitor-google-auth').then(({ GoogleAuth }) => {
         GoogleAuth.initialize({
-          clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          clientId: '645392634302-rfhrct0ds4qmukha4fds46rcsv8kfp86.apps.googleusercontent.com', // Verified Web Client ID
           scopes: ['profile', 'email'],
-          grantOfflineAccess: false,
+          grantOfflineAccess: true,
         });
+        console.log('GoogleAuth initialized');
+        alert('GoogleAuth initialized in App.jsx');
       });
 
       CapacitorApp.addListener('appUrlOpen', data => {
@@ -231,7 +233,8 @@ function App() {
     }
   }, [fetchUser]);
 
-  // --- PUSH NOTIFICATIONS SETUP ---
+  // --- PUSH NOTIFICATIONS SETUP (DISABLED FOR DEBUGGING) ---
+  /*
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       PushNotifications.requestPermissions().then(result => {
@@ -259,6 +262,7 @@ function App() {
       });
     }
   }, []);
+  */
 
   if (error) {
     return (

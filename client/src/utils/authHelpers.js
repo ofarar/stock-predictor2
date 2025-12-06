@@ -9,24 +9,63 @@ export const handleGoogleLogin = async (redirectPath = '/') => {
 
     if (Capacitor.isNativePlatform()) {
         try {
+            alert("Step A: Starting handleGoogleLogin");
+
+            // Check if plugin is available
+            if (!GoogleAuth) {
+                alert("CRITICAL: GoogleAuth object is undefined!");
+                return;
+            }
+
+            alert("Step B: Calling GoogleAuth.signIn()...");
+
             const user = await GoogleAuth.signIn();
+
+            alert("Step C: GoogleAuth.signIn() returned!");
+
+            if (!user) {
+                alert("Step C-ERROR: User object is null/undefined");
+                return;
+            }
+
+            alert(`Step D: Received User:\nEmail: ${user.email}\nID Token Length: ${user.authentication?.idToken?.length}`);
             console.log('Native Google Sign-In success:', user);
-            console.log('Sending ID token to:', `${import.meta.env.VITE_API_URL}/auth/google/native`);
+
+            const apiUrl = `${import.meta.env.VITE_API_URL}/auth/google/native`;
+            alert(`Step E: Preparing to POST to: ${apiUrl}`);
 
             // Send ID token to backend for verification and session creation
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google/native`, {
+            const response = await axios.post(apiUrl, {
                 idToken: user.authentication.idToken,
-                refCode: refCode // <-- Send referral code
+                refCode: refCode
             }, { withCredentials: true });
 
+            alert(`Step F: Axios Response Status: ${response.status}`);
+            console.log('Backend response:', response.data);
+
             if (response.data.success) {
+                alert("Step G: Success! Redirecting...");
                 window.location.href = redirectPath;
+            } else {
+                alert(`Step G-FAIL: Backend Success=false\nMsg: ${response.data.message}`);
             }
         } catch (error) {
+            alert(`CATCH BLOCK:\nMsg: ${error.message}\nStack: ${error.stack}`);
             console.error("Google Sign-In failed", error);
-            // Fallback or alert
+
+            const errorDetails = {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+                url: `${import.meta.env.VITE_API_URL}/auth/google/native`
+            };
+            // Fallback manual alert for axios errors
+            if (error.response) {
+                alert(`Axios Error:\nStatus: ${error.response.status}\nData: ${JSON.stringify(error.response.data)}`);
+            }
         }
     } else {
+        // Web Fallback
         let url = `${import.meta.env.VITE_API_URL}/auth/google?redirect=${redirectPath}`;
         if (refCode) {
             url += `&ref=${refCode}`;
@@ -41,8 +80,6 @@ export const handleLogout = async () => {
         window.location.href = '/';
     } catch (error) {
         console.error("Logout failed", error);
-        alert(`Logout failed: ${error.message}`);
-        // Fallback to hard redirect if API fails
         window.location.href = `${import.meta.env.VITE_API_URL}/auth/logout`;
     }
 };
