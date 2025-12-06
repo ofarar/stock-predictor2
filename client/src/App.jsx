@@ -232,8 +232,7 @@ function App() {
     }
   }, [fetchUser]);
 
-  // --- PUSH NOTIFICATIONS SETUP (DISABLED FOR DEBUGGING) ---
-  /*
+  // --- PUSH NOTIFICATIONS SETUP ---
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       PushNotifications.requestPermissions().then(result => {
@@ -261,7 +260,6 @@ function App() {
       });
     }
   }, []);
-  */
 
   if (error) {
     return (
