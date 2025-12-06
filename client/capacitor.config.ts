@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'StockPredictorAI',
   webDir: 'dist',
   server: {
-    androidScheme: 'http',
+    androidScheme: 'https',
     cleartext: true
   },
   plugins: {

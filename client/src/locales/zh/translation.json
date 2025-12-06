@@ -574,12 +574,25 @@
             "makePrediction": "做出预测"
         }
     },
+    "advanced_settings": "高级设置",
     "notifications": {
-        "types": {
+        "type": {
+            "newPrediction": "新预测",
             "newFollower": "新关注者",
-            "badgeEarned": "获得徽章",
+            "badgeEarned": "赢得徽章",
             "goldenPost": "黄金帖子",
-            "newPrediction": "新预测"
+            "priceChange": "价格变动",
+            "predictionAssessed": "预测已评估",
+            "newReferral": "新推荐"
+        },
+        "desc": {
+            "newPrediction": "当您关注的人做出预测时收到通知",
+            "newFollower": "当有人关注您时收到通知",
+            "badgeEarned": "当您赢得新徽章时收到通知",
+            "goldenPost": "当您关注的黄金会员发布帖子时收到通知",
+            "priceChange": "当黄金会员更改价格时收到通知",
+            "predictionAssessed": "当您的预测被评分时收到通知",
+            "newReferral": "当有人使用您的代码加入时收到通知"
         },
         "newPrediction": "{{username}} 对 {{stockTicker}} 做出了 {{predictionType}} 预测。",
         "newFollower": "{{username}} 开始关注您。",

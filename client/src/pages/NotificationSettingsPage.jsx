@@ -99,12 +99,6 @@ const NotificationSettingsPage = () => {
                     <h2 className="text-xl font-semibold text-white mb-4">{t('advanced_settings')}</h2>
                     <div className="space-y-4 pl-4 border-l-2 border-gray-600">
                         <Toggle
-                            label={t('toggle_all_predictions_label')}
-                            description={t('toggle_all_predictions_description')}
-                            isEnabled={settings.allFollowedPredictions}
-                            onToggle={() => handleToggle('allFollowedPredictions')}
-                        />
-                        <Toggle
                             label={t('toggle_short_term_label')}
                             description={t('toggle_short_term_description')}
                             isEnabled={settings.trustedShortTerm}

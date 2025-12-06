@@ -49,7 +49,7 @@ Cypress.Commands.add('login', (email, password) => {
     // Use the dev login route via the proxy (baseUrl)
     cy.request({
         method: 'POST',
-        url: '/auth/dev/login', // Proxy forwards this to localhost:5001
+        url: '/auth/dev_login', // Proxy forwards this to localhost:5001
         body: { email },
     }).then((resp) => {
         // Check if login was successful

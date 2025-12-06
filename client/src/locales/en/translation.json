@@ -573,12 +573,25 @@
       "makePrediction": "Make a Prediction"
     }
   },
+  "advanced_settings": "Advanced Settings",
   "notifications": {
-    "types": {
+    "type": {
+      "newPrediction": "New Prediction",
       "newFollower": "New Follower",
       "badgeEarned": "Badge Earned",
       "goldenPost": "Golden Post",
-      "newPrediction": "New Prediction"
+      "priceChange": "Price Change",
+      "predictionAssessed": "Prediction Assessed",
+      "newReferral": "New Referral"
+    },
+    "desc": {
+      "newPrediction": "Get notified when someone you follow makes a prediction",
+      "newFollower": "Get notified when someone follows you",
+      "badgeEarned": "Get notified when you earn a new badge",
+      "goldenPost": "Get notified when a Golden Member you follow posts",
+      "priceChange": "Get notified when a Golden Member changes their price",
+      "predictionAssessed": "Get notified when your prediction is graded",
+      "newReferral": "Get notified when someone joins using your code"
     },
     "newPrediction": "{{username}} made a {{predictionType}} prediction on {{stockTicker}}.",
     "newFollower": "{{username}} started following you.",

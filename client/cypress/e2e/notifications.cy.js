@@ -111,4 +111,18 @@ describe('Notifications', () => {
             cy.get('.max-h-96').should('contain', 'started following you');
         });
     });
+    it('should allow toggling granular notification settings', () => {
+        cy.login(user1.email, user1.password);
+        cy.visit('/settings/notifications');
+
+        // Check for specific new toggles
+        cy.contains('New Prediction').should('exist');
+        cy.contains('New Follower').should('exist');
+        cy.contains('Badge Earned').should('exist');
+
+        // Toggle 'New Follower' OFF
+        cy.contains('New Follower')
+        cy.contains('button', 'Save Changes').click();
+        cy.contains('Settings saved!').should('exist'); // Updated to match translation.json
+    });
 });

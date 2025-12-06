@@ -573,12 +573,25 @@
       "makePrediction": "قم بتوقع"
     }
   },
+  "advanced_settings": "إعدادات متقدمة",
   "notifications": {
-    "types": {
+    "type": {
+      "newPrediction": "توقع جديد",
       "newFollower": "متابع جديد",
-      "badgeEarned": "كسب شارة",
+      "badgeEarned": "شاة مكتسبة",
       "goldenPost": "منشور ذهبي",
-      "newPrediction": "توقع جديد"
+      "priceChange": "تغيير السعر",
+      "predictionAssessed": "تم تقييم التوقع",
+      "newReferral": "إحالة جديدة"
+    },
+    "desc": {
+      "newPrediction": "تلقي إشعار عندما يقوم شخص تتابعه بإجراء توقع",
+      "newFollower": "تلقي إشعار عندما يبدأ شخص ما بمتابعتك",
+      "badgeEarned": "تلقي إشعار عندما تحصل على شارة جديدة",
+      "goldenPost": "تلقي إشعار عندما ينشر عضو ذهبي تتابعه",
+      "priceChange": "تلقي إشعار عندما يقوم عضو ذهبي بتغيير سعره",
+      "predictionAssessed": "تلقي إشعار عندما يتم منح درجة لتوقعك",
+      "newReferral": "تلقي إشعار عندما ينضم شخص ما باستخدام رمزك"
     },
     "newPrediction": "أجرى {{username}} توقعاً {{predictionType}} على {{stockTicker}}.",
     "newFollower": "بدأ {{username}} في متابعتك.",

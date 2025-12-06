@@ -574,12 +574,25 @@
       "makePrediction": "भविष्यवाणी करें"
     }
   },
+  "advanced_settings": "उन्नत सेटिंग्स",
   "notifications": {
-    "types": {
-      "newFollower": "नया फॉलोअर",
+    "type": {
+      "newPrediction": "नई भविष्यवाणी",
+      "newFollower": "नया फॉलोअर्स",
       "badgeEarned": "बैज अर्जित किया",
       "goldenPost": "गोल्डन पोस्ट",
-      "newPrediction": "नई भविष्यवाणी"
+      "priceChange": "मूल्य परिवर्तन",
+      "predictionAssessed": "भविष्यवाणी का आकलन",
+      "newReferral": "नई रेफरल"
+    },
+    "desc": {
+      "newPrediction": "जब आप किसी को फॉलो करते हैं और वे भविष्यवाणी करते हैं तो सूचना प्राप्त करें",
+      "newFollower": "जब कोई आपको फॉलो करना शुरू करता है तो सूचना प्राप्त करें",
+      "badgeEarned": "जब आप नया बैज अर्जित करते हैं तो सूचना प्राप्त करें",
+      "goldenPost": "जब कोई गोल्डन सदस्य जिसे आप फॉलो करते हैं, पोस्ट करता है तो सूचना प्राप्त करें",
+      "priceChange": "जब कोई गोल्डन सदस्य अपनी कीमत बदलता है तो सूचना प्राप्त करें",
+      "predictionAssessed": "जब आपकी भविष्यवाणी का मूल्यांकन किया जाता है तो सूचना प्राप्त करें",
+      "newReferral": "जब कोई आपके कोड का उपयोग करके जुड़ता है तो सूचना प्राप्त करें"
     },
     "newPrediction": "{{username}} ने {{stockTicker}} पर एक {{predictionType}} भविष्यवाणी की।",
     "newFollower": "{{username}} ने आपको फॉलो करना शुरू कर दिया।",

@@ -589,12 +589,25 @@
       "makePrediction": "Doe een Voorspelling"
     }
   },
+  "advanced_settings": "Geavanceerde Instellingen",
   "notifications": {
-    "types": {
+    "type": {
+      "newPrediction": "Nieuwe Voorspelling",
       "newFollower": "Nieuwe Volger",
-      "badgeEarned": "Prestatie Verdiend",
+      "badgeEarned": "Badge Verdiend",
       "goldenPost": "Gouden Bericht",
-      "newPrediction": "Nieuwe Voorspelling"
+      "priceChange": "Prijswijziging",
+      "predictionAssessed": "Voorspelling Beoordeeld",
+      "newReferral": "Nieuwe Verwijzing"
+    },
+    "desc": {
+      "newPrediction": "Ontvang een melding wanneer iemand die je volgt een voorspelling doet",
+      "newFollower": "Ontvang een melding wanneer iemand je volgt",
+      "badgeEarned": "Ontvang een melding wanneer je een nieuwe badge verdient",
+      "goldenPost": "Ontvang een melding wanneer een Gouden Lid dat je volgt een bericht plaatst",
+      "priceChange": "Ontvang een melding wanneer een Gouden Lid zijn prijs wijzigt",
+      "predictionAssessed": "Ontvang een melding wanneer je voorspelling wordt beoordeeld",
+      "newReferral": "Ontvang een melding wanneer iemand lid wordt met jouw code"
     },
     "newPrediction": "{{username}} deed een {{predictionType}} voorspelling op {{stockTicker}}.",
     "newFollower": "{{username}} is je begonnen te volgen.",

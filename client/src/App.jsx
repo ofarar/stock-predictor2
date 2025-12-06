@@ -238,6 +238,16 @@ function App() {
       PushNotifications.requestPermissions().then(result => {
         if (result.receive === 'granted') {
           PushNotifications.register();
+
+          // --- FIX: Create Notification Channel for Android 8+ ---
+          PushNotifications.createChannel({
+            id: 'fcm_default_channel',
+            name: 'General Notifications',
+            description: 'General notifications',
+            importance: 5,
+            visibility: 1
+          }).then(() => console.log('Push Channel Created'));
+          // -------------------------------------------------------
         }
       });
 

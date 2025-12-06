@@ -574,12 +574,25 @@
             "makePrediction": "Prognose erstellen"
         }
     },
+    "advanced_settings": "Erweiterte Einstellungen",
     "notifications": {
-        "types": {
+        "type": {
+            "newPrediction": "Neue Vorhersage",
             "newFollower": "Neuer Follower",
-            "badgeEarned": "Abzeichen verdient",
-            "goldenPost": "Gold-Beitrag",
-            "newPrediction": "Neue Prognose"
+            "badgeEarned": "Abzeichen Verdient",
+            "goldenPost": "Goldener Beitrag",
+            "priceChange": "Preisänderung",
+            "predictionAssessed": "Vorhersage Bewertet",
+            "newReferral": "Neue Empfehlung"
+        },
+        "desc": {
+            "newPrediction": "Benachrichtigung, wenn jemand, dem Sie folgen, eine Vorhersage macht",
+            "newFollower": "Benachrichtigung, wenn Ihnen jemand folgt",
+            "badgeEarned": "Benachrichtigung, wenn Sie ein neues Abzeichen verdienen",
+            "goldenPost": "Benachrichtigung, wenn ein Goldenes Mitglied, dem Sie folgen, postet",
+            "priceChange": "Benachrichtigung, wenn ein Goldenes Mitglied seinen Preis ändert",
+            "predictionAssessed": "Benachrichtigung, wenn Ihre Vorhersage bewertet wird",
+            "newReferral": "Benachrichtigung, wenn jemand mit Ihrem Code beitritt"
         },
         "newPrediction": "{{username}} hat eine {{predictionType}}-Prognose für {{stockTicker}} gemacht.",
         "newFollower": "{{username}} hat angefangen, dir zu folgen.",

@@ -574,12 +574,25 @@
       "makePrediction": "Tahmin Yap"
     }
   },
+  "advanced_settings": "Gelişmiş Ayarlar",
   "notifications": {
-    "types": {
+    "type": {
+      "newPrediction": "Yeni Tahmin",
       "newFollower": "Yeni Takipçi",
-      "badgeEarned": "Kazanılan Rozet",
+      "badgeEarned": "Rozet Kazanıldı",
       "goldenPost": "Altın Gönderi",
-      "newPrediction": "Yeni Tahmin"
+      "priceChange": "Fiyat Değişikliği",
+      "predictionAssessed": "Tahmin Değerlendirildi",
+      "newReferral": "Yeni Referans"
+    },
+    "desc": {
+      "newPrediction": "Takip ettiğiniz biri tahmin yaptığında bildirim alın",
+      "newFollower": "Biri sizi takip ettiğinde bildirim alın",
+      "badgeEarned": "Yeni bir rozet kazandığınızda bildirim alın",
+      "goldenPost": "Takip ettiğiniz bir Altın Üye gönderi paylaştığında bildirim alın",
+      "priceChange": "Bir Altın Üye fiyatını değiştirdiğinde bildirim alın",
+      "predictionAssessed": "Tahmininiz derecelendirildiğinde bildirim alın",
+      "newReferral": "Biri kodunuzu kullanarak katıldığında bildirim alın"
     },
     "newPrediction": "{{username}}, {{stockTicker}} üzerine bir {{predictionType}} tahmini yaptı.",
     "newFollower": "{{username}} sizi takip etmeye başladı.",

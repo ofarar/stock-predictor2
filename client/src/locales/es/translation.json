@@ -574,12 +574,25 @@
             "makePrediction": "Hacer una Predicción"
         }
     },
+    "advanced_settings": "Configuración Avanzada",
     "notifications": {
-        "types": {
+        "type": {
+            "newPrediction": "Nueva Predicción",
             "newFollower": "Nuevo Seguidor",
             "badgeEarned": "Insignia Ganada",
             "goldenPost": "Publicación Dorada",
-            "newPrediction": "Nueva Predicción"
+            "priceChange": "Cambio de Precio",
+            "predictionAssessed": "Predicción Evaluada",
+            "newReferral": "Nueva Referencia"
+        },
+        "desc": {
+            "newPrediction": "Recibe una notificación cuando alguien a quien sigues haga una predicción",
+            "newFollower": "Recibe una notificación cuando alguien te siga",
+            "badgeEarned": "Recibe una notificación cuando ganes una nueva insignia",
+            "goldenPost": "Recibe una notificación cuando un Miembro Dorado a quien sigues publique",
+            "priceChange": "Recibe una notificación cuando un Miembro Dorado cambie su precio",
+            "predictionAssessed": "Recibe una notificación cuando se califique tu predicción",
+            "newReferral": "Recibe una notificación cuando alguien se una usando tu código"
         },
         "newPrediction": "{{username}} hizo una predicción {{predictionType}} sobre {{stockTicker}}.",
         "newFollower": "{{username}} ha comenzado a seguirte.",
