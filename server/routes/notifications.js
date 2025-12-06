@@ -67,21 +67,4 @@ router.delete('/notifications/clear', async (req, res) => {
 });
 
 // POST: Register FCM Token
-router.post('/notifications/register-token', async (req, res) => {
-    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
-    const { token } = req.body;
-    if (!token) return res.status(400).json({ message: 'Token is required' });
-
-    try {
-        // Add token to user's fcmTokens array if not already present
-        await User.findByIdAndUpdate(req.user._id, {
-            $addToSet: { fcmTokens: token }
-        });
-        res.status(200).json({ message: 'Token registered successfully' });
-    } catch (err) {
-        console.error("Error registering FCM token:", err);
-        res.status(500).json({ message: 'Error registering token' });
-    }
-});
-
 module.exports = router;

@@ -38,50 +38,14 @@ exports.sendPushToUser = async (userId, title, body, data = {}, notificationType
             return;
         }
 
-        // --- NEW: Filter based on notification settings ---
-        if (notificationType) {
-            const settings = user.notificationSettings;
-            // Check if settings exist and if the specific type is explicitly disabled
-            // Note: We use strict check against false because we want default to be true if undefined
-            if (settings && settings[notificationType] === false) {
-                console.log(`[PushService] Skipped push for user ${userId} (Type: ${notificationType} is disabled).`);
-                return;
-            }
-        }
-        // --------------------------------------------------
-
-        // Clean up tokens? (Optional: remove invalid tokens if send fails)
-
-        const message = {
-            notification: {
-                title: title,
-                body: body,
-            },
-            data: data,
-            tokens: user.fcmTokens,
-        };
-
-        const response = await admin.messaging().sendEachForMulticast(message);
-
-        if (response.failureCount > 0) {
-            const failedTokens = [];
-            response.responses.forEach((resp, idx) => {
-                if (!resp.success) {
-                    failedTokens.push(user.fcmTokens[idx]);
-                }
-            });
-            console.log('List of tokens that caused failures: ' + failedTokens);
-            // Ideally, remove these tokens from the user document
-            if (failedTokens.length > 0) {
-                await User.findByIdAndUpdate(userId, {
-                    $pull: { fcmTokens: { $in: failedTokens } }
-                });
-            }
+        $pull: { fcmTokens: { $in: failedTokens } }
+    });
+}
         }
 
-        console.log(`Push sent to ${response.successCount} devices for user ${userId}`);
+console.log(`Push sent to ${response.successCount} devices for user ${userId}`);
 
     } catch (error) {
-        console.error("Error sending push notification:", error);
-    }
+    console.error("Error sending push notification:", error);
+}
 };
