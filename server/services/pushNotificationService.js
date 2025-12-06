@@ -61,7 +61,7 @@ exports.sendPushToUser = async (userId, title, body, data = {}, notificationType
             tokens: user.fcmTokens,
         };
 
-        const response = await admin.messaging().sendMulticast(message);
+        const response = await admin.messaging().sendEachForMulticast(message);
 
         if (response.failureCount > 0) {
             const failedTokens = [];
