@@ -48,25 +48,76 @@ const NotificationSettingsPage = () => {
         <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg">
             {/* 3. Replace all hard-coded text with the t() function */}
             <h1 className="text-3xl font-bold text-white mb-6">{t('notification_settings_title')}</h1>
+
             <div className="space-y-6">
+                {/* Granular Settings */}
                 <Toggle
-                    label={t('toggle_all_predictions_label')}
-                    description={t('toggle_all_predictions_description')}
-                    isEnabled={settings.allFollowedPredictions}
-                    onToggle={() => handleToggle('allFollowedPredictions')}
+                    label={t('notifications.type.newPrediction')}
+                    description={t('notifications.desc.newPrediction')}
+                    isEnabled={settings.newPrediction ?? true}
+                    onToggle={() => handleToggle('newPrediction')}
                 />
                 <Toggle
-                    label={t('toggle_short_term_label')}
-                    description={t('toggle_short_term_description')}
-                    isEnabled={settings.trustedShortTerm}
-                    onToggle={() => handleToggle('trustedShortTerm')}
+                    label={t('notifications.type.newFollower')}
+                    description={t('notifications.desc.newFollower')}
+                    isEnabled={settings.newFollower ?? true}
+                    onToggle={() => handleToggle('newFollower')}
                 />
                 <Toggle
-                    label={t('toggle_long_term_label')}
-                    description={t('toggle_long_term_description')}
-                    isEnabled={settings.trustedLongTerm}
-                    onToggle={() => handleToggle('trustedLongTerm')}
+                    label={t('notifications.type.badgeEarned')}
+                    description={t('notifications.desc.badgeEarned')}
+                    isEnabled={settings.badgeEarned ?? true}
+                    onToggle={() => handleToggle('badgeEarned')}
                 />
+                <Toggle
+                    label={t('notifications.type.goldenPost')}
+                    description={t('notifications.desc.goldenPost')}
+                    isEnabled={settings.goldenPost ?? true}
+                    onToggle={() => handleToggle('goldenPost')}
+                />
+                <Toggle
+                    label={t('notifications.type.priceChange')}
+                    description={t('notifications.desc.priceChange')}
+                    isEnabled={settings.priceChange ?? true}
+                    onToggle={() => handleToggle('priceChange')}
+                />
+                <Toggle
+                    label={t('notifications.type.predictionAssessed')}
+                    description={t('notifications.desc.predictionAssessed')}
+                    isEnabled={settings.predictionAssessed ?? true}
+                    onToggle={() => handleToggle('predictionAssessed')}
+                />
+                <Toggle
+                    label={t('notifications.type.newReferral')}
+                    description={t('notifications.desc.newReferral')}
+                    isEnabled={settings.newReferral ?? true}
+                    onToggle={() => handleToggle('newReferral')}
+                />
+
+                {/* Advanced Section */}
+                <div className="pt-6 border-t border-gray-700">
+                    <h2 className="text-xl font-semibold text-white mb-4">{t('advanced_settings')}</h2>
+                    <div className="space-y-4 pl-4 border-l-2 border-gray-600">
+                        <Toggle
+                            label={t('toggle_all_predictions_label')}
+                            description={t('toggle_all_predictions_description')}
+                            isEnabled={settings.allFollowedPredictions}
+                            onToggle={() => handleToggle('allFollowedPredictions')}
+                        />
+                        <Toggle
+                            label={t('toggle_short_term_label')}
+                            description={t('toggle_short_term_description')}
+                            isEnabled={settings.trustedShortTerm}
+                            onToggle={() => handleToggle('trustedShortTerm')}
+                        />
+                        <Toggle
+                            label={t('toggle_long_term_label')}
+                            description={t('toggle_long_term_description')}
+                            isEnabled={settings.trustedLongTerm}
+                            onToggle={() => handleToggle('trustedLongTerm')}
+                        />
+                    </div>
+                </div>
             </div>
             <div className="flex justify-end mt-8 pt-6 border-t border-gray-700">
                 <button

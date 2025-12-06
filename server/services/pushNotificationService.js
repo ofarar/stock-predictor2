@@ -29,7 +29,7 @@ try {
  * @param {string} body - The body of the notification.
  * @param {object} data - Optional data payload.
  */
-exports.sendPushToUser = async (userId, title, body, data = {}) => {
+exports.sendPushToUser = async (userId, title, body, data = {}, notificationType = null) => {
     if (!isInitialized) return;
 
     try {
@@ -37,6 +37,18 @@ exports.sendPushToUser = async (userId, title, body, data = {}) => {
         if (!user || !user.fcmTokens || user.fcmTokens.length === 0) {
             return;
         }
+
+        // --- NEW: Filter based on notification settings ---
+        if (notificationType) {
+            const settings = user.notificationSettings;
+            // Check if settings exist and if the specific type is explicitly disabled
+            // Note: We use strict check against false because we want default to be true if undefined
+            if (settings && settings[notificationType] === false) {
+                console.log(`[PushService] Skipped push for user ${userId} (Type: ${notificationType} is disabled).`);
+                return;
+            }
+        }
+        // --------------------------------------------------
 
         // Clean up tokens? (Optional: remove invalid tokens if send fails)
 

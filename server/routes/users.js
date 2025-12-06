@@ -533,25 +533,29 @@ router.put('/profile/golden-member', async (req, res) => {
 
                                 sendPriceChangeEmail(subscriber.email, subscriber.username, userToUpdate.username, oldPrice, newPrice, effectiveDate);
 
-                                await new Notification({
-                                    recipient: subscriber._id,
-                                    sender: userId,
-                                    type: 'PriceChange',
-                                    messageKey: 'notifications.priceChange',
-                                    link: '/profile/' + userId,
-                                    metadata: {
-                                        creatorName: userToUpdate.username,
-                                        oldPrice: oldPrice.toFixed(2),
-                                        newPrice: newPrice.toFixed(2),
-                                        effectiveDate: effectiveDate
-                                    }
-                                }).save();
+                                if (subscriber.notificationSettings && subscriber.notificationSettings.priceChange !== false) {
+                                    await new Notification({
+                                        recipient: subscriber._id,
+                                        sender: userId,
+                                        type: 'PriceChange',
+                                        messageKey: 'notifications.priceChange',
+                                        link: '/profile/' + userId,
+                                        metadata: {
+                                            creatorName: userToUpdate.username,
+                                            oldPrice: oldPrice.toFixed(2),
+                                            newPrice: newPrice.toFixed(2),
+                                            effectiveDate: effectiveDate
+                                        }
+                                    }).save();
+                                }
 
                                 // Send Push Notification
                                 sendPushToUser(
                                     subscriber._id,
                                     "Price Change Alert",
-                                    `${userToUpdate.username} changed their subscription price from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)}.`
+                                    `${userToUpdate.username} changed their subscription price from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)}.`,
+                                    {},
+                                    'priceChange'
                                 );
 
                                 await stripe.subscriptions.update(sub.id, {
@@ -611,23 +615,27 @@ router.post('/users/:userId/follow', actionLimiter, async (req, res) => {
         await User.findByIdAndUpdate(currentUserId, { $addToSet: { following: followedUserId } });
         await User.findByIdAndUpdate(followedUserId, { $addToSet: { followers: currentUserId } });
 
-        await new Notification({
-            recipient: followedUserId,
-            sender: currentUserId,
-            type: 'NewFollower',
-            messageKey: 'notifications.newFollower',
-            link: `/profile/${currentUserId}`,
-            metadata: {
-                username: req.user.username
-            }
-        }).save();
+        const followedUser = await User.findById(followedUserId).select('notificationSettings');
+        if (followedUser && (followedUser.notificationSettings.newFollower !== false)) {
+            await new Notification({
+                recipient: followedUserId,
+                sender: currentUserId,
+                type: 'NewFollower',
+                messageKey: 'notifications.newFollower',
+                link: `/profile/${currentUserId}`,
+                metadata: {
+                    username: req.user.username
+                }
+            }).save();
+        }
 
         // Send Push Notification
         sendPushToUser(
             followedUserId,
             "New Follower",
             `${req.user.username} started following you!`,
-            { url: `/profile/${currentUserId}` }
+            { url: `/profile/${currentUserId}` },
+            'newFollower'
         );
 
         res.status(200).send('Successfully followed user.');

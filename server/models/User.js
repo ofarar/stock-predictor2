@@ -53,9 +53,19 @@ const UserSchema = new Schema({
     //watchlistTicker: { type: String, uppercase: true, default: null },
     watchlist: [{ type: String, uppercase: true }],
     notificationSettings: {
+        // existing advanced filters for predictions
         allFollowedPredictions: { type: Boolean, default: false },
         trustedShortTerm: { type: Boolean, default: true },
-        trustedLongTerm: { type: Boolean, default: true }
+        trustedLongTerm: { type: Boolean, default: true },
+
+        // New Granular Toggles (Default True)
+        newPrediction: { type: Boolean, default: true },
+        newFollower: { type: Boolean, default: true },
+        badgeEarned: { type: Boolean, default: true },
+        goldenPost: { type: Boolean, default: true },
+        priceChange: { type: Boolean, default: true },
+        predictionAssessed: { type: Boolean, default: true },
+        newReferral: { type: Boolean, default: true }
     },
     // --- END: NEW FIELDS ---
 

@@ -14,6 +14,7 @@ const {
     VIEW_LIMIT, VIEW_WINDOW_MS,
     ACTION_LIMIT, ACTION_WINDOW_MS
 } = require('../constants'); // <-- NEW IMPORT
+const { sendPushToUser } = require('../services/pushNotificationService');
 
 // Limiters
 const predictLimiter = rateLimit({
@@ -146,7 +147,11 @@ router.post('/predict', predictLimiter, async (req, res) => {
             const settings = follower.notificationSettings;
             let shouldNotify = false;
 
-            if (settings.allFollowedPredictions) {
+            // --- MASTER SWITCH: Check Global Toggle First ---
+            if (settings.newPrediction === false) {
+                // User explicitly disabled this type
+                shouldNotify = false;
+            } else if (settings.allFollowedPredictions) {
                 shouldNotify = true;
             } else if (isSignificant && settings.trustedShortTerm && isShortTerm) {
                 shouldNotify = true;
@@ -168,6 +173,15 @@ router.post('/predict', predictLimiter, async (req, res) => {
                         ...(percentageChange !== null && { percentage: percentageChange })
                     }
                 });
+
+                // Send Push Notification
+                sendPushToUser(
+                    follower._id,
+                    "New Prediction",
+                    `${user.username} predicted ${stockTicker} ${percentageChange >= 0 ? 'increase' : 'decrease'}`,
+                    { url: `/prediction/${prediction._id}` },
+                    'newPrediction'
+                );
             }
         }
 

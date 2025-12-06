@@ -277,25 +277,29 @@ const runAssessmentJob = async () => {
                         currentUpdate.analystRating += analystRatingToAward; // Sum up analyst rating points
                         currentUpdate.stockTicker = prediction.stockTicker; // Store ticker
 
-                        await new Notification({
-                            recipient: prediction.userId._id,
-                            type: 'PredictionAssessed',
-                            messageKey: 'notifications.predictionAssessed',
-                            metadata: {
-                                stockTicker: prediction.stockTicker,
-                                predictionType: prediction.predictionType,
-                                rating: rating
-                            },
-                            link: `/prediction/${prediction._id}`
-                        }).save();
+                        const userSettings = prediction.userId.notificationSettings;
+                        if (!userSettings || userSettings.predictionAssessed !== false) {
+                            await new Notification({
+                                recipient: prediction.userId._id,
+                                type: 'PredictionAssessed',
+                                messageKey: 'notifications.predictionAssessed',
+                                metadata: {
+                                    stockTicker: prediction.stockTicker,
+                                    predictionType: prediction.predictionType,
+                                    rating: rating
+                                },
+                                link: `/prediction/${prediction._id}`
+                            }).save();
 
-                        // Send Push Notification
-                        sendPushToUser(
-                            prediction.userId._id,
-                            "Prediction Assessed",
-                            `Your prediction for ${prediction.stockTicker} has been assessed. You earned a ${rating.toFixed(1)} rating!`,
-                            { url: `/prediction/${prediction._id}` }
-                        );
+                            // Send Push Notification
+                            sendPushToUser(
+                                prediction.userId._id,
+                                "Prediction Assessed",
+                                `Your prediction for ${prediction.stockTicker} has been assessed. You earned a ${rating.toFixed(1)} rating!`,
+                                { url: `/prediction/${prediction._id}` },
+                                'predictionAssessed'
+                            );
+                        }
 
                         await new PredictionLog({
                             predictionId: prediction._id,

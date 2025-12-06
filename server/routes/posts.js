@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Notification = require('../models/Notification');
 const financeAPI = require('../services/financeAPI');
 const xss = require('xss');
+const { sendPushToUser } = require('../services/pushNotificationService');
 
 router.post('/posts/golden', async (req, res) => {
     if (!req.user || !req.user.isGoldenMember) {
@@ -54,20 +55,37 @@ router.post('/posts/golden', async (req, res) => {
         const validSubscribers = creator.goldenSubscribers.filter(sub => sub.user);
 
         if (validSubscribers.length > 0) {
-            const notifications = validSubscribers.map(sub => ({
-                recipient: sub.user._id,
-                sender: creator._id,
-                type: 'GoldenPost',
-                messageKey: 'notifications.goldenPost',
-                link: '/golden-feed',
-                metadata: {
-                    username: creator.username,
-                    // FIX 2: Add post message snippet (clipped to 50 chars)
-                    postMessage: newPost.message.substring(0, 50) + (newPost.message.length > 50 ? '...' : '')
-                }
-            }));
+            // Filter subscribers who have this notification enabled
+            const subscribersToNotify = validSubscribers.filter(sub =>
+                !sub.user.notificationSettings || sub.user.notificationSettings.goldenPost !== false
+            );
 
-            await Notification.insertMany(notifications);
+            const notifications = subscribersToNotify.map(sub => {
+                sendPushToUser(
+                    sub.user._id,
+                    "New Golden Post",
+                    `${creator.username}: ${newPost.message.substring(0, 50)}...`,
+                    { url: '/golden-feed' },
+                    'goldenPost'
+                );
+
+                return {
+                    recipient: sub.user._id,
+                    sender: creator._id,
+                    type: 'GoldenPost',
+                    messageKey: 'notifications.goldenPost',
+                    link: '/golden-feed',
+                    metadata: {
+                        username: creator.username,
+                        // FIX 2: Add post message snippet (clipped to 50 chars)
+                        postMessage: newPost.message.substring(0, 50) + (newPost.message.length > 50 ? '...' : '')
+                    }
+                };
+            });
+
+            if (notifications.length > 0) {
+                await Notification.insertMany(notifications);
+            }
         }
 
         res.status(201).json(newPost);

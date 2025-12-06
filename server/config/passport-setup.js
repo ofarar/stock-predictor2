@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Notification = require('../models/Notification');
 
 const { sendWelcomeEmail } = require('../services/email');
+const { sendPushToUser } = require('../services/pushNotificationService');
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -36,8 +37,6 @@ passport.use(
 
                 if (existingUsername) {
                     // Username is taken. Signal to the frontend to ask for a new one.
-                    // We pass 'false' for the user because they haven't been created yet.
-                    // The profile info is passed in the 'info' object to be used by the frontend.
                     return done(null, false, {
                         action: 'CHOOSE_USERNAME',
                         profile: {
@@ -59,7 +58,7 @@ passport.use(
                         fromShares: 0,
                         fromReferrals: 0,
                         fromRanks: 0,
-                        fromBonus: earlyUserBonus, // <-- 1. ADDED HERE
+                        fromBonus: earlyUserBonus,
                         shareBreakdown: {},
                         predictionBreakdownByStock: {},
                         badgeBreakdown: {},
@@ -67,16 +66,21 @@ passport.use(
                     };
                     // --- END NEW ---
 
-                    const newUser = await new User({ // <-- 2. CREATE USER
+                    const newUser = await new User({
                         googleId: profile.id,
                         username: newUsername,
                         email: userEmail,
                         avatar: defaultAvatar,
                         analystRating: analystRatingObject
-                    }).save()
+                    }).save();
 
                     // --- 3. NEW: CHECK FOR REFERRAL ---
-                    const referralCode = req.session.referralCode;
+                    // Defensive check for session
+                    let referralCode = null;
+                    if (req.session && req.session.referralCode) {
+                        referralCode = req.session.referralCode;
+                    }
+
                     if (referralCode) {
                         try {
                             const inviter = await User.findById(referralCode);
@@ -94,29 +98,45 @@ passport.use(
                                 await inviter.save();
 
                                 // Add reference to the new user
-                                // Add reference to the new user and save again
                                 newUser.invitedBy = inviter._id;
                                 await newUser.save();
 
                                 // --- 4. CREATE NOTIFICATION FOR INVITER ---
-                                await new Notification({
-                                    recipient: inviter._id,
-                                    sender: newUser._id,
-                                    type: 'NewReferral',
-                                    messageKey: 'notifications.newReferral',
-                                    link: `/profile/${newUser._id}`,
-                                    metadata: {
-                                        username: newUser.username,
-                                        points: pointsToAward
+                                // --- 4. CREATE NOTIFICATION FOR INVITER ---
+                                try {
+                                    if (!inviter.notificationSettings || inviter.notificationSettings.newReferral !== false) {
+                                        await new Notification({
+                                            recipient: inviter._id,
+                                            sender: newUser._id,
+                                            type: 'NewReferral',
+                                            messageKey: 'notifications.newReferral',
+                                            link: `/profile/${newUser._id}`,
+                                            metadata: {
+                                                username: newUser.username,
+                                                points: pointsToAward
+                                            }
+                                        }).save();
+
+                                        sendPushToUser(
+                                            inviter._id,
+                                            "New Referral!",
+                                            `${newUser.username} joined using your referral code! (+${pointsToAward} pts)`,
+                                            { url: `/profile/${newUser._id}` },
+                                            'newReferral'
+                                        );
                                     }
-                                }).save();
+                                } catch (notifyErr) {
+                                    console.error("Referral Notification Error:", notifyErr);
+                                }
                                 // --- END NOTIFICATION ---
                             }
                         } catch (err) {
                             console.error("Referral award error:", err);
                         }
                         // Clear the code from the session
-                        delete req.session.referralCode;
+                        if (req.session) {
+                            delete req.session.referralCode;
+                        }
                     }
                     // --- END NEW ---
 

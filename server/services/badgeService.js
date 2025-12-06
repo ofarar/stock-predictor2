@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting');
 const Prediction = require('../models/Prediction');
+const { sendPushToUser } = require('../services/pushNotificationService');
 
 const awardBadges = async (user) => {
     const settings = await Setting.findOneAndUpdate({}, {}, { upsert: true, new: true });
@@ -132,32 +133,65 @@ const awardBadges = async (user) => {
             const badgeInfo = badgeDefinitions[badge.badgeId];
             if (!badgeInfo) continue;
 
-            await new Notification({
-                recipient: user._id,
-                type: 'BadgeEarned',
-                messageKey: 'notifications.badgeEarnedSelf',
-                link: `/profile/${user._id}`,
-                metadata: {
-                    tier: badge.tier,
-                    badgeName: badgeInfo.name
-                }
-            }).save();
-
-            // Notify followers
-            if (user.followers && user.followers.length > 0) {
-                const followerNotifs = user.followers.map(followerId => ({
-                    recipient: followerId,
-                    sender: user._id,
-                    type: 'BadgeEarned', // Changed from 'FollowerBadgeEarned' to simplify
-                    messageKey: 'notifications.badgeEarnedFollower',
+            // Send Push to Self
+            if (!user.notificationSettings || user.notificationSettings.badgeEarned !== false) {
+                await new Notification({
+                    recipient: user._id,
+                    type: 'BadgeEarned',
+                    messageKey: 'notifications.badgeEarnedSelf',
                     link: `/profile/${user._id}`,
                     metadata: {
-                        username: user.username,
                         tier: badge.tier,
                         badgeName: badgeInfo.name
                     }
-                }));
-                await Notification.insertMany(followerNotifs);
+                }).save();
+
+                sendPushToUser(
+                    user._id,
+                    "Badge Earned!",
+                    `You earned the ${badgeInfo.name} (${badge.tier}) badge!`,
+                    { url: `/profile/${user._id}` },
+                    'badgeEarned'
+                );
+            }
+
+            // Notify followers
+            if (user.followers && user.followers.length > 0) {
+                // Fetch followers to check their settings
+                const followersWithSettings = await User.find({ _id: { $in: user.followers } }).select('notificationSettings');
+
+                const followerNotifs = [];
+                for (const follower of followersWithSettings) {
+                    if (follower.notificationSettings && follower.notificationSettings.badgeEarned === false) {
+                        continue;
+                    }
+
+                    // Send Push to Follower
+                    sendPushToUser(
+                        follower._id,
+                        "Badge Alert",
+                        `${user.username} earned the ${badgeInfo.name} (${badge.tier}) badge!`,
+                        { url: `/profile/${user._id}` },
+                        'badgeEarned'
+                    );
+
+                    followerNotifs.push({
+                        recipient: follower._id,
+                        sender: user._id,
+                        type: 'BadgeEarned',
+                        messageKey: 'notifications.badgeEarnedFollower',
+                        link: `/profile/${user._id}`,
+                        metadata: {
+                            username: user.username,
+                            tier: badge.tier,
+                            badgeName: badgeInfo.name
+                        }
+                    });
+                }
+
+                if (followerNotifs.length > 0) {
+                    await Notification.insertMany(followerNotifs);
+                }
             }
         }
     } else {
