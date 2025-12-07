@@ -225,8 +225,8 @@ router.get('/prediction/:id', async (req, res) => {
 
         prediction.likeCount = (prediction.likes || []).length + (prediction.guestLikes || []).length;
         prediction.dislikeCount = (prediction.dislikes || []).length + (prediction.guestDislikes || []).length;
-        prediction.userHasLiked = userId ? (prediction.likes || []).map(id => id.toString()).includes(userId) : (prediction.guestLikes || []).includes(guestId);
-        prediction.userHasDisliked = userId ? (prediction.dislikes || []).map(id => id.toString()).includes(userId) : (prediction.guestDislikes || []).includes(guestId);
+        prediction.userHasLiked = userId ? (prediction.likes || []).some(id => id.toString() === userId) : (prediction.guestLikes || []).includes(guestId);
+        prediction.userHasDisliked = userId ? (prediction.dislikes || []).some(id => id.toString() === userId) : (prediction.guestDislikes || []).includes(guestId);
 
         res.json(prediction);
     } catch (err) {
@@ -524,7 +524,7 @@ router.post('/predictions/:id/like', actionLimiter, async (req, res) => {
 
         if (userId) {
             prediction.dislikes.pull(userId);
-            if (prediction.likes.includes(userId)) {
+            if (prediction.likes.some(id => id.toString() === userId)) {
                 prediction.likes.pull(userId);
             } else {
                 prediction.likes.addToSet(userId);
@@ -589,7 +589,7 @@ router.post('/predictions/:id/dislike', actionLimiter, async (req, res) => {
 
         if (userId) {
             prediction.likes.pull(userId);
-            if (prediction.dislikes.includes(userId)) {
+            if (prediction.dislikes.some(id => id.toString() === userId)) {
                 prediction.dislikes.pull(userId);
             } else {
                 prediction.dislikes.addToSet(userId);

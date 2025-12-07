@@ -61,7 +61,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     // --- CONSOLIDATED DATA FETCHING ---
     const fetchData = useCallback(() => {
         setLoading(true);
-        axios.get(`${import.meta.env.VITE_API_URL}/api/prediction/${predictionId}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/api/prediction/${predictionId}`, { withCredentials: true })
             .then(predictionRes => {
                 const pred = predictionRes.data;
                 setPrediction(pred);
