@@ -553,8 +553,8 @@ router.put('/profile/golden-member', async (req, res) => {
                                 sendPushToUser(
                                     subscriber._id,
                                     "Price Change Alert",
-                                    `${userToUpdate.username} changed their subscription price from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)}.`,
-                                    {},
+                                    `$${userToUpdate.username} changed their subscription price from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)}.`,
+                                    { url: `/profile/${userToUpdate._id}` },
                                     'priceChange'
                                 );
 

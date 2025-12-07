@@ -6,7 +6,6 @@ let isInitialized = false;
 
 try {
     const serviceAccountPath = path.join(__dirname, '../service-account.json');
-    // Check if file exists before requiring (to avoid crashing if user hasn't added it yet)
     const fs = require('fs');
     if (fs.existsSync(serviceAccountPath)) {
         const serviceAccount = require(serviceAccountPath);
@@ -28,6 +27,7 @@ try {
  * @param {string} title - The title of the notification.
  * @param {string} body - The body of the notification.
  * @param {object} data - Optional data payload.
+ * @param {string} notificationType - The type of notification (e.g., 'newFollower').
  */
 exports.sendPushToUser = async (userId, title, body, data = {}, notificationType = null) => {
     if (!isInitialized) return;
@@ -38,14 +38,43 @@ exports.sendPushToUser = async (userId, title, body, data = {}, notificationType
             return;
         }
 
-        $pull: { fcmTokens: { $in: failedTokens } }
-    });
-}
+        // --- FILTERING LOGIC ---
+        if (notificationType && user.notificationSettings) {
+            if (user.notificationSettings[notificationType] === false) {
+                console.log(`Push skipped: User ${userId} has disabled '${notificationType}'.`);
+                return;
+            }
         }
+        // -----------------------
 
-console.log(`Push sent to ${response.successCount} devices for user ${userId}`);
+        const message = {
+            notification: {
+                title: title,
+                body: body,
+            },
+            data: data, // Client expects { url: ... } here
+            tokens: user.fcmTokens,
+        };
 
+        const response = await admin.messaging().sendEachForMulticast(message);
+
+        if (response.failureCount > 0) {
+            const failedTokens = [];
+            response.responses.forEach((resp, idx) => {
+                if (!resp.success) {
+                    failedTokens.push(user.fcmTokens[idx]);
+                }
+            });
+
+            if (failedTokens.length > 0) {
+                await User.updateOne(
+                    { _id: userId },
+                    { $pull: { fcmTokens: { $in: failedTokens } } }
+                );
+                console.log(`Removed ${failedTokens.length} failed tokens for user ${userId}`);
+            }
+        }
     } catch (error) {
-    console.error("Error sending push notification:", error);
-}
+        console.error("Error sending push notification:", error);
+    }
 };

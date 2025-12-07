@@ -19,7 +19,7 @@ const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 8080;
 
 // Use Helmet to set various security headers
 app.use(helmet({

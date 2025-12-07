@@ -267,6 +267,11 @@ function App() {
 
       PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
         console.log('Push Action:', notification);
+        const data = notification.notification.data;
+        if (data && data.url) {
+          // Navigate to the deep link URL within the app
+          window.location.assign(data.url);
+        }
       });
     }
   }, []);
