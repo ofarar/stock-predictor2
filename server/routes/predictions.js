@@ -213,7 +213,7 @@ router.get('/my-predictions', async (req, res) => {
 router.get('/prediction/:id', async (req, res) => {
     try {
         const prediction = await Prediction.findById(req.params.id)
-            .populate('userId', 'username avatar isGoldenMember isVerified')
+            .populate('userId', 'username avatar isGoldenMember isVerified isBot')
             .lean();
 
         if (!prediction) {
@@ -309,7 +309,7 @@ router.get('/explore/feed', async (req, res) => {
                         userId: {
                             _id: '$userDetails._id', username: '$userDetails.username', avatar: '$userDetails.avatar',
                             isGoldenMember: '$userDetails.isGoldenMember', totalRating: '$userDetails.totalRating', isVerified: '$userDetails.isVerified',
-                            avgRating: '$userDetails.avgRating'
+                            avgRating: '$userDetails.avgRating', isBot: '$userDetails.isBot'
                         }
                     }
                 }
@@ -334,7 +334,7 @@ router.get('/explore/feed', async (req, res) => {
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limitNum)
-                .populate('userId', 'username avatar isGoldenMember totalRating isVerified avgRating')
+                .populate('userId', 'username avatar isGoldenMember totalRating isVerified avgRating isBot')
                 .lean();
 
             const migratedPredictions = predictions.map(p => {
@@ -708,7 +708,7 @@ router.get('/predictions/:ticker', async (req, res) => {
         const predictions = await Prediction.find({
             stockTicker: req.params.ticker.toUpperCase(),
             status: 'Active'
-        }).sort({ createdAt: -1 }).populate('userId', 'username avatar isGoldenMember isVerified');
+        }).sort({ createdAt: -1 }).populate('userId', 'username avatar isGoldenMember isVerified isBot');
         res.json(predictions);
     } catch (err) {
         res.status(500).json({ message: 'Error fetching predictions.' });
@@ -778,7 +778,7 @@ router.get('/stock/:ticker/active-predictions', async (req, res) => {
 
         const predictions = await Prediction.find(query)
             .sort({ createdAt: -1 })
-            .populate('userId', 'username avatar isGoldenMember isVerified')
+            .populate('userId', 'username avatar isGoldenMember isVerified isBot')
             .skip(skip)
             .limit(limitNum);
 

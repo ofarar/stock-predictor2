@@ -13,6 +13,11 @@ const initialChecks = [
     { id: 'db-integrity', name: 'Database Integrity (Orphans)', status: 'pending', result: null, selected: true },
     { id: 'badge-json', name: 'Admin Settings (Badge JSON)', status: 'pending', result: null, selected: true },
 
+    // --- AI / Bot System ---
+    { id: 'python-runtime', name: 'Python Runtime (v3.x)', status: 'pending', result: null, selected: true },
+    { id: 'bot-user', name: 'AI Bot User Identity', status: 'pending', result: null, selected: true },
+    { id: 'model-file', name: 'ML Engine File', status: 'pending', result: null, selected: true },
+
     // --- Core Services ---
     { id: 'cron', name: 'Cron Job (Scoring)', status: 'pending', result: null, selected: true },
     { id: 'email', name: 'Email Service', status: 'pending', result: null, selected: true },

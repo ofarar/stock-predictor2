@@ -22,7 +22,15 @@ const MiniPredictionCard = ({ prediction, currentPrice, isOwnProfile, onEditClic
             <Link to={`/prediction/${prediction._id}`} className={`block bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors ${paddingClass}`}>
                 <div className="flex justify-between items-center">
                     <div className="flex flex-col">
-                        <span className="font-bold text-white text-lg">{prediction.stockTicker}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="font-bold text-white text-lg">{prediction.stockTicker}</span>
+                            {/* Show Quant Icon if the specific prediction author is a Bot */}
+                            {prediction.userId?.isBot && (
+                                <span title="Quant System v2.0" className="text-yellow-500">
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
+                                </span>
+                            )}
+                        </div>
                         <span className="text-xs text-gray-400">
                             {t(`predictionTypes.${prediction.predictionType.toLowerCase()}`)}
                         </span>

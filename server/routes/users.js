@@ -236,7 +236,10 @@ router.get('/profile/:userId', async (req, res) => {
 
         await user.populate(['goldenSubscriptions.user', 'goldenSubscribers.user']);
 
-        const predictionsData = await Prediction.find({ userId: req.params.userId }).sort({ createdAt: -1 }).lean();
+        const predictionsData = await Prediction.find({ userId: req.params.userId })
+            .populate('userId', 'username isBot')
+            .sort({ createdAt: -1 })
+            .lean();
         const predictions = predictionsData.map(p => {
             if (p.score !== undefined) {
                 p.rating = p.score;

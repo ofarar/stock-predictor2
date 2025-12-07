@@ -114,6 +114,7 @@ const AdminUserList = ({ settings }) => {
             // Only include filter params if they are active
             ...(filter === 'golden' && { isGoldenMember: 'true' }),
             ...(filter === 'verified' && { isVerified: 'true' }),
+            ...(filter === 'bot' && { isBot: 'true' }),
         };
 
         axios.get(`${import.meta.env.VITE_API_URL}/api/admin/all-users`, { params, withCredentials: true })
@@ -142,6 +143,7 @@ const AdminUserList = ({ settings }) => {
                     <div className="flex gap-2 bg-gray-900 p-1 rounded-md justify-center">
                         <button onClick={() => setFilter('all')} className={`px-4 py-1 text-sm font-bold rounded w-full ${filter === 'all' ? 'bg-green-500 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>All Users</button>
                         <button onClick={() => setFilter('golden')} className={`px-4 py-1 text-sm font-bold rounded w-full ${filter === 'golden' ? 'bg-yellow-500 text-black' : 'text-gray-300 hover:bg-gray-700'}`}>Golden</button>
+                        <button onClick={() => setFilter('bot')} className={`px-4 py-1 text-sm font-bold rounded w-full ${filter === 'bot' ? 'bg-indigo-500 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Bots</button>
                         {/* Only show Verified filter if the feature is enabled */}
                         {settings?.isVerificationEnabled && (
                             <button onClick={() => setFilter('verified')} className={`px-3 py-1 text-sm font-bold rounded ${filter === 'verified' ? 'bg-green-500 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Verified</button>

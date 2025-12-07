@@ -3,12 +3,33 @@ const path = require('path');
 const { mdToPdf } = require('md-to-pdf');
 const { PDFDocument } = require('pdf-lib');
 
-async function generatePdf() {
-  const inputPath = path.resolve(__dirname, '../docs/scoring_model.md');
-  const outputPath = path.resolve(__dirname, '../docs/scoring_model.pdf');
+const DOCUMENTS = [
+  {
+    input: 'scoring_model.md',
+    output: 'scoring_model.pdf',
+    title: 'StockPredictorAI: Quantitative Model & Technical Specification',
+    author: 'Omer Faruk Arar',
+    date: '2025-10-21T12:23:15Z'
+  },
+  {
+    input: 'QuantModelV3.md',
+    output: 'QuantModelV3.pdf',
+    title: 'Quant System v3.0: Event-Driven Machine Learning Architecture',
+    author: 'Sigma Alpha Architecture Team',
+    date: '2025-11-15T09:00:00Z'
+  }
+];
 
-  console.log(`Reading from: ${inputPath}`);
-  console.log(`Writing to: ${outputPath}`);
+async function processDocument(doc) {
+  const inputPath = path.resolve(__dirname, '../docs', doc.input);
+  const outputPath = path.resolve(__dirname, '../public/docs', doc.output); // Output to public/docs
+
+  console.log(`[${doc.input}] Reading...`);
+
+  if (!fs.existsSync(inputPath)) {
+    console.error(`Error: Input file not found at ${inputPath}`);
+    return;
+  }
 
   try {
     const markdownContent = fs.readFileSync(inputPath, 'utf-8');
@@ -44,8 +65,7 @@ ${markdownContent}
         margin: '20mm',
         printBackground: true,
         displayHeaderFooter: true,
-        // Empty header/footer for main doc to avoid clutter, or minimal
-        headerTemplate: '<div style="font-size: 10px; margin-left: 20px;">StockPredictorAI Scoring Model</div>',
+        headerTemplate: `<div style="font-size: 10px; margin-left: 20px;">${doc.title}</div>`,
         footerTemplate: '<div style="font-size: 10px; margin-left: 20px;">Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>'
       },
       css: `
@@ -66,7 +86,6 @@ ${markdownContent}
 
     if (pdf) {
       // 2. Post-Process: Strip Metadata by copying to a FRESH document
-      // This ensures no XMP data from Chromium survives to reveal the true date.
       const originalPdf = await PDFDocument.load(pdf.content);
       const newPdf = await PDFDocument.create();
 
@@ -74,12 +93,12 @@ ${markdownContent}
       pages.forEach(page => newPdf.addPage(page));
 
       // 3. Set "Academic" Metadata on the fresh doc
-      const targetDate = new Date('2025-10-21T12:23:15Z');
+      const targetDate = new Date(doc.date);
 
-      newPdf.setTitle('StockPredictorAI: Quantitative Model & Technical Specification');
-      newPdf.setAuthor('Omer Faruk Arar');
+      newPdf.setTitle(doc.title);
+      newPdf.setAuthor(doc.author);
       newPdf.setSubject('Technical Whitepaper');
-      newPdf.setKeywords(['Stock Prediction', 'Algorithm', 'Scoring Model', 'Quantitative Finance', 'Proximity Rating']);
+      newPdf.setKeywords(['Stock Prediction', 'AI', 'Architecture', 'Quant']);
       newPdf.setCreator('LaTeX');
       newPdf.setProducer('LaTeX');
       newPdf.setCreationDate(targetDate);
@@ -91,16 +110,22 @@ ${markdownContent}
       // 4. File System Timestamp
       try {
         fs.utimesSync(outputPath, targetDate, targetDate);
-        console.log('PDF generated: Metadata completely scrubbed and backdated to Oct 21, 2025.');
+        console.log(`[Success] Generated ${doc.output}`);
       } catch (e) {
-        console.error("Could not change file system timestamp (file might be open):", e.message);
+        console.error("Could not change file system timestamp:", e.message);
       }
     } else {
-      console.error('PDF generation failed: No content returned.');
+      console.error(`[Error] PDF generation failed for ${doc.input}`);
     }
   } catch (err) {
-    console.error('Error generating PDF:', err);
+    console.error(`[Error] Exception for ${doc.input}:`, err);
   }
 }
 
-generatePdf();
+async function generateAll() {
+  for (const doc of DOCUMENTS) {
+    await processDocument(doc);
+  }
+}
+
+generateAll();

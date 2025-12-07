@@ -41,7 +41,7 @@ router.get('/settings', async (req, res) => {
 
 // PUT: Update admin settings
 router.put('/settings/admin', async (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
         return res.status(403).send('Forbidden: Admins only.');
     }
     try {

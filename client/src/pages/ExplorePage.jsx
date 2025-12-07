@@ -49,6 +49,12 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                                     <VerifiedTick />
                                 </div>
                             )}
+                            {prediction.userId.isBot && (
+                                <span className="ms-2 text-[10px] bg-gradient-to-r from-gray-900 to-black text-yellow-500 border border-yellow-500/50 px-2 py-0.5 rounded-sm font-mono font-bold shadow-sm tracking-widest uppercase flex items-center gap-1">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
+                                    QUANT
+                                </span>
+                            )}
                         </div>
                         <p className="text-xs text-gray-400">{t('text_avg_rating')}: {prediction.userId.avgRating ? prediction.userId.avgRating.toFixed(1) : 'N/A'}</p>
                     </div>

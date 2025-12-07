@@ -16,6 +16,7 @@ require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
 const { runHourlyRankJob, runDailyRankJob, runWeeklyRankJob, runMonthlyRankJob } = require('./jobs/long-term-rank-job');
+const { initBotScheduler } = require('./jobs/botScheduler');
 const http = require('http');
 const { Server } = require("socket.io");
 
@@ -174,7 +175,10 @@ app.use((req, res, next) => {
 
 // --- DB Connection ---
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB connected...'))
+    .then(() => {
+        console.log('MongoDB connected...');
+        initBotScheduler(); // Initialize Python Bot Scheduler
+    })
     .catch(err => console.log(err));
 
 // --- Scheduled Jobs ---

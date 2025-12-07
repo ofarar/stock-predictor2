@@ -29,10 +29,20 @@ COPY . .
 
 
 # Final stage for app image
-FROM base
+# Install Python runtime for the bot
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y python3 python3-pip python3-venv && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy built application
 COPY --from=build /app /app
+
+# Copy ML Service and Dependencies
+# Since we moved ml_service INTO server/, we can copy it directly from the context
+WORKDIR /app
+COPY ml_service /app/ml_service
+# Install dependencies
+RUN pip3 install --no-cache-dir -r ml_service/requirements.txt --break-system-packages
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 5001

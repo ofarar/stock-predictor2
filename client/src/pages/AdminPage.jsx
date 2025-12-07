@@ -8,6 +8,7 @@ import AdminPanel from '../components/AdminPanel';
 import AdminUserList from '../components/AdminUserList';
 import AIWizardWaitlist from '../components/AIWizardWaitlist';
 import AdminHealthCheck from '../components/AdminHealthCheck';
+import AdminBotReview from '../components/AdminBotReview';
 
 const AdminPage = () => {
     const [settings, setSettings] = useState({
@@ -86,6 +87,7 @@ const AdminPage = () => {
                 </button>
             </div>
 
+            <AdminBotReview />
             <AdminUserList settings={settings} />
             {/* Conditionally render waitlist if enabled */}
             {settings.isAIWizardEnabled && <AIWizardWaitlist settings={settings} />}

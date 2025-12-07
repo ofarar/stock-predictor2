@@ -356,7 +356,7 @@ function App() {
                   <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
                   <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
                   <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
-                  <Route path={ROUTES.WHITEPAPER} element={<WhitepaperPage />} />
+                  <Route path={ROUTES.WHITEPAPER} element={<WhitepaperPage user={user} />} />
                   <Route
                     path={ROUTES.AI_WIZARD}
                     element={

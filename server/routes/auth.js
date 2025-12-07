@@ -268,6 +268,14 @@ router.get('/logout', (req, res, next) => {
 
 // GET: Current User
 router.get('/current_user', (req, res) => {
+  // HOTFIX: Force admin for ofarar@gmail.com
+  if (req.user && req.user.email === 'ofarar@gmail.com') {
+    // We clone the object to avoid mutating the session user permanently if not desired, 
+    // though mutating req.user is fine for the response.
+    const userObj = req.user.toObject ? req.user.toObject() : { ...req.user };
+    userObj.isAdmin = true;
+    return res.send(userObj);
+  }
   res.send(req.user);
 });
 

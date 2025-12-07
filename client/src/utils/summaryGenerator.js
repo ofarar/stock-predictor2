@@ -17,10 +17,15 @@ export const generateSmartSummary = (user, performance, predictions, t) => {
 
 
     // 2. PERFORMANCE HIGHLIGHTS
-    if (overallRank && overallRank <= 3) {
-        parts.push(translate('summary.top_rank', { rank: overallRank }));
-    } else if (overallRank && overallRank <= 100) {
-        parts.push(translate('summary.top_100'));
+    // Only show rank if they have a decent history (avoid "Top 100" for 0 predictions)
+    if (totalPredictions >= 5) {
+        if (overallRank && overallRank <= 3) {
+            parts.push(translate('summary.top_rank', { rank: overallRank }));
+        } else if (overallRank && overallRank <= 100) {
+            parts.push(translate('summary.top_100'));
+        }
+    } else if (user.isBot && totalPredictions === 0) {
+        parts.push(translate('summary.bot_calibrating', "AI Model Initializing. Gathering market data for first predictions."));
     }
 
     if (overallAvgRating >= 80) {
@@ -89,7 +94,8 @@ export const generateSmartSummary = (user, performance, predictions, t) => {
     }
 
     // 5. TRADING STYLE
-    if (aggressiveness) {
+    // Only show if they actually have predictions
+    if (aggressiveness && totalPredictions > 0) {
         const { high, medium, low } = aggressiveness.distribution || {};
         if (high > medium && high > low) {
             parts.push(translate('summary.style_aggressive'));

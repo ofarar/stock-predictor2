@@ -12,6 +12,13 @@ const UserSchema = new Schema({
     youtubeLink: { type: String },
     xLink: { type: String },
     telegramLink: { type: String },
+    isBot: { type: Boolean, default: false },
+    // --- Bot Metrics ---
+    aiMetrics: {
+        trainingAccuracy: { type: Number, default: 0 },
+        lastRetrained: { type: Date },
+        specialization: { type: String }
+    },
     isAdmin: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     verifiedAt: { type: Date, default: null },

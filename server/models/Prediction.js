@@ -8,14 +8,15 @@ const PredictionSchema = new Schema({
     targetPriceAtCreation: { type: Number },
     predictionType: { type: String, enum: ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'], required: true },
     deadline: { type: Date, required: true },
-    status: { type: String, enum: ['Active', 'Assessed'], default: 'Active' },
+    status: { type: String, enum: ['Active', 'Assessed', 'Pending', 'Rejected'], default: 'Active' },
     rating: { type: Number, default: 0 },
     actualPrice: { type: Number },
     priceAtCreation: { type: Number },
     maxRatingAtCreation: { type: Number, default: 100 },
     currency: { type: String, default: 'USD' },
-    description: { type: String, maxLength: 500 },
-    initialDescription: { type: String, maxLength: 500 },
+    description: { type: String, maxLength: 2000 },
+    initialDescription: { type: String, maxLength: 2000 },
+    featureVector: { type: Object }, // Stores exact model inputs (X) for retraining
     targetHit: { type: Boolean, default: false }, // Track if the target was hit before/at deadline
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dislikes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -26,7 +27,7 @@ const PredictionSchema = new Schema({
         updatedAt: { type: Date, default: Date.now },
         previousTargetPrice: { type: Number, required: true },
         newTargetPrice: { type: Number, required: true },
-        reason: { type: String, maxLength: 500 },
+        reason: { type: String, maxLength: 2000 },
         priceAtTimeOfUpdate: { type: Number } // The "blue dot" value
     }],
     views: { type: Number, default: 0, index: true },

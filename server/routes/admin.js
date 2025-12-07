@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Prediction = require('../models/Prediction');
 const JobLog = require('../models/JobLog');
 const runAssessmentJob = require('../jobs/assessment-job');
+const { runEarningsModel } = require('../jobs/botScheduler');
 const { awardBadges } = require('../services/badgeService');
 const mongoose = require('mongoose');
 const financeAPI = require('../services/financeAPI');
@@ -32,7 +33,7 @@ async function cleanupOrphanedPredictions() {
 
 // POST: Manually trigger assessment job
 router.post('/admin/evaluate', async (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
         return res.status(403).send('Forbidden: Admins only.');
     }
     try {
@@ -44,9 +45,25 @@ router.post('/admin/evaluate', async (req, res) => {
     }
 });
 
+// POST: Manually trigger Bot Run
+router.post('/admin/trigger-bot', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).send('Forbidden: Admins only.');
+    }
+    try {
+        const { mode } = req.body; // 'inference' or 'train'
+        const safeMode = ['train', 'inference'].includes(mode) ? mode : 'inference';
+        console.log(`Admin triggered manual AI Bot Run (Mode: ${safeMode})...`);
+        runEarningsModel(safeMode);
+        res.status(200).send(`AI Bot (${safeMode}) job triggered successfully.`);
+    } catch (error) {
+        res.status(500).send('Failed to trigger bot.');
+    }
+});
+
 // POST: Recalculate analytics for all users
 router.post('/admin/recalculate-analytics', async (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
         return res.status(403).send('Forbidden: Admins only.');
     }
 
@@ -72,7 +89,7 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
 });
 
 router.post('/admin/cleanup-orphans', async (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
         return res.status(403).send('Forbidden: Admins only.');
     }
     try {
@@ -91,7 +108,7 @@ router.post('/admin/cleanup-orphans', async (req, res) => {
 
 // DELETE: Delete a prediction (Admin only)
 router.delete('/admin/predictions/:id', async (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
         return res.status(403).json({ message: 'Forbidden: Admins only.' });
     }
 
@@ -122,9 +139,47 @@ router.delete('/admin/predictions/:id', async (req, res) => {
     }
 });
 
+// GET: Fetch pending predictions (Admin only)
+router.get('/admin/predictions/pending', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+    try {
+        const predictions = await Prediction.find({ status: 'Pending' })
+            .populate('userId', 'username avatar isBot')
+            .sort({ createdAt: -1 });
+        res.json(predictions);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching pending predictions.' });
+    }
+});
+
+// PUT: Approve or Reject a prediction
+router.put('/admin/predictions/:id/status', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+    const { status } = req.body;
+    if (!['Active', 'Rejected'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status update.' });
+    }
+    try {
+        const prediction = await Prediction.findByIdAndUpdate(
+            req.params.id,
+            { status: status },
+            { new: true }
+        );
+        res.json(prediction);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating prediction status.' });
+    }
+});
+
 // GET: Fetch all users (Admin only)
 router.get('/admin/all-users', async (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
+    // HOTFIX: Allow 'ofarar@gmail.com' explicitly due to DB mismatch
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        console.log('!!! ADMIN ACCESS DENIED [all-users] !!! User:', req.user ? `${req.user._id} | ${req.user.email} | Admin:${req.user.isAdmin}` : 'Unauthenticated');
         return res.status(403).json({ message: 'Forbidden: Admins only.' });
     }
 
@@ -150,6 +205,7 @@ router.get('/admin/all-users', async (req, res) => {
             matchQuery.isGoldenMember = true;
         }
         if (isVerified === 'true') { matchQuery.isVerified = true; }
+        if (req.query.isBot === 'true') { matchQuery.isBot = true; }
 
         const usersWithStats = await User.aggregate([
             { $match: matchQuery },
@@ -192,7 +248,7 @@ router.get('/admin/all-users', async (req, res) => {
 // POST: Health check for services
 router.post('/admin/health-check/:service', async (req, res) => {
     // 1. Security check remains the same.
-    if (!req.user || !req.user.isAdmin) {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
         return res.status(403).json({ message: 'Forbidden: Admins only.' });
     }
 
@@ -345,6 +401,42 @@ router.post('/admin/health-check/:service', async (req, res) => {
                     return `OK (BTC Price: ${quote.price} USD)`;
                 }
                 throw new Error('Crypto API returned no price data.');
+            });
+
+        // --- NEW AI CHECKS ---
+        case 'python-runtime':
+            return checkService(async () => {
+                const { exec } = require('child_process');
+                return new Promise((resolve, reject) => {
+                    // Try 'python3' first, then 'python'
+                    const cmd = process.platform === 'win32' ? 'python --version' : 'python3 --version';
+                    exec(cmd, (error, stdout, stderr) => {
+                        if (error) {
+                            reject(new Error(`Python not found. Error: ${error.message}`));
+                        } else {
+                            resolve(`OK (${stdout.trim() || stderr.trim()})`);
+                        }
+                    });
+                });
+            });
+
+        case 'bot-user':
+            return checkService(async () => {
+                const botUser = await User.findOne({ isBot: true });
+                if (!botUser) throw new Error('No user with isBot=true found.');
+                return `OK (Found bot: ${botUser.username})`;
+            });
+
+        case 'model-file':
+            return checkService(async () => {
+                const fs = require('fs');
+                const path = require('path');
+                // Check if the file exists in the expected location (server/ml_service/...)
+                const modelPath = path.join(__dirname, '../ml_service/earnings_model.py');
+                if (fs.existsSync(modelPath)) {
+                    return 'OK (Model file present on disk)';
+                }
+                throw new Error(`Model file missing at: ${modelPath}`);
             });
 
         default:
