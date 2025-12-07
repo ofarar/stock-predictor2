@@ -23,11 +23,8 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
     const isAssessed = prediction.status === 'Assessed';
     const percentChange = !isAssessed && prediction.currentPrice > 0 ? ((prediction.targetPrice - prediction.currentPrice) / prediction.currentPrice) * 100 : 0;
 
-    const likes = prediction.likes || [];
-    const dislikes = prediction.dislikes || [];
-
-    const userLike = currentUser && likes.includes(currentUser._id);
-    const userDislike = currentUser && dislikes.includes(currentUser._id);
+    const userLike = prediction.userHasLiked;
+    const userDislike = prediction.userHasDisliked;
 
     return (
         <div
@@ -116,17 +113,20 @@ const PredictionCard = ({ prediction, onInfoClick, onVote, currentUser, navigate
                 <div className="flex items-center gap-3 text-gray-400">
                     <button onClick={(e) => { e.stopPropagation(); onVote(prediction._id, 'like'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userLike ? 'text-green-500' : ''}`} disabled={isAssessed} title={t('explore_agree')}>
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
-                        <span>{likes.length}</span>
+                        <span>{prediction.likeCount || 0}</span>
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); onVote(prediction._id, 'dislike'); }} className={`flex items-center gap-1 font-bold hover:text-white ${userDislike ? 'text-red-500' : ''}`} disabled={isAssessed} title={t('explore_disagree')}>
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.438 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.2-1.867a4 4 0 00.8-2.4z"></path></svg>
-                        <span>{dislikes.length}</span>
+                        <span>{prediction.dislikeCount || 0}</span>
                     </button>
                 </div>
             </div>
         </div>
     );
 };
+
+
+
 
 const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-- 'user' prop is here
     const { t } = useTranslation();
@@ -209,26 +209,36 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
     };
 
     const handleVote = (predictionId, voteType) => {
-        if (!user) return requestLogin(); // <-- FIX: Use 'user' prop
+        // No login check needed for guests
 
         const originalPredictions = [...predictions];
         const updatedPredictions = predictions.map(p => {
             if (p._id === predictionId) {
-                const newPrediction = { ...p, likes: [...(p.likes || [])], dislikes: [...(p.dislikes || [])] };
-                const userId = user._id; // <-- FIX: Use 'user' prop
-                const userLikesIndex = newPrediction.likes.indexOf(userId);
-                const userDislikesIndex = newPrediction.dislikes.indexOf(userId);
+                const newPrediction = { ...p };
+
                 if (voteType === 'like') {
-                    if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1);
-                    else {
-                        newPrediction.likes.push(userId);
-                        if (userDislikesIndex !== -1) newPrediction.dislikes.splice(userDislikesIndex, 1);
+                    if (newPrediction.userHasLiked) {
+                        newPrediction.userHasLiked = false;
+                        newPrediction.likeCount = Math.max(0, (newPrediction.likeCount || 0) - 1);
+                    } else {
+                        newPrediction.userHasLiked = true;
+                        newPrediction.likeCount = (newPrediction.likeCount || 0) + 1;
+                        if (newPrediction.userHasDisliked) {
+                            newPrediction.userHasDisliked = false;
+                            newPrediction.dislikeCount = Math.max(0, (newPrediction.dislikeCount || 0) - 1);
+                        }
                     }
                 } else {
-                    if (userDislikesIndex !== -1) newPrediction.dislikes.splice(userDislikesIndex, 1);
-                    else {
-                        newPrediction.dislikes.push(userId);
-                        if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1);
+                    if (newPrediction.userHasDisliked) {
+                        newPrediction.userHasDisliked = false;
+                        newPrediction.dislikeCount = Math.max(0, (newPrediction.dislikeCount || 0) - 1);
+                    } else {
+                        newPrediction.userHasDisliked = true;
+                        newPrediction.dislikeCount = (newPrediction.dislikeCount || 0) + 1;
+                        if (newPrediction.userHasLiked) {
+                            newPrediction.userHasLiked = false;
+                            newPrediction.likeCount = Math.max(0, (newPrediction.likeCount || 0) - 1);
+                        }
                     }
                 }
                 return newPrediction;
@@ -237,11 +247,30 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
         });
         setPredictions(updatedPredictions);
         axios.post(`${import.meta.env.VITE_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
+            .then(res => {
+                setPredictions(prev => prev.map(p => {
+                    if (p._id === predictionId) {
+                        const { userId, ...updatedFields } = res.data;
+                        return {
+                            ...p,
+                            ...updatedFields,
+                            likeCount: res.data.stats.likes,
+                            dislikeCount: res.data.stats.dislikes,
+                            userHasLiked: res.data.stats.userHasLiked,
+                            userHasDisliked: res.data.stats.userHasDisliked
+                        };
+                    }
+                    return p;
+                }));
+            })
             .catch(() => {
                 toast.error(t('explore_vote_failed'));
                 setPredictions(originalPredictions);
             });
     };
+
+
+
 
     return (
         <>

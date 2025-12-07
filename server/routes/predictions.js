@@ -13,7 +13,9 @@ const {
     PREDICT_LIMIT, PREDICT_WINDOW_MS,
     VIEW_LIMIT, VIEW_WINDOW_MS,
     ACTION_LIMIT, ACTION_WINDOW_MS
-} = require('../constants'); // <-- NEW IMPORT
+} = require('../constants');
+const { v4: uuidv4 } = require('uuid');
+
 const { sendPushToUser } = require('../services/pushNotificationService');
 
 // Limiters
@@ -211,17 +213,28 @@ router.get('/my-predictions', async (req, res) => {
 router.get('/prediction/:id', async (req, res) => {
     try {
         const prediction = await Prediction.findById(req.params.id)
-            .populate('userId', 'username avatar isGoldenMember isVerified');
+            .populate('userId', 'username avatar isGoldenMember isVerified')
+            .lean();
 
         if (!prediction) {
             return res.status(404).json({ message: "Prediction not found" });
         }
+
+        let userId = req.user ? req.user._id.toString() : null;
+        let guestId = req.cookies.guest_id;
+
+        prediction.likeCount = (prediction.likes || []).length + (prediction.guestLikes || []).length;
+        prediction.dislikeCount = (prediction.dislikes || []).length + (prediction.guestDislikes || []).length;
+        prediction.userHasLiked = userId ? (prediction.likes || []).map(id => id.toString()).includes(userId) : (prediction.guestLikes || []).includes(guestId);
+        prediction.userHasDisliked = userId ? (prediction.dislikes || []).map(id => id.toString()).includes(userId) : (prediction.guestDislikes || []).includes(guestId);
+
         res.json(prediction);
     } catch (err) {
         console.error("Error fetching prediction:", err);
         res.status(500).json({ message: "Error fetching prediction details" });
     }
 });
+
 
 // POST: Increment view count
 router.post('/prediction/:id/view', viewLimiter, async (req, res) => {
@@ -234,8 +247,11 @@ router.post('/prediction/:id/view', viewLimiter, async (req, res) => {
 });
 
 // GET: Explore feed (paginated predictions)
+// GET: Explore feed (paginated predictions)
 router.get('/explore/feed', async (req, res) => {
     const { status = 'Active', stock, predictionType, sortBy = 'date', verifiedOnly, page = 1, limit = 20 } = req.query;
+    let userId = req.user ? req.user._id.toString() : null;
+    let guestId = req.cookies.guest_id;
 
     if (!['Active', 'Assessed'].includes(status)) {
         return res.status(400).json({ message: 'Invalid status filter' });
@@ -280,7 +296,7 @@ router.get('/explore/feed', async (req, res) => {
                 );
             }
             pipeline.push(
-                { $addFields: { voteScore: { $subtract: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$dislikes", []] } }] } } },
+                { $addFields: { voteScore: { $subtract: [{ $add: [{ $size: { $ifNull: ["$likes", []] } }, { $size: { $ifNull: ["$guestLikes", []] } }] }, { $add: [{ $size: { $ifNull: ["$dislikes", []] } }, { $size: { $ifNull: ["$guestDislikes", []] } }] }] } } },
                 { $sort: sortStage },
                 { $skip: skip },
                 { $limit: limitNum },
@@ -288,7 +304,8 @@ router.get('/explore/feed', async (req, res) => {
                     $project: {
                         _id: 1, stockTicker: 1, targetPrice: 1, predictionType: 1, deadline: 1, status: 1,
                         rating: { $ifNull: ["$rating", "$score"] },
-                        actualPrice: 1, createdAt: 1, description: 1, priceAtCreation: 1, likes: 1, dislikes: 1,
+                        actualPrice: 1, createdAt: 1, description: 1, priceAtCreation: 1,
+                        likes: 1, dislikes: 1, guestLikes: 1, guestDislikes: 1, // Include these
                         userId: {
                             _id: '$userDetails._id', username: '$userDetails.username', avatar: '$userDetails.avatar',
                             isGoldenMember: '$userDetails.isGoldenMember', totalRating: '$userDetails.totalRating', isVerified: '$userDetails.isVerified',
@@ -298,7 +315,17 @@ router.get('/explore/feed', async (req, res) => {
                 }
             );
             const predictions = await Prediction.aggregate(pipeline);
-            return res.json({ predictions, totalPages, currentPage: pageNum });
+
+            // Post-process for like counts/stats
+            const processed = predictions.map(p => {
+                p.likeCount = (p.likes || []).length + (p.guestLikes || []).length;
+                p.dislikeCount = (p.dislikes || []).length + (p.guestDislikes || []).length;
+                p.userHasLiked = userId ? (p.likes || []).map(id => id.toString()).includes(userId) : (p.guestLikes || []).includes(guestId);
+                p.userHasDisliked = userId ? (p.dislikes || []).map(id => id.toString()).includes(userId) : (p.guestDislikes || []).includes(guestId);
+                return p;
+            });
+
+            return res.json({ predictions: processed, totalPages, currentPage: pageNum });
         } else {
             const initialPredictions = await Prediction.aggregate(pipeline.concat([{ $project: { _id: 1 } }]));
             const initialPredictionIds = initialPredictions.map(p => p._id);
@@ -315,6 +342,12 @@ router.get('/explore/feed', async (req, res) => {
                     p.rating = p.score;
                     delete p.score;
                 }
+
+                p.likeCount = (p.likes || []).length + (p.guestLikes || []).length;
+                p.dislikeCount = (p.dislikes || []).length + (p.guestDislikes || []).length;
+                p.userHasLiked = userId ? (p.likes || []).map(id => id.toString()).includes(userId) : (p.guestLikes || []).includes(guestId);
+                p.userHasDisliked = userId ? (p.dislikes || []).map(id => id.toString()).includes(userId) : (p.guestDislikes || []).includes(guestId);
+
                 return p;
             });
 
@@ -340,6 +373,7 @@ router.get('/explore/feed', async (req, res) => {
         res.status(500).json({ message: 'Server error fetching prediction data.' });
     }
 });
+
 
 // GET: Hourly winners widget
 router.get('/widgets/hourly-winners', async (req, res) => {
@@ -469,47 +503,132 @@ router.get('/widgets/community-feed', async (req, res) => {
 
 // POST: Like a prediction
 router.post('/predictions/:id/like', actionLimiter, async (req, res) => {
-    if (!req.user) return res.status(401).send('Not logged in');
     try {
         const prediction = await Prediction.findById(req.params.id);
         if (!prediction) return res.status(404).send('Prediction not found.');
 
-        const userId = req.user._id.toString();
-        prediction.dislikes.pull(userId);
+        let userId = req.user ? req.user._id.toString() : null;
+        let guestId = req.cookies.guest_id;
 
-        if (prediction.likes.includes(userId)) {
-            prediction.likes.pull(userId);
-        } else {
-            prediction.likes.addToSet(userId);
+        // If no user and no guest cookie, create one
+        if (!userId && !guestId) {
+            guestId = uuidv4();
+            // Set cookie for 1 year
+            res.cookie('guest_id', guestId, {
+                maxAge: 365 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+            });
         }
+
+        if (userId) {
+            prediction.dislikes.pull(userId);
+            if (prediction.likes.includes(userId)) {
+                prediction.likes.pull(userId);
+            } else {
+                prediction.likes.addToSet(userId);
+            }
+        } else {
+            // Guest logic
+            // Ensure array exists (schema default should handle this but just in case)
+            if (!prediction.guestLikes) prediction.guestLikes = [];
+            if (!prediction.guestDislikes) prediction.guestDislikes = [];
+
+            // Remove from dislikes if present
+            const dislikeIdx = prediction.guestDislikes.indexOf(guestId);
+            if (dislikeIdx > -1) prediction.guestDislikes.splice(dislikeIdx, 1);
+
+            // Toggle like
+            const likeIdx = prediction.guestLikes.indexOf(guestId);
+            if (likeIdx > -1) {
+                prediction.guestLikes.splice(likeIdx, 1);
+            } else {
+                prediction.guestLikes.push(guestId);
+            }
+        }
+
         await prediction.save();
-        res.json(prediction);
+
+        // Return computed state for the requester
+        const result = prediction.toObject();
+        result.stats = {
+            likes: (result.likes || []).length + (result.guestLikes || []).length,
+            dislikes: (result.dislikes || []).length + (result.guestDislikes || []).length,
+            userHasLiked: userId ? (result.likes || []).map(id => id.toString()).includes(userId) : (result.guestLikes || []).includes(guestId),
+            userHasDisliked: userId ? (result.dislikes || []).map(id => id.toString()).includes(userId) : (result.guestDislikes || []).includes(guestId)
+        };
+
+        res.json(result);
     } catch (err) {
+        console.error("Like error:", err);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 // POST: Dislike a prediction
 router.post('/predictions/:id/dislike', actionLimiter, async (req, res) => {
-    if (!req.user) return res.status(401).send('Not logged in');
     try {
         const prediction = await Prediction.findById(req.params.id);
         if (!prediction) return res.status(404).send('Prediction not found.');
 
-        const userId = req.user._id.toString();
-        prediction.likes.pull(userId);
+        let userId = req.user ? req.user._id.toString() : null;
+        let guestId = req.cookies.guest_id;
 
-        if (prediction.dislikes.includes(userId)) {
-            prediction.dislikes.pull(userId);
-        } else {
-            prediction.dislikes.addToSet(userId);
+        // If no user and no guest cookie, create one
+        if (!userId && !guestId) {
+            guestId = uuidv4();
+            res.cookie('guest_id', guestId, {
+                maxAge: 365 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+            });
         }
+
+        if (userId) {
+            prediction.likes.pull(userId);
+            if (prediction.dislikes.includes(userId)) {
+                prediction.dislikes.pull(userId);
+            } else {
+                prediction.dislikes.addToSet(userId);
+            }
+        } else {
+            // Guest logic
+            if (!prediction.guestLikes) prediction.guestLikes = [];
+            if (!prediction.guestDislikes) prediction.guestDislikes = [];
+
+            // Remove from likes if present
+            const likeIdx = prediction.guestLikes.indexOf(guestId);
+            if (likeIdx > -1) prediction.guestLikes.splice(likeIdx, 1);
+
+            // Toggle dislike
+            const dislikeIdx = prediction.guestDislikes.indexOf(guestId);
+            if (dislikeIdx > -1) {
+                prediction.guestDislikes.splice(dislikeIdx, 1);
+            } else {
+                prediction.guestDislikes.push(guestId);
+            }
+        }
+
         await prediction.save();
-        res.json(prediction);
+
+        const result = prediction.toObject();
+        result.stats = {
+            likes: (result.likes || []).length + (result.guestLikes || []).length,
+            dislikes: (result.dislikes || []).length + (result.guestDislikes || []).length,
+            userHasLiked: userId ? (result.likes || []).map(id => id.toString()).includes(userId) : (result.guestLikes || []).includes(guestId),
+            userHasDisliked: userId ? (result.dislikes || []).map(id => id.toString()).includes(userId) : (result.guestDislikes || []).includes(guestId)
+        };
+
+        res.json(result);
     } catch (err) {
+        console.error("Dislike error:", err);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 // GET: Scoreboard
 router.get('/scoreboard', async (req, res) => {

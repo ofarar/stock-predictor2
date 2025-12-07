@@ -10,6 +10,8 @@ const MongoStore = require('connect-mongo'); // <-- Import MongoStore
 const passport = require('passport');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit'); // <-- Added import
+const cookieParser = require('cookie-parser'); // <-- Import cookie-parser
+
 require('./config/passport-setup'); // Run the passport config
 const cron = require('node-cron');
 const runAssessmentJob = require('./jobs/assessment-job'); // Import the job
@@ -112,6 +114,8 @@ const limiter = rateLimit({
     skip: (req, res) => process.env.NODE_ENV === 'development' // Skip in dev
 });
 app.use(limiter);
+app.use(cookieParser()); // <-- Use cookie-parser
+
 
 // 4. Session Management
 app.use(

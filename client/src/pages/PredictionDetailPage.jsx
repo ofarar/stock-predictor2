@@ -138,26 +138,75 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     }, [prediction]);
 
     const handleVote = (voteType) => {
-        if (!currentUser) return requestLogin();
+        // Logged-in check REMOVED to allow guests
         if (!prediction || prediction.status !== 'Active') return;
 
         const originalPrediction = { ...prediction };
-        const newPrediction = { ...prediction, likes: [...prediction.likes], dislikes: [...prediction.dislikes] };
-        const userId = currentUser._id;
-        const userLikesIndex = newPrediction.likes.indexOf(userId);
-        const userDislikesIndex = newPrediction.dislikes.indexOf(userId);
+
+        // Optimistic UI Update
+        const newPrediction = { ...prediction };
+
+        // Helper to toggle boolean and adjust count
         if (voteType === 'like') {
-            if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1);
-            else { newPrediction.likes.push(userId); if (userDislikesIndex !== -1) newPrediction.dislikes.splice(userDislikesIndex, 1); }
+            if (newPrediction.userHasLiked) {
+                // Toggle OFF
+                newPrediction.userHasLiked = false;
+                newPrediction.likeCount = Math.max(0, (newPrediction.likeCount || 0) - 1);
+            } else {
+                // Toggle ON
+                newPrediction.userHasLiked = true;
+                newPrediction.likeCount = (newPrediction.likeCount || 0) + 1;
+
+                // If was disliked, remove dislike
+                if (newPrediction.userHasDisliked) {
+                    newPrediction.userHasDisliked = false;
+                    newPrediction.dislikeCount = Math.max(0, (newPrediction.dislikeCount || 0) - 1);
+                }
+            }
         } else {
-            if (userDislikesIndex !== -1) newPrediction.dislikes.splice(userDislikesIndex, 1);
-            else { newPrediction.dislikes.push(userId); if (userLikesIndex !== -1) newPrediction.likes.splice(userLikesIndex, 1); }
+            // Dislike logic
+            if (newPrediction.userHasDisliked) {
+                // Toggle OFF
+                newPrediction.userHasDisliked = false;
+                newPrediction.dislikeCount = Math.max(0, (newPrediction.dislikeCount || 0) - 1);
+            } else {
+                // Toggle ON
+                newPrediction.userHasDisliked = true;
+                newPrediction.dislikeCount = (newPrediction.dislikeCount || 0) + 1;
+
+                // If was liked, remove like
+                if (newPrediction.userHasLiked) {
+                    newPrediction.userHasLiked = false;
+                    newPrediction.likeCount = Math.max(0, (newPrediction.likeCount || 0) - 1);
+                }
+            }
         }
+
         setPrediction(newPrediction);
 
         axios.post(`${import.meta.env.VITE_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
-            .catch(() => { toast.error(t("Vote failed.")); setPrediction(originalPrediction); });
+            .then(res => {
+                // Update with actual server logic/stats to be sure
+                // Update with actual server logic/stats to be sure
+                setPrediction(prev => {
+                    const { userId, ...updatedFields } = res.data; // Exclude userId to prevent overwriting populated object
+                    return {
+                        ...prev,
+                        ...updatedFields,
+                        likeCount: res.data.stats ? res.data.stats.likes : prev.likeCount,
+                        dislikeCount: res.data.stats ? res.data.stats.dislikes : prev.dislikeCount,
+                        userHasLiked: res.data.stats ? res.data.stats.userHasLiked : prev.userHasLiked,
+                        userHasDisliked: res.data.stats ? res.data.stats.userHasDisliked : prev.userHasDisliked
+                    };
+                });
+            })
+            .catch((err) => {
+                console.error("Vote error", err);
+                toast.error(t("Vote failed."));
+                setPrediction(originalPrediction);
+            });
     };
+
 
     const openShareModal = () => {
         if (!prediction) return;
@@ -205,7 +254,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     if (loading) return <div className="text-center text-white">{t("Loading Prediction...")}</div>;
     if (!prediction) return <div className="text-center text-white">{t("Prediction not found.")}</div>;
 
-    const username = prediction.userId.username;
+    const username = prediction.userId?.username || "Unknown User";
     const stockTicker = prediction.stockTicker;
     const predictionType = t(`predictionTypes.${prediction.predictionType.toLowerCase()}`);
 
@@ -233,8 +282,8 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         // FIX: Pass the initial price (priceAtCreation) to the scoring function
         : calculateLiveScore(prediction.targetPrice, currentPrice, prediction.priceAtCreation);
     const formattedRating = typeof rating === 'number' ? rating.toFixed(1) : rating;
-    const userLike = currentUser && (prediction.likes || []).includes(currentUser._id);
-    const userDislike = currentUser && (prediction.dislikes || []).includes(currentUser._id);
+    const userLike = prediction.userHasLiked;
+    const userDislike = prediction.userHasDisliked;
     const hasInitialPrice = typeof prediction.priceAtCreation === 'number';
 
     let percentFromCurrent = null;
@@ -387,25 +436,26 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                         <div className="flex justify-center items-center gap-8 text-gray-400">
                             <button onClick={() => handleVote('like')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userLike ? 'text-green-500' : 'hover:text-white'}`} disabled={isAssessed} title={t("Agree")}>
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.562 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
-                                <span>{(prediction.likes || []).length}</span>
+                                <span>{prediction.likeCount || 0}</span>
                             </button>
                             <button onClick={() => handleVote('dislike')} className={`flex items-center gap-2 font-bold text-2xl transition-colors ${userDislike ? 'text-red-500' : 'hover:text-white'}`} disabled={isAssessed} title={t("Disagree")}>
                                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.438 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.2-1.867a4 4 0 00.8-2.4z"></path></svg>
-                                <span>{(prediction.dislikes || []).length}</span>
+                                <span>{prediction.dislikeCount || 0}</span>
                             </button>
                         </div>
                     </div>
+
 
                     <div className="border-t border-gray-700 mt-6 pt-4 flex items-center">
                         <img src={prediction.userId.avatar} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${prediction.userId.isGoldenMember ? 'border-yellow-400' : 'border-gray-600'}`} />
                         <div className="ms-3">
                             <p className="text-sm text-gray-400">{t("Predicted by")}</p>
                             <div className="flex items-center">
-                                <Link to={`/profile/${prediction.userId._id}`} className="font-semibold text-white hover:underline break-words">
-                                    {prediction.userId.username.split(' ').slice(0, -1).join(' ')}
+                                <Link to={`/profile/${prediction.userId?._id}`} className="font-semibold text-white hover:underline break-words">
+                                    {(prediction.userId?.username || 'Unknown User').split(' ').slice(0, -1).join(' ')}
                                     <span style={{ whiteSpace: 'nowrap' }}>
-                                        {' '}{prediction.userId.username.split(' ').slice(-1).join(' ')}
-                                        {settings?.isVerificationEnabled && prediction.userId.isVerified && (
+                                        {' '}{(prediction.userId?.username || 'Unknown User').split(' ').slice(-1).join(' ')}
+                                        {settings?.isVerificationEnabled && prediction.userId?.isVerified && (
                                             <span className="ms-1 inline-block align-middle">
                                                 <VerifiedTick />
                                             </span>

@@ -19,6 +19,9 @@ const PredictionSchema = new Schema({
     targetHit: { type: Boolean, default: false }, // Track if the target was hit before/at deadline
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dislikes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    guestLikes: [{ type: String }], // Array of guest IDs (UUIDs)
+    guestDislikes: [{ type: String }], // Array of guest IDs (UUIDs)
+
     history: [{
         updatedAt: { type: Date, default: Date.now },
         previousTargetPrice: { type: Number, required: true },
