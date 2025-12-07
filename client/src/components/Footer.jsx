@@ -25,7 +25,7 @@ const Footer = ({ settings }) => {
                     </div>
 
                     {/* Center: Links */}
-                    <div className="flex flex-wrap md:flex-nowrap justify-center gap-x-6 text-gray-400 whitespace-nowrap overflow-x-auto">
+                    <div className="flex flex-wrap lg:flex-nowrap justify-center gap-x-6 text-gray-400 whitespace-nowrap">
                         <Link to="/about" className="hover:text-white">{t('footer.about')}</Link>
                         <Link to="/contact" className="hover:text-white">{t('footer.contact')}</Link>
                         <Link to="/terms" className="hover:text-white">{t('footer.terms')}</Link>
