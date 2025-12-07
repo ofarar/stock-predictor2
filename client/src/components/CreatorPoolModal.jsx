@@ -217,7 +217,20 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         drilldownData = predictionBreakdownData;
     } else if (drilldownView === 'shares') {
         drilldownTitle = t('creatorPoolModal.sharesBreakdownTitle');
-        drilldownData = shareBreakdownData;
+        // Remap keys to match translation file (e.g., 'Prediction' -> 'fromPredictions')
+        if (shareBreakdownData) {
+            drilldownData = {};
+            const keyMap = {
+                'Prediction': 'fromPredictions',
+                'Badge': 'fromBadges',
+                'Rank': 'fromRanks',
+                'Summary': 'fromSummary'
+            };
+            Object.keys(shareBreakdownData).forEach(key => {
+                const newKey = keyMap[key] || key;
+                drilldownData[newKey] = shareBreakdownData[key];
+            });
+        }
     } else if (drilldownView === 'badges') {
         drilldownTitle = t('creatorPoolModal.badgesBreakdownTitle');
         drilldownData = badgeBreakdownData;

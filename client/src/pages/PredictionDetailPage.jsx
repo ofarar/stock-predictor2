@@ -137,10 +137,14 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         }
     }, [prediction]);
 
+    const [isVoting, setIsVoting] = useState(false);
+
     const handleVote = (voteType) => {
         // Logged-in check REMOVED to allow guests
         if (!prediction || prediction.status !== 'Active') return;
+        if (isVoting) return; // Prevent double-voting/race conditions
 
+        setIsVoting(true);
         const originalPrediction = { ...prediction };
 
         // Optimistic UI Update
@@ -187,7 +191,6 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         axios.post(`${import.meta.env.VITE_API_URL}/api/predictions/${predictionId}/${voteType}`, {}, { withCredentials: true })
             .then(res => {
                 // Update with actual server logic/stats to be sure
-                // Update with actual server logic/stats to be sure
                 setPrediction(prev => {
                     const { userId, ...updatedFields } = res.data; // Exclude userId to prevent overwriting populated object
                     return {
@@ -204,6 +207,9 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                 console.error("Vote error", err);
                 toast.error(t("Vote failed."));
                 setPrediction(originalPrediction);
+            })
+            .finally(() => {
+                setIsVoting(false);
             });
     };
 

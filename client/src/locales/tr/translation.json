@@ -1102,6 +1102,7 @@
   "analystRating.pie.labels.fromshares": "Paylaşımlardan",
   "analystRating.pie.labels.fromranks": "Sıralamalardan",
   "analystRating.pie.labels.fromreferrals": "Davetlerden",
+  "analystRating.pie.labels.fromsummary": "Akıllı Özetten",
   "analystRating.pie.labels.market_maven": "Piyasa Uzmanı",
   "analystRating.pie.labels.daily_oracle": "Günlük Kahin",
   "analystRating.pie.labels.hourly_hotshot": "Saatlik Usta",

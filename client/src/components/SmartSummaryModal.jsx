@@ -12,12 +12,24 @@ const SmartSummaryModal = ({ isOpen, onClose, user, performance, predictions }) 
     const summaryText = Array.isArray(summary) ? summary.map(s => `• ${s}`).join('\n') : summary;
     const shareText = `${t('share_message_intro', 'Check out this trader profile on StockPredictor!')}\n\n${summaryText}`;
 
+    const recordShare = () => {
+        // Record share for stats/rewards
+        import('axios').then(axios => {
+            axios.default.post(`${import.meta.env.VITE_API_URL}/api/activity/share`,
+                { shareContext: { context: 'summary' } },
+                { withCredentials: true }
+            ).catch(err => console.error("Failed to record share", err));
+        });
+    };
+
     const handleShareX = () => {
+        recordShare();
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
         window.open(twitterUrl, '_blank');
     };
 
     const handleShareTelegram = () => {
+        recordShare();
         const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
         window.open(telegramUrl, '_blank');
     };

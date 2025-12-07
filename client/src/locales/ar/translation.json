@@ -1088,6 +1088,7 @@
   "analystRating.pie.labels.fromshares": "من المشاركات",
   "analystRating.pie.labels.fromranks": "من المراتب",
   "analystRating.pie.labels.fromreferrals": "من الإحالات",
+  "analystRating.pie.labels.fromsummary": "من الملخص الذكي",
   "analystRating.pie.labels.market_maven": "خبير السوق",
   "analystRating.pie.labels.daily_oracle": "عراف اليوم",
   "analystRating.pie.labels.hourly_hotshot": "سهم الساعة الساخن",

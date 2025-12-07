@@ -1101,6 +1101,7 @@
     "analystRating.pie.labels.fromshares": "Aus Teilungen",
     "analystRating.pie.labels.fromranks": "Aus Rängen",
     "analystRating.pie.labels.fromreferrals": "Aus Empfehlungen",
+    "analystRating.pie.labels.fromsummary": "Aus Smart Summary",
     "analystRating.pie.labels.market_maven": "Markt-Maven",
     "analystRating.pie.labels.daily_oracle": "Tagesorakel",
     "analystRating.pie.labels.hourly_hotshot": "Stündlicher Komet",

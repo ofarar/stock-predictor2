@@ -1067,6 +1067,7 @@
   "analystRating.pie.shares": "From Shares",
   "analystRating.pie.ranks": "From Ranks",
   "analystRating.pie.referrals": "From Referrals",
+  "analystRating.pie.summary": "From Smart Summary",
   "common.back": "Back",
   "sentiment.question": "What is the community's {{type}} price target for {{ticker}}?",
   "sentiment.based_on_count": "Based on {{count}} predictions",
@@ -1088,6 +1089,8 @@
   "analystRating.pie.labels.fromshares": "From Shares",
   "analystRating.pie.labels.fromranks": "From Ranks",
   "analystRating.pie.labels.fromreferrals": "From Referrals",
+  "analystRating.pie.labels.fromsummary": "From Smart Summary",
+  "analystRating.pie.labels.frombonus": "Bonus",
   "analystRating.pie.labels.market_maven": "Market Maven",
   "analystRating.pie.labels.daily_oracle": "Daily Oracle",
   "analystRating.pie.labels.hourly_hotshot": "Hourly Hotshot",
@@ -1111,7 +1114,6 @@
   "promoBanner.creatorPoolText": "💰 <strong>Join as an Early User!</strong> Sign up now to earn <1>+1,000 Analyst Rating</1> and get your share of platform revenue just for your contributions. <2>Join Now</2>",
   "promoBanner.joinNow": "Join Now",
   "analystRating.pie.bonus": "Bonus",
-  "analystRating.pie.labels.frombonus": "Bonus",
   "seo": {
     "default": {
       "title": "StockPredictorAI - Predict the Market, Track Your Accuracy",

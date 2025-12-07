@@ -1089,6 +1089,7 @@
   "analystRating.pie.labels.fromshares": "साझाकरण से",
   "analystRating.pie.labels.fromranks": "रैंक से",
   "analystRating.pie.labels.fromreferrals": "रेफरल से",
+  "analystRating.pie.labels.fromsummary": "स्मार्ट सारांश से",
   "analystRating.pie.labels.market_maven": "बाज़ार विशेषज्ञ",
   "analystRating.pie.labels.daily_oracle": "दैनिक ओरेकल",
   "analystRating.pie.labels.hourly_hotshot": "प्रति घंटा हॉटशॉट",

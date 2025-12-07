@@ -1101,6 +1101,7 @@
     "analystRating.pie.labels.fromshares": "От Репостов",
     "analystRating.pie.labels.fromranks": "От Рангов",
     "analystRating.pie.labels.fromreferrals": "От Рефералов",
+    "analystRating.pie.labels.fromsummary": "Из Умного Обзора",
     "analystRating.pie.labels.market_maven": "Рыночный Мастер",
     "analystRating.pie.labels.daily_oracle": "Дневной Оракул",
     "analystRating.pie.labels.hourly_hotshot": "Часовой Эксперт",

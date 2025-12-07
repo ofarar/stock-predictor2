@@ -1101,6 +1101,7 @@
     "analystRating.pie.labels.fromshares": "来自分享",
     "analystRating.pie.labels.fromranks": "来自排名",
     "analystRating.pie.labels.fromreferrals": "来自推荐",
+    "analystRating.pie.labels.fromsummary": "来自智能摘要",
     "analystRating.pie.labels.market_maven": "市场大师",
     "analystRating.pie.labels.daily_oracle": "每日先知",
     "analystRating.pie.labels.hourly_hotshot": "每小时热点",

@@ -1101,6 +1101,7 @@
     "analystRating.pie.labels.fromshares": "De Compartidos",
     "analystRating.pie.labels.fromranks": "De Rangos",
     "analystRating.pie.labels.fromreferrals": "De Referidos",
+    "analystRating.pie.labels.fromsummary": "Del Resumen Inteligente",
     "analystRating.pie.labels.market_maven": "Experto del Mercado",
     "analystRating.pie.labels.daily_oracle": "Oráculo Diario",
     "analystRating.pie.labels.hourly_hotshot": "Experto Horario",

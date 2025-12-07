@@ -27,6 +27,8 @@ router.post('/activity/share', actionLimiter, async (req, res) => {
         shareCategory = 'Badge';
     } else if (shareContext?.context === 'rank') {
         shareCategory = 'Rank';
+    } else if (shareContext?.context === 'summary') {
+        shareCategory = 'Summary'; // New Category
     }
 
     try {

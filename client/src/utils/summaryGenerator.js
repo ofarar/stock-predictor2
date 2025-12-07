@@ -14,16 +14,7 @@ export const generateSmartSummary = (user, performance, predictions, t) => {
     // Filter assessed predictions for analysis
     const assessedPredictions = predictions ? predictions.filter(p => p.status === 'Assessed') : [];
 
-    // 1. INTRO / EXPERIENCE LEVEL
-    const joinedYear = new Date(user.createdAt).getFullYear();
 
-    if (totalPredictions > 50) {
-        parts.push(translate('summary.veteran', { year: joinedYear }));
-    } else if (totalPredictions > 10) {
-        parts.push(translate('summary.active_trader', { year: joinedYear }));
-    } else {
-        parts.push(translate('summary.rising_star', { year: joinedYear }));
-    }
 
     // 2. PERFORMANCE HIGHLIGHTS
     if (overallRank && overallRank <= 3) {

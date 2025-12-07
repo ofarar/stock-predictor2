@@ -1101,6 +1101,7 @@
     "analystRating.pie.labels.fromshares": "Des Partages",
     "analystRating.pie.labels.fromranks": "Des Rangs",
     "analystRating.pie.labels.fromreferrals": "Des Parrainages",
+    "analystRating.pie.labels.fromsummary": "Du Résumé Intelligent",
     "analystRating.pie.labels.market_maven": "Expert du Marché",
     "analystRating.pie.labels.daily_oracle": "Oracle Quotidien",
     "analystRating.pie.labels.hourly_hotshot": "As Horaire",

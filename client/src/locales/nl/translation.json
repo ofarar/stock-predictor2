@@ -1104,6 +1104,7 @@
   "analystRating.pie.labels.fromshares": "Van Delingen",
   "analystRating.pie.labels.fromranks": "Van Rangen",
   "analystRating.pie.labels.fromreferrals": "Van Verwijzingen",
+  "analystRating.pie.labels.fromsummary": "Van Slimme Samenvatting",
   "analystRating.pie.labels.market_maven": "Marktkenner",
   "analystRating.pie.labels.daily_oracle": "Dagelijks Orakel",
   "analystRating.pie.labels.hourly_hotshot": "Uurlijks Schot",
