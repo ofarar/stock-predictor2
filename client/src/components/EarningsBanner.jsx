@@ -4,10 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 import { FaBullhorn, FaTimes } from 'react-icons/fa';
 
-const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true }) => {
+const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true, onClose }) => {
     const { t, i18n } = useTranslation();
     const location = useLocation();
-    const [isVisible, setIsVisible] = useState(true);
     const isRTL = i18n.language === 'ar';
 
     // Refs for animation and interaction
@@ -101,13 +100,13 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
     }, [isRTL]);
 
     useEffect(() => {
-        if (isActive && isVisible && formattedMessages.length > 0) {
+        if (isActive && formattedMessages.length > 0) {
             requestRef.current = requestAnimationFrame(animate);
         }
         return () => {
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
         };
-    }, [isActive, isVisible, formattedMessages, animate]);
+    }, [isActive, formattedMessages, animate]);
 
     // Interaction Handlers
     const handleWheel = (e) => {
@@ -136,12 +135,12 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
     };
 
     // Early return AFTER all hooks
-    if (!isActive || !isVisible || formattedMessages.length === 0) {
+    if (!isActive || formattedMessages.length === 0) {
         return null;
     }
 
     return (
-        <div className="relative group pt-[env(safe-area-inset-top)] bg-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="relative group bg-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
             <div
                 className={`w-full ${colorClass} text-white py-2 overflow-hidden flex-shrink-0 cursor-grab active:cursor-grabbing relative z-20`}
                 onWheel={handleWheel}
@@ -187,9 +186,9 @@ const EarningsBanner = ({ calendar = [], onMakePredictionClick, isActive = true 
             </div>
 
             {/* Close Button */}
-            <div className={`absolute top-0 bottom-0 ${isRTL ? 'left-2' : 'right-2'} z-30 flex items-center pt-[env(safe-area-inset-top)] pointer-events-none`}>
+            <div className={`absolute top-0 bottom-0 ${isRTL ? 'left-2' : 'right-2'} z-30 flex items-center pt-0 pointer-events-none`}>
                 <button
-                    onClick={() => setIsVisible(false)}
+                    onClick={onClose}
                     className="bg-black/20 hover:bg-black/40 text-white p-1 rounded-full transition-colors pointer-events-auto"
                     aria-label="Close banner"
                 >

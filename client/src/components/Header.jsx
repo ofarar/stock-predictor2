@@ -10,7 +10,7 @@ import LanguageSelector from './LanguageSelector';
 import ReferralModal from './ReferralModal';
 import { handleGoogleLogin, handleLogout } from '../utils/authHelpers';
 
-const Header = ({ user, onMakePredictionClick, settings }) => {
+const Header = ({ user, onMakePredictionClick, settings, isBannerVisible = true }) => {
     const { t, i18n } = useTranslation();
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

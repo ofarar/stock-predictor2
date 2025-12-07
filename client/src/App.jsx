@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
@@ -105,6 +106,7 @@ function App() {
   const [settings, setSettings] = useState(null);
   const [cookieConsent, setCookieConsent] = useState(false);
   const [earningsCalendar, setEarningsCalendar] = useState([]);
+  const [isEarningsBannerVisible, setIsEarningsBannerVisible] = useState(true);
   const [error, setError] = useState(null);
 
   const handleOpenPredictionModal = useCallback((ticker = null) => {
@@ -296,56 +298,79 @@ function App() {
         <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
         <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
       </Helmet>
-      <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: { background: '#333', color: '#fff', marginTop: 'env(safe-area-inset-top)' },
+          duration: 3000
+        }}
+        containerStyle={{
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 20,
+        }}
+      />
       <ScrollToTop />
       <CanonicalTag />
       <Elements stripe={stripePromise}>
-        <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
-          <EarningsBanner
-            calendar={earningsCalendar}
-            onMakePredictionClick={(stock) => handleOpenPredictionModal({ symbol: stock.symbol })}
-            isActive={settings?.isEarningsBannerActive}
-          />
-          <Header user={user} onMakePredictionClick={handleOpenPredictionModal} settings={settings} onProfileUpdate={fetchUser} />
-          <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
-          <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
-          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
-            <Suspense fallback={<FallbackLoading />}>
-              <Routes>
-                <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-                <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
-                <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
-                <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
-                <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
-                <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
-                <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
-                <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
-                <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
-                <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-                <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-                <Route path={ROUTES.TERMS} element={<TermsPage />} />
-                <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
-                <Route path={ROUTES.ADMIN} element={<AdminPage />} />
-                <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
-                <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
-                <Route path={ROUTES.CONTACT} element={<ContactPage />} />
-                <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
-                <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
-                <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
-                <Route path={ROUTES.WHITEPAPER} element={<WhitepaperPage />} />
-                <Route
-                  path={ROUTES.AI_WIZARD}
-                  element={
-                    <FeatureRoute settings={settings} featureFlag="isAIWizardEnabled">
-                      <AIWizardPage user={user} />
-                    </FeatureRoute>
-                  }
-                />
-              </Routes>
-            </Suspense>
-          </main>
-          <Footer settings={settings} />
-        </div>
+        <PullToRefresh onRefresh={async () => window.location.reload()}>
+          <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
+            {isEarningsBannerVisible && (
+              <EarningsBanner
+                calendar={earningsCalendar}
+                onMakePredictionClick={(stock) => handleOpenPredictionModal({ symbol: stock.symbol })}
+                isActive={settings?.isEarningsBannerActive}
+                onClose={() => setIsEarningsBannerVisible(false)}
+              />
+            )}
+            <Header
+              user={user}
+              onMakePredictionClick={handleOpenPredictionModal}
+              settings={settings}
+              onProfileUpdate={fetchUser}
+              isBannerVisible={isEarningsBannerVisible}
+            />
+            <PredictionModal isOpen={isPredictionModalOpen} onClose={handleCloseModal} initialStock={stockToPredict} />
+            <LoginPromptModal isOpen={isLoginPromptOpen} onClose={() => setIsLoginPromptOpen(false)} />
+            <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-2 md:pt-4 pb-4 md:pb-6 lg:pb-8">
+              <Suspense fallback={<FallbackLoading />}>
+                <Routes>
+                  <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                  <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
+                  <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
+                  <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                  <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
+                  <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
+                  <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
+                  <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
+                  <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
+                  <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+                  <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+                  <Route path={ROUTES.TERMS} element={<TermsPage />} />
+                  <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
+                  <Route path={ROUTES.ADMIN} element={<AdminPage />} />
+                  <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
+                  <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
+                  <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+                  <Route path={ROUTES.WATCHLIST} element={<WatchlistPage settings={settings} />} />
+                  <Route path={ROUTES.NOTIFICATIONS} element={<NotificationSettingsPage />} />
+                  <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccessPage />} />
+                  <Route path={ROUTES.WHITEPAPER} element={<WhitepaperPage />} />
+                  <Route
+                    path={ROUTES.AI_WIZARD}
+                    element={
+                      <FeatureRoute settings={settings} featureFlag="isAIWizardEnabled">
+                        <AIWizardPage user={user} />
+                      </FeatureRoute>
+                    }
+                  />
+                </Routes>
+              </Suspense>
+            </main>
+            <Footer settings={settings} />
+          </div>
+        </PullToRefresh>
       </Elements>
       <CookieConsent
         location="bottom"
