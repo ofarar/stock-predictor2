@@ -217,7 +217,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         drilldownData = predictionBreakdownData;
     } else if (drilldownView === 'shares') {
         drilldownTitle = t('creatorPoolModal.sharesBreakdownTitle');
-        // Remap keys to match translation file (e.g., 'Prediction' -> 'fromPredictions')
+        // Remap keys to match translation file (e.g., 'Summary' -> 'fromSummary')
         if (shareBreakdownData) {
             drilldownData = {};
             const keyMap = {
@@ -240,7 +240,15 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 pt-8" onClick={onClose}>
+        <div
+            className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 pt-8"
+            onClick={(e) => {
+                // Only close if clicking the backdrop itself, not children
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+        >
             <div
                 className="bg-gray-800 p-6 rounded-lg w-full max-w-lg max-h-[95vh] flex flex-col"
                 onClick={e => e.stopPropagation()}
