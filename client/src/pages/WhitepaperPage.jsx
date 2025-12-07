@@ -24,8 +24,8 @@ const DOCUMENTS = {
         title: 'Scoring Model',
         icon: FaChartBar,
         content: scoringModelContent,
-        pdfUrl: null, // No PDF for scoring model yet, or add if available
-        pdfLabel: null
+        pdfUrl: '/docs/scoring_model.pdf', // Updated PDF path
+        pdfLabel: 'Download Model PDF'
     }
 };
 
@@ -37,6 +37,25 @@ const WhitepaperPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-900 text-gray-100 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+            <style>{`
+                .katex-display {
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    padding-bottom: 0.5rem;
+                }
+                /* Custom verify scrollbar for tablet/mobile */
+                .katex-display::-webkit-scrollbar {
+                    height: 6px;
+                }
+                .katex-display::-webkit-scrollbar-track {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 4px;
+                }
+                .katex-display::-webkit-scrollbar-thumb {
+                    background: rgba(59, 130, 246, 0.5); 
+                    border-radius: 4px;
+                }
+            `}</style>
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
 
                 {/* Sidebar Navigation */}
@@ -57,8 +76,8 @@ const WhitepaperPage = () => {
                                         key={doc.id}
                                         onClick={() => setActiveDoc(doc.id)}
                                         className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${isActive
-                                                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50'
-                                                : 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+                                            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50'
+                                            : 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
                                             }`}
                                     >
                                         <Icon className={`mr-3 ${isActive ? 'text-blue-400' : 'text-gray-500'}`} />
