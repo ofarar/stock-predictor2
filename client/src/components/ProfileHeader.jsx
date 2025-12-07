@@ -104,9 +104,9 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                     )}
                 </div>
             </div>
-            <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-3 mt-4 sm:mt-0">
+            <div className="w-full sm:w-auto flex flex-wrap items-center justify-center sm:justify-end gap-3 mt-4 sm:mt-0">
                 {!isOwnProfile && (
-                    <div className="flex gap-3">
+                    <>
                         {isSubscribed ? (
                             <div className="font-bold py-2 px-5 rounded-md bg-gray-700 text-yellow-400 border border-yellow-500 flex items-center gap-2">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -152,27 +152,25 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                                 {t('follow_btn')}
                             </button>
                         )}
-                    </div>
+                    </>
                 )}
                 {isOwnProfile && (
-                    <div className="flex flex-wrap justify-center gap-3">
+                    <>
                         {settings?.isVerificationEnabled && !user.isVerified && (
                             <button onClick={() => setIsVerificationModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-green-600 text-white hover:bg-green-700">{t('get_verified_label')}</button>
                         )}
                         <button onClick={() => setIsGoldenModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400">{user.isGoldenMember ? t('manage_gold_label') : t('become_golden_label')}</button>
-                    </div>
+                    </>
                 )}
                 {/* Always show Smart Summary button */}
-                <div className="mt-3 flex justify-center sm:justify-end">
-                    <button
-                        onClick={onOpenSummary}
-                        data-testid="smart-summary-btn"
-                        className="flex items-center gap-2 text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-300 hover:to-purple-300 transition-colors border border-purple-500/30 rounded-full px-4 py-1 hover:bg-purple-500/10"
-                    >
-                        <span>✨</span>
-                        {t('smart_summary_btn', 'Smart Summary')}
-                    </button>
-                </div>
+                <button
+                    onClick={onOpenSummary}
+                    data-testid="smart-summary-btn"
+                    className="flex items-center gap-2 text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-300 hover:to-purple-300 transition-colors border border-purple-500/30 rounded-full px-4 py-2 hover:bg-purple-500/10"
+                >
+                    <span>✨</span>
+                    {t('smart_summary_btn', 'Smart Summary')}
+                </button>
             </div>
         </div>
     );
