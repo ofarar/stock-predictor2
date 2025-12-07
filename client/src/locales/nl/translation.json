@@ -1185,5 +1185,29 @@
     "message": "De aankomende resultatendag voor {{ticker}} is deze {{day}}.",
     "makePrediction": "Voorspelling maken",
     "viewStock": "{{ticker}} Aandelenpagina bekijken"
-  }
+  },
+  "summary": {
+    "default_intro": "Aandelenmarkt enthousiasteling die nieuwe kansen verkent.",
+    "veteran": "Een doorgewinterde veteraan sinds {{year}} met een schat aan marktervaring.",
+    "active_trader": "Een actieve handelaar die sinds {{year}} een solide trackrecord opbouwt.",
+    "rising_star": "Een rijzende ster die in {{year}} is begonnen aan hun reis.",
+    "top_rank": "Momenteel gerangschikt op #{{rank}} op het wereldwijde leaderboard! 🏆",
+    "top_100": "Een toppresteerder, momenteel in de top 100 wereldwijd.",
+    "high_accuracy": "Maakt zeer nauwkeurige voorspellingen met een indrukwekkende gemiddelde score van {{rating}}.",
+    "solid_history": "Behoudt een solide voorspellingsgeschiedenis met een betrouwbare score van {{rating}}.",
+    "stock_superpowers": "Toont uitzonderlijke nauwkeurigheid bij het analyseren van {{stocks}}.",
+    "expert_short_term": "Gespecialiseerd in korte termijn marktbewegingen.",
+    "expert_long_term": "Blinkt uit in het voorspellen van lange termijn trends.",
+    "style_aggressive": "Geeft de voorkeur aan kansen met hoge groei en hoog risico.",
+    "style_conservative": "Hanteert een berekende, stabiele aanpak van de markten.",
+    "style_balanced": "Behoudt een evenwichtige portefeuillestrategie.",
+    "influencer": "Gevold door {{count}} beleggers die vertrouwen op hun inzichten.",
+    "community_builder": "Bouwt een toegewijde gemeenschap van {{count}} volgers.",
+    "golden_member": "Een premium Golden Member die exclusieve marktinzet biedt.",
+    "new_trader": "Een nieuwe handelaar klaar om hun stempel op de markt te drukken."
+  },
+  "smart_summary_title": "Slimme Samenvatting",
+  "share_summary_label": "Deel deze samenvatting",
+  "share_message_intro": "Bekijk dit handelarenprofiel op StockPredictorAI!",
+  "smart_summary_btn": "Slimme Samenvatting"
 }

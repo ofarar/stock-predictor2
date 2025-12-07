@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
 
-const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, settings, isAnimating, requestLogin }, ref) => {
+const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, onOpenSummary, settings, isAnimating, requestLogin }, ref) => {
     const { t, i18n } = useTranslation();
     const { user, followersCount, followingCount, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
@@ -162,6 +162,17 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                         <button onClick={() => setIsGoldenModalOpen(true)} className="font-bold py-2 px-5 rounded-md bg-yellow-500 text-black hover:bg-yellow-400">{user.isGoldenMember ? t('manage_gold_label') : t('become_golden_label')}</button>
                     </div>
                 )}
+                {/* Always show Smart Summary button */}
+                <div className="mt-3 flex justify-center sm:justify-end">
+                    <button
+                        onClick={onOpenSummary}
+                        data-testid="smart-summary-btn"
+                        className="flex items-center gap-2 text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-300 hover:to-purple-300 transition-colors border border-purple-500/30 rounded-full px-4 py-1 hover:bg-purple-500/10"
+                    >
+                        <span>✨</span>
+                        {t('smart_summary_btn', 'Smart Summary')}
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -148,6 +148,16 @@ To ensure fair play and incentivize deep analysis, the bonus for hitting a targe
 | **Quarterly** | Very High | **6.0x** | **30.0** points | Major reward for quarterly forecasting. |
 | **Yearly** | Very High | **10.0x** | **50.0** points | Heavily incentivizes deep, long-term analysis.
 
+### 6. Smart Summary Generator
+
+The "Smart Summary" features uses a heuristic algorithm to generate a human-readable, positive bio for each trader. It analyzes:
+
+*   **Experience:** Categorizes users as "Veterans", "Active Traders", or "Rising Stars" based on join date and prediction volume.
+*   **Performance:** Highlights global rank (Top 3, Top 100) and average rating (>80 High Accuracy).
+*   **Stock Superpowers:** Identifies specific stock tickers where the user has an average rating >85%.
+*   **Prediction Horizon:** Detects expertise in Short-term (Hourly/Daily) vs. Long-term (Monthly/Yearly) forecasting.
+*   **Trading Style:** Classifies the user as "Aggressive", "Conservative", or "Balanced" based on the distribution of their prediction aggressiveness.
+
 -----
 
 ### 💳 Monetization & Revenue Models

@@ -32,6 +32,7 @@ import VerifiedStatusModal from '../components/VerifiedStatusModal';
 import ConfirmationModal from '../components/ConfirmationModal';
 import CreatorPoolModal from '../components/CreatorPoolModal';
 import AnalystRatingInfoModal from '../components/AnalystRatingInfoModal';
+import SmartSummaryModal from '../components/SmartSummaryModal';
 
 const ProfilePage = ({ settings, requestLogin }) => {
     const { t } = useTranslation();
@@ -60,6 +61,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isVerifiedJustNow, setIsVerifiedJustNow] = useState(false);
     const [isCreatorPoolModalOpen, setIsCreatorPoolModalOpen] = useState(false);
     const [isRatingInfoModalOpen, setIsRatingInfoModalOpen] = useState(false);
+    const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
     const [isCreatorPoolAnimated, setIsCreatorPoolAnimated] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
     const [predictionToDeleteId, setPredictionToDeleteId] = useState(null);
@@ -346,6 +348,15 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 onClose={() => setIsRatingInfoModalOpen(false)}
             />
 
+            {/* 4. ADD SMART SUMMARY MODAL */}
+            <SmartSummaryModal
+                isOpen={isSummaryModalOpen}
+                onClose={() => setIsSummaryModalOpen(false)}
+                user={user}
+                performance={filteredPerformance || performance}
+                predictions={predictions}
+            />
+
             <div className="animate-fade-in max-w-6xl mx-auto">
                 {/* --- NEW: Promo Banner displayed for guests if enabled in settings --- */}
                 {!currentUser && settings?.isPromoBannerActive && (
@@ -370,6 +381,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                     setIsGoldenModalOpen={handleOpenGoldenModal}
                     setIsVerificationModalOpen={setIsVerificationModalOpen}
                     setIsStatusModalOpen={setIsStatusModalOpen}
+                    onOpenSummary={() => setIsSummaryModalOpen(true)}
                     settings={settings}
                     requestLogin={requestLogin}
                 />

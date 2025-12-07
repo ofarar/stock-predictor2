@@ -1182,5 +1182,29 @@
         "message": "Le jour de publication des résultats pour {{ticker}} est ce {{day}}.",
         "makePrediction": "Faire une prédiction",
         "viewStock": "Voir la page d'actions {{ticker}}"
-    }
+    },
+    "summary": {
+        "default_intro": "Passionné de bourse explorant de nouvelles opportunités.",
+        "veteran": "Un vétéran chevronné depuis {{year}} avec une riche expérience du marché.",
+        "active_trader": "Un trader actif bâtissant un solide historique depuis {{year}}.",
+        "rising_star": "Une étoile montante qui a rejoint en {{year}} et commence son parcours.",
+        "top_rank": "Actuellement classé #{{rank}} au classement mondial ! 🏆",
+        "top_100": "Une performance de haut niveau, actuellement dans le top 100 mondial.",
+        "high_accuracy": "Élabore des prédictions très précises avec une note moyenne impressionnante de {{rating}}.",
+        "solid_history": "Maintient un historique de prédictions solide avec une note fiable de {{rating}}.",
+        "stock_superpowers": "Fait preuve d'une précision exceptionnelle lors de l'analyse de {{stocks}}.",
+        "expert_short_term": "Se spécialise dans les mouvements de marché à court terme.",
+        "expert_long_term": "Excelle dans la prévision des tendances à long terme.",
+        "style_aggressive": "Préfère les opportunités à forte croissance et à haut risque.",
+        "style_conservative": "Adopte une approche calculée et stable des marchés.",
+        "style_balanced": "Maintient une stratégie de portefeuille équilibrée.",
+        "influencer": "Suivi par {{count}} investisseurs qui comptent sur ses analyses.",
+        "community_builder": "Construit une communauté dédiée de {{count}} abonnés.",
+        "golden_member": "Un Membre Golden premium offrant des analyses de marché exclusives.",
+        "new_trader": "Un nouveau trader prêt à laisser sa marque sur le marché."
+    },
+    "smart_summary_title": "Résumé Intelligent",
+    "share_summary_label": "Partager ce résumé",
+    "share_message_intro": "Découvrez ce profil de trader sur StockPredictorAI !",
+    "smart_summary_btn": "Résumé Intelligent"
 }

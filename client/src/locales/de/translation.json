@@ -1182,5 +1182,29 @@
         "message": "Der bevorstehende Ergebnisbericht für {{ticker}} ist diesen {{day}}.",
         "makePrediction": "Vorhersage treffen",
         "viewStock": "{{ticker}} Aktienseite anzeigen"
-    }
+    },
+    "summary": {
+        "default_intro": "Börsenenthusiast, der neue Möglichkeiten erkundet.",
+        "veteran": "Ein erfahrener Veteran seit {{year}} mit einem Reichtum an Markterfahrung.",
+        "active_trader": "Ein aktiver Händler, der seit {{year}} eine solide Erfolgsbilanz aufbaut.",
+        "rising_star": "Ein aufsteigender Stern, der {{year}} beigetreten ist und seine Reise beginnt.",
+        "top_rank": "Aktuell auf Platz #{{rank}} der globalen Rangliste! 🏆",
+        "top_100": "Ein Top-Performer, derzeit unter den Top 100 weltweit.",
+        "high_accuracy": "Erstellt hochpräzise Vorhersagen mit einer beeindruckenden Durchschnittsbewertung von {{rating}}.",
+        "solid_history": "Behält eine solide Vorhersagehistorie mit einer zuverlässigen Bewertung von {{rating}} bei.",
+        "stock_superpowers": "Zeigt außergewöhnliche Genauigkeit bei der Analyse von {{stocks}}.",
+        "expert_short_term": "Spezialisiert auf kurzfristige Marktbewegungen.",
+        "expert_long_term": "Zeichnet sich durch die Vorhersage langfristiger Trends aus.",
+        "style_aggressive": "Bevorzugt wachstumsstarke, risikoreiche Chancen.",
+        "style_conservative": "Verfolgt einen kalkulierten, stetigen Ansatz für die Märkte.",
+        "style_balanced": "Behält eine ausgewogene Portfoliostrategie bei.",
+        "influencer": "Gefolgt von {{count}} Investoren, die sich auf seine Erkenntnisse verlassen.",
+        "community_builder": "Baut eine engagierte Community von {{count}} Followern auf.",
+        "golden_member": "Ein Premium Golden Member, das exklusive Markteinblicke bietet.",
+        "new_trader": "Ein neuer Händler, bereit, sich auf dem Markt einen Namen zu machen."
+    },
+    "smart_summary_title": "Smarte Zusammenfassung",
+    "share_summary_label": "Diese Zusammenfassung teilen",
+    "share_message_intro": "Schau dir dieses Händlerprofil auf StockPredictorAI an!",
+    "smart_summary_btn": "Smarte Zusammenfassung"
 }

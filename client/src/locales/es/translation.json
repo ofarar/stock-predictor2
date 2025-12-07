@@ -1182,5 +1182,29 @@
         "message": "El próximo informe de resultados de {{ticker}} es este {{day}}.",
         "makePrediction": "Hacer una predicción",
         "viewStock": "Ver página de acciones de {{ticker}}"
-    }
+    },
+    "summary": {
+        "default_intro": "Entusiasta del mercado de valores explorando nuevas oportunidades.",
+        "veteran": "Un veterano experimentado desde {{year}} con una gran experiencia en el mercado.",
+        "active_trader": "Un operador activo construyendo un historial sólido desde {{year}}.",
+        "rising_star": "Una estrella en ascenso que se unió en {{year}} y está comenzando su viaje.",
+        "top_rank": "¡Actualmente clasificado #{{rank}} en la tabla de clasificación mundial! 🏆",
+        "top_100": "Un rendimiento de primer nivel, actualmente dentro del top 100 mundial.",
+        "high_accuracy": "Construye predicciones altamente precisas con una impresionante calificación promedio de {{rating}}.",
+        "solid_history": "Mantiene un historial de predicciones sólido con una calificación confiable de {{rating}}.",
+        "stock_superpowers": "Muestra una precisión excepcional al analizar {{stocks}}.",
+        "expert_short_term": "Se especializa en movimientos del mercado a corto plazo.",
+        "expert_long_term": "Sobresale en la previsión de tendencias a largo plazo.",
+        "style_aggressive": "Prefiere oportunidades de alto crecimiento y alto riesgo.",
+        "style_conservative": "Adopta un enfoque calculado y constante en los mercados.",
+        "style_balanced": "Mantiene una estrategia de cartera equilibrada.",
+        "influencer": "Seguido por {{count}} inversores que confían en sus conocimientos.",
+        "community_builder": "Construyendo una comunidad dedicada de {{count}} seguidores.",
+        "golden_member": "Un Miembro Dorado premium que ofrece conocimientos exclusivos del mercado.",
+        "new_trader": "Un nuevo operador listo para dejar su huella en el mercado."
+    },
+    "smart_summary_title": "Resumen Inteligente",
+    "share_summary_label": "Compartir este resumen",
+    "share_message_intro": "¡Echa un vistazo a este perfil de operador en StockPredictorAI!",
+    "smart_summary_btn": "Resumen Inteligente"
 }

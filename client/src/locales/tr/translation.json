@@ -1183,5 +1183,29 @@
     "message": "{{ticker}} için yaklaşan bilanço açıklama günü bu {{day}}.",
     "makePrediction": "Tahmin Yap",
     "viewStock": "{{ticker}} Hisse Sayfasını Gör"
-  }
+  },
+  "summary": {
+    "default_intro": "Yeni fırsatlar keşfeden borsa meraklısı.",
+    "veteran": "{{year}} yılından beri piyasa deneyimiyle dolu kıdemli bir uzman.",
+    "active_trader": "{{year}} yılından beri sağlam bir geçmiş oluşturan aktif bir yatırımcı.",
+    "rising_star": "{{year}} yılında katılan ve yolculuğuna yeni başlayan yükselen bir yıldız.",
+    "top_rank": "Şu anda küresel liderlik tablosunda #{{rank}} sırada! 🏆",
+    "top_100": "Şu anda dünya çapında ilk 100 içinde yer alan üst düzey bir performans sergiliyor.",
+    "high_accuracy": "{{rating}} gibi etkileyici bir ortalama puanla yüksek doğrulukta tahminler oluşturuyor.",
+    "solid_history": "{{rating}} puanlık güvenilir bir tahmin geçmişini sürdürüyor.",
+    "stock_superpowers": "{{stocks}} analizinde olağanüstü doğruluk gösteriyor.",
+    "expert_short_term": "Kısa vadeli piyasa hareketlerinde uzmanlaşıyor.",
+    "expert_long_term": "Uzun vadeli trendleri tahmin etmede mükemmelleşiyor.",
+    "style_aggressive": "Yüksek büyüme ve yüksek riskli fırsatları tercih ediyor.",
+    "style_conservative": "Piyasalara hesaplı ve istikrarlı bir yaklaşım benimsiyor.",
+    "style_balanced": "Dengeli bir portföy stratejisi sürdürüyor.",
+    "influencer": "İçgörülerine güvenen {{count}} yatırımcı tarafından takip ediliyor.",
+    "community_builder": "{{count}} takipçiden oluşan özel bir topluluk inşa ediyor.",
+    "golden_member": "Özel piyasa içgörüleri sunan seçkin bir Altın Üye.",
+    "new_trader": "Piyasada iz bırakmaya hazır yeni bir yatırımcı."
+  },
+  "smart_summary_title": "Akıllı Özet",
+  "share_summary_label": "Bu özeti paylaş",
+  "share_message_intro": "StockPredictor'daki bu yatırımcı profiline göz atın!",
+  "smart_summary_btn": "Akıllı Özet"
 }
