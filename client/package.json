@@ -23,6 +23,7 @@
     "i18next": "^25.6.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "luxon": "^3.7.2",
+    "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
     "react-cookie-consent": "^9.0.0",
@@ -49,7 +50,8 @@
     "test": "vitest",
     "mobile:build": "npm run build && npx cap sync",
     "mobile:open:android": "npx cap open android",
-    "mobile:open:ios": "npx cap open ios"
+    "mobile:open:ios": "npx cap open ios",
+    "generate-docs": "node scripts/generate_pdf.js"
   },
   "eslintConfig": {
     "extends": [
