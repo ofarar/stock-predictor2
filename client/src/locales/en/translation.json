@@ -1169,5 +1169,9 @@
     "message": "Upcoming earning day for {{ticker}} is this {{day}}.",
     "makePrediction": "Make a prediction",
     "viewStock": "View {{ticker}} Stock Page"
-  }
+  },
+  "prediction_deleted_success": "Prediction deleted successfully.",
+  "prediction_delete_failed": "Failed to delete prediction.",
+  "confirm_delete_title": "Delete Prediction",
+  "confirm_delete_prediction": "Are you sure you want to delete this prediction? This action cannot be undone and will recalculate user stats."
 }

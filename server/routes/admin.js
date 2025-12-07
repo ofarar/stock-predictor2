@@ -12,6 +12,7 @@ const { transporter } = require('../services/email');
 const PredictionLog = require('../models/PredictionLog');
 const Setting = require('../models/Setting');
 const cryptoProvider = require('../services/financeProviders/cryptoProvider');
+const { recalculateUserAnalytics } = require('../services/analyticsService');
 
 // --- NEW UTILITY FUNCTION: Deletes predictions without matching users ---
 async function cleanupOrphanedPredictions() {
@@ -59,60 +60,7 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
                 console.warn(`Skipping user with ID ${user._id} because they are missing an email.`);
                 continue;
             }
-
-            user.badges = [];
-            if (typeof user.analystRating !== 'object' || user.analystRating === null) {
-                user.analystRating = { total: 0, fromPredictions: 0, fromBadges: 0, fromShares: 0, fromReferrals: 0, fromRanks: 0, fromBonus: 0, shareBreakdown: {}, predictionBreakdownByStock: {}, badgeBreakdown: {}, rankBreakdown: {} };
-            }
-
-            const sharesPoints = user.analystRating.fromShares || 0;
-            const referralPoints = user.analystRating.fromReferrals || 0;
-
-            user.analystRating.total = sharesPoints + referralPoints;
-            user.analystRating.fromPredictions = 0;
-            user.analystRating.fromBadges = 0;
-            user.analystRating.fromRanks = 0;
-            user.analystRating.predictionBreakdownByStock = new Map();
-            user.analystRating.badgeBreakdown = new Map();
-            user.analystRating.rankBreakdown = new Map();
-
-            const userPredictionsData = await Prediction.find({ userId: user._id, status: 'Assessed' }).lean();
-            const userPredictions = userPredictionsData.map(p => {
-                if (p.score !== undefined) p.rating = p.score;
-                return p;
-            });
-
-            if (userPredictions.length > 0) {
-                for (const p of userPredictions) {
-                    let ratingToAward = 0;
-                    if (p.rating > 90) ratingToAward = 10;
-                    else if (p.rating > 80) ratingToAward = 5;
-                    else if (p.rating > 70) ratingToAward = 2;
-
-                    if (ratingToAward > 0) {
-                        user.analystRating.fromPredictions += ratingToAward;
-                        const stockKey = p.stockTicker.replace(/\./g, '_');
-                        const currentStockRating = user.analystRating.predictionBreakdownByStock.get(stockKey) || 0;
-                        user.analystRating.predictionBreakdownByStock.set(stockKey, currentStockRating + ratingToAward);
-                    }
-                }
-                await awardBadges(user);
-            }
-
-            const stats = await Prediction.aggregate([
-                { $match: { userId: user._id, status: 'Assessed' } },
-                { $group: { _id: null, avgRating: { $avg: { $ifNull: ["$rating", "$score"] } } } }
-            ]);
-            user.avgRating = stats[0] ? stats[0].avgRating : 0;
-
-            user.analystRating.total =
-                (user.analystRating.fromPredictions || 0) +
-                (user.analystRating.fromBadges || 0) +
-                (user.analystRating.fromShares || 0) +
-                (user.analystRating.fromReferrals || 0) +
-                (user.analystRating.fromRanks || 0);
-
-            await user.save();
+            await recalculateUserAnalytics(user);
         }
         console.log(`--- Analytics recalculation completed for ${allUsers.length} users. ---`);
         res.status(200).send('Successfully recalculated analytics for all users.');
@@ -138,6 +86,39 @@ router.post('/admin/cleanup-orphans', async (req, res) => {
     } catch (error) {
         console.error("Error during orphan cleanup:", error);
         res.status(500).send('Failed to run orphan cleanup job.');
+    }
+});
+
+// DELETE: Delete a prediction (Admin only)
+router.delete('/admin/predictions/:id', async (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    try {
+        const { id } = req.params;
+        const prediction = await Prediction.findById(id);
+
+        if (!prediction) {
+            return res.status(404).json({ message: 'Prediction not found.' });
+        }
+
+        const userId = prediction.userId;
+        const isAssessed = prediction.status === 'Assessed';
+
+        await Prediction.findByIdAndDelete(id);
+
+        if (isAssessed) {
+            const user = await User.findById(userId);
+            if (user) {
+                await recalculateUserAnalytics(user);
+            }
+        }
+
+        res.json({ message: 'Prediction deleted successfully.' });
+    } catch (error) {
+        console.error("Error deleting prediction:", error);
+        res.status(500).json({ message: 'Failed to delete prediction.' });
     }
 });
 

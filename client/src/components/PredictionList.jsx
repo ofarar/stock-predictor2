@@ -7,7 +7,7 @@ import ShareModal from './ShareModal';
 import { FaShareAlt } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
-const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditClick, emptyTextKey, profileUsername, id }) => {
+const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditClick, emptyTextKey, profileUsername, id, isAdmin, onDeleteClick }) => {
     const { t } = useTranslation();
     const [visibleCount, setVisibleCount] = useState(6);
     // NEW STATE: For the Share Modal
@@ -150,6 +150,8 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                                 currentPrice={quotes ? quotes[p.stockTicker] : undefined}
                                 isOwnProfile={isOwnProfile}
                                 onEditClick={onEditClick}
+                                isAdmin={isAdmin}
+                                onDeleteClick={onDeleteClick}
                             />
                         ))}
                     </div>

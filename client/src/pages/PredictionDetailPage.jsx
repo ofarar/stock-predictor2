@@ -1,7 +1,7 @@
 // src/pages/PredictionDetailPage.js
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import DescriptionModal from '../components/DescriptionModal';
@@ -15,7 +15,8 @@ import ShareModal from '../components/ShareModal';
 import { Helmet } from 'react-helmet-async';
 import { isMarketOpen } from '../utils/timeHelpers';
 import PromoBanner from '../components/PromoBanner'; // <--- 1. NEW IMPORT
-import { FaShareAlt } from 'react-icons/fa';
+import { FaShareAlt, FaTrash } from 'react-icons/fa';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const calculateLiveScore = (predictedPrice, actualPrice, priceAtCreation) => {
     if (!actualPrice || actualPrice <= 0) return '...';
@@ -54,6 +55,8 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareContent, setShareContent] = useState({ text: '', url: '' });
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const navigate = useNavigate();
 
     // --- CONSOLIDATED DATA FETCHING ---
     const fetchData = useCallback(() => {
@@ -182,6 +185,21 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
         const text = t(messageKey, params);
         setShareContent({ text, url });
         setIsShareModalOpen(true);
+        setIsShareModalOpen(true);
+    };
+
+    const confirmDeletePrediction = async () => {
+        try {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/predictions/${predictionId}`, { withCredentials: true });
+            toast.success(t('prediction_deleted_success'));
+            // Navigate back to the user's profile
+            navigate(`/profile/${prediction.userId._id}`);
+        } catch (error) {
+            console.error("Failed to delete prediction:", error);
+            toast.error(t('prediction_delete_failed'));
+        } finally {
+            setIsDeleteConfirmOpen(false);
+        }
     };
 
     if (loading) return <div className="text-center text-white">{t("Loading Prediction...")}</div>;
@@ -240,6 +258,17 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                 shareContext={{ context: 'prediction', ticker: prediction.stockTicker }}
             />
 
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => setIsDeleteConfirmOpen(false)}
+                onConfirm={confirmDeletePrediction}
+                title={t('confirm_delete_title', 'Delete Prediction')}
+                message={t('confirm_delete_prediction', 'Are you sure you want to delete this prediction? This action cannot be undone and will recalculate user stats.')}
+                confirmText={t('common.delete', 'Delete')}
+                cancelText={t('common.cancel', 'Cancel')}
+                isDistructive={true}
+            />
+
             <DescriptionModal isOpen={isDescModalOpen} onClose={() => setIsDescModalOpen(false)} description={prediction.description} />
             <EditPredictionModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} prediction={prediction} onUpdate={fetchData} />
             <PredictionHistoryModal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)} prediction={prediction} />
@@ -276,6 +305,15 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                             <button onClick={openShareModal} title={t('prediction.share_title')} className="text-gray-400 hover:text-white">
                                 <FaShareAlt className="w-5 h-5" />
                             </button>
+                            {currentUser?.isAdmin && (
+                                <button
+                                    onClick={() => setIsDeleteConfirmOpen(true)}
+                                    title={t('Delete Prediction (Admin)')}
+                                    className="text-gray-400 hover:text-red-500"
+                                >
+                                    <FaTrash className="w-5 h-5" />
+                                </button>
+                            )}
                         </div>
                     </div>
 

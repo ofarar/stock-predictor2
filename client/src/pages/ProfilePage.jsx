@@ -61,6 +61,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isCreatorPoolModalOpen, setIsCreatorPoolModalOpen] = useState(false);
     const [isRatingInfoModalOpen, setIsRatingInfoModalOpen] = useState(false);
     const [isCreatorPoolAnimated, setIsCreatorPoolAnimated] = useState(false);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const [predictionToDeleteId, setPredictionToDeleteId] = useState(null);
 
     // --- NEW: Handle Profile View Counting ---
     useEffect(() => {
@@ -234,6 +236,27 @@ const ProfilePage = ({ settings, requestLogin }) => {
         setIsEditModalOpen(true);
     };
 
+    const handleDeleteClick = (predictionId) => {
+        setPredictionToDeleteId(predictionId);
+        setIsDeleteConfirmOpen(true);
+    };
+
+    const confirmDeletePrediction = async () => {
+        if (!predictionToDeleteId) return;
+
+        try {
+            await axios.delete(`${API_URL}/api/admin/predictions/${predictionToDeleteId}`, { withCredentials: true });
+            toast.success(t('prediction_deleted_success'));
+            fetchData(); // Reload data to update lists and stats
+        } catch (error) {
+            console.error("Failed to delete prediction:", error);
+            toast.error(t('prediction_delete_failed'));
+        } finally {
+            setIsDeleteConfirmOpen(false);
+            setPredictionToDeleteId(null);
+        }
+    };
+
     const confirmCancelVerification = () => {
         const promise = axios.post(`${API_URL}${API_ENDPOINTS.CANCEL_VERIFICATION}`, {}, { withCredentials: true })
             .then(() => fetchData());
@@ -275,6 +298,16 @@ const ProfilePage = ({ settings, requestLogin }) => {
             {/* All modals are rendered here */}
             <VerifiedStatusModal isOpen={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} onCancel={() => { setIsStatusModalOpen(false); setIsCancelConfirmOpen(true); }} />
             <ConfirmationModal isOpen={isCancelConfirmOpen} onClose={() => setIsCancelConfirmOpen(false)} onConfirm={confirmCancelVerification} title={t('cancel_verification_title')} message={t('cancel_verification_msg')} />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => setIsDeleteConfirmOpen(false)}
+                onConfirm={confirmDeletePrediction}
+                title={t('confirm_delete_title', 'Delete Prediction')}
+                message={t('confirm_delete_prediction', 'Are you sure you want to delete this prediction? This action cannot be undone and will recalculate user stats.')}
+                confirmText={t('common.delete', 'Delete')}
+                cancelText={t('common.cancel', 'Cancel')}
+                isDistructive={true}
+            />
             <VerificationModal
                 isOpen={isVerificationModalOpen}
                 onClose={() => setIsVerificationModalOpen(false)}
@@ -381,6 +414,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
                                 emptyTextKey="no_active_predictions_label"
                                 profileUsername={user.username}
                                 id="active"
+                                isAdmin={currentUser?.isAdmin}
+                                onDeleteClick={handleDeleteClick}
                             />
                             <PredictionList
                                 titleKey="prediction_history_title"
@@ -389,6 +424,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
                                 onEditClick={handleEditClick}
                                 emptyTextKey="no_prediction_history_label"
                                 profileUsername={user.username}
+                                isAdmin={currentUser?.isAdmin}
+                                onDeleteClick={handleDeleteClick}
                             />
                         </div>
                     </div>

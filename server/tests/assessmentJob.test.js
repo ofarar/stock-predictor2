@@ -28,6 +28,7 @@ describe('Assessment Job', () => {
         User.findByIdAndUpdate.mockResolvedValue({});
         Notification.prototype.save = jest.fn().mockResolvedValue({});
         PredictionLog.prototype.save = jest.fn().mockResolvedValue({});
+        Prediction.aggregate = jest.fn().mockResolvedValue([]);
     });
 
     afterEach(() => {
@@ -45,8 +46,14 @@ describe('Assessment Job', () => {
             targetPrice: 150,
             priceAtCreation: 145,
             deadline: deadline,
+            createdAt: new Date(Date.now() - 86400000),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Daily',
             save: jest.fn(),
         };
@@ -75,8 +82,14 @@ describe('Assessment Job', () => {
             targetPrice: 200,
             priceAtCreation: 190,
             deadline: deadline,
+            createdAt: new Date(Date.now() - 3600000),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Hourly',
             save: jest.fn(),
         };
@@ -110,8 +123,14 @@ describe('Assessment Job', () => {
             targetPrice: 30000,
             priceAtCreation: 29000,
             deadline: deadline,
+            createdAt: new Date(Date.now() - 86400000 * 2),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Daily',
             save: jest.fn(),
         };
@@ -145,8 +164,14 @@ describe('Assessment Job', () => {
             targetPrice: 1.10,
             priceAtCreation: 1.08,
             deadline: deadline,
+            createdAt: new Date(Date.now() - 86400000 * 3),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Daily',
             save: jest.fn(),
         };
@@ -178,8 +203,14 @@ describe('Assessment Job', () => {
             targetPrice: 250,
             priceAtCreation: 240,
             deadline: deadline,
+            createdAt: new Date(Date.now() - 86400000 * 2),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Daily',
             save: jest.fn(),
         };
@@ -213,8 +244,14 @@ describe('Assessment Job', () => {
             targetPrice: 500,
             priceAtCreation: 450,
             deadline: deadline,
+            createdAt: new Date(Date.now() - 86400000 * 10),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Weekly',
             save: jest.fn(),
         };
@@ -244,10 +281,16 @@ describe('Assessment Job', () => {
             _id: 'pred_monthly',
             stockTicker: 'GOOGL',
             targetPrice: 140,
-            priceAtCreation: 130,
+            priceAtCreation: 130, // GOOGL Monthly
             deadline: deadline,
+            createdAt: new Date(Date.now() - 86400000 * 40),
             status: 'Active',
-            userId: { _id: 'user1', username: 'testuser' },
+            userId: {
+                _id: 'user1',
+                username: 'testuser',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Monthly',
             save: jest.fn(),
         };
@@ -282,7 +325,12 @@ describe('Assessment Job', () => {
             deadline: deadline,
             createdAt: createdAt,
             status: 'Active',
-            userId: { _id: 'user_hourly', username: 'hourly_trader', analystRating: 0, save: jest.fn() },
+            userId: {
+                _id: 'user_hourly',
+                username: 'hourly_trader',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Hourly',
             save: jest.fn(),
         };
@@ -325,7 +373,12 @@ describe('Assessment Job', () => {
             deadline: deadline,
             createdAt: createdAt,
             status: 'Active',
-            userId: { _id: 'user_daily', username: 'daily_trader', analystRating: 0, save: jest.fn() },
+            userId: {
+                _id: 'user_daily',
+                username: 'daily_trader',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Daily',
             save: jest.fn(),
         };
@@ -359,7 +412,12 @@ describe('Assessment Job', () => {
             deadline: deadline,
             createdAt: createdAt,
             status: 'Active',
-            userId: { _id: 'user_yearly', username: 'yearly_investor', analystRating: 0, save: jest.fn() },
+            userId: {
+                _id: 'user_yearly',
+                username: 'yearly_investor',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Yearly',
             save: jest.fn(),
         };
@@ -391,7 +449,12 @@ describe('Assessment Job', () => {
             deadline: deadline,
             createdAt: createdAt,
             status: 'Active',
-            userId: { _id: 'user_missed', username: 'missed_trader', analystRating: 0, save: jest.fn() },
+            userId: {
+                _id: 'user_missed',
+                username: 'missed_trader',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
             predictionType: 'Daily',
             save: jest.fn(),
         };
