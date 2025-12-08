@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FaShareAlt } from 'react-icons/fa';
 import ShareModal from './ShareModal';
 import LoadMoreButton from './LoadMoreButton';
+import { getShareBaseUrl } from '../utils/urlHelper';
 
 const MiniAggressivenessBar = ({ score }) => (
     <div className="w-full bg-gray-900 rounded-full h-1.5 mt-2">
@@ -97,7 +98,8 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
 
     const openShareModal = (item, type) => {
         // --- Reverted to use the current page's URL ---
-        const shareUrl = window.location.href;
+        const baseUrl = getShareBaseUrl();
+        const shareUrl = `${baseUrl}${window.location.pathname}${window.location.search}`; // Correctly reconstruct full path
         let shareText = '';
         let shareContext = {};
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { generateSmartSummary } from '../utils/summaryGenerator';
+import { getShareBaseUrl } from '../utils/urlHelper';
 
 const SmartSummaryModal = ({ isOpen, onClose, user, performance, predictions }) => {
     const { t } = useTranslation();
@@ -8,7 +9,11 @@ const SmartSummaryModal = ({ isOpen, onClose, user, performance, predictions }) 
     if (!isOpen || !user) return null;
 
     const summary = generateSmartSummary(user, performance, predictions, t);
-    const shareUrl = window.location.href; // Profile URL
+
+    // Construct share URL
+    const baseUrl = getShareBaseUrl();
+    const relativePath = window.location.pathname + window.location.search;
+    const shareUrl = `${baseUrl}${relativePath}`;
     const summaryText = Array.isArray(summary) ? summary.map(s => `• ${s}`).join('\n') : summary;
     const shareText = `${t('share_message_intro', 'Check out this trader profile on StockPredictor!')}\n\n${summaryText}`;
 

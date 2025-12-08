@@ -3,9 +3,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
+import { getShareBaseUrl } from '../utils/urlHelper'; // <--- Import
+
 const ReferralModal = ({ isOpen, onClose, userId }) => {
     const { t } = useTranslation();
-    const appUrl = window.location.origin; // e.g., "http://localhost:5173" or "https://predictostock.vercel.app"
+    const appUrl = getShareBaseUrl(); // <--- Use helper
     const referralLink = `${appUrl}/?ref=${userId}`;
 
     if (!isOpen) return null;
@@ -70,7 +72,7 @@ const ReferralModal = ({ isOpen, onClose, userId }) => {
                         onClick={shareOnTelegram}
                         className="bg-[#0088cc] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0077b3] flex items-center justify-center gap-2 w-full sm:w-auto"
                     >
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"/></svg>
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" /></svg>
                         {t('referralModal.shareOnTelegram', 'Share on Telegram')}
                     </button>
                 </div>

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ShareModal from './ShareModal'; // <-- 1. Import new component
+import { getShareBaseUrl } from '../utils/urlHelper'; // <--- Import helper
 import { FaShareAlt } from 'react-icons/fa';
 
 const badgeStyles = {
@@ -22,7 +23,9 @@ const BadgeDetailModal = ({ badge, onClose }) => {
     const style = badgeStyles[badge.tier] || { color: 'text-gray-500', icon: '⚫' };
 
     // --- 4. Prepare data for the ShareModal ---
-    const url = window.location.href; // This will be the profile URL
+    const baseUrl = getShareBaseUrl();
+    const relativePath = window.location.pathname + window.location.search;
+    const url = `${baseUrl}${relativePath}`;
     const icon = badgeStyles[badge.tier]?.icon || '🏆';
     // Use the *new* translation key
     const shareText = t('badgeDetailModal.shareTweet', {

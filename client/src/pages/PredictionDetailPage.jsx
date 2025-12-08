@@ -217,7 +217,8 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
     const openShareModal = () => {
         if (!prediction) return;
 
-        const url = window.location.href;
+        const baseUrl = getShareBaseUrl();
+        const url = `${baseUrl}/prediction/${predictionId}`;
         const isOwner = currentUser?._id === prediction.userId?._id;
         const isAssessed = prediction.status === 'Assessed';
 

@@ -6,6 +6,7 @@ import LoadMoreButton from './LoadMoreButton';
 import ShareModal from './ShareModal';
 import { FaShareAlt } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { getShareBaseUrl } from '../utils/urlHelper';
 
 const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditClick, emptyTextKey, profileUsername, id, isAdmin, onDeleteClick }) => {
     const { t } = useTranslation();
@@ -76,7 +77,9 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
         });
         // Define the unique anchor ID
         const ACTIVE_PREDICTIONS_ANCHOR = "#active";
-        const baseUrl = window.location.origin + window.location.pathname;
+        // const baseUrl = window.location.origin + window.location.pathname; 
+        // Use helper to ensure prod domain on mobile
+        const baseUrl = getShareBaseUrl() + window.location.pathname;
 
         // Construct the URL by combining the current page URL with the anchor ID
         const shareUrl = baseUrl + ACTIVE_PREDICTIONS_ANCHOR;
