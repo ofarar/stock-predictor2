@@ -1,6 +1,6 @@
 export const API_URL = import.meta.env.VITE_API_URL;
 // APP_URL restored
-export const APP_URL = 'https://www.stockpredictorai.com';
+export const APP_URL = import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com';
 
 export const API_ENDPOINTS = {
     CURRENT_USER: '/auth/current_user',
