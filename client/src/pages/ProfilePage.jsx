@@ -3,7 +3,7 @@ import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
+
 import { API_URL, API_ENDPOINTS, STORAGE_KEYS, URL_PARAMS, PARAM_VALUES, PREDICTION_STATUS, NUMERIC_CONSTANTS, DEFAULT_VALUES } from '../constants';
 
 // New Component Imports
@@ -100,10 +100,12 @@ const ProfilePage = ({ settings, requestLogin }) => {
     }, [isVerifiedJustNow]);
 
     // --- NEW: Handle Creator Pool Animation ---
+    // --- NEW: Handle Creator Pool Animation ---
     useEffect(() => {
         // Only run for own profile and if we have a current user loaded
-        if (currentUser?._id === userId) {
+        if (currentUser && String(currentUser._id) === String(userId)) {
             // Check if the user has ALREADY seen it (from DB)
+            // Use optional chaining for safety
             if (!currentUser.hasSeenCreatorPoolAnimation) {
                 // If NOT seen, trigger animation
                 setIsCreatorPoolAnimated(true);
@@ -282,6 +284,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const activePredictions = predictions.filter(p => p.status === PREDICTION_STATUS.ACTIVE);
     const assessedPredictions = predictions.filter(p => p.status === PREDICTION_STATUS.ASSESSED);
 
+
     // --- 2. CREATE DYNAMIC SEO CONTENT ---
     const pageTitle = t('seo.profile_page.title', {
         username: user.username
@@ -294,24 +297,22 @@ const ProfilePage = ({ settings, requestLogin }) => {
     return (
         <>
             {/* --- 3. ADD HELMET COMPONENT --- */}
-            <Helmet>
-                <title>{pageTitle}</title>
-                <meta name="description" content={pageDescription} />
-                <script type="application/ld+json">
-                    {JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "Person",
-                        "name": user.username,
-                        "url": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/profile/${user._id}`,
-                        "image": user.avatar,
-                        "description": user.bio || t('seo.profile_default_desc', { username: user.username }),
-                        "mainEntityOfPage": {
-                            "@type": "ProfilePage",
-                            "@id": window.location.href
-                        }
-                    })}
-                </script>
-            </Helmet>
+            <title>{pageTitle}</title>
+            <meta name="description" content={pageDescription} />
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Person",
+                    "name": user.username,
+                    "url": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/profile/${user._id}`,
+                    "image": user.avatar,
+                    "description": user.bio || t('seo.profile_default_desc', { username: user.username }),
+                    "mainEntityOfPage": {
+                        "@type": "ProfilePage",
+                        "@id": window.location.href
+                    }
+                })}
+            </script>
             {/* --- END --- */}
             {/* All modals are rendered here */}
             <VerifiedStatusModal isOpen={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} onCancel={() => { setIsStatusModalOpen(false); setIsCancelConfirmOpen(true); }} />

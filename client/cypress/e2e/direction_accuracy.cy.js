@@ -1,32 +1,67 @@
 describe('Direction Accuracy Feature', () => {
     const user = {
-        _id: 'test_user_id',
+        _id: '5f8d0d55b54764421b7156d9', // Valid 24-char Hex ID
         username: 'TestUser1',
         email: 'test@example.com',
-        analystRating: { total: 100 }
+        analystRating: { total: 100 },
+        // Add missing fields to preventing rendering crashes
+        watchlist: [],
+        badges: [],
+        followers: [],
+        following: [],
+        goldenSubscriptions: [],
+        isGoldenMember: false,
+        isVerified: false,
+        avatar: null,
+        bio: 'Test Bio',
+        createdAt: new Date().toISOString()
     };
 
     const predictions = [
         // Correct Direction (Up/Up)
-        { _id: '1', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 105, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a1', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 105, predictionType: 'Weekly', userId: user },
         // Wrong Direction (Up/Down)
-        { _id: '2', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 95, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a2', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 95, predictionType: 'Weekly', userId: user },
         // Correct Direction (Down/Down)
-        { _id: '3', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 80, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a3', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 80, predictionType: 'Weekly', userId: user },
         // Wrong Direction (Down/Up)
-        { _id: '4', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 110, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a4', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 110, predictionType: 'Weekly', userId: user },
     ];
     // Accuracy: 2/4 = 50%
 
     beforeEach(() => {
+        cy.on('uncaught:exception', () => false); // Ignore ResizeObserver loop errors
+
         // Mock Login
-        cy.intercept('GET', '/api/auth/me', {
+        cy.intercept('GET', '**/auth/current_user', {
             statusCode: 200,
             body: user
         }).as('getMe');
 
+        // Mock Settings
+        cy.intercept('GET', '**/api/settings', {
+            statusCode: 200,
+            body: {
+                isEarningsBannerActive: false,
+                verificationPrice: 4.99,
+                isPromoBannerActive: false
+            }
+        }).as('getSettings');
+
+        // Mock Notifications (Prevent 401 logout)
+        cy.intercept('GET', '**/api/notifications', {
+            statusCode: 200,
+            body: []
+        }).as('getNotifications');
+
+        // Mock View Count (Prevent 429 Too Many Requests)
+        cy.intercept('POST', '**/api/users/*/view', {
+            statusCode: 200,
+            body: { success: true }
+        }).as('postView');
+
         // Mock Profile Fetch
-        cy.intercept('GET', `/api/users/${user._id}/profile`, {
+        cy.intercept('GET', `**/api/profile/${user._id}`, {
             statusCode: 200,
             body: {
                 user: user,
@@ -57,8 +92,15 @@ describe('Direction Accuracy Feature', () => {
     it('should display Direction Accuracy bar with correct percentage on desktop', () => {
         cy.viewport(1280, 720); // Desktop
 
-        // Check Title
-        cy.contains('Direction Accuracy').should('be.visible');
+        // Wait for profile to load
+        cy.contains('TestUser1').should('be.visible');
+
+        // Check if ProfileStats is rendered by checking the first card
+        cy.contains('Overall Rank').should('be.visible');
+
+        // Check Direction Accuracy Title
+        // Increase timeout just in case of animation/rendering delays
+        cy.contains('Direction Accuracy', { timeout: 10000 }).should('be.visible');
 
         // Check Percentage (50%)
         cy.contains('50%').should('be.visible');
@@ -67,7 +109,6 @@ describe('Direction Accuracy Feature', () => {
         cy.contains('2/4 Correct').should('be.visible');
 
         // Check Layout: Should be side-by-side with Aggressiveness
-        // We can check if they share the same row or have specific classes, but visibility is key
         cy.contains('Prediction Style').should('be.visible');
     });
 

@@ -15,16 +15,16 @@ const UserCard = ({ user, onEditLimit }) => {
         <div className="bg-gray-700 p-4 rounded-lg flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 border border-gray-600 shadow-sm hover:bg-gray-650 transition-colors">
             {/* User Info Section */}
             <div className="flex items-center gap-4 w-full sm:w-auto">
-                <Link to={`/profile/${user.username}`}>
+                <Link to={`/profile/${user._id}`}>
                     <img
-                        src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
+                        src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user._id}`}
                         alt={user.username}
                         className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-sm"
                     />
                 </Link>
                 <div className="text-left">
                     <div className="flex items-center gap-1">
-                        <Link to={`/profile/${user.username}`} className="font-bold text-white text-lg hover:underline">
+                        <Link to={`/profile/${user._id}`} className="font-bold text-white text-lg hover:underline">
                             {user.username}
                         </Link>
                         {user.isVerified && <VerifiedTick />}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import PullToRefresh from 'react-simple-pull-to-refresh';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import PullToRefresh from './components/PullToRefresh'; // Import custom component
+
 import { Toaster } from 'react-hot-toast';
 import CookieConsent from 'react-cookie-consent';
 import axios from 'axios';
@@ -102,13 +102,13 @@ const CanonicalTag = () => {
   const languages = ['en', 'tr', 'de', 'es', 'zh', 'ru', 'fr', 'nl', 'ar', 'hi'];
 
   return (
-    <Helmet>
+    <>
       <link rel="canonical" href={canonicalUrl} />
       {languages.map(lang => (
-        <link key={lang} rel="alternate" hreflang={lang} href={lang === 'en' ? baseUrl : `${baseUrl}?lang=${lang}`} />
+        <link key={lang} rel="alternate" hrefLang={lang} href={lang === 'en' ? baseUrl : `${baseUrl}?lang=${lang}`} />
       ))}
-      <link rel="alternate" hreflang="x-default" href={baseUrl} />
-    </Helmet>
+      <link rel="alternate" hrefLang="x-default" href={baseUrl} />
+    </>
   );
 };
 
@@ -311,10 +311,8 @@ function App() {
 
   return (
     <Router>
-      <Helmet>
-        <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
-        <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
-      </Helmet>
+      <title>{t('seo.default.title', 'StockPredictorAI - Predict the Market, Track Your Accuracy')}</title>
+      <meta name="description" content={t('seo.default.description', 'Join the StockPredictorAI community to make stock predictions, track your accuracy, and follow top-performing analysts. Sign up to build your track record.')} />
       <Toaster
         position="top-center"
         toastOptions={{

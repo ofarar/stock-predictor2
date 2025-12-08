@@ -9,7 +9,7 @@ import VerifiedTick from '../components/VerifiedTick';
 import { formatCurrency, formatPercentage, formatNumber } from '../utils/formatters';
 import LoadMoreButton from '../components/LoadMoreButton';
 import CommunitySentiment from '../components/CommunitySentiment';
-import { Helmet } from 'react-helmet-async';
+
 import { isMarketOpen } from '../utils/timeHelpers';
 import { NUMERIC_CONSTANTS } from '../constants';
 import { DateTime } from 'luxon'; // Import Luxon for date handling
@@ -181,10 +181,8 @@ const StockPage = ({ onPredictClick, settings, earningsCalendar = [] }) => {
 
     return (
         <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
-            <Helmet>
-                <title>{pageTitle}</title>
-                <meta name="description" content={pageDescription} />
-            </Helmet>
+            <title>{pageTitle}</title>
+            <meta name="description" content={pageDescription} />
 
             {/* --- BLOCK 1: MAIN INFO AND EARNINGS ALERT --- */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2 items-end">
