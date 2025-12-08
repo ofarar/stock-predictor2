@@ -643,7 +643,16 @@ def run_quant_model(mode='inference'):
                     "targetPrice": float(round(predicted_price, 2)),
                     "targetPriceAtCreation": float(round(predicted_price, 2)),
                     "predictionType": prediction_type,
-                    "deadline": datetime.datetime.now() + datetime.timedelta(days=7 if prediction_type == "Weekly" else 1),
+                    "deadline": (
+                        # For ALL predictions, we target Market Close (21:00 UTC / 4:00 PM EST)
+                        # Weekly: Next Friday at 21:00 UTC
+                        (datetime.datetime.now() + datetime.timedelta(days=(4 - datetime.date.today().weekday()) % 7)).replace(hour=21, minute=0, second=0, microsecond=0)
+                        if prediction_type == "Weekly" else
+                        # Daily: Today at 21:00 UTC (if before close), else Tomorrow at 21:00 UTC
+                        (datetime.datetime.now().replace(hour=21, minute=0, second=0, microsecond=0) 
+                         if datetime.datetime.now().hour < 21 else 
+                         (datetime.datetime.now() + datetime.timedelta(days=1)).replace(hour=21, minute=0, second=0, microsecond=0))
+                    ),
                     "status": "Pending", 
                     "rating": 0,
                     "actualPrice": None,
