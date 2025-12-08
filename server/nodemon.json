@@ -1,0 +1,7 @@
+{
+    "ignore": [
+        "ml_service/models/*",
+        "*.test.js",
+        "node_modules"
+    ]
+}

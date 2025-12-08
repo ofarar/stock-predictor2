@@ -227,6 +227,7 @@ router.get('/admin/all-users', async (req, res) => {
                     isGoldenMember: 1,
                     isVerified: 1,
                     verifiedAt: 1,
+                    aiMetrics: 1, // Exposed for Admin Bot Governance
                     followersCount: 1,
                     followingCount: 1,
                     goldenSubscribersCount: 1,

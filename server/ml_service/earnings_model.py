@@ -11,11 +11,12 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from ta.momentum import RSIIndicator
 from ta.trend import SMAIndicator
+import argparse
+import subprocess
+import json
 
 # Load env variables
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
-
-# ... (omitted generate_natural_language_rationale to save space, assuming it's unchanged) ...
 
 def fetch_nasdaq_earnings_date(ticker):
     """
@@ -63,7 +64,7 @@ def fetch_nasdaq_earnings_date(ticker):
         
     return None
 
-def generate_natural_language_rationale(ticker, direction, top_feature, feature_imp, confidence, macro_trend, sympathy, recent_return, macro_rsi):
+def generate_natural_language_rationale(ticker, direction, top_feature, feature_imp, confidence, macro_trend, sympathy, recent_return, current_macro_rsi):
     """
     Generates a human-readable paragraph explaining the model's decision.
     """
@@ -83,9 +84,9 @@ def generate_natural_language_rationale(ticker, direction, top_feature, feature_
     
     # 2. Macro Context
     if macro_trend > 0:
-        macro_desc = f"bullish market tailwinds (QQQ RSI: {macro_rsi:.1f})"
+        macro_desc = f"bullish market tailwinds (QQQ RSI: {current_macro_rsi:.1f})"
     else:
-        macro_desc = f"bearish market headwinds (QQQ RSI: {macro_rsi:.1f})"
+        macro_desc = f"bearish market headwinds (QQQ RSI: {current_macro_rsi:.1f})"
 
     # 3. Price Action Context
     if recent_return > 0.05:
@@ -95,17 +96,20 @@ def generate_natural_language_rationale(ticker, direction, top_feature, feature_
     elif recent_return > 0:
         context_str = f"amidst mild upward consolidation (+{recent_return*100:.1f}%)"
     else:
-        context_str = f"amidst mild downward consolidation ({recent_return*100:.1f}%)"
+        context_str = f"following a mild pullback ({recent_return*100:.1f}%)"
 
     # 4. Construct Narrative
     intro = f"Sigma Alpha identifies a high-probability {direction} setup for {ticker}, {context_str}."
     
-    body = (
-        f" The primary algorithmic driver is {driver_desc} (Impact Score: {feature_imp:.4f}), "
-        f"which signals a likely continuation of the move" if direction == "Bullish" and recent_return > 0 else 
-        f"which signals a potential reversal" if direction != ("Bullish" if recent_return > 0 else "Bearish") else
-        f"which signals significant event-driven volatility"
+    driver_text = f" The primary algorithmic driver is {driver_desc} (Impact Score: {feature_imp:.4f}),"
+    
+    signal_text = (
+        f" which signals a likely continuation of the move" if direction == "Bullish" and recent_return > 0 else 
+        f" which signals a potential reversal" if direction != ("Bullish" if recent_return > 0 else "Bearish") else
+        f" which signals significant event-driven volatility"
     )
+    
+    body = driver_text + signal_text
 
     validation = f" This thesis is further validated by {macro_desc} and "
     
@@ -169,16 +173,26 @@ def fetch_macro_context():
     Returns: DataFrame with 'Macro_Trend_Score' (Slope of SMA20).
     """
     print("  [Macro] Fetching Nasdaq-100 (QQQ) context...")
-    qqq = yf.download("QQQ", period="2y", progress=False)
+    print("  [Macro] Fetching Nasdaq-100 (QQQ) context...")
     
-    # Flatten columns if MultiIndex
-    if isinstance(qqq.columns, pd.MultiIndex):
-        qqq.columns = qqq.columns.get_level_values(0)
+    # Calculate dates for 2y
+    end_date = datetime.datetime.now() + datetime.timedelta(days=1)
+    start_date = end_date - datetime.timedelta(days=730)
+    
+    # Use Node Adapter
+    qqq = fetch_data_from_node_adapter("QQQ", start_date, end_date)
+    
+    if qqq is None:
+        return pd.DataFrame({'Pct_Change': [], 'Macro_Trend': [], 'Macro_RSI': []})
+        
+    # Standardize Column Names if coming from Node adapter (already done inside adapter but let's be safe)
+    # The adapter returns 'Close', 'Open' etc capitalized.
+    
+    # Flatten columns logic is NOT needed for Node adapter dataframe.
         
     qqq['Pct_Change'] = qqq['Close'].pct_change()
     
     # Macro Trend: Slope of 20-day SMA
-    # Close is now guaranteed to be 1D Series after flattening (unless duplicate columns exist, but standard download implies one ticker)
     qqq['SMA_20'] = SMAIndicator(close=qqq['Close'], window=20).sma_indicator()
     qqq['Macro_Trend'] = qqq['SMA_20'].diff() # Positive = Uptrend, Negative = Downtrend
     
@@ -221,10 +235,8 @@ def fetch_next_earnings_date(ticker):
         t = yf.Ticker(ticker)
         cal = t.calendar
         if isinstance(cal, dict) and 'Earnings Date' in cal:
-            # yfinance returns a list of dates, usually the first one is the confirmed one
             dates = cal['Earnings Date']
             if dates:
-                # Provide the first date
                 return dates[0]
     except Exception as e:
         print(f"  [Calendar Error] {ticker}: {e}")
@@ -237,18 +249,81 @@ def get_peer_sympathy_score(ticker):
     
     for peer in peers:
         try:
-            data = yf.download(peer, period="5d", progress=False)
-            if data.empty: continue
+            # 5 days check
+            end_date = datetime.datetime.now() + datetime.timedelta(days=1)
+            start_date = end_date - datetime.timedelta(days=10) # Ask for 10 to be safe for 5 trading days
             
-            # Flatten columns
-            if isinstance(data.columns, pd.MultiIndex):
-                data.columns = data.columns.get_level_values(0)
+            data = fetch_data_from_node_adapter(peer, start_date, end_date)
+            
+            if data is None or data.empty: continue
+            
+            # Flatten columns NOT needed.
             
             cum_ret = (data['Close'].iloc[-1] / data['Close'].iloc[0]) - 1
             if cum_ret > 0.04: score += 1.0
             elif cum_ret < -0.04: score -= 1.0
         except: continue
     return score
+
+def fetch_data_from_node_adapter(ticker, start_date, end_date):
+    """
+    Calls the Node.js script to fetch data via yahoo-finance2.
+    Returns: DataFrame
+    """
+    script_path = os.path.join(os.path.dirname(__file__), 'fetch_stock_history.js')
+    
+    # Format dates for CLI (ISO strings preferred by wrapper)
+    # The wrapper likely expects "YYYY-MM-DD" or similar.
+    # Our wrapper accepts raw strings.
+    s_str = start_date.strftime('%Y-%m-%d')
+    e_str = end_date.strftime('%Y-%m-%d')
+    
+    try:
+        # Call Node script
+        cmd = ['node', script_path, ticker, s_str, e_str]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        
+        # Parse output
+        data = json.loads(result.stdout)
+        
+        if not data or 'error' in data:
+            print(f"  [Node Adapter Error] {data}")
+            return None
+            
+        # Convert to DataFrame
+        df = pd.DataFrame(data)
+        
+        # Ensure column names map to capitalized (yfinance style)
+        # Node returns: date, open, high, low, close, volume, adjClose...
+        df.rename(columns={
+            'date': 'Date',
+            'open': 'Open',
+            'high': 'High',
+            'low': 'Low',
+            'close': 'Close',
+            'volume': 'Volume'
+        }, inplace=True)
+        
+        # Set Index
+        df['Date'] = pd.to_datetime(df['Date'])
+        df.set_index('Date', inplace=True)
+        # Sort to ensure chronological order (Crucial step missed previously)
+        df.sort_index(inplace=True)
+        
+        # Remove timezone if present/ambiguous, assuming Node returns UTC ISO
+        if df.index.tz is not None:
+             df.index = df.index.tz_convert(None)
+        else:
+             # If naive, leave it.
+             pass
+
+        return df
+        
+    except Exception as e:
+        print(f"  [Node Adapter Exception] {e}")
+        # Only print stderr if available
+        # print(e.stderr if hasattr(e, 'stderr') else "")
+        return None
 
 def prepare_scientific_features(ticker, macro_data, days_until_earnings, period="2y"):
     """
@@ -257,7 +332,20 @@ def prepare_scientific_features(ticker, macro_data, days_until_earnings, period=
     """
     try:
         stock = yf.Ticker(ticker)
-        df = stock.history(period=period)
+        # Force explicit date range to ensure freshness
+        end_date = datetime.datetime.now() + datetime.timedelta(days=1)
+        start_date = end_date - datetime.timedelta(days=730 if period=="2y" else 365)
+        
+        print(f"  [Data Fetch] {ticker} | Start: {start_date.date()} | End: {end_date.date()}")
+        
+        # call Node Adapter
+        df = fetch_data_from_node_adapter(ticker, start_date, end_date)
+        
+        # Flatten MultiIndex NOT needed for Node adapter (it returns flat)
+        # but keep logic if we revert? No, simple is better.
+        
+        if df is None: return None, None, [], None
+
         if df.empty or len(df) < 50: return None, None, [], None
 
         # 1. Base Technicals
@@ -289,8 +377,6 @@ def prepare_scientific_features(ticker, macro_data, days_until_earnings, period=
         # Rename macro cols for clarity if needed, but here assuming unique names from fetch_macro_context
         
         # Abnormal Return = Stock Ret - Macro Ret (QQQ)
-        # Note: macro_data column Pct_Change needs to be renamed to differentiate from stock Pct_Change if it existed
-        # Actually in this script df['Returns'] is stock return. macro_data has 'Pct_Change'
         df['Abnormal_Ret'] = df['Returns'] - df['Pct_Change']
         df['Hype_Factor'] = df['Abnormal_Ret'].rolling(window=30).sum()
         
@@ -300,7 +386,9 @@ def prepare_scientific_features(ticker, macro_data, days_until_earnings, period=
         # 5. Sympathy (Placeholder for history, filled for inference)
         df['Sympathy'] = 0.0
         
-        df.dropna(inplace=True)
+        # Drop NaNs generated by shifting features (Beginning of history), 
+        # BUT keep the end rows where Y_Target is NaN (Critical for Inference!)
+        df.dropna(subset=['Ret_Lag3', 'Vol_5d', 'Hype_Factor', 'Macro_RSI'], inplace=True)
         
         # Fetch Event Dates for Filtering
         earnings_dates = get_historical_earnings_dates(ticker)
@@ -339,6 +427,9 @@ def train_event_driven_model(ticker, df, earnings_dates, current_model=None):
     Trains XGBoost ONLY on 'Pre-Earnings Windows' (Event-Driven Constraint).
     Refines 'Days_Until' logic.
     """
+    # 0. Ensure clean data (Drop NaNs in Y_Target which are preserved for Inference)
+    df.dropna(inplace=True)
+    
     # 1. Filter Data Mask & Refine Days_Until
     mask = pd.Series(False, index=df.index)
     events_found = 0
@@ -381,12 +472,6 @@ def train_event_driven_model(ticker, df, earnings_dates, current_model=None):
     X = training_df[feature_cols]
     y = training_df['Y_Target']
     
-    # Train
-    # If we have a current_model (loaded), we want to continue training (incremental)?
-    # XGBoost 'process' is typically to fit a new booster. 
-    # But strictly speaking, sklearn api 'fit' usually retrains. 
-    # To do incremental, we pass xgb_model=current_model.
-    
     model = xgb.XGBRegressor(
         objective='reg:squarederror',
         n_estimators=200,
@@ -409,19 +494,11 @@ def train_event_driven_model(ticker, df, earnings_dates, current_model=None):
     rmse = np.sqrt(np.mean((y - preds)**2))
     
     # NEW: Directional Accuracy
-    # Check if sign matches (Up vs Down)
-    # y and preds are returns. 
-    # Handle zero correctly? sign(0) is 0.
     correct_direction = np.sign(y) == np.sign(preds)
     accuracy = np.mean(correct_direction) * 100.0 # Percentage
     
     return model, rmse, accuracy, feature_cols
 
-import argparse
-
-# ... (Previous imports and functions remain) ...
-
-# [MODIFIED] run_quant_model to accept mode
 def run_quant_model(mode='inference'):
     user_id = get_quant_user_id()
     if not user_id: return
@@ -438,129 +515,100 @@ def run_quant_model(mode='inference'):
     processed_count = 0
     
     for ticker in STOCKS:
-        print(f"\n>> Analyzing {ticker}...")
-        
-        # 2A. Precision Scheduling (Calendar Gatekeeper)
-        # In TRAINING mode, we might want to iterate all stocks regardless of schedule? 
-        # But 'prepare_scientific_features' relies on 'days_until'.
-        # For simplicity, we keep the schedule check for INFERENCE, but potentially relax it for TRAINING?
-        # Actually, for TRAINING (Quarterly), we re-train on history. We don't "need" next earnings date for history training.
-        # But the model architecture needs a 'days_until' feature.
-        
-        next_earnings_date = fetch_nasdaq_earnings_date(ticker)
-        
-        # Default Logic: If no date found, skip (Strict Mode)
-        if not next_earnings_date:
-            print("  [Schedule] No upcoming earnings date found. Skipping.")
-            continue
+        try:
+            print(f"\n>> Analyzing {ticker}...")
             
-        # Calc Days Until
-        today = datetime.date.today()
-        if isinstance(next_earnings_date, datetime.datetime):
-             next_earnings_date = next_earnings_date.date()
-             
-        days_until = (next_earnings_date - today).days
-        print(f"  [Schedule] Next Earnings: {next_earnings_date} (T-{days_until})")
-        
-        # INFERENCE MODE GATES
-        if mode == 'inference':
-            if days_until > 7 and days_until != 14: # Allow T-14 check or Strict window
-                # Wait, the prompt said "every day getting 6 months costs me".
-                # If we are in inference, we ONLY need 200 days for Technicals + Macro.
-                # We do NOT need to fetch 2 years if we are not training.
-                 pass # We continue to check specific windows below
+            # 2A. Precision Scheduling (Calendar Gatekeeper)
+            next_earnings_date = fetch_nasdaq_earnings_date(ticker)
+            
+            # Default Logic: If no date found, skip (Strict Mode)
+            if not next_earnings_date:
+                print("  [Schedule] No upcoming earnings date found. Skipping.")
+                continue
+                
+            # Calc Days Until
+            today = datetime.date.today()
+            if isinstance(next_earnings_date, datetime.datetime):
+                 next_earnings_date = next_earnings_date.date()
+                 
+            days_until = (next_earnings_date - today).days
+            print(f"  [Schedule] Next Earnings: {next_earnings_date} (T-{days_until})")
+            
+            # INFERENCE MODE GATES
+            if mode == 'inference':
+                if days_until > 7 and days_until != 14:
+                     pass # We continue to check specific windows below
 
-            # Prediction Type Logic
-            prediction_type = "Daily"
-            if days_until == 7:
-                print("  [Schedule] T-7 Detected. Generating Weekly Prediction.")
-                prediction_type = "Weekly"
-            elif days_until in [5, 4, 3, 2]:
-                print(f"  [Schedule] T-{days_until} Detected. Generating Daily Prediction.")
+                # Prediction Type Logic
                 prediction_type = "Daily"
-            else:
-                print(f"  [Schedule] T-{days_until} is outside active inference window. Skipping.")
+                if days_until == 7:
+                    print("  [Schedule] T-7 Detected. Generating Weekly Prediction.")
+                    prediction_type = "Weekly"
+                elif days_until in [5, 4, 3, 2]:
+                    print(f"  [Schedule] T-{days_until} Detected. Generating Daily Prediction.")
+                    prediction_type = "Daily"
+                elif days_until == 14:
+                    # Optional: Early Warning
+                    pass
+                else:
+                    print(f"  [Schedule] T-{days_until} is outside active inference window. Skipping.")
+                    continue
+            
+            # 2B. Data Acquisition
+            fetch_period = "2y" if mode == 'train' else "1y"
+            df, stock_obj, e_dates, _ = prepare_scientific_features(ticker, macro_data, days_until, period=fetch_period)
+            
+            if df is None:
+                print("  [Error] Insufficient data. Skipping.")
                 continue
 
-        # 2B. Prepare Data
-        # OPTIMIZATION: If Inference, fetch less data?
-        # Technicals (SMA20, RSI14, Vol5d) need ~30 days. 
-        # Macro correlation (30d rolling) needs ~30 days.
-        # So 200 days (approx 6-7 months) is a safe lower bound. 
-        # If Training, we need 2 years.
-        
-        fetch_period = "2y" if mode == 'train' else "1y" # 1y is safe, or "6mo"
-        
-        df, stock_obj, e_dates, _ = prepare_scientific_features(ticker, macro_data, days_until, period=fetch_period)
-        if df is None: continue
-        
-        # 3. Mode Branching
-        brain = load_model(ticker)
-        
-        if mode == 'train':
-            # TRAIN MODE
-            print("  [Mode] Starting Full Retraining...")
-            # We train regardless of current day, using history
-            # We train regardless of current day, using history
-            model, rmse, accuracy, features = train_event_driven_model(ticker, df, e_dates, current_model=None) 
-            # Save the updated brain
-            save_model(model, ticker)
+            print(f"  [Data Debug] {ticker} | Last Date: {df.index[-1].date()} | Close: {df['Close'].iloc[-1]:.2f}")
+
+            # 3. Mode Branching
+            brain = load_model(ticker)
             
-            avg_accuracy = (avg_accuracy * processed_count + accuracy) / (processed_count + 1)
-            processed_count += 1
-            
-            # Update user metrics for "Last Retrained"
-            users_collection.update_one(
-                {"_id": user_id},
-                {"$set": {
-                    "aiMetrics.lastRetrained": datetime.datetime.now(),
-                    "aiMetrics.trainingAccuracy": float(round(avg_accuracy, 1)),
-                    "aiMetrics.specialization": "Event-Driven Quant (v3.0)"
-                }}
-            )
-            continue # Training done for this ticker
-            
-        elif mode == 'inference':
-            # INFERENCE MODE
-            if not brain:
-                print("  [Mode] No Brain found. Skipping inference (Cluster must be trained first).")
+            if mode == 'train':
+                # TRAIN MODE
+                print("  [Mode] Starting Full Retraining...")
+                model, rmse, accuracy, features = train_event_driven_model(ticker, df, e_dates, current_model=None) 
+                # Save the updated brain
+                save_model(model, ticker)
+                
+                avg_accuracy = (avg_accuracy * processed_count + accuracy) / (processed_count + 1)
+                processed_count += 1
+                
+                # Update user metrics
+                users_collection.update_one(
+                    {"_id": user_id},
+                    {"$set": {
+                        "aiMetrics.lastRetrained": datetime.datetime.now(),
+                        "aiMetrics.trainingAccuracy": float(round(avg_accuracy, 1)),
+                        "aiMetrics.specialization": "Tech Momentum & Pre-Earnings Strategy"
+                    }}
+                )
                 continue
                 
-            model = brain
-            features = ['Ret_Lag1', 'Ret_Lag2', 'V_rev', 'Vol_5d', 'Hype_Factor', 'Macro_Trend', 'Macro_RSI', 'Sympathy', 'Days_Until'] # Hardcoded generic or saved?
-            # Ideally save these with model. For now hardcode match.
-            
-            # 4. Inference on Current State
-            # Fetch Sympathy Score for *Now*
-            sympathy = get_peer_sympathy_score(ticker)
-            
-            # Prepare Input Vector (Last Row)
-            last_row = df.iloc[[-1]].copy()
-            last_row['Sympathy'] = sympathy 
-            last_row['Days_Until'] = days_until 
-            
-            X_live = last_row[features]
-            predicted_return = model.predict(X_live)[0]
-            
-            current_price = df.iloc[-1]['Close']
-            predicted_price = current_price * (1 + predicted_return)
-            
-            # Macro Constraint
-            raw_signal = predicted_return
-            if predicted_return > 0 and current_macro_trend < 0:
-                print("  [Constraint] Bullish signal dampened by Negative Macro Trend.")
-                predicted_return *= 0.7 
+            elif mode == 'inference':
+                # INFERENCE MODE
+                if not brain:
+                    print("  [Mode] No Brain found. Skipping inference (Cluster must be trained first).")
+                    continue
+                    
+                model = brain
+                features = ['Ret_Lag1', 'Ret_Lag2', 'V_rev', 'Vol_5d', 'Hype_Factor', 'Macro_Trend', 'Macro_RSI', 'Sympathy', 'Days_Until'] 
                 
-            print(f"  [Inference] Raw: {raw_signal*100:.2f}% -> Constrained: {predicted_return*100:.2f}%")
-            
-            # Save Prediction Logic (Same as before)
-            if abs(predicted_return) > 0.012: # 1.2% Threshold
-                direction = "Bullish" if predicted_return > 0 else "Bearish"
+                # Predict on LATEST row
+                X_live = df.iloc[[-1]][features]
+                current_price = df.iloc[-1]['Close']
                 
-                # ... Rationale & DB Insert ...
-                # (Reusing existing logic block, but simplified for brevity in this replacement)
-                # NOTE: For brevity I will assume we keep the rationale generation logic here or copy it back.
-                # To be safe I will copy the insert block back.
+                prediction_val = model.predict(X_live)[0]
+                predicted_price = current_price * (1 + prediction_val)
+                
+                direction = "Bullish" if prediction_val > 0 else "Bearish"
+                confidence = min(abs(prediction_val) * 1000, 95.0)
+                sympathy = get_peer_sympathy_score(ticker)
+                
+                print(f"  [Inference] {ticker} -> {direction} (Target: {predicted_price:.2f})")
                 
                 # Check dupes
                 existing = predictions_collection.find_one({
@@ -612,6 +660,11 @@ def run_quant_model(mode='inference'):
                 predictions_collection.insert_one(new_prediction)
                 print(f"  [Signal] Saved {direction} prediction.")
 
+        except Exception as e:
+            print(f"  [CRITICAL ERROR] Failed to process {ticker}: {e}")
+            continue
+
+    print(f"\n--- [Cron] Bot Run Completed Successfully ---")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Sigma Alpha Quant Engine')

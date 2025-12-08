@@ -29,6 +29,8 @@ COPY . .
 
 
 # Final stage for app image
+FROM base
+
 # Install Python runtime for the bot
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y python3 python3-pip python3-venv && \

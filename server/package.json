@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "nodemon server.js --ignore ml_service/models/ --ignore **/models/ --ignore **/*.json --ignore **/__pycache__/",
     "generate-sitemap": "node generateSitemap.js",
     "build-all": "npm run generate-sitemap && cd client && npm run build",
     "test": "jest"
