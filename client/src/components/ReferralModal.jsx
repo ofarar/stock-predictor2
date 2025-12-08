@@ -1,5 +1,6 @@
 // src/components/ReferralModal.js
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
@@ -30,7 +31,7 @@ const ReferralModal = ({ isOpen, onClose, userId }) => {
         window.open(url, '_blank', 'noopener,noreferrer');
     };
 
-    return (
+    return ReactDOM.createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
             <div className="bg-gray-800 p-6 rounded-lg w-full max-w-lg" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
@@ -83,7 +84,8 @@ const ReferralModal = ({ isOpen, onClose, userId }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

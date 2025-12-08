@@ -1,5 +1,6 @@
 // src/components/AnalystRatingInfoModal.js
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +22,7 @@ const AnalystRatingInfoModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    return (
+    return ReactDOM.createPortal(
         // --- FIX 2: Add accessibility attributes to the overlay div ---
         // sonarlint-disable-next-line javascript:S6819
         <div
@@ -56,7 +57,8 @@ const AnalystRatingInfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

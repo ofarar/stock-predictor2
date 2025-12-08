@@ -1,5 +1,6 @@
 // src/components/ShareModal.js
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -46,7 +47,7 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
         toast.success(t('referralModal.copied', 'Link copied to clipboard!'));
     };
 
-    return (
+    return ReactDOM.createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-[100] p-4" onClick={onClose}>
             <div className="bg-gray-800 p-6 rounded-lg w-full max-w-lg" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
@@ -104,7 +105,8 @@ const ShareModal = ({ isOpen, onClose, title, text, url, shareContext }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
