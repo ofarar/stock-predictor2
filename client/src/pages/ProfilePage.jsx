@@ -295,6 +295,20 @@ const ProfilePage = ({ settings, requestLogin }) => {
             <Helmet>
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Person",
+                        "name": user.username,
+                        "url": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/profile/${user._id}`,
+                        "image": user.avatar,
+                        "description": user.bio || t('seo.profile_default_desc', { username: user.username }),
+                        "mainEntityOfPage": {
+                            "@type": "ProfilePage",
+                            "@id": window.location.href
+                        }
+                    })}
+                </script>
             </Helmet>
             {/* --- END --- */}
             {/* All modals are rendered here */}

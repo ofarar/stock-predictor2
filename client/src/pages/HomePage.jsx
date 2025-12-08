@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
+import { Helmet } from 'react-helmet-async';
 
 // Import all necessary components
 import DailyLeaderboard from '../components/DailyLeaderboard';
@@ -89,6 +90,27 @@ const HomePage = ({ user, settings }) => {
 
     return (
         <div className="space-y-8 animate-fade-in">
+            <Helmet>
+                <title>{t('seo.home_page.title', 'StockPredictorAI - AI-Powered Stock Predictions')}</title>
+                <meta name="description" content={t('seo.home_page.description', 'Join the community of top stock analysts. Track performance, compete in leaderboards, and get AI-powered insights.')} />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "name": "StockPredictorAI",
+                        "url": import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com',
+                        "potentialAction": {
+                            "@type": "SearchAction",
+                            "target": {
+                                "@type": "EntryPoint",
+                                "urlTemplate": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/search?q={search_term_string}`
+                            },
+                            "query-input": "required name=search_term_string"
+                        }
+                    })}
+                </script>
+            </Helmet>
+
             {!user && settings?.isPromoBannerActive && <PromoBanner />}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
