@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
@@ -7,7 +8,7 @@ const DirectionAccuracyInfoModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    return (
+    return ReactDOM.createPortal(
         <div
             className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4"
             onClick={onClose}
@@ -41,7 +42,8 @@ const DirectionAccuracyInfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

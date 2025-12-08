@@ -107,8 +107,8 @@ const PerformanceTabs = ({ performance, predictions, onFilterChange }) => {
         setVisibleStockCount(10);
     }
 
-    const displayedStocks = performance.byStock.slice(0, visibleStockCount);
-    const hasMoreStocks = performance.byStock.length > visibleStockCount;
+    const displayedStocks = (performance.byStock || []).slice(0, visibleStockCount);
+    const hasMoreStocks = (performance.byStock || []).length > visibleStockCount;
 
     return (
         <>

@@ -43,6 +43,7 @@ const DirectionAccuracyBar = ({ accuracy, correctCount, totalCount, onInfoClick,
                             onClick={(e) => { e.stopPropagation(); onInfoClick(); }}
                             className="text-gray-500 hover:text-white"
                             title={t('direction_accuracy.info', 'Percentage of predictions where the price moved in the predicted direction')}
+                            data-testid="direction-accuracy-info-button"
                         >
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
                         </button>
@@ -50,7 +51,10 @@ const DirectionAccuracyBar = ({ accuracy, correctCount, totalCount, onInfoClick,
                 </div>
                 <div className="text-right">
                     {/* MODIFIED: Hidden on mobile by default, shown if clicked. Always shown on desktop OR if alwaysVisible. */}
-                    <p className={`text-xs md:text-sm text-gray-400 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0 md:opacity-100'}`}>
+                    <p
+                        className={`text-xs md:text-sm text-gray-400 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0 md:opacity-100'}`}
+                        data-testid="direction-accuracy-percentage"
+                    >
                         {formatPercentage(accuracy, i18n.language)}
                     </p>
                 </div>
@@ -63,7 +67,10 @@ const DirectionAccuracyBar = ({ accuracy, correctCount, totalCount, onInfoClick,
                 ></div>
             </div>
 
-            <div className={`flex justify-between text-xs text-gray-400 mt-1 px-1 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0 md:opacity-100'}`}>
+            <div
+                className={`flex justify-between text-xs text-gray-400 mt-1 px-1 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0 md:opacity-100'}`}
+                data-testid="direction-accuracy-details"
+            >
                 <span>{t('direction_accuracy.details', '{{correct}}/{{total}} Correct', { correct: correctCount, total: totalCount })}</span>
             </div>
         </div>

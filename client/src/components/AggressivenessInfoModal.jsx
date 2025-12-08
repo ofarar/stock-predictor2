@@ -1,5 +1,6 @@
 // src/components/AggressivenessInfoModal.js
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +20,7 @@ const AggressivenessInfoModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    return (
+    return ReactDOM.createPortal(
         // sonarlint-disable-next-line javascript:S6819
         <div
             className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4"
@@ -50,7 +51,8 @@ const AggressivenessInfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

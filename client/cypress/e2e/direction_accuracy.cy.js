@@ -19,13 +19,13 @@ describe('Direction Accuracy Feature', () => {
 
     const predictions = [
         // Correct Direction (Up/Up)
-        { _id: '5f8d0d55b54764421b7156a1', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 105, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a1', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 105, predictionType: 'Weekly', userId: user, rating: 80 },
         // Wrong Direction (Up/Down)
-        { _id: '5f8d0d55b54764421b7156a2', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 95, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a2', status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 95, predictionType: 'Weekly', userId: user, rating: 40 },
         // Correct Direction (Down/Down)
-        { _id: '5f8d0d55b54764421b7156a3', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 80, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a3', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 80, predictionType: 'Weekly', userId: user, rating: 85 },
         // Wrong Direction (Down/Up)
-        { _id: '5f8d0d55b54764421b7156a4', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 110, predictionType: 'Weekly', userId: user },
+        { _id: '5f8d0d55b54764421b7156a4', status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 110, predictionType: 'Weekly', userId: user, rating: 30 },
     ];
     // Accuracy: 2/4 = 50%
 
@@ -74,7 +74,9 @@ describe('Direction Accuracy Feature', () => {
                         analyzedCount: 4,
                         distribution: { defensive: 1, neutral: 1, offensive: 2 },
                         overallScore: 15
-                    }
+                    },
+                    byType: [],
+                    byStock: []
                 },
                 totalAnalystRating: 1000
             }
@@ -103,7 +105,7 @@ describe('Direction Accuracy Feature', () => {
         cy.contains('Direction Accuracy', { timeout: 10000 }).should('be.visible');
 
         // Check Percentage (50%)
-        cy.contains('50%').should('be.visible');
+        cy.contains('50.0%').should('be.visible');
 
         // Check Details (2/4 Correct)
         cy.contains('2/4 Correct').should('be.visible');
@@ -123,23 +125,22 @@ describe('Direction Accuracy Feature', () => {
         // If we implement with opacity-0, we might need 'have.class', 'opacity-0' 
         // OR check CSS property
 
-        cy.contains('50%').should('have.class', 'opacity-0');
-        cy.contains('2/4 Correct').should('have.class', 'opacity-0');
+        cy.get('[data-testid="direction-accuracy-percentage"]').should('have.class', 'opacity-0');
+        cy.get('[data-testid="direction-accuracy-details"]').should('have.class', 'opacity-0');
 
         // Click to toggle
         cy.contains('Direction Accuracy').click();
 
         // Should be visible now
-        cy.contains('50%').should('not.have.class', 'opacity-0');
-        cy.contains('2/4 Correct').should('not.have.class', 'opacity-0');
+        cy.get('[data-testid="direction-accuracy-percentage"]').should('not.have.class', 'opacity-0');
+        cy.get('[data-testid="direction-accuracy-details"]').should('not.have.class', 'opacity-0');
     });
 
     it('should open info modal when clicking info icon', () => {
         cy.viewport(1280, 720);
 
-        // Find the info button inside Direction Accuracy component and click
-        // Use a more specific selector if possible, or trigger traversal
-        cy.contains('Direction Accuracy').parent().find('button').click();
+        // Click the info button using the robust test ID
+        cy.get('[data-testid="direction-accuracy-info-button"]').click();
 
         // Check Modal content
         cy.contains('Understanding Direction Accuracy').should('be.visible');
