@@ -3,11 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
+import QuantSystemInfoModal from './QuantSystemInfoModal';
 
 const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, onOpenSummary, settings, isAnimating, requestLogin }, ref) => {
     const { t, i18n } = useTranslation();
     const { user, followersCount, followingCount, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
+    const [isQuantModalOpen, setIsQuantModalOpen] = React.useState(false);
 
     // --- Start: Logic to split username ---
     const usernameParts = user.username.split(' ');
@@ -66,10 +68,16 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                         </span>
                     </h1>
                     {user.isBot && (
-                        <span className="mt-1 md:mt-0 md:ms-2 text-xs bg-gray-900 text-yellow-500 border border-yellow-500/50 px-3 py-1 rounded-full font-mono font-bold shadow-lg tracking-widest uppercase flex items-center gap-1">
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
-                            QUANT SYSTEM v2.0
-                        </span>
+                        <>
+                            <button
+                                onClick={() => setIsQuantModalOpen(true)}
+                                className="mt-1 md:mt-0 md:ms-2 text-xs bg-gray-900 text-yellow-500 border border-yellow-500/50 px-3 py-1 rounded-full font-mono font-bold shadow-lg tracking-widest uppercase flex items-center gap-1 hover:bg-yellow-500/10 transition-colors"
+                            >
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
+                                QUANT SYSTEM v3.0
+                            </button>
+                            <QuantSystemInfoModal isOpen={isQuantModalOpen} onClose={() => setIsQuantModalOpen(false)} profileData={profileData} />
+                        </>
                     )}
                 </div>
 
