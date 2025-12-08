@@ -5,18 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { FaShareAlt } from 'react-icons/fa';
 import ShareModal from './ShareModal';
 import LoadMoreButton from './LoadMoreButton';
+import PerformanceDetailModal from './PerformanceDetailModal';
 import { getShareBaseUrl } from '../utils/urlHelper';
 
-const MiniAggressivenessBar = ({ score }) => (
-    <div className="w-full bg-gray-900 rounded-full h-1.5 mt-2">
-        <div
-            className="bg-gradient-to-r from-blue-500 to-green-500 h-1.5 rounded-full"
-            style={{ width: `${score}%` }}
-        ></div>
-    </div>
-);
-
-const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSelected, onClick, onShareClick }) => { // <-- Renamed
+const StatCard = ({ label, avgRating, rank, isStock, isSelected, onClick, onShareClick }) => {
     const { t } = useTranslation();
     const circumference = 2 * Math.PI * 20;
     const validAvgRating = avgRating || 0;
@@ -30,7 +22,7 @@ const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSele
     return (
         <div
             onClick={onClick}
-            className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 cursor-pointer ${isSelected ? 'ring-2 ring-green-400 scale-[1.03]' : 'hover:scale-[1.02]'}`}
+            className={`flex flex-col bg-gray-700 p-4 rounded-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]`}
         >
             <div className="flex items-center flex-grow">
                 <div className="relative w-12 h-12 flex-shrink-0">
@@ -56,10 +48,8 @@ const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSele
                     <p className="text-xl font-bold text-white">#{rank}</p>
                 </div>
             </div>
-            <div className="flex items-center justify-between mt-3">
-                <div className="w-10/12">
-                    <MiniAggressivenessBar score={aggressivenessScore} />
-                </div>
+
+            <div className="flex justify-end mt-2">
                 <button
                     onClick={handleShare}
                     className="text-gray-500 hover:text-white transition-colors duration-200 p-1 rounded-full hover:bg-gray-600"
@@ -72,58 +62,51 @@ const StatCard = ({ label, avgRating, rank, isStock, aggressivenessScore, isSele
     );
 };
 
-const PerformanceTabs = ({ performance, onFilterChange }) => {
+const PerformanceTabs = ({ performance, predictions, onFilterChange }) => {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('ByType');
     const [selectedFilter, setSelectedFilter] = useState(null);
 
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareData, setShareData] = useState({ text: '', url: '' });
-    const [visibleStockCount, setVisibleStockCount] = useState(10); // Start with 10 visible items
+    const [visibleStockCount, setVisibleStockCount] = useState(10);
+
+    // DETAIL MODAL STATE
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [detailModalData, setDetailModalData] = useState({ title: '', data: null, type: '' });
 
     if (!performance) return null;
 
-    const handleCardClick = (filterKey, performanceData) => {
-        if (selectedFilter === filterKey) {
-            setSelectedFilter(null);
-            onFilterChange(performance);
-        } else {
-            setSelectedFilter(filterKey);
-            onFilterChange({
-                ...performance,
-                aggressiveness: performanceData.aggressiveness
-            });
-        }
+    const handleCardClick = (title, data, type) => {
+        setDetailModalData({ title, data, type });
+        setIsDetailModalOpen(true);
     };
 
     const openShareModal = (item, type) => {
-        // --- Reverted to use the current page's URL ---
         const baseUrl = getShareBaseUrl();
-        const shareUrl = `${baseUrl}${window.location.pathname}${window.location.search}`; // Correctly reconstruct full path
+        const shareUrl = `${baseUrl}${window.location.pathname}${window.location.search}`;
         let shareText = '';
         let shareContext = {};
 
         if (type === 'ByStock') {
             shareText = t('performanceTabs.shareText.byStock', { rank: item.rank, ticker: item.ticker });
             shareContext = { context: 'stockRank', ticker: item.ticker };
-        } else { // 'ByType'
+        } else {
             shareText = t('performanceTabs.shareText.byType', { rank: item.rank, type: t(`predictionTypes.${item.type.toLowerCase()}`) });
             shareContext = { context: 'typeRank', rankType: item.type };
         }
 
-        setShareData({ text: shareText, url: shareUrl, context: shareContext }); // <-- 4. Save context
+        setShareData({ text: shareText, url: shareUrl, context: shareContext });
         setIsShareModalOpen(true);
     };
 
-    // Reset visibility count when switching tabs
     const handleTabChange = (newTab) => {
         setActiveTab(newTab);
         setSelectedFilter(null);
         onFilterChange(performance);
-        setVisibleStockCount(10); // Reset count on tab switch
+        setVisibleStockCount(10);
     }
 
-    // 3. Prepare the sliced list for ByStock
     const displayedStocks = performance.byStock.slice(0, visibleStockCount);
     const hasMoreStocks = performance.byStock.length > visibleStockCount;
 
@@ -136,6 +119,16 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                 url={shareData.url}
                 shareContext={shareData.context}
             />
+
+            <PerformanceDetailModal
+                isOpen={isDetailModalOpen}
+                onClose={() => setIsDetailModalOpen(false)}
+                title={detailModalData.title}
+                data={detailModalData.data}
+                predictions={predictions}
+                type={detailModalData.type}
+            />
+
             <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
                 <div className="flex border-b border-gray-700 mb-4">
                     <button onClick={() => { setActiveTab('ByType'); setSelectedFilter(null); onFilterChange(performance); }} className={`px-4 py-2 font-bold transition-colors ${activeTab === 'ByType' ? 'text-green-400 border-b-2 border-green-400' : 'text-gray-400 hover:text-white'}`}>
@@ -153,9 +146,8 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                                 label={t(`predictionTypes.${p.type.toLowerCase()}`)}
                                 avgRating={p.avgRating}
                                 rank={p.rank}
-                                aggressivenessScore={p.aggressivenessScore}
-                                isSelected={selectedFilter === p.type}
-                                onClick={() => handleCardClick(p.type, p)}
+                                isSelected={false}
+                                onClick={() => handleCardClick(p.type, p, 'ByType')} // Can pass translated label as title? Or raw type? 'p.type' is key 'Weekly'.
                                 onShareClick={() => openShareModal(p, 'ByType')}
                             />
                         )) : <p className="md:col-span-2 text-gray-500 text-center py-4">{t('performanceTabs.noData.byType')}</p>}
@@ -163,7 +155,6 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                 )}
                 {activeTab === 'ByStock' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-fast">
-                        {/* 2. CRITICAL FIX: Map over the sliced list (displayedStocks) */}
                         {displayedStocks.length > 0 ? displayedStocks.map(s => (
                             <StatCard
                                 key={s.ticker}
@@ -171,14 +162,12 @@ const PerformanceTabs = ({ performance, onFilterChange }) => {
                                 avgRating={s.avgRating}
                                 isStock={true}
                                 rank={s.rank}
-                                aggressivenessScore={s.aggressivenessScore}
-                                isSelected={selectedFilter === s.ticker}
-                                onClick={() => handleCardClick(s.ticker, s)}
+                                isSelected={false}
+                                onClick={() => handleCardClick(s.ticker, s, 'ByStock')}
                                 onShareClick={() => openShareModal(s, 'ByStock')}
                             />
                         )) : <p className="md:col-span-2 text-gray-500 text-center py-4">{t('performanceTabs.noData.byStock')}</p>}
 
-                        {/* 3. Load More Button (remains the same) */}
                         <div className="md:col-span-2">
                             <LoadMoreButton
                                 onClick={() => setVisibleStockCount(prev => prev + 10)}

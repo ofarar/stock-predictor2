@@ -1202,10 +1202,24 @@
         "influencer": "受到 {{count}} 位依赖其见解的投资者的关注。",
         "community_builder": "正在建立一个拥有 {{count}} 位关注者的专属社区。",
         "golden_member": "提供独家市场见解的高级黄金会员。",
-        "new_trader": "准备在市场上大展身手的新交易员。"
+        "new_trader": "准备在市场上大展身手的新交易员。",
+        "market_oracle": "市场先知：拥有预测市场下一步走势的惊人能力。",
+        "trend_spotter": "趋势发现者：非常善于识别正确的市场方向。"
     },
     "smart_summary_title": "智能摘要",
     "share_summary_label": "分享此摘要",
     "share_message_intro": "在 StockPredictorAI 上查看此交易员的个人资料！",
-    "smart_summary_btn": "智能摘要"
+    "smart_summary_btn": "智能摘要",
+    "direction_accuracy": {
+        "title": "方向准确性",
+        "noData": "无已评估预测",
+        "info": "价格按预测方向变动的预测百分比",
+        "details": "{{correct}}/{{total}} 正确"
+    },
+    "directionAccuracyInfoModal": {
+        "title": "了解方向准确性",
+        "description": "此指标显示用户正确预测价格上涨或下跌的频率，而不管确切的目标价格如何。",
+        "howItWorks": "运作方式",
+        "explanation": "如果用户预测价格上涨并且价格实际上涨（即使未达到目标），则算作正确的方向预测。这同样适用于预测的价格下跌。"
+    }
 }

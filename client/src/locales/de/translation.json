@@ -1202,10 +1202,24 @@
         "influencer": "Gefolgt von {{count}} Investoren, die sich auf seine Erkenntnisse verlassen.",
         "community_builder": "Baut eine engagierte Community von {{count}} Followern auf.",
         "golden_member": "Ein Premium Golden Member, das exklusive Markteinblicke bietet.",
-        "new_trader": "Ein neuer Händler, bereit, sich auf dem Markt einen Namen zu machen."
+        "new_trader": "Ein neuer Händler, bereit, sich auf dem Markt einen Namen zu machen.",
+        "market_oracle": "Markt-Orakel: Hat eine unheimliche Fähigkeit, den nächsten Marktzug vorherzusagen.",
+        "trend_spotter": "Trend-Spotter: Großartig darin, die richtige Marktrichtung zu erkennen."
     },
     "smart_summary_title": "Smarte Zusammenfassung",
     "share_summary_label": "Diese Zusammenfassung teilen",
     "share_message_intro": "Schau dir dieses Händlerprofil auf StockPredictorAI an!",
-    "smart_summary_btn": "Smarte Zusammenfassung"
+    "smart_summary_btn": "Smarte Zusammenfassung",
+    "direction_accuracy": {
+        "title": "Richtungsgenauigkeit",
+        "noData": "Keine bewerteten Vorhersagen",
+        "info": "Prozentsatz der Vorhersagen, bei denen sich der Preis in die vorhergesagte Richtung bewegt hat",
+        "details": "{{correct}}/{{total}} Korrekt"
+    },
+    "directionAccuracyInfoModal": {
+        "title": "Richtungsgenauigkeit verstehen",
+        "description": "Diese Kennzahl zeigt, wie oft ein Benutzer korrekt vorhersagt, ob der Preis steigen oder fallen wird, unabhängig vom genauen Zielpreis.",
+        "howItWorks": "Wie es funktioniert",
+        "explanation": "Wenn ein Benutzer einen Preisanstieg vorhersagt und der Preis tatsächlich steigt (selbst wenn das Ziel verfehlt wird), zählt dies als korrekte Richtungsvorhersage. Das Gleiche gilt für vorhergesagte Preisrückgänge."
+    }
 }

@@ -1202,10 +1202,24 @@
         "influencer": "Seguido por {{count}} inversores que confían en sus conocimientos.",
         "community_builder": "Construyendo una comunidad dedicada de {{count}} seguidores.",
         "golden_member": "Un Miembro Dorado premium que ofrece conocimientos exclusivos del mercado.",
-        "new_trader": "Un nuevo operador listo para dejar su huella en el mercado."
+        "new_trader": "Un nuevo operador listo para dejar su huella en el mercado.",
+        "market_oracle": "Oráculo del Mercado: Tiene una habilidad asombrosa para predecir el próximo movimiento del mercado.",
+        "trend_spotter": "Detector de Tendencias: Excelente para identificar la dirección correcta del mercado."
     },
     "smart_summary_title": "Resumen Inteligente",
     "share_summary_label": "Compartir este resumen",
     "share_message_intro": "¡Echa un vistazo a este perfil de operador en StockPredictorAI!",
-    "smart_summary_btn": "Resumen Inteligente"
+    "smart_summary_btn": "Resumen Inteligente",
+    "direction_accuracy": {
+        "title": "Precisión de Dirección",
+        "noData": "Sin predicciones evaluadas",
+        "info": "Porcentaje de predicciones donde el precio se movió en la dirección prevista",
+        "details": "{{correct}}/{{total}} Correctas"
+    },
+    "directionAccuracyInfoModal": {
+        "title": "Entendiendo la Precisión de Dirección",
+        "description": "Esta métrica muestra con qué frecuencia un usuario predice correctamente si el precio subirá o bajará, independientemente del precio objetivo exacto.",
+        "howItWorks": "Cómo funciona",
+        "explanation": "Si un usuario predice un aumento de precio y el precio realmente sube (incluso si no alcanza el objetivo), cuenta como una predicción direccional correcta. Lo mismo se aplica para las predicciones de bajada de precio."
+    }
 }

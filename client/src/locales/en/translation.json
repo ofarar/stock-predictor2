@@ -1194,10 +1194,24 @@
     "influencer": "Followed by {{count}} investors relying on their insights.",
     "community_builder": "Building a dedicated community of {{count}} followers.",
     "golden_member": "A premium Golden Member providing exclusive market insights.",
-    "new_trader": "A new trader ready to make their mark on the market."
+    "new_trader": "A new trader ready to make their mark on the market.",
+    "market_oracle": "Market Oracle: Has an uncanny ability to predict the market's next move.",
+    "trend_spotter": "Trend Spotter: Great at identifying the correct market direction."
   },
   "smart_summary_title": "Smart Summary",
   "share_summary_label": "Share this summary",
   "share_message_intro": "Check out this trader profile on StockPredictorAI!",
-  "smart_summary_btn": "Smart Summary"
+  "smart_summary_btn": "Smart Summary",
+  "direction_accuracy": {
+    "title": "Direction Accuracy",
+    "noData": "No assessed predictions",
+    "info": "Percentage of predictions where the price moved in the predicted direction",
+    "details": "{{correct}}/{{total}} Correct"
+  },
+  "directionAccuracyInfoModal": {
+    "title": "Understanding Direction Accuracy",
+    "description": "This metric shows how often a user correctly predicts whether the price will go up or down, regardless of the exact target price.",
+    "howItWorks": "How it works",
+    "explanation": "If a user predicts a price increase and the price actually increases (even if it misses the target), it counts as a correct directional prediction. The same applies for predicted price decreases."
+  }
 }

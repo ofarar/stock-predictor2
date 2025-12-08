@@ -1203,10 +1203,24 @@
     "influencer": "İçgörülerine güvenen {{count}} yatırımcı tarafından takip ediliyor.",
     "community_builder": "{{count}} takipçiden oluşan özel bir topluluk inşa ediyor.",
     "golden_member": "Özel piyasa içgörüleri sunan seçkin bir Altın Üye.",
-    "new_trader": "Piyasada iz bırakmaya hazır yeni bir yatırımcı."
+    "new_trader": "Piyasada iz bırakmaya hazır yeni bir yatırımcı.",
+    "market_oracle": "Piyasa Kahini: Piyasanın bir sonraki hamlesini tahmin etme konusunda esrarengiz bir yeteneği var.",
+    "trend_spotter": "Trend Avcısı: Doğru piyasa yönünü belirlemede harika."
   },
   "smart_summary_title": "Akıllı Özet",
   "share_summary_label": "Bu özeti paylaş",
   "share_message_intro": "StockPredictor'daki bu yatırımcı profiline göz atın!",
-  "smart_summary_btn": "Akıllı Özet"
+  "smart_summary_btn": "Akıllı Özet",
+  "direction_accuracy": {
+    "title": "Yön Doğruluğu",
+    "noData": "Değerlendirilmiş tahmin yok",
+    "info": "Fiyatın tahmin edilen yönde hareket ettiği tahminlerin yüzdesi",
+    "details": "{{correct}}/{{total}} Doğru"
+  },
+  "directionAccuracyInfoModal": {
+    "title": "Yön Doğruluğunu Anlamak",
+    "description": "Bu metrik, kesin hedef fiyattan bağımsız olarak, bir kullanıcının fiyatın artacağını veya azalacağını ne sıklıkla doğru tahmin ettiğini gösterir.",
+    "howItWorks": "Nasıl çalışır",
+    "explanation": "Bir kullanıcı fiyat artışı tahmin ederse ve fiyat gerçekten artarsa (hedefi ıskalasa bile), bu doğru bir yön tahmini olarak sayılır. Aynısı tahmin edilen fiyat düşüşleri için de geçerlidir."
+  }
 }

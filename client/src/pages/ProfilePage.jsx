@@ -11,6 +11,7 @@ import ProfileHeader from '../components/ProfileHeader';
 import ProfileStats from '../components/ProfileStats';
 import PredictionList from '../components/PredictionList';
 import AggressivenessInfoModal from '../components/AggressivenessInfoModal';
+import DirectionAccuracyInfoModal from '../components/DirectionAccuracyInfoModal';
 import PromoBanner from '../components/PromoBanner';
 
 // Other required component imports
@@ -57,6 +58,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [predictionToEdit, setPredictionToEdit] = useState(null);
     const [isAggressivenessInfoOpen, setIsAggressivenessInfoOpen] = useState(false);
+    const [isDirectionInfoOpen, setIsDirectionInfoOpen] = useState(false);
     const [filteredPerformance, setFilteredPerformance] = useState(null);
     const [isVerifiedJustNow, setIsVerifiedJustNow] = useState(false);
     const [isCreatorPoolModalOpen, setIsCreatorPoolModalOpen] = useState(false);
@@ -348,6 +350,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
             <GoldenPostForm isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} onPostCreated={fetchData} />
             <EditPredictionModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} prediction={predictionToEdit} onUpdate={fetchData} />
             <AggressivenessInfoModal isOpen={isAggressivenessInfoOpen} onClose={() => setIsAggressivenessInfoOpen(false)} />
+            <DirectionAccuracyInfoModal isOpen={isDirectionInfoOpen} onClose={() => setIsDirectionInfoOpen(false)} />
 
             {/* 3. ADD THE NEW MODAL */}
             <CreatorPoolModal
@@ -403,9 +406,11 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 <ProfileStats
                     user={user}
                     performance={filteredPerformance}
+                    predictions={predictions}
                     predictionCount={predictions.length}
                     totalAnalystRating={profileData.totalAnalystRating}
                     onInfoClick={() => setIsAggressivenessInfoOpen(true)}
+                    onDirectionInfoClick={() => setIsDirectionInfoOpen(true)}
                     onCreatorPoolClick={() => {
                         setIsCreatorPoolModalOpen(true);
                         setIsCreatorPoolAnimated(false);
@@ -426,6 +431,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                             <BadgeShowcase badges={user.badges} onBadgeClick={setSelectedBadge} onInfoClick={() => setIsBadgeInfoOpen(true)} />
                             <PerformanceTabs
                                 performance={performance}
+                                predictions={predictions}
                                 onFilterChange={handlePerformanceFilterChange}
                             />
                             <PerformanceChart chartData={profileData.chartData} />

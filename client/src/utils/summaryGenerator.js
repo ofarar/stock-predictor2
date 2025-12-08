@@ -93,6 +93,31 @@ export const generateSmartSummary = (user, performance, predictions, t) => {
         }
     }
 
+
+    // --- NEW: MARKET TREND SPOTTER (Direction Accuracy) ---
+    if (assessedPredictions.length >= 5) {
+        const directionStats = assessedPredictions.reduce((acc, p) => {
+            if (typeof p.priceAtCreation === 'number' && typeof p.actualPrice === 'number') {
+                acc.total++;
+                const predictedDir = p.targetPrice - p.priceAtCreation;
+                const actualDir = p.actualPrice - p.priceAtCreation;
+                if ((predictedDir * actualDir) > 0) {
+                    acc.correct++;
+                }
+            }
+            return acc;
+        }, { correct: 0, total: 0 });
+
+        if (directionStats.total > 0) {
+            const accuracy = (directionStats.correct / directionStats.total) * 100;
+            if (accuracy >= 80) {
+                parts.push(translate('summary.market_oracle'));
+            } else if (accuracy >= 65) {
+                parts.push(translate('summary.trend_spotter'));
+            }
+        }
+    }
+
     // 5. TRADING STYLE
     // Only show if they actually have predictions
     if (aggressiveness && totalPredictions > 0) {

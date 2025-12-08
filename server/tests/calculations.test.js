@@ -69,3 +69,38 @@ describe('Calculation Logic Tests', () => {
         });
     });
 });
+
+describe('calculateDirectionAccuracy', () => {
+    const { calculateDirectionAccuracy } = require('../utils/calculations');
+
+    test('should calculate accuracy correctly', () => {
+        const predictions = [
+            { status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 105 }, // Up/Up (Correct)
+            { status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 95 },  // Up/Down (Wrong)
+            { status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 80 },   // Down/Down (Correct)
+            { status: 'Assessed', priceAtCreation: 100, targetPrice: 90, actualPrice: 110 },  // Down/Up (Wrong)
+        ];
+        const result = calculateDirectionAccuracy(predictions);
+        // 2 correct out of 4 -> 50%
+        expect(result.accuracy).toBe(50);
+        expect(result.correct).toBe(2);
+        expect(result.total).toBe(4);
+    });
+
+    test('should handle empty or invalid inputs', () => {
+        const result = calculateDirectionAccuracy([]);
+        expect(result.accuracy).toBe(0);
+        expect(result.total).toBe(0);
+    });
+
+    test('should ignore non-assessed items', () => {
+        const predictions = [
+            { status: 'Active', priceAtCreation: 100, targetPrice: 110, actualPrice: 0 },
+            { status: 'Assessed', priceAtCreation: 100, targetPrice: 110, actualPrice: 120 } // Correct
+        ];
+        const result = calculateDirectionAccuracy(predictions);
+        expect(result.accuracy).toBe(100);
+        expect(result.total).toBe(1);
+    });
+});
+

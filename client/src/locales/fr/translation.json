@@ -1202,10 +1202,24 @@
         "influencer": "Suivi par {{count}} investisseurs qui comptent sur ses analyses.",
         "community_builder": "Construit une communauté dédiée de {{count}} abonnés.",
         "golden_member": "Un Membre Golden premium offrant des analyses de marché exclusives.",
-        "new_trader": "Un nouveau trader prêt à laisser sa marque sur le marché."
+        "new_trader": "Un nouveau trader prêt à laisser sa marque sur le marché.",
+        "market_oracle": "Oracle du Marché : Possède une capacité troublante à prédire le prochain mouvement du marché.",
+        "trend_spotter": "Détecteur de Tendance : Excellent pour identifier la bonne direction du marché."
     },
     "smart_summary_title": "Résumé Intelligent",
     "share_summary_label": "Partager ce résumé",
     "share_message_intro": "Découvrez ce profil de trader sur StockPredictorAI !",
-    "smart_summary_btn": "Résumé Intelligent"
+    "smart_summary_btn": "Résumé Intelligent",
+    "direction_accuracy": {
+        "title": "Précision de la Direction",
+        "noData": "Aucune prédiction évaluée",
+        "info": "Pourcentage de prédictions où le prix a évolué dans la direction prévue",
+        "details": "{{correct}}/{{total}} Correct"
+    },
+    "directionAccuracyInfoModal": {
+        "title": "Comprendre la Précision de la Direction",
+        "description": "Cette mesure indique la fréquence à laquelle un utilisateur prédit correctement si le prix va monter ou descendre, quel que soit le prix cible exact.",
+        "howItWorks": "Comment ça marche",
+        "explanation": "Si un utilisateur prédit une hausse de prix et que le prix augmente réellement (même s'il manque la cible), cela compte comme une prédiction directionnelle correcte. Il en va de même pour les baisses de prix prédites."
+    }
 }

@@ -79,20 +79,6 @@ router.post('/users/mark-creator-pool-seen', async (req, res) => {
     try {
         await User.findByIdAndUpdate(req.user._id, { hasSeenCreatorPoolAnimation: true });
         res.status(200).send();
-    } catch (err) {
-        res.status(500).send();
-    }
-});
-
-// GET: Get a user's profile by ID
-router.get('/users/:id', async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id)
-            .populate('followers', 'username avatar')
-            .populate('following', 'username avatar')
-            .populate('goldenSubscribers', 'username avatar')
-            .populate('goldenSubscriptions.user', 'username avatar');
-
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

@@ -1205,10 +1205,24 @@
     "influencer": "Gevold door {{count}} beleggers die vertrouwen op hun inzichten.",
     "community_builder": "Bouwt een toegewijde gemeenschap van {{count}} volgers.",
     "golden_member": "Een premium Golden Member die exclusieve marktinzet biedt.",
-    "new_trader": "Een nieuwe handelaar klaar om hun stempel op de markt te drukken."
+    "new_trader": "Een nieuwe handelaar klaar om hun stempel op de markt te drukken.",
+    "market_oracle": "Marktorakel: Heeft een griezelig vermogen om de volgende stap van de markt te voorspellen.",
+    "trend_spotter": "Trendspotter: Geweldig in het identificeren van de juiste marktrichting."
   },
   "smart_summary_title": "Slimme Samenvatting",
   "share_summary_label": "Deel deze samenvatting",
   "share_message_intro": "Bekijk dit handelarenprofiel op StockPredictorAI!",
-  "smart_summary_btn": "Slimme Samenvatting"
+  "smart_summary_btn": "Slimme Samenvatting",
+  "direction_accuracy": {
+    "title": "Richting Nauwkeurigheid",
+    "noData": "Geen beoordeelde voorspellingen",
+    "info": "Percentage voorspellingen waarbij de prijs in de voorspelde richting bewoog",
+    "details": "{{correct}}/{{total}} Correct"
+  },
+  "directionAccuracyInfoModal": {
+    "title": "Richting Nauwkeurigheid Begrijpen",
+    "description": "Deze statistiek toont hoe vaak een gebruiker correct voorspelt of de prijs zal stijgen of dalen, ongeacht de exacte richtprijs.",
+    "howItWorks": "Hoe het werkt",
+    "explanation": "Als een gebruiker een prijsstijging voorspelt en de prijs daadwerkelijk stijgt (zelfs als het doel wordt gemist), telt dit als een correcte richtingsvoorspelling. Hetzelfde geldt voor voorspelde prijsdalingen."
+  }
 }

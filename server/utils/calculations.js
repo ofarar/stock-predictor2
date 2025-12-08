@@ -81,7 +81,49 @@ function calculateAggressiveness(predictions) {
     };
 }
 
+/**
+ * Calculates the direction accuracy percentage.
+ * @param {Array} predictions - List of assessed predictions.
+ * @returns {Object} { accuracy: number, correct: number, total: number }
+ */
+
+function calculateDirectionAccuracy(predictions) {
+    if (!predictions || predictions.length === 0) {
+        return { accuracy: 0, correct: 0, total: 0 };
+    }
+
+    // Filter for assessed predictions that have necessary price data
+    const assessed = predictions.filter(p =>
+        p.status === 'Assessed' &&
+        typeof p.priceAtCreation === 'number' &&
+        typeof p.actualPrice === 'number'
+    );
+
+    if (assessed.length === 0) {
+        return { accuracy: 0, correct: 0, total: 0 };
+    }
+
+    let correctCount = 0;
+
+    assessed.forEach(p => {
+        const predictedDir = p.targetPrice - p.priceAtCreation;
+        const actualDir = p.actualPrice - p.priceAtCreation;
+
+        // Correct if both are positive or both are negative
+        if ((predictedDir * actualDir) > 0) {
+            correctCount++;
+        }
+    });
+
+    return {
+        accuracy: (correctCount / assessed.length) * 100,
+        correct: correctCount,
+        total: assessed.length
+    };
+}
+
 module.exports = {
     calculateProximityRating,
-    calculateAggressiveness
+    calculateAggressiveness,
+    calculateDirectionAccuracy
 };
