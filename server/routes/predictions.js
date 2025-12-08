@@ -177,10 +177,11 @@ router.post('/predict', predictLimiter, async (req, res) => {
                 });
 
                 // Send Push Notification
+                const percentageString = percentageChange !== null ? ` (${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%)` : '';
                 sendPushToUser(
                     follower._id,
                     "New Prediction",
-                    `${user.username} predicted ${stockTicker} ${percentageChange >= 0 ? 'increase' : 'decrease'}`,
+                    `${user.username} made a ${predictionType} prediction on ${stockTicker}${percentageString}`,
                     { url: `/prediction/${prediction._id}` },
                     'newPrediction'
                 );

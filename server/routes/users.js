@@ -556,7 +556,7 @@ router.put('/profile/golden-member', async (req, res) => {
                                 sendPushToUser(
                                     subscriber._id,
                                     "Price Change Alert",
-                                    `$${userToUpdate.username} changed their subscription price from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)}.`,
+                                    `${userToUpdate.username}'s subscription price is changing from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)} on ${effectiveDate}.`,
                                     { url: `/profile/${userToUpdate._id}` },
                                     'priceChange'
                                 );
@@ -636,7 +636,7 @@ router.post('/users/:userId/follow', actionLimiter, async (req, res) => {
         sendPushToUser(
             followedUserId,
             "New Follower",
-            `${req.user.username} started following you!`,
+            `${req.user.username} started following you.`,
             { url: `/profile/${currentUserId}` },
             'newFollower'
         );

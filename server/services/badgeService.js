@@ -149,7 +149,7 @@ const awardBadges = async (user) => {
                 sendPushToUser(
                     user._id,
                     "Badge Earned!",
-                    `You earned the ${badgeInfo.name} (${badge.tier}) badge!`,
+                    `Congratulations! You've earned the ${badge.tier} ${badgeInfo.name} badge.`,
                     { url: `/profile/${user._id}` },
                     'badgeEarned'
                 );
@@ -170,7 +170,7 @@ const awardBadges = async (user) => {
                     sendPushToUser(
                         follower._id,
                         "Badge Alert",
-                        `${user.username} earned the ${badgeInfo.name} (${badge.tier}) badge!`,
+                        `${user.username} has earned the ${badge.tier} ${badgeInfo.name} badge!`,
                         { url: `/profile/${user._id}` },
                         'badgeEarned'
                     );

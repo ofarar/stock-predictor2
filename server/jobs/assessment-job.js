@@ -295,7 +295,7 @@ const runAssessmentJob = async () => {
                             sendPushToUser(
                                 prediction.userId._id,
                                 "Prediction Assessed",
-                                `Your prediction for ${prediction.stockTicker} has been assessed. You earned a ${rating.toFixed(1)} rating!`,
+                                `Your ${prediction.predictionType} prediction for ${prediction.stockTicker} earned a ${rating.toFixed(1)} rating!`,
                                 { url: `/prediction/${prediction._id}` },
                                 'predictionAssessed'
                             );
