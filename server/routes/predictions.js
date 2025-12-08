@@ -32,9 +32,12 @@ const predictLimiter = rateLimit({
     message: { message: "Information overload! Please wait an hour before making more predictions." },
     standardHeaders: true,
     legacyHeaders: false,
-    keyGenerator: (req) => {
-        // Rate limit by User ID if logged in, otherwise by IP
-        return req.user ? req.user._id.toString() : req.ip;
+    keyGenerator: (req, res) => {
+        // Rate limit by User ID if logged in, otherwise by IP using the safe helper
+        if (req.user) {
+            return req.user._id.toString();
+        }
+        return rateLimit.ipKeyGenerator(req, res);
     },
     // Don't skip for dev environments if we want to test this logic, OR skip if preferred.
     // Keeping existing skip logic if present before, but better to allow testing.

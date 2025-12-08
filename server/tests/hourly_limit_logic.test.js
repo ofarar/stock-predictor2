@@ -4,7 +4,9 @@ const { PREDICT_LIMIT } = require('../constants');
 // Mock express-rate-limit BEFORE requiring the route file
 // We return the options object itself so we can inspect it
 jest.mock('express-rate-limit', () => {
-    return jest.fn((options) => (req, res, next) => next());
+    const mock = jest.fn((options) => (req, res, next) => next());
+    mock.ipKeyGenerator = jest.fn((req) => req.ip);
+    return mock;
 });
 
 jest.mock('uuid', () => ({
@@ -83,5 +85,16 @@ describe('Hourly Rate Limit Logic', () => {
         const req = { user: { _id: '123', rateLimitHourly: customLimit } };
         const limit = predictLimiterOptions.max(req);
         expect(limit).toBe(customLimit);
+    });
+    test('should use user ID for key generation when logged in', () => {
+        const req = { user: { _id: '123' } };
+        const key = predictLimiterOptions.keyGenerator(req, {});
+        expect(key).toBe('123');
+    });
+
+    test('should use ipKeyGenerator when not logged in', () => {
+        const req = { ip: '1.2.3.4' };
+        const key = predictLimiterOptions.keyGenerator(req, {});
+        expect(key).toBe('1.2.3.4');
     });
 });
