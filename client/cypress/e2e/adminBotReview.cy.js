@@ -47,16 +47,20 @@ describe('Admin Bot Governance', () => {
 
         // Mock other Admin Page calls to avoid errors
         cy.intercept('GET', '**/api/admin/all-users**', { body: [] });
+        cy.intercept('GET', '**/api/admin/ai-wizard-waitlist', { statusCode: 200, body: [] });
     });
 
     it('should display pending predictions and allow approval', () => {
         cy.visit('/admin');
 
+        // 1. Navigate to Bot Governance Tab
+        cy.get('button').contains('Bot Governance').click();
+
         // Wait for data load
         cy.wait('@getPending');
 
         // 1. Verify UI Rendering
-        cy.contains('Bot Governance').should('be.visible');
+        cy.get('h2').contains('Bot Governance').should('be.visible');
         cy.contains('NVDA').should('be.visible');
         cy.contains('AI BOT').should('be.visible'); // Badge check
         cy.contains('Bullish signal').should('be.visible');
@@ -75,6 +79,11 @@ describe('Admin Bot Governance', () => {
 
     it('should allow rejection', () => {
         cy.visit('/admin');
+
+        // Navigate
+        cy.get('button').contains('Bot Governance').click();
+
+        // Wait
         cy.wait('@getPending');
 
         // Click Reject
@@ -96,6 +105,10 @@ describe('Admin Bot Governance', () => {
         }).as('getEmpty');
 
         cy.visit('/admin');
+
+        // Navigate
+        cy.get('button').contains('Bot Governance').click();
+
         cy.wait('@getEmpty');
 
         cy.contains('No pending predictions to review').should('be.visible');
@@ -111,6 +124,10 @@ describe('Admin Bot Governance', () => {
         }).as('getLong');
 
         cy.visit('/admin');
+
+        // Navigate
+        cy.get('button').contains('Bot Governance').click();
+
         cy.wait('@getLong');
 
         // Check for the scrollable container class

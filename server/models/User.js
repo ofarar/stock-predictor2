@@ -106,6 +106,8 @@ const UserSchema = new Schema({
     lastPredictionDate: { type: Date },
     hasSeenCreatorPoolAnimation: { type: Boolean, default: false },
     fcmTokens: [{ type: String }], // For Push Notifications
+    customPredictionLimit: { type: Number, default: null }, // Daily limit override
+    rateLimitHourly: { type: Number, default: null }, // Hourly rate limit override, // Override for global limit. If null, use global.
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

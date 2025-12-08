@@ -18,12 +18,27 @@ const { v4: uuidv4 } = require('uuid');
 
 const { sendPushToUser } = require('../services/pushNotificationService');
 
-// Limiters
+// --- DYNAMIC RATE LIMITER ---
+// This limiter checks if a user is logged in and has a custom `rateLimitHourly`.
+// If so, it uses that. Otherwise, it uses the global PREDICT_LIMIT.
 const predictLimiter = rateLimit({
-    windowMs: PREDICT_WINDOW_MS, // 1 hour
-    max: PREDICT_LIMIT, // Max 100 predictions per hour per IP (adjust as needed)
-    message: 'You have made too many predictions, please try again after an hour',
-    skip: (req, res) => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
+    windowMs: PREDICT_WINDOW_MS,
+    max: (req) => {
+        if (req.user && req.user.rateLimitHourly !== undefined && req.user.rateLimitHourly !== null) {
+            return req.user.rateLimitHourly;
+        }
+        return PREDICT_LIMIT;
+    },
+    message: { message: "Information overload! Please wait an hour before making more predictions." },
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => {
+        // Rate limit by User ID if logged in, otherwise by IP
+        return req.user ? req.user._id.toString() : req.ip;
+    },
+    // Don't skip for dev environments if we want to test this logic, OR skip if preferred.
+    // Keeping existing skip logic if present before, but better to allow testing.
+    skip: (req, res) => process.env.NODE_ENV === 'test' // Only skip in automated tests
 });
 
 const viewLimiter = rateLimit({
@@ -68,7 +83,12 @@ router.post('/predict', predictLimiter, async (req, res) => {
 
         // --- Daily Limit Check ---
         if (lastPredictionDay === today) {
-            if (user.dailyPredictionCount >= settings.maxPredictionsPerDay) {
+            // Use custom limit if set, otherwise fallback to global setting
+            const dailyLimit = (user.customPredictionLimit !== null && user.customPredictionLimit !== undefined)
+                ? user.customPredictionLimit
+                : settings.maxPredictionsPerDay;
+
+            if (user.dailyPredictionCount >= dailyLimit) {
                 return res.status(429).json({ message: 'Daily prediction limit reached.' });
             }
             dailyCountUpdate = { $inc: { dailyPredictionCount: 1 } };

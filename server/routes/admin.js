@@ -227,13 +227,16 @@ router.get('/admin/all-users', async (req, res) => {
                     isGoldenMember: 1,
                     isVerified: 1,
                     verifiedAt: 1,
+                    createdAt: 1, // Added for "Joined Date"
                     aiMetrics: 1, // Exposed for Admin Bot Governance
                     followersCount: 1,
                     followingCount: 1,
                     goldenSubscribersCount: 1,
                     goldenSubscriptionsCount: 1,
                     predictionCount: { $size: { $ifNull: ["$predictions", []] } },
-                    avgRating: { $round: [{ $ifNull: ["$avgRating", 0] }, 1] }
+                    avgRating: { $round: [{ $ifNull: ["$avgRating", 0] }, 1] },
+                    customPredictionLimit: 1,
+                    rateLimitHourly: 1
                 }
             },
             { $sort: sortQuery }
@@ -442,6 +445,31 @@ router.post('/admin/health-check/:service', async (req, res) => {
 
         default:
             return res.status(404).json({ message: 'Unknown service check.' });
+    }
+});
+
+// PUT: Update User Limit
+router.put('/admin/users/:id/limit', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    try {
+        const { limit, hourlyLimit } = req.body;
+
+        const updateData = {};
+        if (limit !== undefined) updateData.customPredictionLimit = limit;
+        if (hourlyLimit !== undefined) updateData.rateLimitHourly = hourlyLimit;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true }
+        );
+        res.json({ message: 'Limits updated', user: updatedUser });
+    } catch (err) {
+        console.error("Error updating user limit:", err);
+        res.status(500).json({ message: 'Failed to update user limit.' });
     }
 });
 
