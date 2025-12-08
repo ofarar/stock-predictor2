@@ -304,6 +304,25 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
             <Helmet>
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "SocialMediaPosting",
+                        "headline": pageTitle,
+                        "datePublished": prediction.createdAt,
+                        "author": {
+                            "@type": "Person",
+                            "name": username,
+                            "url": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/profile/${prediction.userId?._id}`
+                        },
+                        "articleBody": prediction.description || t('seo.prediction_default_body', { ticker: stockTicker, target: formatCurrency(prediction.targetPrice, i18n.language, prediction.currency) }),
+                        "keywords": `${stockTicker}, Stock Prediction, ${predictionType}, Financial Forecast`,
+                        "mainEntityOfPage": {
+                            "@type": "WebPage",
+                            "@id": window.location.href
+                        }
+                    })}
+                </script>
             </Helmet>
 
             <ShareModal
