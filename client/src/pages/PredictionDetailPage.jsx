@@ -14,7 +14,8 @@ import { formatPercentage, formatCurrency, formatTimeLeft, formatNumericDate } f
 import ShareModal from '../components/ShareModal';
 import { Helmet } from 'react-helmet-async';
 import { isMarketOpen } from '../utils/timeHelpers';
-import PromoBanner from '../components/PromoBanner'; // <--- 1. NEW IMPORT
+import PromoBanner from '../components/PromoBanner';
+import { getShareBaseUrl } from '../utils/urlHelper';
 import { FaShareAlt, FaTrash } from 'react-icons/fa';
 import ConfirmationModal from '../components/ConfirmationModal';
 

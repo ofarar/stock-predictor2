@@ -29,6 +29,23 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
   return false;
 };
 
+// --- HELPER: Detect Mobile Device ---
+const isMobileDevice = () => {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  return /android|ipad|iphone|ipod/i.test(userAgent) || Capacitor.isNativePlatform();
+};
+
+const PullToRefreshWrapper = ({ children }) => {
+  if (isMobileDevice()) {
+    return (
+      <PullToRefresh onRefresh={async () => window.location.reload()}>
+        {children}
+      </PullToRefresh>
+    );
+  }
+  return <>{children}</>;
+};
+
 const FallbackLoading = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
     <svg className="animate-spin h-8 w-8 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -314,7 +331,7 @@ function App() {
       <ScrollToTop />
       <CanonicalTag />
       <Elements stripe={stripePromise}>
-        <PullToRefresh onRefresh={async () => window.location.reload()}>
+        <PullToRefreshWrapper>
           <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">
             {isEarningsBannerVisible && (
               <EarningsBanner
@@ -370,7 +387,7 @@ function App() {
             </main>
             <Footer settings={settings} />
           </div>
-        </PullToRefresh>
+        </PullToRefreshWrapper>
       </Elements>
       <CookieConsent
         location="bottom"
