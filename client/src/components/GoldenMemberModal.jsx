@@ -1,5 +1,6 @@
 // src/components/GoldenMemberModal.js
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -107,7 +108,7 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
     // --- The unconditional guard clause must come AFTER all hooks ---
     if (!isOpen || !user) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
             {/* 1. Main container with fixed height for small screens */}
             <div className="relative bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg text-gray-300 flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
@@ -214,7 +215,8 @@ const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
                     </p>
                 )}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

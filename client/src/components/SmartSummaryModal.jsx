@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { generateSmartSummary } from '../utils/summaryGenerator';
 import { getShareBaseUrl } from '../utils/urlHelper';
@@ -39,7 +40,7 @@ const SmartSummaryModal = ({ isOpen, onClose, user, performance, predictions }) 
         window.open(telegramUrl, '_blank');
     };
 
-    return (
+    return ReactDOM.createPortal(
         <div data-testid="smart-summary-modal" className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fade-in mx-4">
             <div className="bg-gray-800 rounded-xl p-6 w-full max-w-lg shadow-2xl border border-gray-700 relative flex flex-col max-h-[90vh] overflow-y-auto">
                 {/* Decorative Background Elements */}
@@ -103,7 +104,8 @@ const SmartSummaryModal = ({ isOpen, onClose, user, performance, predictions }) 
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

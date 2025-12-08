@@ -1,5 +1,6 @@
 // src/components/EditPredictionModal.js
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -54,7 +55,7 @@ const EditPredictionModal = ({ isOpen, onClose, prediction, onUpdate }) => {
         percentageChange = ((parseFloat(target) - originalTarget) / originalTarget) * 100;
     }
 
-    return (
+    return ReactDOM.createPortal(
         <>
             <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
             <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
@@ -102,7 +103,8 @@ const EditPredictionModal = ({ isOpen, onClose, prediction, onUpdate }) => {
                     </form>
                 </div>
             </div>
-        </>
+        </>,
+        document.body
     );
 };
 

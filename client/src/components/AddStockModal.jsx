@@ -1,5 +1,6 @@
 // src/components/AddStockModal.js
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import StockFilterSearch from './StockFilterSearch';
@@ -23,7 +24,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
         return null;
     }
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={onClose}>
             <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
@@ -51,13 +52,14 @@ const AddStockModal = ({ isOpen, onClose, onAdd }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
 AddStockModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
 };
 export default AddStockModal;

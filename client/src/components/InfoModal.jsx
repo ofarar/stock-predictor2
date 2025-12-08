@@ -1,5 +1,6 @@
 // src/components/InfoModal.js
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 // Reusable card component for a consistent look
@@ -15,7 +16,7 @@ const InfoModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-[60] p-4" onClick={onClose}>
             <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-lg text-gray-300" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
@@ -27,20 +28,20 @@ const InfoModal = ({ isOpen, onClose }) => {
 
                 <div className="space-y-4 max-h-[70vh] overflow-y-auto pe-2 modern-scrollbar">
                     <p>{t('infoModal.description')}</p>
-                    
-                    <InfoSection 
-                        title={t('infoModal.hourlyPredictions.title')} 
-                        text={t('infoModal.hourlyPredictions.description')} 
+
+                    <InfoSection
+                        title={t('infoModal.hourlyPredictions.title')}
+                        text={t('infoModal.hourlyPredictions.description')}
                     />
 
-                    <InfoSection 
-                        title={t('infoModal.dailyPredictions.title')} 
-                        text={t('infoModal.dailyPredictions.description')} 
+                    <InfoSection
+                        title={t('infoModal.dailyPredictions.title')}
+                        text={t('infoModal.dailyPredictions.description')}
                     />
 
-                    <InfoSection 
-                        title={t('infoModal.longerTermPredictions.title')} 
-                        text={t('infoModal.longerTermPredictions.description')} 
+                    <InfoSection
+                        title={t('infoModal.longerTermPredictions.title')}
+                        text={t('infoModal.longerTermPredictions.description')}
                     />
                 </div>
 
@@ -50,7 +51,8 @@ const InfoModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import AggressivenessProgressBar from './AggressivenessProgressBar';
@@ -72,7 +73,7 @@ const PerformanceDetailModal = ({ isOpen, onClose, title, data, predictions, typ
     const avgRating = data?.avgRating || 0;
     const rank = data?.rank || '-';
 
-    return (
+    return ReactDOM.createPortal(
         <div
             className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4"
             onClick={onClose}
@@ -137,7 +138,8 @@ const PerformanceDetailModal = ({ isOpen, onClose, title, data, predictions, typ
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

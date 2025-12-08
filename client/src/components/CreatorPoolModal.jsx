@@ -1,6 +1,7 @@
 // src/components/CreatorPoolModal.js
 
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
@@ -239,7 +240,7 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
         drilldownData = rankBreakdownData;
     }
 
-    return (
+    return ReactDOM.createPortal(
         <div
             className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4 pt-8"
             onClick={(e) => {
@@ -375,7 +376,8 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

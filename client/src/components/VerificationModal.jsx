@@ -1,5 +1,6 @@
 // src/components/VerificationModal.js
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../utils/formatters';
 import axios from 'axios';
@@ -58,7 +59,7 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         // *** Use handleClose for the backdrop click ***
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4" onClick={handleClose}>
             <div className="relative bg-gray-800 p-8 rounded-lg w-full max-w-md text-center" onClick={(e) => e.stopPropagation()}>
@@ -114,7 +115,8 @@ const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
