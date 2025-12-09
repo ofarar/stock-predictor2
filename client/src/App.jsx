@@ -16,6 +16,7 @@ import LoginPromptModal from './components/LoginPromptModal';
 import EarningsBanner from './components/EarningsBanner';
 import Footer from './components/Footer';
 import FeatureRoute from './components/FeatureRoute';
+import AdminRoute from './components/AdminRoute';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Capacitor } from '@capacitor/core';
@@ -364,7 +365,11 @@ function App() {
                   <Route path={ROUTES.ABOUT} element={<AboutPage />} />
                   <Route path={ROUTES.TERMS} element={<TermsPage />} />
                   <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
-                  <Route path={ROUTES.ADMIN} element={<AdminPage />} />
+                  <Route path={ROUTES.ADMIN} element={
+                    <AdminRoute user={user} isAuthLoading={isAuthLoading}>
+                      <AdminPage />
+                    </AdminRoute>
+                  } />
                   <Route path={ROUTES.PREDICTION_DETAIL} element={<PredictionDetailPage user={user} requestLogin={requestLogin} settings={settings} />} />
                   <Route path={ROUTES.GOLDEN_FEED} element={<GoldenFeedPage settings={settings} />} />
                   <Route path={ROUTES.CONTACT} element={<ContactPage />} />
