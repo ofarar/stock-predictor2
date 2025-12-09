@@ -563,7 +563,7 @@ def run_quant_model(mode='inference', specific_ticker=None):
                 if days_until == 7:
                     print("  [Schedule] T-7 Detected. Generating Weekly Prediction.")
                     prediction_type = "Weekly"
-                elif days_until in [5, 4, 3, 2]:
+                elif days_until in [5, 4, 3, 2, 1]:
                     print(f"  [Schedule] T-{days_until} Detected. Generating Daily Prediction.")
                     prediction_type = "Daily"
                 elif days_until == 14:
@@ -617,17 +617,25 @@ def run_quant_model(mode='inference', specific_ticker=None):
                 features = ['Ret_Lag1', 'Ret_Lag2', 'V_rev', 'Vol_5d', 'Hype_Factor', 'Macro_Trend', 'Macro_RSI', 'Sympathy', 'Days_Until', 'Days_Until_Fed'] 
                 
                 # Predict on LATEST row
-                # Handle missing columns if model is old (Safe Inference)
-                # But X_live has the new columns. 
-                # If the model file doesn't know them, XGBoost might error or ignore. 
-                # We can try/except or just let XGBoost handle it (it usually ignores extra cols if names match, but here names are ordered).
-                # To be safe, we re-order X_live to match what the 'brain' expects, OR we accept that we need retraining.
-                # For now, we pass all. If error, we fallback.
-                
                 X_live = df.iloc[[-1]][features]
                 current_price = df.iloc[-1]['Close']
                 
                 prediction_val = model.predict(X_live)[0]
+
+                # --- SAFETY CLAMPS (Tuning v3.1) ---
+                # 1. Fed Risk Dampener
+                days_to_fed = X_live['Days_Until_Fed'].values[0]
+                if days_to_fed <= 1:
+                    print(f"  [Risk] Fed Decision in {days_to_fed} days. Dampening signal by 50%.")
+                    prediction_val *= 0.5 
+
+                # 2. Max Daily Move Constraint (Prevent Outliers like 18%)
+                if prediction_type == "Daily":
+                    max_move = 0.05 # 5% limit for daily predictions
+                    if abs(prediction_val) > max_move:
+                        print(f"  [Clamp] Predicted move {prediction_val*100:.1f}% exceeds limit. Clamping to {max_move*100:.1f}%.")
+                        prediction_val = max_move if prediction_val > 0 else -max_move
+
                 predicted_price = current_price * (1 + prediction_val)
                 
                 direction = "Bullish" if prediction_val > 0 else "Bearish"
