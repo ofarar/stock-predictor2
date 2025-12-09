@@ -31,11 +31,11 @@ const DOCUMENTS = {
     // Draft Paper (Initially hidden, logic in component)
     quantModel: {
         id: 'quantModel',
-        title: 'Quant Model v3.0 (Draft)',
+        title: 'Quant System v3.0 (Technical Report)',
         icon: FaChartBar,
         content: quantModelContent,
-        pdfUrl: null, // No PDF yet
-        pdfLabel: 'Download Draft PDF',
+        pdfUrl: null, // Uses automatic "Print to PDF" fallback
+        pdfLabel: 'Download Report',
         isDraft: true
     }
 };
