@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.stockpredictorai.app",
+            "sha256_cert_fingerprints": [
+                "A1:4C:3B:85:AB:9A:F5:49:7C:D5:31:4D:80:7A:D1:80:D8:C3:C7:FF:E2:27:42:6C:A3:5D:1D:F7:B7:97:98:AE"
+            ]
+        }
+    }
+]
