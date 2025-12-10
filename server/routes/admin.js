@@ -227,6 +227,7 @@ router.get('/admin/all-users', async (req, res) => {
                     isGoldenMember: 1,
                     isVerified: 1,
                     verifiedAt: 1,
+                    country: 1, // --- NEW: Expose Country ---
                     createdAt: 1, // Added for "Joined Date"
                     aiMetrics: 1, // Exposed for Admin Bot Governance
                     followersCount: 1,

@@ -12,6 +12,8 @@ const UserSchema = new Schema({
     youtubeLink: { type: String },
     xLink: { type: String },
     telegramLink: { type: String },
+    country: { type: String, default: null }, // ISO 3166-1 alpha-2 code
+    lastIp: { type: String, select: false }, // Store last known IP (private)
     isBot: { type: Boolean, default: false },
     // --- Bot Metrics ---
     aiMetrics: {

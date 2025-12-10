@@ -6,6 +6,23 @@ const { sendWelcomeEmail } = require('../services/email');
 const { OAuth2Client } = require('google-auth-library');
 const Notification = require('../models/Notification');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const geoip = require('geoip-lite'); // --- NEW: Import geoip-lite ---
+
+// --- NEW: Helper to detect country ---
+const detectCountry = (req) => {
+  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
+  // Handle list of IPs (x-forwarded-for)
+  if (ip && ip.indexOf(',') > -1) {
+    ip = ip.split(',')[0].trim();
+  }
+  // Handle localhost for testing
+  if (ip === '::1' || ip === '127.0.0.1') {
+    // Return 'US' for localhost testing
+    return 'US';
+  }
+  const geo = geoip.lookup(ip);
+  return geo ? geo.country : null;
+};
 
 // In-memory store for mobile one-time tokens (Production should use Redis)
 // Map<token, { userId: string, expires: number }>
@@ -85,6 +102,24 @@ router.get(
           sendWelcomeEmail(user.email, user.username);
         }
 
+        // --- NEW: Update Country & IP on Login ---
+        const currentCountry = detectCountry(req);
+        let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        if (ip && ip.indexOf(',') > -1) ip = ip.split(',')[0].trim();
+
+        const updateDoc = {};
+        if (ip) updateDoc.lastIp = ip;
+
+        // Only set country if it's a NEW user
+        if (info && info.isNewUser && currentCountry) {
+          updateDoc.country = currentCountry;
+        }
+
+        if (Object.keys(updateDoc).length > 0) {
+          User.findByIdAndUpdate(user._id, updateDoc).exec();
+        }
+        // ----------------------------------------
+
         // --- MOBILE FLOW ---
         if (state.mobile) {
           // Generate a secure random token
@@ -154,12 +189,21 @@ router.post('/google/native', async (req, res) => {
       };
       // --- END NEW ---
 
+      // --- NEW: Detect Country Early ---
+      const currentCountry = detectCountry(req);
+      // ---------------------------------
+
+      let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      if (ip && ip.indexOf(',') > -1) ip = ip.split(',')[0].trim();
+
       user = await new User({
         googleId,
         username: newUsername,
         email,
         avatar: defaultAvatar,
-        analystRating: analystRatingObject
+        analystRating: analystRatingObject,
+        country: currentCountry || null, // Set country on creation
+        lastIp: ip || null // Set IP on creation
       }).save();
 
       // --- REFERRAL LOGIC ---
@@ -199,6 +243,8 @@ router.post('/google/native', async (req, res) => {
 
       sendWelcomeEmail(user.email, user.username);
     }
+
+    // -----------------------------------------------
 
     // Log the user in
     req.logIn(user, (err) => {

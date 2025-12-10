@@ -7,7 +7,18 @@ import toast from 'react-hot-toast';
 import VerifiedTick from './VerifiedTick';
 import LoadMoreButton from './LoadMoreButton';
 import LimitEditModal from './LimitEditModal';
+
 import { formatDateTimeShort } from '../utils/formatters';
+
+// --- NEW: Simple Country Flag Helper ---
+const getFlagEmoji = (countryCode) => {
+    if (!countryCode) return null;
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+};
 
 // --- UserCard Component ---
 const UserCard = ({ user, onEditLimit }) => {
@@ -29,6 +40,12 @@ const UserCard = ({ user, onEditLimit }) => {
                         </Link>
                         {user.isVerified && <VerifiedTick />}
                         {user.isGoldenMember && <span className="text-yellow-400 text-xs ml-1" title="Golden Member">👑</span>}
+                        {/* --- NEW: Country Flag --- */}
+                        {user.country && (
+                            <span className="text-lg ml-1" title={user.country}>
+                                {getFlagEmoji(user.country)}
+                            </span>
+                        )}
                     </div>
                     {/* User Meta: Joined Date */}
                     {user.createdAt && (

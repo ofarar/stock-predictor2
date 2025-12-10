@@ -396,6 +396,7 @@ router.put('/profile', async (req, res) => {
             youtubeLink: xss(youtubeLink),
             xLink: xss(xLink),
             telegramLink: xss(telegramLink),
+            country: xss(req.body.country),
             avatar: xss(avatar)
         };
 
