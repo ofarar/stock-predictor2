@@ -4,7 +4,40 @@ const User = require('../models/User');
 const Prediction = require('../models/Prediction');
 const JobLog = require('../models/JobLog');
 const runAssessmentJob = require('../jobs/assessment-job');
-const { runEarningsModel } = require('../jobs/botScheduler');
+const { runEarningsModel, runSmartBotBatch } = require('../jobs/botScheduler');
+
+// ... existing code ...
+
+/**
+ * @route POST /api/admin/trigger-bots
+ * @desc Manually trigger a bot batch
+ */
+router.post('/admin/trigger-bots', async (req, res) => {
+    // Check for admin permissions inline, consistent with other routes in this file
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    try {
+        const { interval, mode = 'inference' } = req.body; // 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'SigmaAlpha'
+
+        console.log(`[Admin] Manually triggering ${interval} bots (Mode: ${mode})...`);
+
+        if (interval === 'SigmaAlpha') {
+            runEarningsModel(mode);
+        } else if (['Daily', 'Weekly', 'Monthly', 'Quarterly'].includes(interval)) {
+            // Updated to pass mode
+            runSmartBotBatch(interval, mode);
+        } else {
+            return res.status(400).json({ message: "Invalid interval" });
+        }
+
+        res.json({ message: `Triggered ${interval} bot batch successfully.` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to trigger bots" });
+    }
+});
 const { awardBadges } = require('../services/badgeService');
 const mongoose = require('mongoose');
 const financeAPI = require('../services/financeAPI');
@@ -145,10 +178,23 @@ router.get('/admin/predictions/pending', async (req, res) => {
         return res.status(403).json({ message: 'Forbidden: Admins only.' });
     }
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const skip = (page - 1) * limit;
+
+        const total = await Prediction.countDocuments({ status: 'Pending' });
         const predictions = await Prediction.find({ status: 'Pending' })
             .populate('userId', 'username avatar isBot')
-            .sort({ createdAt: -1 });
-        res.json(predictions);
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            predictions,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching pending predictions.' });
     }
@@ -172,6 +218,46 @@ router.put('/admin/predictions/:id/status', async (req, res) => {
         res.json(prediction);
     } catch (error) {
         res.status(500).json({ message: 'Error updating prediction status.' });
+    }
+});
+
+// PUT: Bulk Approve/Reject
+router.put('/admin/predictions/bulk-status', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+    const { predictionIds, status } = req.body;
+
+    if (!Array.isArray(predictionIds) || predictionIds.length === 0) {
+        return res.status(400).json({ message: 'No prediction IDs provided.' });
+    }
+    if (!['Active', 'Rejected'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status update.' });
+    }
+
+    try {
+        const result = await Prediction.updateMany(
+            { _id: { $in: predictionIds } },
+            { $set: { status: status } }
+        );
+        res.json({ message: `Successfully updated ${result.modifiedCount} predictions to ${status}.` });
+    } catch (error) {
+        console.error("Bulk update error:", error);
+        res.status(500).json({ message: 'Error performing bulk update.' });
+    }
+});
+
+// GET: Fetch the primary AI Bot user (Sigma Alpha) for stats
+router.get('/admin/bot-user', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+    try {
+        // Find Sigma Alpha or fallback to any bot
+        const botUser = await User.findOne({ username: 'Sigma Alpha' }) || await User.findOne({ isBot: true });
+        res.json(botUser || null);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching bot user' });
     }
 });
 
@@ -201,11 +287,14 @@ router.get('/admin/all-users', async (req, res) => {
         const sortQuery = { [sortKey]: sortOrder, username: 1 };
 
         const matchQuery = {};
-        if (isGoldenMember === 'true') {
-            matchQuery.isGoldenMember = true;
-        }
-        if (isVerified === 'true') { matchQuery.isVerified = true; }
-        if (req.query.isBot === 'true') { matchQuery.isBot = true; }
+        if (isGoldenMember === 'true') matchQuery.isGoldenMember = true;
+        if (isGoldenMember === 'false') matchQuery.isGoldenMember = { $ne: true };
+
+        if (isVerified === 'true') matchQuery.isVerified = true;
+        if (isVerified === 'false') matchQuery.isVerified = { $ne: true };
+
+        if (req.query.isBot === 'true') matchQuery.isBot = true;
+        if (req.query.isBot === 'false') matchQuery.isBot = { $ne: true };
 
         const usersWithStats = await User.aggregate([
             { $match: matchQuery },

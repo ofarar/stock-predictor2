@@ -85,7 +85,7 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                 {user.isBot && user.aiMetrics && (
                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                         <span className="text-xs font-mono text-green-400 bg-green-900/40 px-2 py-1 rounded border border-green-500/30">
-                            TRN ACC: {user.aiMetrics.trainingAccuracy}%
+                            TRN ACC: {Number(user.aiMetrics.trainingAccuracy).toFixed(2)}%
                         </span>
                         <span className="text-xs font-mono text-blue-400 bg-blue-900/40 px-2 py-1 rounded border border-blue-500/30">
                             SPEC: {user.aiMetrics.specialization}

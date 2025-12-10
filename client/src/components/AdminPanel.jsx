@@ -63,19 +63,7 @@ const AdminPanel = () => {
                 >
                     Evaluate Predictions Now
                 </button>
-                {/* --- NEW BOT TRIGGER --- */}
-                <button
-                    onClick={() => {
-                        if (globalThis.confirm("Trigger AI Bot Run? This will spawn the python engine.")) {
-                            axios.post(`${import.meta.env.VITE_API_URL}/api/admin/trigger-bot`, {}, { withCredentials: true })
-                                .then(() => toast.success("AI Bot Job Triggered!"))
-                                .catch(() => toast.error("Failed to trigger bot."));
-                        }
-                    }}
-                    className="bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-500"
-                >
-                    Run AI Bot Engine
-                </button>
+
                 <button
                     onClick={handleRecalculateAnalytics}
                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-400"

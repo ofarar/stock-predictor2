@@ -137,6 +137,7 @@ const AdminUserList = ({ settings }) => {
             ...(filter === 'golden' && { isGoldenMember: 'true' }),
             ...(filter === 'verified' && { isVerified: 'true' }),
             ...(filter === 'bot' && { isBot: 'true' }),
+            ...(filter === 'regular' && { isGoldenMember: 'false', isVerified: 'false', isBot: 'false' }),
         };
 
         axios.get(`${import.meta.env.VITE_API_URL}/api/admin/all-users`, { params, withCredentials: true })
@@ -187,7 +188,7 @@ const AdminUserList = ({ settings }) => {
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                     {/* Filters */}
                     <div className="flex bg-gray-900 p-1 rounded-md overflow-x-auto">
-                        {['all', 'golden', 'verified', 'bot'].map(f => (
+                        {['all', 'regular', 'golden', 'verified', 'bot'].map(f => (
                             <button
                                 key={f}
                                 onClick={() => setFilter(f)}

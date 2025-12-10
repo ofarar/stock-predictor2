@@ -20,8 +20,15 @@ const TAB_NAMES = {
 };
 
 const AdminPage = () => {
-    // Default to Users tab as requested
-    const [activeTab, setActiveTab] = useState(TAB_NAMES.USERS);
+    // Default to Users tab, or load from localStorage
+    const [activeTab, setActiveTab] = useState(() => {
+        return localStorage.getItem('adminActiveTab') || TAB_NAMES.USERS;
+    });
+
+    // Save tab choice
+    useEffect(() => {
+        localStorage.setItem('adminActiveTab', activeTab);
+    }, [activeTab]);
     const [settings, setSettings] = useState({
         isVerificationEnabled: false,
         verificationPrice: 0,
@@ -192,8 +199,8 @@ const AdminPage = () => {
                             key={tabName}
                             onClick={() => setActiveTab(tabName)}
                             className={`px-4 py-2 rounded-md font-bold whitespace-nowrap transition-colors flex-1 text-center ${activeTab === tabName
-                                    ? 'bg-blue-600 text-white shadow-lg'
-                                    : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                                ? 'bg-blue-600 text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-gray-700'
                                 }`}
                         >
                             {tabName}
