@@ -63,22 +63,16 @@ async function seedBots() {
                 // Check if bot exists
                 const exists = await User.findOne({ username: botConfig.username });
 
-                // Use RandomUser.me for realistic human avatars matching gender
-                // Format: https://randomuser.me/api/portraits/men/1.jpg or women/1.jpg
-                const genderPath = botConfig.gender === 'male' ? 'men' : 'women';
-
-                // Deterministic simplistic hash for ID 0-99 to keep it consistent
-                const nameSum = botConfig.username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const avatarId = nameSum % 99;
-
-                const avatarUrl = botConfig.avatar || `https://randomuser.me/api/portraits/${genderPath}/${avatarId}.jpg`;
+                // switch to DiceBear (Legal/Safe)
+                // Styles: shapes (abstract professional), initials, identicon
+                const avatarUrl = botConfig.avatar || `https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(botConfig.username)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
 
                 if (exists) {
                     existCount++;
                     let hasChanged = false;
 
-                    // Check if avatar has changed
-                    if (exists.avatar !== avatarUrl || !exists.avatar || exists.avatar.includes('dicebear')) {
+                    // Check if avatar has changed or is using old randomuser
+                    if (exists.avatar !== avatarUrl || !exists.avatar || exists.avatar.includes('randomuser')) {
                         console.log(`[UPDATE] Updating avatar for ${botConfig.username}`);
                         exists.avatar = avatarUrl;
                         hasChanged = true;

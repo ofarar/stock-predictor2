@@ -169,10 +169,10 @@ def get_deadline(interval):
         return now + datetime.timedelta(days=90)
     return now + datetime.timedelta(days=1)
 
-def run_smart_engine(interval, mode):
+def run_smart_engine(interval, mode, specific_ticker=None):
     print(f"\n--- Smart Bot Engine v1.1 ({interval}) [Mode: {mode}] ---")
     
-    # Bots Logic (Simplified for brevity, similar to before but utilizing mode)
+    # Bots Logic
     bots = list(users_collection.find({"isBot": True}))
     print(f"--> Found {len(bots)} bots.")
     
@@ -181,47 +181,47 @@ def run_smart_engine(interval, mode):
     for bot in bots:
         if bot.get('username') == 'Sigma Alpha': continue
         
-        # 1. Try to use the pre-assigned Universe from the DB (Best Source)
+        # 1. Universe
         universe = bot.get('universe', [])
         
-        # 2. Fallback: Parse 'about' (formerly looked for non-existent 'bio')
+        # 2. Fallback
         if not universe or len(universe) < 3:
-            bio = bot.get('about', '').lower() # Seeder uses 'about', not 'bio'
-            
-            if 'tech' in bio or 'momentum' in bio: 
-                universe = ['AAPL', 'MSFT', 'NVDA', 'AMD', 'GOOGL', 'META', 'TSLA', 'AVGO']
-            elif 'crypto' in bio: 
-                universe = ['BTC-USD', 'ETH-USD', 'SOL-USD', 'COIN', 'MSTR']
-            elif 'energy' in bio: 
-                universe = ['XOM', 'CVX', 'OXY', 'SHELL', 'BP']
-            elif 'finance' in bio or 'bank' in bio: 
-                universe = ['JPM', 'BAC', 'GS', 'MS', 'WFC']
-            elif 'dividend' in bio or 'stable' in bio or 'blue chip' in bio:
-                # SAFE DIVIDEND / SINANCE Logic
+            bio = bot.get('about', '').lower()
+            if 'dividend' in bio or 'stable' in bio or 'blue chip' in bio:
                 universe = ['KO', 'JNJ', 'PG', 'WMT', 'VZ', 'T', 'PEP', 'MCD', 'COST']
-            elif 'gold' in bio or 'mining' in bio:
-                universe = ['GLD', 'GDX', 'NEM', 'GOLD']
-            else: 
-                # Generic Default
-                universe = ['SPY', 'QQQ', 'TSLA', 'AMZN', 'AAPL']
+            else:
+                universe = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA']
         
-        # Ensure we have enough targets
-        if len(universe) < 3: universe = ['SPY', 'QQQ', 'AAPL']
+        # Specific Ticker Filter (Bot must have it in universe)
+        if specific_ticker:
+            if specific_ticker not in universe:
+                continue
+            # Override to just this ticker
+            universe = [specific_ticker]
             
-        # print(f"  [{bot['username']}] Universe: {universe}")
-        np.random.shuffle(universe)
-        targets = universe[:3]
-        
+        # Ensure sufficient pool (unless specific ticker)
+        if not specific_ticker and len(universe) < 3: 
+             universe = ['SPY', 'QQQ', 'AAPL']
+             
+        if not specific_ticker:
+            np.random.shuffle(universe)
+            targets = universe[:3]
+        else:
+            targets = universe
+
         for ticker in targets:
             try:
-                # Skip existing check to force update? No, keep it.
+                # Check existance (skip if already pending, unless we want to force?)
+                # If specific ticker requested, we might want to allow forcing? 
+                # For now keeping it standard.
                 exists = predictions_collection.find_one({
-                    "userId": bot['_id'], "stockTicker": ticker, "status": "Active"
+                    "userId": bot['_id'], "stockTicker": ticker, "status": "Pending"
                 })
-                if exists: continue
+                if exists: 
+                    # print(f"    [Skip] Existing pending prediction for {ticker}")
+                    continue
                 
                 # Fetch Data
-                # Optimization: Could fetch less data if inference, but need features calc
                 df = fetch_data(ticker)
                 
                 prediction_pct, top_feature, current_price = train_and_predict(ticker, df, interval, mode)
@@ -231,9 +231,9 @@ def run_smart_engine(interval, mode):
                 # --- CLAMPING LOGIC ---
                 CLAMPS = {
                     'Daily': 0.05,      # Max 5%
-                    'Weekly': 0.15,     # Max 15%
-                    'Monthly': 0.30,    # Max 30%
-                    'Quarterly': 0.50   # Max 50%
+                    'Weekly': 0.15,
+                    'Monthly': 0.30,
+                    'Quarterly': 0.50
                 }
                 max_move = CLAMPS.get(interval, 0.10)
                 
@@ -241,7 +241,10 @@ def run_smart_engine(interval, mode):
                     print(f"    [Clamp] {ticker}: {prediction_pct*100:.1f}% -> {max_move*100:.1f}% ({interval} Limit)")
                     prediction_pct = max_move if prediction_pct > 0 else -max_move
 
-                if abs(prediction_pct) < 0.005 and interval == 'Daily': continue
+                # Aggressive Threshold: REMOVED (0.0%)
+                # if abs(prediction_pct) < 0.001 and interval == 'Daily':
+                #    print(f"    [Skip] {ticker}: Move {prediction_pct*100:.2f}% < 0.1%")
+                #    continue
                     
                 target_price = current_price * (1 + prediction_pct)
                 direction = "Bullish" if prediction_pct > 0 else "Bearish"
@@ -265,7 +268,7 @@ def run_smart_engine(interval, mode):
                 }
                 
                 predictions_collection.insert_one(new_pred)
-                print(f"    [P] {ticker} -> {direction} @ {target_price:.2f}")
+                print(f"    [P] ({bot['username']}) {ticker} -> {direction} @ {target_price:.2f}")
                 success_count += 1
                 
             except Exception as e:
@@ -278,6 +281,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--interval', type=str, default='Daily', choices=['Daily', 'Weekly', 'Monthly', 'Quarterly'])
     parser.add_argument('--mode', type=str, default='inference', choices=['train', 'inference'])
+    parser.add_argument('--ticker', type=str, help='Run for a specific ticker only')
     args = parser.parse_args()
     
-    run_smart_engine(args.interval, args.mode)
+    run_smart_engine(args.interval, args.mode, specific_ticker=args.ticker)
