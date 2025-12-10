@@ -45,7 +45,7 @@ describe('Analyst Rating Flow', () => {
 
         cy.intercept('GET', '**/api/quote/AAPL', { fixture: 'quote.json' }).as('getQuote');
 
-        cy.intercept('GET', '**/api/users/user123/profile', {
+        cy.intercept('GET', '**/api/profile/user123', {
             body: mockProfile
         }).as('getProfile');
 

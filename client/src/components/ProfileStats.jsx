@@ -43,7 +43,18 @@ const ProfileStats = ({ user, performance, predictions, totalAnalystRating, onIn
     const location = useLocation(); // Get current location
 
     // Check if we should highlight the stats (e.g. came from prediction detail)
-    const shouldHighlight = location.state?.highlightStats;
+    const [shouldHighlight, setShouldHighlight] = React.useState(location.state?.highlightStats);
+
+    React.useEffect(() => {
+        if (shouldHighlight) {
+            const timer = setTimeout(() => {
+                setShouldHighlight(false);
+                // Optionally clear the state from history so it doesn't reappear on refresh (though refresh usually clears state)
+                window.history.replaceState({}, document.title);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [shouldHighlight]);
 
     // Calculate share percentage, ensure it's a number
     const userRating = user.analystRating?.total || 0;
