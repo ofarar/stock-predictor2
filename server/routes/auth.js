@@ -10,18 +10,23 @@ const geoip = require('geoip-lite'); // --- NEW: Import geoip-lite ---
 
 // --- NEW: Helper to detect country ---
 const detectCountry = (req) => {
-  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-  // Handle list of IPs (x-forwarded-for)
-  if (ip && ip.indexOf(',') > -1) {
-    ip = ip.split(',')[0].trim();
+  try {
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
+    // Handle list of IPs (x-forwarded-for)
+    if (ip && ip.indexOf(',') > -1) {
+      ip = ip.split(',')[0].trim();
+    }
+    // Handle localhost for testing
+    if (ip === '::1' || ip === '127.0.0.1') {
+      return 'US'; // Localhost fallback
+    }
+    const geo = geoip.lookup(ip);
+    // If geoip fails to find it (null), return 'XX' for World/Unknown
+    return geo ? geo.country : 'XX';
+  } catch (error) {
+    console.error("GeoIP Error:", error.message);
+    return 'XX'; // Fallback to 'World' on exception
   }
-  // Handle localhost for testing
-  if (ip === '::1' || ip === '127.0.0.1') {
-    // Return 'US' for localhost testing
-    return 'US';
-  }
-  const geo = geoip.lookup(ip);
-  return geo ? geo.country : null;
 };
 
 // In-memory store for mobile one-time tokens (Production should use Redis)
