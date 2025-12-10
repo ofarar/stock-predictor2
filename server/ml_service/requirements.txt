@@ -1,8 +1,8 @@
-yfinance
-pandas
-numpy
-xgboost
-scikit-learn
+yfinance>=0.2.40
+pandas==2.2.0
+numpy==1.26.3
+xgboost==2.0.3
+scikit-learn==1.4.0
 pymongo
 python-dotenv
 ta

@@ -4,40 +4,7 @@ const User = require('../models/User');
 const Prediction = require('../models/Prediction');
 const JobLog = require('../models/JobLog');
 const runAssessmentJob = require('../jobs/assessment-job');
-const { runEarningsModel, runSmartBotBatch } = require('../jobs/botScheduler');
-
-// ... existing code ...
-
-/**
- * @route POST /api/admin/trigger-bots
- * @desc Manually trigger a bot batch
- */
-router.post('/admin/trigger-bots', async (req, res) => {
-    // Check for admin permissions inline, consistent with other routes in this file
-    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
-        return res.status(403).json({ message: 'Forbidden: Admins only.' });
-    }
-
-    try {
-        const { interval, mode = 'inference' } = req.body; // 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'SigmaAlpha'
-
-        console.log(`[Admin] Manually triggering ${interval} bots (Mode: ${mode})...`);
-
-        if (interval === 'SigmaAlpha') {
-            runEarningsModel(mode);
-        } else if (['Daily', 'Weekly', 'Monthly', 'Quarterly'].includes(interval)) {
-            // Updated to pass mode
-            runSmartBotBatch(interval, mode);
-        } else {
-            return res.status(400).json({ message: "Invalid interval" });
-        }
-
-        res.json({ message: `Triggered ${interval} bot batch successfully.` });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Failed to trigger bots" });
-    }
-});
+const { runEarningsModel, runSmartBotBatch, getActiveJobs, stopJob } = require('../jobs/botScheduler');
 const { awardBadges } = require('../services/badgeService');
 const mongoose = require('mongoose');
 const financeAPI = require('../services/financeAPI');
@@ -63,6 +30,62 @@ async function cleanupOrphanedPredictions() {
     // 3. Return the count of deleted documents
     return result.deletedCount;
 }
+
+/**
+ * @route GET /api/admin/active-jobs
+ * @desc Get list of running bot jobs
+ */
+router.get('/admin/active-jobs', (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+    const jobs = getActiveJobs();
+    res.json({ activeJobs: jobs });
+});
+
+/**
+ * @route POST /api/admin/stop-job
+ * @desc Manually stop a running job
+ */
+router.post('/admin/stop-job', (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+    const { jobId } = req.body;
+    const success = stopJob(jobId);
+    if (success) {
+        res.json({ message: `Job ${jobId} stopped successfully.` });
+    } else {
+        res.status(404).json({ message: `Job ${jobId} not found or already finished.` });
+    }
+});
+
+/**
+ * @route POST /api/admin/trigger-bots
+ * @desc Manually trigger a bot batch
+ */
+router.post('/admin/trigger-bots', async (req, res) => {
+    // Check for admin permissions inline
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    try {
+        const { interval, mode } = req.body;
+
+        if (interval === 'SigmaAlpha') {
+            runEarningsModel(mode);
+        } else {
+            // Fallback for Daily/Weekly/etc
+            runSmartBotBatch(interval, mode);
+        }
+
+        res.json({ message: `Triggered ${interval} bot in ${mode} mode.` });
+    } catch (error) {
+        console.error("Error triggering bot:", error);
+        res.status(500).json({ message: 'Failed to trigger bot.' });
+    }
+});
 
 // POST: Manually trigger assessment job
 router.post('/admin/evaluate', async (req, res) => {
