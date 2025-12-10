@@ -474,4 +474,53 @@ describe('Assessment Job', () => {
         // we can check that the log doesn't show "Awarded bonus points".
         // But better: check that targetHit is false.
     });
+    it('should calculate and save earnedPoints correctly', async () => {
+        const deadline = new Date();
+        deadline.setDate(deadline.getDate() - 1);
+        const createdAt = new Date(deadline.getTime() - 86400000);
+
+        const mockPrediction = {
+            _id: 'pred_points_test',
+            stockTicker: 'GOOG',
+            targetPrice: 150, // Target
+            priceAtCreation: 140,
+            deadline: deadline,
+            createdAt: createdAt,
+            status: 'Active',
+            userId: {
+                _id: 'user_points',
+                username: 'points_user',
+                analystRating: { predictionBreakdownByStock: new Map(), total: 0 },
+                save: jest.fn()
+            },
+            predictionType: 'Daily',
+            save: jest.fn(),
+            earnedPoints: undefined // Should be updated
+        };
+
+        const mockPopulate = jest.fn().mockResolvedValue([mockPrediction]);
+        Prediction.find.mockReturnValue({ populate: mockPopulate });
+
+        // Hit target: Close 155 (Target 150 passed) used for targetHit check
+        financeAPI.getHistorical.mockResolvedValue([
+            { high: 160, low: 145, close: 155 }
+        ]);
+
+        await runAssessmentJob();
+
+        // 1. Calculate Expected Rating
+        // Error = |150 - 155| / 155 = 5/155 = 0.032...
+        // Max Error = 0.05 (5%)
+        // Rating = 100 * (1 - (0.032/0.05)) = 100 * (1 - 0.64) = 36 approx
+        // Actually, let's just check that earnedPoints is set.
+        // If rating > 90/80/70 gives points. 36 gives 0 accuracy points.
+        // Target Hit Bonus: Base(5) * Weight(1.0) = 5.
+        // Total should be 5.
+
+        expect(mockPrediction.earnedPoints).toBeDefined();
+        // Since we mocked data, the internal `calculateProximityRating` inside job will run.
+        // We expect at least the target hit bonus.
+        expect(mockPrediction.earnedPoints).toBeGreaterThanOrEqual(5);
+        expect(mockPrediction.save).toHaveBeenCalled();
+    });
 });

@@ -35,8 +35,15 @@ const StatCard = ({ label, value, isRank = false, onClick, onInfoClick, isAnimat
     );
 };
 
+// Import useLocation
+import { useLocation } from 'react-router-dom';
+
 const ProfileStats = ({ user, performance, predictions, totalAnalystRating, onInfoClick, onCreatorPoolClick, onRatingInfoClick, onDirectionInfoClick, isCreatorPoolAnimated }) => {
     const { t, i18n } = useTranslation();
+    const location = useLocation(); // Get current location
+
+    // Check if we should highlight the stats (e.g. came from prediction detail)
+    const shouldHighlight = location.state?.highlightStats;
 
     // Calculate share percentage, ensure it's a number
     const userRating = user.analystRating?.total || 0;
@@ -75,6 +82,7 @@ const ProfileStats = ({ user, performance, predictions, totalAnalystRating, onIn
                 label={t('analyst_rating_label')}
                 value={formatNumber(userRating, i18n.language)}
                 onInfoClick={onRatingInfoClick}
+                isAnimated={shouldHighlight} // Apply animation here
             />
 
             <StatCard

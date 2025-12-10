@@ -265,6 +265,10 @@ const runAssessmentJob = async () => {
                         prediction.status = 'Assessed';
                         prediction.rating = rating;
                         prediction.actualPrice = actualPrice;
+                        prediction.status = 'Assessed';
+                        prediction.rating = rating;
+                        prediction.actualPrice = actualPrice;
+                        prediction.earnedPoints = analystRatingToAward; // Save the points to the prediction
                         await prediction.save();
 
                         const userId = prediction.userId._id.toString();
@@ -286,7 +290,8 @@ const runAssessmentJob = async () => {
                                 metadata: {
                                     stockTicker: prediction.stockTicker,
                                     predictionType: prediction.predictionType,
-                                    rating: rating
+                                    rating: rating,
+                                    points: analystRatingToAward // --- NEW: Include points for notification ---
                                 },
                                 link: `/prediction/${prediction._id}`
                             }).save();

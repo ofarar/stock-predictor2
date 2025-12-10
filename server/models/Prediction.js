@@ -10,6 +10,7 @@ const PredictionSchema = new Schema({
     deadline: { type: Date, required: true },
     status: { type: String, enum: ['Active', 'Assessed', 'Pending', 'Rejected'], default: 'Active' },
     rating: { type: Number, default: 0 },
+    earnedPoints: { type: Number }, // Points earned for this prediction (Analyst Rating)
     actualPrice: { type: Number },
     priceAtCreation: { type: Number },
     maxRatingAtCreation: { type: Number, default: 100 },

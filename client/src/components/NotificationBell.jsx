@@ -138,6 +138,9 @@ const NotificationBell = ({ user }) => {
                             if (n.metadata?.rating != null) {
                                 interpolation.rating = n.metadata.rating.toFixed(1);
                             }
+                            if (n.metadata?.points != null) {
+                                interpolation.points = n.metadata.points.toFixed(1); // or integer if preferred
+                            }
 
                             return (
                                 <Link to={n.link} key={n._id} onClick={() => setIsOpen(false)} className="flex items-start p-2 text-sm text-gray-300 hover:bg-gray-700 rounded">

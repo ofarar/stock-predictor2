@@ -437,6 +437,16 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                 {isAssessed ? t("Final Rating") : ratingLabel}
                             </p>
                             <p className={`text-3xl font-bold ${typeof rating === 'number' && rating > 60 ? 'text-green-400' : 'text-red-400'}`}>{formattedRating}</p>
+                            {/* --- NEW: ANALYST RATINGS DISPLAY --- */}
+                            {isAssessed && prediction.earnedPoints !== undefined && (
+                                <Link
+                                    to={`/profile/${prediction.userId._id}`}
+                                    state={{ highlightStats: true }}
+                                    className="mt-2 text-sm font-semibold text-green-400 bg-green-900/30 px-3 py-1 rounded-full border border-green-500/30 hover:bg-green-900/50 transition-colors inline-block"
+                                >
+                                    +{prediction.earnedPoints.toFixed(1)} Analyst Rating
+                                </Link>
+                            )}
                         </div>
                     </div>
 
