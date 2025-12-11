@@ -207,6 +207,14 @@ Retail investors have been burned so many times that they are skeptical of *any*
 >
 > We represent a new market category: **"Prediction Validation."** We don't compete with the content creators; we provide the *standard* they need to prove they are legitimate. We are the "Gold Shovel" in the content gold rush.
 
+### If the company does not become a success, what is the most likely reason?
+*Please mention the potential reasons that could lead to the company not achieving success.*
+
+> **High CAC (Customer Acquisition Cost) & Low Retention.**
+> The biggest risk is not "Building the Tech" (that is done) or "Market Demand" (it's huge). The risk is **Unit Economics**.
+>
+> If we spend $50 to acquire a user but they only stay for 2 months ($20 LTV), the business fails. This is why our Seed round is focused 100% on **Distribution** and **Retention Experiments**—to prove we can acquire users cheaply (Viral/SEO) and keep them (Gamification). The risk is purely "Execution on Growth."
+
 ---
 
 ## 4. Background
