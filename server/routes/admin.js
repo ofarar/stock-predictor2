@@ -153,40 +153,57 @@ router.post('/admin/predict-gold', async (req, res) => {
     const { ticker } = req.body;
     if (!ticker) return res.status(400).json({ message: "Ticker required" });
 
+    // Rate Limiting (1 Hour per User) - Bypass for specific super-admin if needed, but requested for "per user"
+    if (req.user.lastInstantPredictUsage) {
+        const lastUsage = new Date(req.user.lastInstantPredictUsage);
+        const now = new Date();
+        const diffMs = now - lastUsage;
+        const oneHourMs = 60 * 60 * 1000;
+
+        if (diffMs < oneHourMs) {
+            const minutesLeft = Math.ceil((oneHourMs - diffMs) / 60000);
+            return res.status(429).json({ message: `Rate limit exceeded. Try again in ${minutesLeft} minutes.` });
+        }
+    }
+
+    // Update usage timestamp
+    req.user.lastInstantPredictUsage = new Date();
+    await req.user.save();
+
     try {
         const { spawn } = require('child_process');
         const path = require('path');
-        const scriptPath = path.join(__dirname, '../ml_service/gold_bot_engine.py');
+        const scriptPath = path.join(__dirname, '../ml_service/instant_bot_engine.py');
         const interval = '1h'; // Default to Intraday per user request
-        console.log(`[GoldBot] Analyzing ${ticker} (${interval})...`);
+        console.log(`[InstantBot] Analyzing ${ticker} (${interval})...`);
 
         const pythonCommand = process.platform === 'win32' ? 'python' : '/usr/bin/python3';
-        console.log(`[GoldBot] Spawning ${pythonCommand} at ${scriptPath}`);
+        console.log(`[InstantBot] Spawning ${pythonCommand} at ${scriptPath}`);
         const pythonProcess = spawn(pythonCommand, [scriptPath, ticker, '--interval', interval]);
 
         let output = '';
         pythonProcess.stdout.on('data', (data) => {
             const s = data.toString();
             output += s;
-            console.log(`[GoldBot Out]: ${s}`);
+            console.log(`[InstantBot Out]: ${s}`);
         });
 
         let errorOutput = '';
         pythonProcess.stderr.on('data', (data) => {
             const s = data.toString();
             errorOutput += s;
-            console.error(`[GoldBot Err]: ${s}`);
+            console.error(`[InstantBot Err]: ${s}`);
         });
 
         pythonProcess.on('error', (err) => {
-            console.error(`[GoldBot] Failed to start process: ${err.message}`);
+            console.error(`[InstantBot] Failed to start process: ${err.message}`);
             return res.status(500).json({ message: "Process start failed", details: err.message });
         });
 
         pythonProcess.on('close', (code) => {
-            console.log(`[GoldBot] Exit Code: ${code}`);
+            console.log(`[InstantBot] Exit Code: ${code}`);
             if (code !== 0) {
-                console.error(`[GoldBot] Failed. Output: ${output}, Error: ${errorOutput}`);
+                console.error(`[InstantBot] Failed. Output: ${output}, Error: ${errorOutput}`);
                 // Ensure we don't double-send if 'error' already sent
                 if (!res.headersSent) {
                     return res.status(500).json({ message: "Analysis failed", details: errorOutput });
@@ -197,7 +214,7 @@ router.post('/admin/predict-gold', async (req, res) => {
                 const result = JSON.parse(output);
                 res.json(result);
             } catch (e) {
-                console.error(`[GoldBot] JSON Parse Error: ${e.message}. Output was: ${output}`);
+                console.error(`[InstantBot] JSON Parse Error: ${e.message}. Output was: ${output}`);
                 if (!res.headersSent) {
                     res.status(500).json({ message: "Invalid output from engine", output });
                 }

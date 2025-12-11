@@ -6,6 +6,7 @@ const TickerAutocomplete = ({ value, onChange, placeholder = "Search Ticker...",
     const [results, setResults] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const searchRef = useRef(null);
+    const ignoreNextSearch = useRef(false);
 
     // Sync internal state if external value changes (e.g., clear after selection)
     useEffect(() => {
@@ -13,6 +14,11 @@ const TickerAutocomplete = ({ value, onChange, placeholder = "Search Ticker...",
     }, [value]);
 
     useEffect(() => {
+        if (ignoreNextSearch.current) {
+            ignoreNextSearch.current = false;
+            return;
+        }
+
         if (searchTerm.length < 1) {
             setResults([]);
             return;
@@ -52,6 +58,7 @@ const TickerAutocomplete = ({ value, onChange, placeholder = "Search Ticker...",
     };
 
     const handleItemSelect = (symbol) => {
+        ignoreNextSearch.current = true;
         setSearchTerm(symbol);
         setIsOpen(false);
         if (onSelect) onSelect(symbol);

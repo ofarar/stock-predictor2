@@ -35,7 +35,7 @@ def fetch_data(ticker, period_days=20, interval='1h'): # Intraday default
     except:
         return None
 
-def analyze_gold_setup(ticker, interval='1h'):
+def analyze_instant_setup(ticker, interval='1h'):
     # Try requested interval (default 1h)
     df = fetch_data(ticker, interval=interval)
     
@@ -98,6 +98,14 @@ def analyze_gold_setup(ticker, interval='1h'):
     # Calculate % move
     pct_move = (target - current_price) / current_price
     
+    # Consistency Check: Override direction based on actual math
+    if pct_move > 0:
+        direction = "Bullish"
+    elif pct_move < 0:
+        direction = "Bearish"
+    else:
+        direction = "Neutral"
+    
     return {
         "ticker": ticker,
         "current_price": current_price,
@@ -116,7 +124,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     try:
-        result = analyze_gold_setup(args.ticker, interval=args.interval)
+        result = analyze_instant_setup(args.ticker, interval=args.interval)
         print(json.dumps(result))
     except Exception as e:
         print(json.dumps({"error": f"Engine Crash: {str(e)}", "ticker": args.ticker}))

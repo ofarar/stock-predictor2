@@ -24,6 +24,7 @@ const UserSchema = new Schema({
     universe: [{ type: String, uppercase: true }], // Stores the specific tickers this bot trades
     isAdmin: { type: Boolean, default: false },
     canUseGoldBot: { type: Boolean, default: false }, // NEW Permission
+    lastInstantPredictUsage: { type: Date, default: null }, // For Rate Limiting
     isVerified: { type: Boolean, default: false },
     verifiedAt: { type: Date, default: null },
     // --- STRIPE FIELDS ---
