@@ -92,6 +92,15 @@
 > **No.**
 > Our business model is B2C Subscription / Marketplace. Customers pay upfront (via Stripe) instantly. We do not have long payment terms (Net 30/60/90) or inventory gaps that require working capital financing. Our cash flow cycle is immediate.
 
+### What is the company's debt situation?
+*Does the company owe money to banks, investors, founders, suppliers, tax authorities, or others?*
+
+> **Zero Debt.**
+> The company has no outstanding loans, lines of credit, or convertible notes.
+> *   **Founder Debt:** None. All founder contributions are equity-based, not loans.
+> *   **Tax/Supplier:** Current on all obligations.
+> *   **Bank Debt:** None.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
