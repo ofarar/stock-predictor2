@@ -23,6 +23,8 @@ const { sendPushToUser } = require('../services/pushNotificationService');
 // If so, it uses that. Otherwise, it uses the global PREDICT_LIMIT.
 const predictLimiter = rateLimit({
     windowMs: PREDICT_WINDOW_MS,
+    // Skip for admin users or when running tests
+    skip: (req) => (req.user && req.user.isAdmin) || process.env.NODE_ENV === 'test',
     max: (req) => {
         if (req.user && req.user.rateLimitHourly !== undefined && req.user.rateLimitHourly !== null) {
             return req.user.rateLimitHourly;
@@ -39,9 +41,6 @@ const predictLimiter = rateLimit({
         }
         return rateLimit.ipKeyGenerator(req, res);
     },
-    // Don't skip for dev environments if we want to test this logic, OR skip if preferred.
-    // Keeping existing skip logic if present before, but better to allow testing.
-    skip: (req, res) => process.env.NODE_ENV === 'test' // Only skip in automated tests
 });
 
 const viewLimiter = rateLimit({

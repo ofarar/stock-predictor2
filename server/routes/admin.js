@@ -153,8 +153,8 @@ router.post('/admin/predict-gold', async (req, res) => {
     const { ticker } = req.body;
     if (!ticker) return res.status(400).json({ message: "Ticker required" });
 
-    // Rate Limiting (1 Hour per User) - Bypass for specific super-admin if needed, but requested for "per user"
-    if (req.user.lastInstantPredictUsage) {
+    // Rate Limiting (1 Hour per User) - Bypass for admin users
+    if (!req.user.isAdmin && req.user.lastInstantPredictUsage) {
         const lastUsage = new Date(req.user.lastInstantPredictUsage);
         const now = new Date();
         const diffMs = now - lastUsage;
