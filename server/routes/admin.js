@@ -160,20 +160,47 @@ router.post('/admin/predict-gold', async (req, res) => {
         const interval = '1h'; // Default to Intraday per user request
         console.log(`[GoldBot] Analyzing ${ticker} (${interval})...`);
 
-        const process = spawn('python', [scriptPath, ticker, '--interval', interval]);
+        const pythonCommand = process.platform === 'win32' ? 'python' : '/usr/bin/python3';
+        console.log(`[GoldBot] Spawning ${pythonCommand} at ${scriptPath}`);
+        const pythonProcess = spawn(pythonCommand, [scriptPath, ticker, '--interval', interval]);
 
         let output = '';
-        process.stdout.on('data', (data) => { output += data.toString(); });
+        pythonProcess.stdout.on('data', (data) => {
+            const s = data.toString();
+            output += s;
+            console.log(`[GoldBot Out]: ${s}`);
+        });
 
-        process.stderr.on('data', (data) => { console.error(`[GoldBot Err]: ${data}`); });
+        let errorOutput = '';
+        pythonProcess.stderr.on('data', (data) => {
+            const s = data.toString();
+            errorOutput += s;
+            console.error(`[GoldBot Err]: ${s}`);
+        });
 
-        process.on('close', (code) => {
-            if (code !== 0) return res.status(500).json({ message: "Analysis failed" });
+        pythonProcess.on('error', (err) => {
+            console.error(`[GoldBot] Failed to start process: ${err.message}`);
+            return res.status(500).json({ message: "Process start failed", details: err.message });
+        });
+
+        pythonProcess.on('close', (code) => {
+            console.log(`[GoldBot] Exit Code: ${code}`);
+            if (code !== 0) {
+                console.error(`[GoldBot] Failed. Output: ${output}, Error: ${errorOutput}`);
+                // Ensure we don't double-send if 'error' already sent
+                if (!res.headersSent) {
+                    return res.status(500).json({ message: "Analysis failed", details: errorOutput });
+                }
+                return;
+            }
             try {
                 const result = JSON.parse(output);
                 res.json(result);
             } catch (e) {
-                res.status(500).json({ message: "Invalid output from engine" });
+                console.error(`[GoldBot] JSON Parse Error: ${e.message}. Output was: ${output}`);
+                if (!res.headersSent) {
+                    res.status(500).json({ message: "Invalid output from engine", output });
+                }
             }
         });
     } catch (e) {

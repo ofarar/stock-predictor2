@@ -115,5 +115,9 @@ if __name__ == "__main__":
     parser.add_argument('--interval', type=str, default='1h')
     args = parser.parse_args()
     
-    result = analyze_gold_setup(args.ticker, interval=args.interval)
-    print(json.dumps(result))
+    try:
+        result = analyze_gold_setup(args.ticker, interval=args.interval)
+        print(json.dumps(result))
+    except Exception as e:
+        print(json.dumps({"error": f"Engine Crash: {str(e)}", "ticker": args.ticker}))
+        sys.exit(0) # Exit 0 to pass JSON error to Node

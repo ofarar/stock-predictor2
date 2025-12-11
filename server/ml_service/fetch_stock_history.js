@@ -1,4 +1,4 @@
-const { default: YahooFinance } = require('yahoo-finance2'); // CommonJS require if possible, checking environment.
+// yahoo-finance2 is ESM, dynamic import used below.
 // Actually, since server is CommonJS (require), I should use require('yahoo-finance2').default if it works?
 // My debug script used import().
 // Let's stick to the method that worked in the debug script (using dynamic import to be safe in CJS environment if package is ESM).
