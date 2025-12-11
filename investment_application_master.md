@@ -165,6 +165,16 @@ Retail investors have been burned so many times that they are skeptical of *any*
 > *   **Them:** High friction. User must move their money to their brokerage to copy trades.
 > *   **Us:** Information Layer (SaaS). Users keep their existing brokerage; they just pay us for the verified signal. Lower barrier to entry.
 
+### Is it a blue ocean or red ocean market?
+*"Red Ocean" refers to intense competition... "Blue Ocean" refers to creating a new market...*
+
+> **We are creating a "Blue Ocean of Trust" inside a "Red Ocean of Noise."**
+>
+> *   **The Red Ocean:** There is an excess supply of "Stock Tips." Every YouTuber and Tweeter is selling advice. This market is saturated and low-trust.
+> *   **The Blue Ocean:** There is a scarcity of **"Verified Reputation."** No one has built the "FICO Score for Financial Influencers" yet.
+>
+> We represent a new market category: **"Prediction Validation."** We don't compete with the content creators; we provide the *standard* they need to prove they are legitimate. We are the "Gold Shovel" in the content gold rush.
+
 ---
 
 ## 4. Background
