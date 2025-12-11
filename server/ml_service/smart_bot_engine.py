@@ -291,41 +291,53 @@ def run_smart_engine(interval, mode, specific_ticker=None, sentiment_json=None):
                 
                 if prediction_pct is None: continue
                 
-                # --- APPLY SENTIMENT BIAS ---
+                # --- PERSONALITY & STRATEGY BIAS ---
+                strategy = bot.get('strategy', 'Neutral')
+                risk_cap = bot.get('volatilityCap', 0.05) # Default 5%
+                
+                # 1. Strategy Bias
+                if strategy == 'Momentum' and prediction_pct > 0:
+                    prediction_pct *= 1.1 # Boost winners
+                elif strategy == 'MeanReversion':
+                    # Dampen trends, boost reversals? 
+                    # For simplicity: just slightly dampen strong moves to simulate taking profits early
+                    prediction_pct *= 0.9
+                elif strategy == 'Contrarian': 
+                    # Slight fade
+                    prediction_pct *= 0.95
+                elif strategy == 'Conservative':
+                    prediction_pct *= 0.8 # Always reduce volatility
+                
+                # 2. Sector/Sentiment Bias (Existing)
                 bias, bias_reason = get_sector_bias(ticker, sentiment_json)
                 if bias != 0:
-                    # print(f"    [Sentiment] {ticker}: Applying {bias*100:+.1f}% bias due to {bias_reason}")
                     prediction_pct += bias
-                # ----------------------------
 
-                # --- CLAMPING LOGIC ---
-                # Adjusted limits to allow for "Strong Bearish" (-10%) sentiment to pass through
-                CLAMPS = {
-                    'Daily': 0.15,      # Increased to 15% to allow for -10% sentiment events
-                    'Weekly': 0.25,
-                    'Monthly': 0.40,
-                    'Quarterly': 0.60
-                }
-                max_move = CLAMPS.get(interval, 0.15)
+                # 3. Micro-Jitter (Uniqueness)
+                # Adds +/- 0.5% random variation so no two bots match exactly
+                jitter = (np.random.random() - 0.5) * 0.01 
+                prediction_pct += jitter
+
+                # 4. Risk-Based Clamping (The "Cap")
+                # Interval multiplier allows slightly more room for longer horizons
+                horizon_mult = 1.0
+                if interval == 'Weekly': horizon_mult = 1.5
+                elif interval == 'Quarterly': horizon_mult = 3.0
                 
-                # Debug: Print raw prediction
-                # print(f"    [Raw] {ticker}: {prediction_pct:.4f}")
+                personal_limit = risk_cap * horizon_mult
                 
-                # Sanity Check: If prediction is WILDLY high (e.g. > 15% for Daily), assume model is broken/hallucinating and SKIP.
-                # This prevents the "Wall of 5%" issue where hundreds of stocks get clamped to the max.
-                sanity_limit = max_move * 4 
-                if abs(prediction_pct) > sanity_limit:
-                    print(f"    [Skip] {ticker}: Prediction {prediction_pct*100:.1f}% exceeds sanity limit {sanity_limit*100:.1f}% (Model Hallucination?)")
-                    continue
+                # Hard limit for sanity (prevent 50% moves unless warranted)
+                global_max = 0.20 * horizon_mult
+                final_limit = min(personal_limit, global_max)
 
-                if abs(prediction_pct) > max_move:
-                    print(f"    [Clamp] {ticker} Raw: {prediction_pct*100:.2f}% -> Clamped: {max_move*100:.1f}% ({interval} Limit)")
-                    prediction_pct = max_move if prediction_pct > 0 else -max_move
+                if abs(prediction_pct) > final_limit:
+                    # print(f"    [Clamp] {ticker} ({bot['username']}): {prediction_pct*100:.1f}% -> {final_limit*100:.1f}% (Risk Cap)")
+                    prediction_pct = final_limit if prediction_pct > 0 else -final_limit
 
-                # Aggressive Threshold: REMOVED (0.0%)
-                # if abs(prediction_pct) < 0.001 and interval == 'Daily':
-                #    print(f"    [Skip] {ticker}: Move {prediction_pct*100:.2f}% < 0.1%")
-                #    continue
+                # Sanity Limit (Extreme Hallucination Check)
+                if abs(prediction_pct) > (final_limit * 1.5):
+                     print(f"    [Skip] {ticker}: {prediction_pct*100:.1f}% exceeds sanity.")
+                     continue
                     
                 target_price = current_price * (1 + prediction_pct)
                 direction = "Bullish" if prediction_pct > 0 else "Bearish"
