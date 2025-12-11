@@ -28,7 +28,7 @@ const stopJob = (jobId) => {
     return false;
 };
 
-const runSmartBotBatch = (interval = 'Daily', mode = 'inference') => {
+const runSmartBotBatch = (interval = 'Daily', mode = 'inference', ticker = null, sentimentOverrides = null) => {
     const jobId = interval; // Use interval as ID since we only run one of each at a time
     if (activeJobs[jobId]) {
         console.log(`[Scheduler] Job ${jobId} is already running. Skipping.`);
@@ -40,7 +40,11 @@ const runSmartBotBatch = (interval = 'Daily', mode = 'inference') => {
     const scriptPath = path.join(__dirname, '../ml_service/smart_bot_engine.py');
     const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
 
-    const pythonProcess = spawn(pythonCommand, ['-u', scriptPath, '--interval', interval, '--mode', mode]);
+    const args = ['-u', scriptPath, '--interval', interval, '--mode', mode];
+    if (ticker) args.push('--ticker', ticker);
+    if (sentimentOverrides) args.push('--sentiment', JSON.stringify(sentimentOverrides));
+
+    const pythonProcess = spawn(pythonCommand, args);
     activeJobs[jobId] = pythonProcess;
 
     pythonProcess.stdout.on('data', (data) => {
@@ -61,7 +65,7 @@ const runSmartBotBatch = (interval = 'Daily', mode = 'inference') => {
     });
 };
 
-const runEarningsModel = (mode = 'inference') => {
+const runEarningsModel = (mode = 'inference', ticker = null) => {
     const jobId = 'SigmaAlpha';
     if (activeJobs[jobId]) {
         console.log(`[Scheduler] Job ${jobId} is already running. Skipping.`);
@@ -73,7 +77,10 @@ const runEarningsModel = (mode = 'inference') => {
     const scriptPath = path.join(__dirname, '../ml_service/earnings_model.py');
     const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
 
-    const pythonProcess = spawn(pythonCommand, ['-u', scriptPath, '--mode', mode]);
+    const args = ['-u', scriptPath, '--mode', mode];
+    if (ticker) args.push('--ticker', ticker);
+
+    const pythonProcess = spawn(pythonCommand, args);
     activeJobs[jobId] = pythonProcess;
 
     pythonProcess.stdout.on('data', (data) => {

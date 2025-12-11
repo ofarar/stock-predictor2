@@ -13,24 +13,29 @@ async function main() {
     const ticker = args[0];
     const startDate = args[1];
     const endDate = args[2];
+    const interval = args[3] || '1d';
 
     try {
         const { default: YahooFinance } = await import('yahoo-finance2');
         const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
 
         const queryOptions = {
-            period1: startDate,
-            period2: endDate
+            period1: startDate, // yahoo-finance2 handles YYYY-MM-DD strings well often, but for intraday let's be strict? 
+            // Actually, let's try just passing them as is first but realize the previous error was "InvalidOptionsError".
+            // Maybe it's the interval validation.
+            // Let's force dates to be dates.
+            period1: new Date(startDate),
+            period2: new Date(endDate),
+            interval: interval // '1h' or '60m'
         };
 
-        const result = await yahooFinance.historical(ticker, queryOptions);
+        // console.error("Query Options:", JSON.stringify(queryOptions)); // Debug log to stderr
 
-        // Output as JSON
+        const result = await yahooFinance.historical(ticker, queryOptions);
         console.log(JSON.stringify(result));
     } catch (error) {
-        // Output explicit error structure for Python to parse or handle
-        console.error(JSON.stringify({ error: error.message }));
-        process.exit(1);
+        // console.error("Yahoo Error:", error);
+        console.log(JSON.stringify({ error: error.message, details: error }));
     }
 }
 

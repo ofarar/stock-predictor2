@@ -21,7 +21,7 @@ const getFlagEmoji = (countryCode) => {
 };
 
 // --- UserCard Component ---
-const UserCard = ({ user, onEditLimit }) => {
+const UserCard = ({ user, onEditLimit, onToggleGold }) => {
     return (
         <div className="bg-gray-700 p-4 rounded-lg flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 border border-gray-600 shadow-sm hover:bg-gray-650 transition-colors">
             {/* User Info Section */}
@@ -40,7 +40,18 @@ const UserCard = ({ user, onEditLimit }) => {
                         </Link>
                         {user.isVerified && <VerifiedTick />}
                         {user.isGoldenMember && <span className="text-yellow-400 text-xs ml-1" title="Golden Member">👑</span>}
-                        {/* --- NEW: Country Flag --- */}
+                        {/* --- Gold Access Toggle --- */}
+                        <button
+                            onClick={() => onToggleGold(user)}
+                            className={`ml-2 text-xs font-bold px-2 py-0.5 rounded border transition-colors flex items-center gap-1
+                                ${user.canUseGoldBot
+                                    ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/30'
+                                    : 'bg-gray-800 text-gray-500 border-gray-700 hover:text-gray-300 hover:border-gray-500'}`}
+                            title={user.canUseGoldBot ? "Has Gold Bot Access" : "Grant Gold Bot Access"}
+                        >
+                            ⚡ {user.canUseGoldBot ? 'ON' : 'OFF'}
+                        </button>
+                        {/* --- Country Flag --- */}
                         {user.country && (
                             <span className="text-lg ml-1" title={user.country}>
                                 {getFlagEmoji(user.country)}
@@ -102,6 +113,7 @@ UserCard.propTypes = {
         _id: PropTypes.string.isRequired,
         avatar: PropTypes.string,
         isGoldenMember: PropTypes.bool,
+        canUseGoldBot: PropTypes.bool,
         username: PropTypes.string.isRequired,
         isVerified: PropTypes.bool,
         createdAt: PropTypes.string,
@@ -111,7 +123,8 @@ UserCard.propTypes = {
         rateLimitHourly: PropTypes.number,
         customPredictionLimit: PropTypes.number
     }).isRequired,
-    onEditLimit: PropTypes.func.isRequired
+    onEditLimit: PropTypes.func.isRequired,
+    onToggleGold: PropTypes.func.isRequired
 };
 
 // --- Main Component ---
@@ -173,6 +186,26 @@ const AdminUserList = ({ settings }) => {
         }
     };
 
+    // Toggle Gold Access
+    const handleToggleGold = async (user) => {
+        try {
+            const res = await axios.put(
+                `${import.meta.env.VITE_API_URL}/api/admin/users/${user._id}/gold-access`,
+                {},
+                { withCredentials: true }
+            );
+
+            if (res.data.success) {
+                toast.success(`${user.username} Gold Access: ${res.data.canUseGoldBot ? 'GRANTED' : 'REVOKED'}`);
+                // Update local state
+                setUsers(prev => prev.map(u => u._id === user._id ? { ...u, canUseGoldBot: res.data.canUseGoldBot } : u));
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to toggle permission.");
+        }
+    };
+
     const usersToDisplay = useMemo(() => users.slice(0, visibleCount), [users, visibleCount]);
 
     return (
@@ -226,6 +259,7 @@ const AdminUserList = ({ settings }) => {
                                 key={user._id}
                                 user={user}
                                 onEditLimit={setEditingUser}
+                                onToggleGold={handleToggleGold}
                             />
                         ))
                     ) : (

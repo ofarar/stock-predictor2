@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import VerifiedTick from './VerifiedTick';
 import QuantSystemInfoModal from './QuantSystemInfoModal';
 
-const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, onOpenSummary, settings, isAnimating, requestLogin }, ref) => {
+const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile, isFollowing, isSubscribed, handleFollow, handleUnfollow, setIsJoinModalOpen, setIsGoldenModalOpen, setIsVerificationModalOpen, setIsStatusModalOpen, onOpenSummary, settings, isAnimating, requestLogin, onGoldPredict }, ref) => {
     const { t, i18n } = useTranslation();
     const { user, followersCount, followingCount, goldenSubscribersCount, goldenSubscriptionsCount } = profileData;
     const avatarBorder = user.isGoldenMember ? 'border-yellow-400' : 'border-green-500';
@@ -205,9 +205,19 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
                     data-testid="smart-summary-btn"
                     className="flex items-center gap-2 text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-300 hover:to-purple-300 transition-colors border border-purple-500/30 rounded-full px-4 py-2 hover:bg-purple-500/10"
                 >
-                    <span>✨</span>
                     {t('smart_summary_btn', 'Smart Summary')}
                 </button>
+
+                {/* --- NEW: GOLD PREDICT (Admins OR Permissioned Users) --- */}
+                {(currentUser?.isAdmin || currentUser?.canUseGoldBot) && (user.isBot || isOwnProfile) && (
+                    <button
+                        onClick={onGoldPredict}
+                        className="flex items-center gap-2 text-sm font-bold bg-gradient-to-r from-yellow-600 to-amber-600 text-white hover:from-yellow-500 hover:to-amber-500 transition-colors shadow-lg rounded-full px-4 py-2 border border-yellow-400/50"
+                    >
+                        <span>⚡</span>
+                        Instant Predict
+                    </button>
+                )}
             </div>
         </div>
     );

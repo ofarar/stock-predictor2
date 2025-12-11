@@ -10,6 +10,7 @@ import { API_URL, API_ENDPOINTS, STORAGE_KEYS, URL_PARAMS, PARAM_VALUES, PREDICT
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileStats from '../components/ProfileStats';
 import PredictionList from '../components/PredictionList';
+import GoldPredictModal from '../components/GoldPredictModal'; // Import new modal
 import AggressivenessInfoModal from '../components/AggressivenessInfoModal';
 import DirectionAccuracyInfoModal from '../components/DirectionAccuracyInfoModal';
 import PromoBanner from '../components/PromoBanner';
@@ -68,7 +69,8 @@ const ProfilePage = ({ settings, requestLogin }) => {
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
     const [predictionToDeleteId, setPredictionToDeleteId] = useState(null);
 
-    // --- NEW: Handle Profile View Counting ---
+    // --- New Gold Modal State ---
+    const [isGoldPredictModalOpen, setIsGoldPredictModalOpen] = useState(false);
     useEffect(() => {
         if (!userId) return;
 
@@ -247,6 +249,10 @@ const ProfilePage = ({ settings, requestLogin }) => {
         setIsDeleteConfirmOpen(true);
     };
 
+    const handleGoldPredict = () => {
+        setIsGoldPredictModalOpen(true);
+    };
+
     const confirmDeletePrediction = async () => {
         if (!predictionToDeleteId) return;
 
@@ -375,6 +381,13 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 predictions={predictions}
             />
 
+            {/* 5. ADD GOLD PREDICT MODAL */}
+            {/* 5. ADD GOLD PREDICT MODAL */}
+            <GoldPredictModal
+                isOpen={isGoldPredictModalOpen}
+                onClose={() => setIsGoldPredictModalOpen(false)}
+            />
+
             <div className="animate-fade-in max-w-6xl mx-auto">
                 {/* --- NEW: Promo Banner displayed for guests if enabled in settings --- */}
                 {!currentUser && settings?.isPromoBannerActive && (
@@ -402,6 +415,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                     onOpenSummary={() => setIsSummaryModalOpen(true)}
                     settings={settings}
                     requestLogin={requestLogin}
+                    onGoldPredict={handleGoldPredict}
                 />
 
                 <ProfileStats

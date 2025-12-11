@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import whitepaperContent from '../../docs/StockPredictorAI_WhitePaper.md?raw';
 import quantModelContent from '../../docs/QuantModelV3.md?raw';
 import scoringModelContent from '../../docs/ScoringModel_Public.md?raw';
-import { FaFilePdf, FaArrowLeft, FaFileAlt, FaChartBar } from 'react-icons/fa';
+import instantPredictContent from '../../docs/InstantPredict_WhitePaper.md?raw';
+import { FaFilePdf, FaArrowLeft, FaFileAlt, FaChartBar, FaBolt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import 'katex/dist/katex.min.css'; // Ensure katex CSS is imported
 
@@ -28,14 +29,23 @@ const DOCUMENTS = {
         pdfUrl: '/docs/scoring_model.pdf',
         pdfLabel: 'Download Model PDF'
     },
-    // Draft Paper (Initially hidden, logic in component)
+    // Draft Papers (Initially hidden, logic in component)
     quantModel: {
         id: 'quantModel',
         title: 'Quant System v3.0 (Technical Report)',
-        icon: FaChartBar,
+        icon: FaChartBar, // Generic icon
         content: quantModelContent,
         pdfUrl: null, // Uses automatic "Print to PDF" fallback
         pdfLabel: 'Download Report',
+        isDraft: true
+    },
+    instantPredict: {
+        id: 'instantPredict',
+        title: 'Instant Predict (Algorithm)',
+        icon: FaBolt, // Bolt icon for Instant/Gold bot
+        content: instantPredictContent,
+        pdfUrl: null,
+        pdfLabel: 'Download Paper',
         isDraft: true
     }
 };

@@ -10,7 +10,8 @@ import xgboost as xgb
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from ta.momentum import RSIIndicator
-from ta.trend import SMAIndicator
+from ta.trend import SMAIndicator, MACD
+from ta.volatility import BollingerBands
 
 # Load env variables
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
@@ -88,11 +89,23 @@ def prepare_features(df):
     df['Trend_Signal'] = np.where(df['SMA_20'] > df['SMA_50'], 1, -1)
     
     df['Vol_20d'] = df['Ret_1d'].rolling(20).std()
+
+    # 5. MACD (Scientific/Standard ML Feature)
+    macd = MACD(close=df[col])
+    df['MACD'] = macd.macd()
+    df['MACD_Diff'] = macd.macd_diff() # Histogram usually very predictive
+
+    # 6. Bollinger Bands
+    bb = BollingerBands(close=df[col], window=20, window_dev=2)
+    df['BB_High'] = bb.bollinger_hband()
+    df['BB_Low'] = bb.bollinger_lband()
+    # Distance from bands
+    df['BB_Pos'] = (df[col] - df['BB_Low']) / (df['BB_High'] - df['BB_Low'])
     
     # Target (for training)
     df['Y_Next'] = df[col].shift(-1) / df[col] - 1
     
-    features = ['Ret_1d', 'Ret_5d', 'RSI', 'Trend_Signal', 'Vol_20d']
+    features = ['Ret_1d', 'Ret_5d', 'RSI', 'Trend_Signal', 'Vol_20d', 'MACD', 'MACD_Diff', 'BB_Pos']
     df.dropna(subset=features, inplace=True)
     
     return df, features
@@ -125,8 +138,14 @@ def train_and_predict(ticker, df, interval, mode='inference'):
     if mode == 'inference':
         model = load_model(ticker, interval)
         if model:
-            # print(f"    [Cache] Loaded model for {ticker}")
-            pass
+            try:
+                # Validation: Check if model works with current feature set
+                # (Crucial since we added MACD/BB and old models will have wrong shape)
+                latest_features = df_clean.iloc[[-1]][features]
+                model.predict(latest_features)
+            except Exception as e:
+                print(f"    [Auto-Retrain] Model mismatch for {ticker} (Features changed). Retraining...")
+                model = None # Force Retrain
     
     # 2. Train if missing or in Train mode
     if model is None:
@@ -169,8 +188,50 @@ def get_deadline(interval):
         return now + datetime.timedelta(days=90)
     return now + datetime.timedelta(days=1)
 
-def run_smart_engine(interval, mode, specific_ticker=None):
-    print(f"\n--- Smart Bot Engine v1.1 ({interval}) [Mode: {mode}] ---")
+def get_sector_bias(ticker, sentiment_config):
+    """
+    Calculates bias based on basic sector mapping.
+    """
+    if not sentiment_config: return 0.0, None
+
+    try:
+        config = json.loads(sentiment_config)
+    except:
+        return 0.0, None
+
+    sector = config.get('sector', 'All')
+    sentiment = config.get('sentiment', 'Neutral')
+    
+    if sector == 'All' and sentiment == 'Neutral': return 0.0, None
+
+    # Rudimentary Sector Map (Top tickers) - Expand as needed
+    TECH = ['AAPL', 'MSFT', 'NVDA', 'GOOGL', 'AMZN', 'TSLA', 'AMD', 'INTC', 'ORCL', 'IBM', 'CRM', 'ADBE']
+    FINANCE = ['JPM', 'BAC', 'WFC', 'C', 'GS', 'MS', 'V', 'MA']
+    ENERGY = ['XOM', 'CVX', 'COP', 'SLB', 'EOG']
+    HEALTH = ['JNJ', 'PFE', 'UNH', 'LLY', 'MRK', 'ABBV']
+    
+    is_match = False
+    if sector == 'All': is_match = True
+    elif sector == 'Technology' and ticker in TECH: is_match = True
+    elif sector == 'Finance' and ticker in FINANCE: is_match = True
+    elif sector == 'Energy' and ticker in ENERGY: is_match = True
+    elif sector == 'Healthcare' and ticker in HEALTH: is_match = True
+    
+    if not is_match: return 0.0, None
+    
+    # Bias Map
+    BIAS_MAP = {
+        'Strong Bearish': -0.10,
+        'Bearish': -0.05,
+        'Neutral': 0.00,
+        'Bullish': 0.05,
+        'Strong Bullish': 0.10
+    }
+    
+    return BIAS_MAP.get(sentiment, 0.0), f"{sector} {sentiment}"
+
+def run_smart_engine(interval, mode, specific_ticker=None, sentiment_json=None):
+    print(f"\n--- Smart Bot Engine v1.2 ({interval}) [Mode: {mode}] ---")
     
     # Bots Logic
     bots = list(users_collection.find({"isBot": True}))
@@ -228,17 +289,37 @@ def run_smart_engine(interval, mode, specific_ticker=None):
                 
                 if prediction_pct is None: continue
                 
-                # --- CLAMPING LOGIC ---
-                CLAMPS = {
-                    'Daily': 0.05,      # Max 5%
-                    'Weekly': 0.15,
-                    'Monthly': 0.30,
-                    'Quarterly': 0.50
-                }
-                max_move = CLAMPS.get(interval, 0.10)
+                if prediction_pct is None: continue
                 
+                # --- APPLY SENTIMENT BIAS ---
+                bias, bias_reason = get_sector_bias(ticker, sentiment_json)
+                if bias != 0:
+                    # print(f"    [Sentiment] {ticker}: Applying {bias*100:+.1f}% bias due to {bias_reason}")
+                    prediction_pct += bias
+                # ----------------------------
+
+                # --- CLAMPING LOGIC ---
+                # Adjusted limits to allow for "Strong Bearish" (-10%) sentiment to pass through
+                CLAMPS = {
+                    'Daily': 0.15,      # Increased to 15% to allow for -10% sentiment events
+                    'Weekly': 0.25,
+                    'Monthly': 0.40,
+                    'Quarterly': 0.60
+                }
+                max_move = CLAMPS.get(interval, 0.15)
+                
+                # Debug: Print raw prediction
+                # print(f"    [Raw] {ticker}: {prediction_pct:.4f}")
+                
+                # Sanity Check: If prediction is WILDLY high (e.g. > 15% for Daily), assume model is broken/hallucinating and SKIP.
+                # This prevents the "Wall of 5%" issue where hundreds of stocks get clamped to the max.
+                sanity_limit = max_move * 4 
+                if abs(prediction_pct) > sanity_limit:
+                    print(f"    [Skip] {ticker}: Prediction {prediction_pct*100:.1f}% exceeds sanity limit {sanity_limit*100:.1f}% (Model Hallucination?)")
+                    continue
+
                 if abs(prediction_pct) > max_move:
-                    print(f"    [Clamp] {ticker}: {prediction_pct*100:.1f}% -> {max_move*100:.1f}% ({interval} Limit)")
+                    print(f"    [Clamp] {ticker} Raw: {prediction_pct*100:.2f}% -> Clamped: {max_move*100:.1f}% ({interval} Limit)")
                     prediction_pct = max_move if prediction_pct > 0 else -max_move
 
                 # Aggressive Threshold: REMOVED (0.0%)
@@ -249,8 +330,10 @@ def run_smart_engine(interval, mode, specific_ticker=None):
                 target_price = current_price * (1 + prediction_pct)
                 direction = "Bullish" if prediction_pct > 0 else "Bearish"
                 
-                rationale = (f"Market analysis indicates a {direction} trend driven by "
-                             f"{top_feature}. Model ({mode}) confidence based on {interval} data.")
+                rationale = (f"Market analysis indicates a {direction} trend driven by {top_feature}.")
+                if bias != 0:
+                    rationale += f" Adjusted for {bias_reason} sentiment."
+                rationale += f" Model ({mode}) confidence based on {interval} data."
                              
                 new_pred = {
                     "userId": bot['_id'],
@@ -267,9 +350,12 @@ def run_smart_engine(interval, mode, specific_ticker=None):
                     "updatedAt": datetime.datetime.utcnow()
                 }
                 
-                predictions_collection.insert_one(new_pred)
-                print(f"    [P] ({bot['username']}) {ticker} -> {direction} @ {target_price:.2f}")
-                success_count += 1
+                if mode == 'train':
+                    print(f"    [Train] ({bot['username']}) Model updated for {ticker}. Result: {direction} @ {target_price:.2f} (Not saving to DB)")
+                else:
+                    predictions_collection.insert_one(new_pred)
+                    print(f"    [P] ({bot['username']}) {ticker} -> {direction} @ {target_price:.2f}")
+                    success_count += 1
                 
             except Exception as e:
                 print(f"    Error {ticker}: {e}")
@@ -282,6 +368,7 @@ if __name__ == "__main__":
     parser.add_argument('--interval', type=str, default='Daily', choices=['Daily', 'Weekly', 'Monthly', 'Quarterly'])
     parser.add_argument('--mode', type=str, default='inference', choices=['train', 'inference'])
     parser.add_argument('--ticker', type=str, help='Run for a specific ticker only')
+    parser.add_argument('--sentiment', type=str, help='JSON string for sentiment overrides')
     args = parser.parse_args()
     
-    run_smart_engine(args.interval, args.mode, specific_ticker=args.ticker)
+    run_smart_engine(args.interval, args.mode, specific_ticker=args.ticker, sentiment_json=args.sentiment)

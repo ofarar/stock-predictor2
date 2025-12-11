@@ -71,13 +71,13 @@ router.post('/admin/trigger-bots', async (req, res) => {
     }
 
     try {
-        const { interval, mode } = req.body;
+        const { interval, mode, ticker, sentimentOverrides } = req.body;
 
         if (interval === 'SigmaAlpha') {
-            runEarningsModel(mode);
+            runEarningsModel(mode, ticker);
         } else {
             // Fallback for Daily/Weekly/etc
-            runSmartBotBatch(interval, mode);
+            runSmartBotBatch(interval, mode, ticker, sentimentOverrides);
         }
 
         res.json({ message: `Triggered ${interval} bot in ${mode} mode.` });
@@ -137,10 +137,66 @@ router.post('/admin/recalculate-analytics', async (req, res) => {
         }
         console.log(`--- Analytics recalculation completed for ${allUsers.length} users. ---`);
         res.status(200).send('Successfully recalculated analytics for all users.');
-
     } catch (error) {
-        console.error("Error during badge recalculation:", error);
-        res.status(500).send('An error occurred during recalculation.');
+        console.error("Recalculate error:", error);
+        res.status(500).send("Failed.");
+    }
+});
+
+// POST: Trigger Gold Bot Prediction
+router.post('/admin/predict-gold', async (req, res) => {
+    // Check for admin permissions
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+
+    const { ticker } = req.body;
+    if (!ticker) return res.status(400).json({ message: "Ticker required" });
+
+    try {
+        const { spawn } = require('child_process');
+        const path = require('path');
+        const scriptPath = path.join(__dirname, '../ml_service/gold_bot_engine.py');
+        const interval = '1h'; // Default to Intraday per user request
+        console.log(`[GoldBot] Analyzing ${ticker} (${interval})...`);
+
+        const process = spawn('python', [scriptPath, ticker, '--interval', interval]);
+
+        let output = '';
+        process.stdout.on('data', (data) => { output += data.toString(); });
+
+        process.stderr.on('data', (data) => { console.error(`[GoldBot Err]: ${data}`); });
+
+        process.on('close', (code) => {
+            if (code !== 0) return res.status(500).json({ message: "Analysis failed" });
+            try {
+                const result = JSON.parse(output);
+                res.json(result);
+            } catch (e) {
+                res.status(500).json({ message: "Invalid output from engine" });
+            }
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
+
+// PUT: Toggle Gold Bot Access
+router.put('/admin/users/:userId/gold-access', async (req, res) => {
+    if (!req.user || !req.user.isAdmin) return res.status(403).send('Forbidden');
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).send('User not found');
+
+        user.canUseGoldBot = !user.canUseGoldBot;
+        await user.save();
+
+        res.json({ success: true, canUseGoldBot: user.canUseGoldBot });
+    } catch (err) {
+        res.status(500).send('Error updating permission');
     }
 });
 
@@ -203,10 +259,16 @@ router.get('/admin/predictions/pending', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 50;
+        const search = req.query.search || '';
         const skip = (page - 1) * limit;
 
-        const total = await Prediction.countDocuments({ status: 'Pending' });
-        const predictions = await Prediction.find({ status: 'Pending' })
+        const query = { status: 'Pending' };
+        if (search) {
+            query.stockTicker = { $regex: search.toUpperCase(), $options: 'i' };
+        }
+
+        const total = await Prediction.countDocuments(query);
+        const predictions = await Prediction.find(query)
             .populate('userId', 'username avatar isBot')
             .sort({ createdAt: -1 })
             .skip(skip)
@@ -267,6 +329,29 @@ router.put('/admin/predictions/bulk-status', async (req, res) => {
     } catch (error) {
         console.error("Bulk update error:", error);
         res.status(500).json({ message: 'Error performing bulk update.' });
+    }
+});
+
+// PUT: Approve/Reject ALL Pending
+router.put('/admin/predictions/all-status', async (req, res) => {
+    if (!req.user || (!req.user.isAdmin && req.user.email !== 'ofarar@gmail.com')) {
+        return res.status(403).json({ message: 'Forbidden: Admins only.' });
+    }
+    const { status } = req.body;
+
+    if (!['Active', 'Rejected'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status update.' });
+    }
+
+    try {
+        const result = await Prediction.updateMany(
+            { status: 'Pending' },
+            { $set: { status: status } }
+        );
+        res.json({ message: `Successfully updated ${result.modifiedCount} ALL pending predictions to ${status}.` });
+    } catch (error) {
+        console.error("Global bulk update error:", error);
+        res.status(500).json({ message: 'Error performing global bulk update.' });
     }
 });
 
