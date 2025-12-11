@@ -110,6 +110,17 @@ Retail investors are drowning in noise. Platforms like Twitter/X, Reddit, and Di
 
 **The Solution:** StockPredictorAI acts as the **"Trust Layer"**. We don't just host content; we *validate* it. By forcing every prediction to be logged, scored, and ranked on an immutable leaderboard, we filter out the noise and surface the top 1% of talent that is actually worth listening to.
 
+### What are the company's biggest challenges?
+*Investors want to know that you are realistic about the risks.*
+
+**1. The "Cold Start" Problem (Chicken & Egg):**
+As a two-sided marketplace (Analysts vs. Investors), we need Analysts to attract Investors, but Analysts want an audience before they join.
+*   **Mitigation:** We are solving this by seeding the platform with our own "Smart Bots" content and paying "Founding Analysts" from the Creator Pool to ensure the shelves are stocked from Day 1.
+
+**2. Overcoming "Scam Fatigue":**
+Retail investors have been burned so many times that they are skeptical of *any* new platform.
+*   **Mitigation:** Radical Transparency. We make our scoring algorithm open-source and immutable. We don't ask for trust; we prove it mathematically.
+
 ---
 
 ## 4. Background
