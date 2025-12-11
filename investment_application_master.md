@@ -109,6 +109,20 @@
 >
 > However, we are sophisticated enough to understand the non-dilutive benefits of Venture Debt. If the terms (interest-only periods, covenants) allow us to invest aggressively in User Acquisition before repayment starts, we would certainly consider a hybrid deal (e.g., small equity round + debt line).
 
+### What is the company's current valuation?
+*How do you currently value the company? Please elaborate on how you arrived at this valuation.*
+
+> **$2.5 Million USD (Pre-Money).**
+>
+> **Methodology: Comparable Transactions (Market Standard).**
+> Since we are Pre-Revenue, we do not use DCF (Discounted Cash Flow) or Revenue Multiples. Instead, we value the company based on the **Asset Value** and **Stage Norms** for European Fintech Seeds:
+>
+> 1.  **Technology Asset:** A fully functional, production-ready MERN stack platform with proprietary AI models (XGBoost) and real-time infrastructure. (Estimated development cost to replicate: >$300k).
+> 2.  **IP & Team:** 100% IP ownership + Ph.D. Founder with specialized Domain Expertise (Siemens/Defense).
+> 3.  **Market Opportunity:** The "Financial Creator Economy" is a Billion-dollar "Blue Ocean."
+>
+> **The Deal Logic:** This valuation is priced to allow incoming investors to see a clear **300% markup** (to $7.5M - $10M) at the Series A round in 18 months.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
