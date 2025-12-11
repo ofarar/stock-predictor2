@@ -275,6 +275,12 @@ Retail investors have been burned so many times that they are skeptical of *any*
 > **No.**
 > I am a builder, not an investor. My entire career has been focused on *creating* value through Engineering and Product Development (Siemens, Defense), rather than allocating capital. This is why I value an "Active Owner" partner like Kjøller—to bridge that gap.
 
+### Where did you hear about us?
+*It could be, for instance, from an internet search...*
+
+> **Referral (Word of Mouth).**
+> I was referred to Kjøller by a fellow founder/peer who is also exploring investment opportunities. They spoke highly of your "Active Ownership" model and suggested it would be a good fit for my technically-focused background.
+
 ---
 
 ## 5. Use of Proceeds (Detailed)
