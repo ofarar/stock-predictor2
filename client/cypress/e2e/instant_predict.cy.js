@@ -1,21 +1,81 @@
 describe('Instant Predict (Gold Bot) E2E', () => {
+    const adminUser = {
+        _id: 'admin_user_id',
+        username: 'AdminUser',
+        email: 'ofarar@gmail.com',
+        isAdmin: true,
+        canUseGoldBot: true,
+        avatar: 'https://robohash.org/admin',
+        isBot: false,
+        isGoldenMember: false,
+        isVerified: true,
+        watchlist: [],
+        badges: [],
+        followers: [],
+        following: [],
+        goldenSubscriptions: [],
+        bio: 'Admin Test Bio',
+        createdAt: new Date().toISOString()
+    };
+
     beforeEach(() => {
-        // 1. Mock Admin User Login
-        cy.intercept('GET', '/api/auth/me', {
+        cy.on('uncaught:exception', () => false); // Ignore ResizeObserver loop errors
+
+        // 1. Mock Admin User Session
+        cy.intercept('GET', '**/auth/current_user', {
             statusCode: 200,
-            body: {
-                _id: 'admin_user_id',
-                username: 'AdminUser',
-                email: 'ofarar@gmail.com', // Recognized super-admin
-                isAdmin: true,
-                canUseGoldBot: true,
-                avatar: 'https://robohash.org/admin'
-            }
+            body: adminUser
         }).as('getMe');
 
-        // 2. Visit Profile Page
-        cy.visit('/profile');
-        cy.wait('@getMe');
+        // 2. Mock Settings (Prevent loading hang)
+        cy.intercept('GET', '**/api/settings', {
+            statusCode: 200,
+            body: {
+                isEarningsBannerActive: false,
+                verificationPrice: 4.99,
+                isPromoBannerActive: false
+            }
+        }).as('getSettings');
+
+        // 3. Mock Notifications (Prevent 401 errors)
+        cy.intercept('GET', '**/api/notifications', {
+            statusCode: 200,
+            body: []
+        }).as('getNotifications');
+
+        // 4. Mock View Log (Prevent 404/Error on side effect)
+        cy.intercept('POST', '**/api/users/*/view', {
+            statusCode: 200,
+            body: { success: true }
+        }).as('postView');
+
+        // 5. Mock Profile Data (The Page Data)
+        cy.intercept('GET', `**/api/profile/${adminUser._id}`, {
+            statusCode: 200,
+            body: {
+                user: adminUser,
+                predictions: [],
+                performance: {
+                    totalRating: 0,
+                    overallRank: 999,
+                    overallAvgRating: 50.0
+                },
+                followersCount: 10,
+                followingCount: 5,
+                goldenSubscribersCount: 0,
+                goldenSubscriptionsCount: 0,
+                isFollowing: false,
+                isSubscribed: false
+            }
+        }).as('getProfile');
+
+        // 6. Visit Profile Page with Language forced to EN
+        cy.visit(`/profile/${adminUser._id}`, {
+            onBeforeLoad(win) {
+                win.localStorage.setItem('i18nextLng', 'en');
+            }
+        });
+        cy.wait('@getProfile');
     });
 
     it('should display the Instant Predict button for admins', () => {
