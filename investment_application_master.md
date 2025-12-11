@@ -182,6 +182,14 @@ Retail investors have been burned so many times that they are skeptical of *any*
 > *   **Algorithm Models:** Proprietary trained XGBoost models ("Smart Bots").
 > *   **Value:** While hard to price on a balance sheet, this data is the "Oils" of our future B2B Enterprise API licensing business.
 
+### Will the company need assistance with fundraising?
+*Will the company need to raise additional capital in the future, and would it be relevant to utilize our resources in this regard?*
+
+> **Yes, absolutely.**
+> We view Kjøller Holdings as a strategic partner, not just a capital source.
+>
+> We plan to raise a **Series A ($2M - $5M)** in 12-18 months once we hit our metrics ($10k MRR / 25k Users). We would highly value your expertise and network introduction to pan-European VCs at that stage to help us scale globally. Access to your dedicated fundraising team would be a significant unfair advantage for us.
+
 ---
 
 ## 5. Use of Proceeds (Detailed)
