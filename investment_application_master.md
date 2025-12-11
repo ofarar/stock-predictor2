@@ -165,6 +165,12 @@ Retail investors have been burned so many times that they are skeptical of *any*
 >
 > What started as a side project to expose fake gurus has evolved into a global platform that empowers the honest ones. We are building the meritocracy that finance has always promised but never delivered.
 
+### Is the Founder 100% focused on the company?
+*Do the Founder(s) have other side jobs, run other companies, etc.?*
+
+> **Yes.**
+> The founder is **100% fully committed** to StockPredictorAI. There are no side jobs, other active ventures, or consulting gigs. The focus is singular: building the world's first verified prediction marketplace.
+
 ---
 
 ## 5. Use of Proceeds (Detailed)
