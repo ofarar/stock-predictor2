@@ -86,6 +86,12 @@
 > **No.**
 > Since we are a 100% digital business, we have no physical storefronts, no inventory, and no expensive multi-year leases. Our infrastructure (Fly.io/Cloudflare) is pay-as-you-go. We do not require any external guarantees for banking or suppliers at this stage.
 
+### Does the company need bridge financing?
+*We assist several of our portfolio companies with bridge financing (advances to suppliers, invoice purchases, etc).*
+
+> **No.**
+> Our business model is B2C Subscription / Marketplace. Customers pay upfront (via Stripe) instantly. We do not have long payment terms (Net 30/60/90) or inventory gaps that require working capital financing. Our cash flow cycle is immediate.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
