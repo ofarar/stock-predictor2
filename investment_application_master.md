@@ -171,6 +171,17 @@ Retail investors have been burned so many times that they are skeptical of *any*
 > **Yes.**
 > The founder is **100% fully committed** to StockPredictorAI. There are no side jobs, other active ventures, or consulting gigs. The focus is singular: building the world's first verified prediction marketplace.
 
+### What comprises the inventory and what is its value?
+*If the company has an inventory of goods... please state the values in purchase price.*
+
+> **Not Applicable (Digital Asset Value).**
+> As a SaaS platform, we hold no physical inventory ($0 value).
+>
+> However, our **"Digital Inventory"** (Data) is growing daily:
+> *   **Prediction Database:** Thousands of verified, time-stamped market predictions.
+> *   **Algorithm Models:** Proprietary trained XGBoost models ("Smart Bots").
+> *   **Value:** While hard to price on a balance sheet, this data is the "Oils" of our future B2B Enterprise API licensing business.
+
 ---
 
 ## 5. Use of Proceeds (Detailed)
