@@ -1213,5 +1213,26 @@
     "description": "This metric shows how often a user correctly predicts whether the price will go up or down, regardless of the exact target price.",
     "howItWorks": "How it works",
     "explanation": "If a user predicts a price increase and the price actually increases (even if it misses the target), it counts as a correct directional prediction. The same applies for predicted price decreases."
+  },
+  "instantPredict": {
+    "buttonLabel": "Instant Predict",
+    "modalTitle": "Instant Predict",
+    "modalSubtitle": "Run short-term technical analysis on any asset.",
+    "inputLabel": "Stock Ticker",
+    "inputPlaceholder": "e.g. AAPL, BTC-USD, GLD",
+    "disclaimer": "Targets Intraday (1H). Fallback to Daily.",
+    "runButton": "Run Analysis",
+    "analyzing": "Analyzing...",
+    "analysisComplete": "Analysis Complete!",
+    "analysisFailed": "Analysis Failed",
+    "tickerLabel": "Ticker",
+    "currentPriceLabel": "Current",
+    "horizonLabel": "Horizon",
+    "targetLabel": "Target",
+    "expectedMoveLabel": "Expected Move",
+    "rationaleLabel": "AI Rationale",
+    "closeResultButton": "Close Result",
+    "labelDaily": "Daily",
+    "labelIntraday": "Intraday"
   }
 }

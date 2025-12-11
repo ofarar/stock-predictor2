@@ -1221,5 +1221,26 @@
         "description": "Cette mesure indique la fréquence à laquelle un utilisateur prédit correctement si le prix va monter ou descendre, quel que soit le prix cible exact.",
         "howItWorks": "Comment ça marche",
         "explanation": "Si un utilisateur prédit une hausse de prix et que le prix augmente réellement (même s'il manque la cible), cela compte comme une prédiction directionnelle correcte. Il en va de même pour les baisses de prix prédites."
+    },
+    "instantPredict": {
+        "buttonLabel": "Prédiction Instantanée",
+        "modalTitle": "Prédiction Instantanée",
+        "modalSubtitle": "Lancez une analyse technique à court terme sur n'importe quel actif.",
+        "inputLabel": "Symbole Boursier",
+        "inputPlaceholder": "ex. AAPL, BTC-USD, GLD",
+        "disclaimer": "Cible Intraday (1H). Repli sur Quotidien.",
+        "runButton": "Lancer l'Analyse",
+        "analyzing": "Analyse en cours...",
+        "analysisComplete": "Analyse Terminée !",
+        "analysisFailed": "Échec de l'Analyse",
+        "tickerLabel": "Symbole",
+        "currentPriceLabel": "Actuel",
+        "horizonLabel": "Horizon",
+        "targetLabel": "Cible",
+        "expectedMoveLabel": "Mouvement Prévu",
+        "rationaleLabel": "Raisonnement IA",
+        "closeResultButton": "Fermer le Résultat",
+        "labelDaily": "Quotidien",
+        "labelIntraday": "Intraday"
     }
 }

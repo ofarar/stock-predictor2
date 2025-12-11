@@ -1224,5 +1224,26 @@
     "description": "Deze statistiek toont hoe vaak een gebruiker correct voorspelt of de prijs zal stijgen of dalen, ongeacht de exacte richtprijs.",
     "howItWorks": "Hoe het werkt",
     "explanation": "Als een gebruiker een prijsstijging voorspelt en de prijs daadwerkelijk stijgt (zelfs als het doel wordt gemist), telt dit als een correcte richtingsvoorspelling. Hetzelfde geldt voor voorspelde prijsdalingen."
+  },
+  "instantPredict": {
+    "buttonLabel": "Direct Voorspellen",
+    "modalTitle": "Direct Voorspellen",
+    "modalSubtitle": "Voer technische analyse op korte termijn uit op elk activum.",
+    "inputLabel": "Aandelenticker",
+    "inputPlaceholder": "bijv. AAPL, BTC-USD, GLD",
+    "disclaimer": "Richt zich op Intraday (1u). Terugval naar Dagelijks.",
+    "runButton": "Analyse Uitvoeren",
+    "analyzing": "Analyseren...",
+    "analysisComplete": "Analyse Voltooid!",
+    "analysisFailed": "Analyse Mislukt",
+    "tickerLabel": "Ticker",
+    "currentPriceLabel": "Huidig",
+    "horizonLabel": "Horizon",
+    "targetLabel": "Doel",
+    "expectedMoveLabel": "Verwachte Beweging",
+    "rationaleLabel": "AI Redenering",
+    "closeResultButton": "Resultaat Sluiten",
+    "labelDaily": "Dagelijks",
+    "labelIntraday": "Intradag"
   }
 }

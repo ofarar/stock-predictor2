@@ -1222,5 +1222,26 @@
     "description": "Bu metrik, kesin hedef fiyattan bağımsız olarak, bir kullanıcının fiyatın artacağını veya azalacağını ne sıklıkla doğru tahmin ettiğini gösterir.",
     "howItWorks": "Nasıl çalışır",
     "explanation": "Bir kullanıcı fiyat artışı tahmin ederse ve fiyat gerçekten artarsa (hedefi ıskalasa bile), bu doğru bir yön tahmini olarak sayılır. Aynısı tahmin edilen fiyat düşüşleri için de geçerlidir."
+  },
+  "instantPredict": {
+    "buttonLabel": "Anlık Tahmin",
+    "modalTitle": "Anlık Tahmin",
+    "modalSubtitle": "Herhangi bir varlık üzerinde kısa vadeli teknik analiz yapın.",
+    "inputLabel": "Kod",
+    "inputPlaceholder": "ör. AAPL, BTC-USD, GLD",
+    "disclaimer": "Gün İçi (1S) hedeflenir. Günlük'e döner.",
+    "runButton": "Analizi Çalıştır",
+    "analyzing": "Analiz Ediliyor...",
+    "analysisComplete": "Analiz Tamamlandı!",
+    "analysisFailed": "Analiz Başarısız",
+    "tickerLabel": "Kod",
+    "currentPriceLabel": "Güncel",
+    "horizonLabel": "Vade",
+    "targetLabel": "Hedef",
+    "expectedMoveLabel": "Beklenen Hareket",
+    "rationaleLabel": "Yapay Zeka Mantığı",
+    "closeResultButton": "Sonucu Kapat",
+    "labelDaily": "Günlük",
+    "labelIntraday": "Gün İçi"
   }
 }

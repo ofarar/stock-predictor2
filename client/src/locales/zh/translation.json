@@ -1221,5 +1221,26 @@
         "description": "此指标显示用户正确预测价格上涨或下跌的频率，而不管确切的目标价格如何。",
         "howItWorks": "运作方式",
         "explanation": "如果用户预测价格上涨并且价格实际上涨（即使未达到目标），则算作正确的方向预测。这同样适用于预测的价格下跌。"
+    },
+    "instantPredict": {
+        "buttonLabel": "即时预测",
+        "modalTitle": "即时预测",
+        "modalSubtitle": "对任何资产进行短期技术分析。",
+        "inputLabel": "股票代码",
+        "inputPlaceholder": "例如 AAPL, BTC-USD, GLD",
+        "disclaimer": "目标日内（1小时）。回退至日线。",
+        "runButton": "运行分析",
+        "analyzing": "分析中...",
+        "analysisComplete": "分析完成！",
+        "analysisFailed": "分析失败",
+        "tickerLabel": "代码",
+        "currentPriceLabel": "当前价",
+        "horizonLabel": "周期",
+        "targetLabel": "目标价",
+        "expectedMoveLabel": "预期波动",
+        "rationaleLabel": "AI 理由",
+        "closeResultButton": "关闭结果",
+        "labelDaily": "日线",
+        "labelIntraday": "日内"
     }
 }

@@ -1208,5 +1208,26 @@
     "description": "يوضح هذا المقياس عدد المرات التي يتوقع فيها المستخدم بشكل صحيح ما إذا كان السعر سيرتفع أم ينخفض، بغض النظر عن السعر المستهدف بدقة.",
     "howItWorks": "كيف يعمل",
     "explanation": "إذا توقع المستخدم ارتفاع السعر وارتفع السعر بالفعل (حتى لو لم يصل إلى الهدف)، فإنه يحتسب كتوقع اتجاه صحيح. وينطبق الشيء نفسه على انخفاض السعر المتوقع."
+  },
+  "instantPredict": {
+    "buttonLabel": "توقع فوري",
+    "modalTitle": "توقع فوري",
+    "modalSubtitle": "إجراء تحليل فني قصير المدى على أي أصل.",
+    "inputLabel": "رمز السهم",
+    "inputPlaceholder": "مثال AAPL, BTC-USD, GLD",
+    "disclaimer": "يستهدف خلال اليوم (1 ساعة). الرجوع إلى يومي.",
+    "runButton": "تشغيل التحليل",
+    "analyzing": "جاري التحليل...",
+    "analysisComplete": "اكتمل التحليل!",
+    "analysisFailed": "فشل التحليل",
+    "tickerLabel": "الرمز",
+    "currentPriceLabel": "الحالي",
+    "horizonLabel": "الأفق الزمني",
+    "targetLabel": "الهدف",
+    "expectedMoveLabel": "التحرك المتوقع",
+    "rationaleLabel": "منطق الذكاء الاصطناعي",
+    "closeResultButton": "إغلاق النتيجة",
+    "labelDaily": "يومي",
+    "labelIntraday": "خلال اليوم"
   }
 }

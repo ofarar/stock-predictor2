@@ -1221,5 +1221,26 @@
         "description": "Diese Kennzahl zeigt, wie oft ein Benutzer korrekt vorhersagt, ob der Preis steigen oder fallen wird, unabhängig vom genauen Zielpreis.",
         "howItWorks": "Wie es funktioniert",
         "explanation": "Wenn ein Benutzer einen Preisanstieg vorhersagt und der Preis tatsächlich steigt (selbst wenn das Ziel verfehlt wird), zählt dies als korrekte Richtungsvorhersage. Das Gleiche gilt für vorhergesagte Preisrückgänge."
+    },
+    "instantPredict": {
+        "buttonLabel": "Sofort-Prognose",
+        "modalTitle": "Sofort-Prognose",
+        "modalSubtitle": "Führe kurzfristige technische Analysen für jeden Vermögenswert durch.",
+        "inputLabel": "Ticker",
+        "inputPlaceholder": "z.B. AAPL, BTC-USD, GLD",
+        "disclaimer": "Ziel Intraday (1H). Fallback auf Täglich.",
+        "runButton": "Analyse Starten",
+        "analyzing": "Analysieren...",
+        "analysisComplete": "Analyse Abgeschlossen!",
+        "analysisFailed": "Analyse Fehlgeschlagen",
+        "tickerLabel": "Ticker",
+        "currentPriceLabel": "Aktuell",
+        "horizonLabel": "Zeithorizont",
+        "targetLabel": "Ziel",
+        "expectedMoveLabel": "Erwartete Bewegung",
+        "rationaleLabel": "KI-Begründung",
+        "closeResultButton": "Ergebnis Schließen",
+        "labelDaily": "Täglich",
+        "labelIntraday": "Intraday"
     }
 }
