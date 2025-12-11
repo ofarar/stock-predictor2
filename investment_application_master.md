@@ -132,6 +132,15 @@
 > 2.  **High-Level Strategy:** We want an investor who is available for monthly calls to challenge our assumptions and help us avoid common scaling pitfalls.
 > 3.  **Network:** Introductions to B2B fintech partners or EU-based Series A funds.
 
+### Can the company offer any form of downside protection?
+*Could the company or its existing shareholders offer mechanisms that protect our investment... such as sell back options.*
+
+> **We offer Standard Liquidation Preference (1x).**
+>
+> **1. Liquidation Preference:** We propose a standard **1x Non-Participating Liquidation Preference**. This ensures that in any exit/sale, Kjøller gets their original investment back *before* the founders get a single dollar. This is the deepest protection standard in Venture Capital.
+>
+> **2. No Sell-Back Options:** As a high-growth Seed startup, we require all capital to be deployed into *Growth*, not held in reserve for buybacks. Offering a "Sell Back" option would cripple our ability to spend the money we are raising, defeating the purpose of the round. We align incentives through Equity upside, not Debt-like downside protection.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
