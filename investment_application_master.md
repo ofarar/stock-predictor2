@@ -58,6 +58,28 @@
 > *   **Strategy:** We plan to activate "Golden Memberships" and "Bot Subscriptions" once we reach 5,000 Verified Users, turning the "Revenue Switch" on.
 > *   **Trend:** Stagnant by design (Pre-monetization).
 
+### What is the company's monthly cash burn?
+*If the company is not profitable, how much money is being spent monthly over what is earned?*
+
+> **~$500 USD / month.**
+>
+> **Why so low?**
+> This is a "Lean Startup." The platform is architected for efficiency:
+> *   **Automated AI Pipes:** Our "Smart Bots" run autonomously on cloud functions (Fly.io), requiring minimal maintenance.
+> *   **No Fixed Salaries:** The founder is currently unpaid (sweat equity).
+> *   **Cloud-Native:** We use modern, scalable infrastructure that costs pennies per user until we scale.
+>
+> *Note: This low burn allows us to survive indefinitely while we search for Product-Market Fit.*
+
+### What is the company's runway?
+*If the company is not profitable, how long can it continue to operate before running out of money? Consider both scenarios: without raising capital and with raising capital.*
+
+> **Scenario A (Without Capital): Infinite.**
+> Because our burn is covered by the founder and our infrastructure costs are negligible, we can operate in "Cockroach Mode" indefinitely. We are not reliant on this round for survival.
+>
+> **Scenario B (With Capital): 18 Months.**
+> We are planning a 12-18 month runway for the Seed Capital. This gives us 1.5 years to hit the "Series A" milestone of 25k users and $10k MRR. We will burn Capital aggressively on User Acquisition once it hits the bank.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
