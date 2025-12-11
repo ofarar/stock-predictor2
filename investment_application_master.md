@@ -80,6 +80,12 @@
 > **Scenario B (With Capital): 18 Months.**
 > We are planning a 12-18 month runway for the Seed Capital. This gives us 1.5 years to hit the "Series A" milestone of 25k users and $10k MRR. We will burn Capital aggressively on User Acquisition once it hits the bank.
 
+### Does the company need guarantees?
+*We have assisted several of our portfolio companies in providing guarantees to suppliers, landlords, banks, etc. Is this something we should consider in relation to this investment?*
+
+> **No.**
+> Since we are a 100% digital business, we have no physical storefronts, no inventory, and no expensive multi-year leases. Our infrastructure (Fly.io/Cloudflare) is pay-as-you-go. We do not require any external guarantees for banking or suppliers at this stage.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
