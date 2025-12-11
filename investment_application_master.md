@@ -150,6 +150,21 @@ As a two-sided marketplace (Analysts vs. Investors), we need Analysts to attract
 Retail investors have been burned so many times that they are skeptical of *any* new platform.
 *   **Mitigation:** Radical Transparency. We make our scoring algorithm open-source and immutable. We don't ask for trust; we prove it mathematically.
 
+### Who are the primary competitors?
+*Please identify the main competitors in the market and how they compare with your company.*
+
+> **1. Unverified Social Media (Twitter/X, Reddit, Discord):**
+> *   **Them:** Infinite noise, zero accountability. "Gurus" delete losers.
+> *   **Us:** The "Trust Layer." We force validation. You can't delete a bad prediction here.
+>
+> **2. Traditional Financial Media (Seeking Alpha, Motley Fool):**
+> *   **Them:** Long, subjective articles. Hard to track actual performance.
+> *   **Us:** Quantitative scoring. We don't care about your "thesis"; we care if your price target hit.
+>
+> **3. Brokerages with "Social" layers (eToro):**
+> *   **Them:** High friction. User must move their money to their brokerage to copy trades.
+> *   **Us:** Information Layer (SaaS). Users keep their existing brokerage; they just pay us for the verified signal. Lower barrier to entry.
+
 ---
 
 ## 4. Background
