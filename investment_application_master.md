@@ -261,6 +261,12 @@ Retail investors have been burned so many times that they are skeptical of *any*
 > **Why this profile wins:**
 > The founder is not just a "web developer" but a **Simulation & AI Expert**. He is applying the same rigorous mathematics used in **Autonomous Driving** (trajectory prediction) to **Financial Markets** (price prediction).
 
+### Do you have investor experience?
+*Experience with investing in startups or other unlisted companies.*
+
+> **No.**
+> I am a builder, not an investor. My entire career has been focused on *creating* value through Engineering and Product Development (Siemens, Defense), rather than allocating capital. This is why I value an "Active Owner" partner like Kjøller—to bridge that gap.
+
 ---
 
 ## 5. Use of Proceeds (Detailed)
