@@ -123,6 +123,15 @@
 >
 > **The Deal Logic:** This valuation is priced to allow incoming investors to see a clear **300% markup** (to $7.5M - $10M) at the Series A round in 18 months.
 
+### What does the company seek from an investor?
+*Apart from capital, does the company have any specific requirements from the investor it chooses?*
+
+> **We are looking for "Smart Capital" (Active Ownership).**
+> We specifically targeted Kjøller because we don't just want a check; we want a partner.
+> 1.  **Fundraising Mentorship:** We are technical experts (Ph.D. level), but we need guidance on "The VC Game" to prepare for our Series A. We want an investor who will help us structure our next round.
+> 2.  **High-Level Strategy:** We want an investor who is available for monthly calls to challenge our assumptions and help us avoid common scaling pitfalls.
+> 3.  **Network:** Introductions to B2B fintech partners or EU-based Series A funds.
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
