@@ -190,6 +190,20 @@ Retail investors have been burned so many times that they are skeptical of *any*
 >
 > We plan to raise a **Series A ($2M - $5M)** in 12-18 months once we hit our metrics ($10k MRR / 25k Users). We would highly value your expertise and network introduction to pan-European VCs at that stage to help us scale globally. Access to your dedicated fundraising team would be a significant unfair advantage for us.
 
+### Who is the team and what competencies do they have?
+*What qualifications does the team have to make the company a success? Please elaborate with previous experiences.*
+
+> **Omer Faruk Arar (Founder & PhD)**
+> A Senior Software Architect with 20+ years of experience in building **mission-critical simulation systems** and autonomous agents for **Siemens** and the **Defense Sector**.
+>
+> **Core Competencies:**
+> *   **Technical Mastery:** Ph.D. in Computer Engineering (Specializing in Machine Learning) + Senior Engineer at Siemens (ADAS/Autonomous Driving).
+> *   **Execution:** Certified Scrum Master (PSM I) with a track record of leading cross-functional teams to deliver complex software on time.
+> *   **Full-Stack Powerhouse:** Personally architected 100% of the StockPredictorAI platform (MERN Stack, Python AI, AWS/Cloud), proving the ability to execute without a large team.
+>
+> **Why this profile wins:**
+> The founder is not just a "web developer" but a **Simulation & AI Expert**. He is applying the same rigorous mathematics used in **Autonomous Driving** (trajectory prediction) to **Financial Markets** (price prediction).
+
 ---
 
 ## 5. Use of Proceeds (Detailed)
