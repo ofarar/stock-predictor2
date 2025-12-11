@@ -101,6 +101,14 @@
 > *   **Tax/Supplier:** Current on all obligations.
 > *   **Bank Debt:** None.
 
+### Would the company be open to Venture Debt?
+*Venture Debt is an alternative to Cash-for-Equity... The advantage is less dilution... The disadvantage is that it is a debt that must be repaid.*
+
+> **Open to Discussion.**
+> We are primarily seeking Equity Capital to fund "Growth Experiments" without the pressure of immediate repayment, which aligns better with our Pre-Revenue status.
+>
+> However, we are sophisticated enough to understand the non-dilutive benefits of Venture Debt. If the terms (interest-only periods, covenants) allow us to invest aggressively in User Acquisition before repayment starts, we would certainly consider a hybrid deal (e.g., small equity round + debt line).
+
 ### The Ask (Financials)
 *   **Seeking (minimum):** `250,000`
 *   **Seeking (maximum):** `600,000`
