@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-require('dotenv').config({ path: '../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const User = require('../models/User');
 const Prediction = require('../models/Prediction');
 
@@ -8,32 +9,36 @@ async function cleanupActiveBotPredictions() {
         await mongoose.connect(process.env.MONGO_URI);
         console.log("--> Connected to DB");
 
-        // 1. Identify Bot Users
-        const bots = await User.find({ isBot: true }).select('_id username');
+        // 1. Identify Bot Users (Exclude Sigma Alpha)
+        const bots = await User.find({
+            isBot: true,
+            username: { $ne: 'Sigma Alpha' }
+        }).select('_id username');
+
         const botIds = bots.map(b => b._id);
 
-        console.log(`Found ${bots.length} bots: ${bots.map(b => b.username).join(', ')}`);
+        console.log(`Found ${bots.length} bots to clear (Excluding Sigma Alpha):`);
+        console.log(bots.map(b => b.username).join(', '));
 
         if (botIds.length === 0) {
-            console.log("No bots found. Exiting.");
+            console.log("No eligible bots found. Exiting.");
             return;
         }
 
-        // 2. Delete ACTIVE Predictions for these bots
-        // The user specifically mentioned "Approved all mistakenly", so status is 'Active'.
+        // 2. Delete ACTIVE and PENDING Predictions for these bots
         const query = {
             userId: { $in: botIds },
-            status: 'Active'
+            status: { $in: ['Active', 'Pending'] }
         };
 
         const count = await Prediction.countDocuments(query);
-        console.log(`Found ${count} Active predictions linked to bots.`);
+        console.log(`Found ${count} Active/Pending predictions linked to target bots.`);
 
         if (count > 0) {
             const result = await Prediction.deleteMany(query);
-            console.log(`--> Deleted ${result.deletedCount} Active predictions.`);
+            console.log(`--> Deleted ${result.deletedCount} Active/Pending predictions.`);
         } else {
-            console.log("No Active bot predictions to delete.");
+            console.log("No Active/Pending bot predictions to delete.");
         }
 
         console.log("--> Cleanup Complete.");
