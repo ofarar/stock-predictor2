@@ -239,6 +239,9 @@ def run_smart_engine(interval, mode, specific_ticker=None, sentiment_json=None):
     
     success_count = 0
     
+    # Collect all bot IDs for the global check
+    all_bot_ids = [b['_id'] for b in bots]
+
     for bot in bots:
         if bot.get('username') == 'Sigma Alpha': continue
         
@@ -272,14 +275,17 @@ def run_smart_engine(interval, mode, specific_ticker=None, sentiment_json=None):
 
         for ticker in targets:
             try:
-                # Check existance (skip if already pending, unless we want to force?)
-                # If specific ticker requested, we might want to allow forcing? 
-                # For now keeping it standard.
+                # GLOBAL UNIQUENESS CHECK
+                # Check if ANY bot has a pending prediction for this ticker
+                # This enforces "One AI Prediction Per Stock"
                 exists = predictions_collection.find_one({
-                    "userId": bot['_id'], "stockTicker": ticker, "status": "Pending"
+                    "stockTicker": ticker, 
+                    "status": "Pending",
+                    "userId": {"$in": all_bot_ids}
                 })
+                
                 if exists: 
-                    # print(f"    [Skip] Existing pending prediction for {ticker}")
+                    # print(f"    [Skip] Existing pending prediction for {ticker} by another bot")
                     continue
                 
                 # Fetch Data
