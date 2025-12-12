@@ -288,7 +288,7 @@ router.get('/widgets/famous-stocks', async (req, res) => {
         startOfDay.setUTCHours(0, 0, 0, 0);
 
         let stocks = await Prediction.aggregate([
-            { $match: { createdAt: { $gte: startOfDay } } },
+            { $match: { createdAt: { $gte: startOfDay }, status: 'Active' } },
             { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
             { $sort: { predictions: -1 } },
             { $limit: 4 },
@@ -304,7 +304,7 @@ router.get('/widgets/famous-stocks', async (req, res) => {
             sevenDaysAgo.setUTCHours(0, 0, 0, 0);
 
             stocks = await Prediction.aggregate([
-                { $match: { createdAt: { $gte: sevenDaysAgo } } },
+                { $match: { createdAt: { $gte: sevenDaysAgo }, status: 'Active' } },
                 { $group: { _id: '$stockTicker', predictions: { $sum: 1 } } },
                 { $sort: { predictions: -1 } },
                 { $limit: 4 },
