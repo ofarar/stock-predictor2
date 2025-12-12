@@ -32,6 +32,7 @@ const PredictionSchema = new Schema({
         priceAtTimeOfUpdate: { type: Number } // The "blue dot" value
     }],
     views: { type: Number, default: 0, index: true },
+    assessedAt: { type: Date, index: true }, // Time when the prediction was assessed
 }, { timestamps: true });
 
 // --- PERFORMANCE INDEXES ---
@@ -43,5 +44,8 @@ PredictionSchema.index({ status: 1, deadline: 1 });
 
 // 3. For User Stats Aggregation (frequently calculates avg rating for a user)
 PredictionSchema.index({ userId: 1, status: 1 });
+
+// 4. For Hourly Winners (filters by status='Assessed' and assessedAt)
+PredictionSchema.index({ status: 1, assessedAt: -1 });
 
 module.exports = mongoose.model('Prediction', PredictionSchema);

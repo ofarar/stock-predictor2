@@ -405,7 +405,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
 
         const winners = await Prediction.find({
             status: 'Assessed',
-            updatedAt: { $gte: oneHourAgo }
+            assessedAt: { $gte: oneHourAgo }
         })
             .sort({ rating: -1 })
             .limit(3)

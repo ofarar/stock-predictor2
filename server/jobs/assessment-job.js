@@ -265,9 +265,7 @@ const runAssessmentJob = async () => {
                         prediction.status = 'Assessed';
                         prediction.rating = rating;
                         prediction.actualPrice = actualPrice;
-                        prediction.status = 'Assessed';
-                        prediction.rating = rating;
-                        prediction.actualPrice = actualPrice;
+                        prediction.assessedAt = new Date();
                         prediction.earnedPoints = analystRatingToAward; // Save the points to the prediction
                         await prediction.save();
 

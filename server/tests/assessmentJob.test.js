@@ -105,6 +105,7 @@ describe('Assessment Job', () => {
         // Should use the real-time price (205)
         expect(financeAPI.getQuote).toHaveBeenCalledWith('TSLA');
         expect(mockPrediction.actualPrice).toBe(205);
+        expect(mockPrediction.assessedAt).toBeDefined(); // Verify new field
         expect(mockPrediction.save).toHaveBeenCalled();
     });
 
