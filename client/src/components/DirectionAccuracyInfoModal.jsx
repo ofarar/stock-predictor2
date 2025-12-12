@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const DirectionAccuracyInfoModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen) return null;

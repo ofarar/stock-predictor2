@@ -3,6 +3,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const predictionTypes = [
     { name: 'Hourly', titleKey: 'predictionTypes.hourly', descriptionKey: 'predictionTypes.hourlyDescription' },
@@ -14,6 +15,7 @@ const predictionTypes = [
 ];
 
 const PredictionTypesModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen) return null;

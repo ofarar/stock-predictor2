@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const QuantSystemInfoModal = ({ isOpen, onClose, profileData }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     const stats = useMemo(() => {

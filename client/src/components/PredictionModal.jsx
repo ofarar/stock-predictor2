@@ -6,8 +6,10 @@ import PredictionWidget from './PredictionWidget';
 import InfoModal from './InfoModal';
 import ConfirmationModal from './ConfirmationModal';
 import PredictionTypesModal from './PredictionTypesModal';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const PredictionModal = ({ isOpen, onClose, initialStock }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);

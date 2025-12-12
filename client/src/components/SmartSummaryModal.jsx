@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { generateSmartSummary } from '../utils/summaryGenerator';
 import { getShareBaseUrl } from '../utils/urlHelper';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const SmartSummaryModal = ({ isOpen, onClose, user, performance, predictions }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen || !user) return null;

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import ShareModal from './ShareModal'; // <-- 1. Import new component
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 import { getShareBaseUrl } from '../utils/urlHelper'; // <--- Import helper
 import { FaShareAlt } from 'react-icons/fa';
 
@@ -14,6 +15,11 @@ const badgeStyles = {
 };
 
 const BadgeDetailModal = ({ badge, onClose }) => {
+    // Only lock scroll if this modal is effectively open.
+    // NOTE: This modal doesn't have an `isOpen` prop, it's conditionally rendered by parent.
+    // However, when it IS rendered, we want to lock scroll.
+    // We can pass `true` or check if `badge` exists.
+    useLockBodyScroll(!!badge);
     const { t } = useTranslation();
 
     // --- 3. Add state for the new modal ---

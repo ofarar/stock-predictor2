@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { handleGoogleLogin } from '../utils/authHelpers';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const BenefitItem = ({ icon, title, description }) => (
     <div className="flex items-start gap-4 bg-gray-700 p-4 rounded-lg">
@@ -17,6 +18,7 @@ const BenefitItem = ({ icon, title, description }) => (
 );
 
 const SignupBenefitsModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen) return null;

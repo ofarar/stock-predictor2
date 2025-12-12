@@ -4,8 +4,10 @@ import { createPortal } from 'react-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const GoldenMemberModal = ({ isOpen, onClose, user, onUpdate }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
     const [price, setPrice] = useState(5);
     const [description, setDescription] = useState('');

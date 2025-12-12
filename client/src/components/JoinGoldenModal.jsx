@@ -4,8 +4,10 @@ import ReactDOM from 'react-dom'; // Portal for robust stacking
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const JoinGoldenModal = ({ isOpen, onClose, goldenMember }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
     const [isProcessing, setIsProcessing] = useState(false); // State to disable button during API call
 

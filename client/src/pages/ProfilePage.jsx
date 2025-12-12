@@ -364,6 +364,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                 isOpen={isCreatorPoolModalOpen}
                 onClose={() => setIsCreatorPoolModalOpen(false)}
                 currentProfileId={user._id}
+                targetRank={profileData?.performance?.creatorPoolRank}
             />
 
             {/* 3. ADD THE NEW MODAL */}

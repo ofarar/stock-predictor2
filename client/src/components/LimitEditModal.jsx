@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const LimitEditModal = ({ isOpen, onClose, onSave, user, currentHourlyLimit }) => {
+    useLockBodyScroll(isOpen);
     const [hourlyLimit, setHourlyLimit] = useState('');
 
     useEffect(() => {

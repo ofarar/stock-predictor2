@@ -6,10 +6,12 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import TimePenaltyBar from './TimePenaltyBar';
 import InfoModal from './InfoModal';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 import { formatPercentage } from '../utils/formatters';
 import { getPredictionDetails } from '../utils/timeHelpers';
 
 const EditPredictionModal = ({ isOpen, onClose, prediction, onUpdate }) => {
+    useLockBodyScroll(isOpen);
     const { t, i18n } = useTranslation();
 
     const [target, setTarget] = useState('');

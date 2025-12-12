@@ -4,8 +4,10 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import TickerAutocomplete from './TickerAutocomplete';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const GoldPredictModal = ({ isOpen, onClose, onPredictionSuccess }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
     const [predictionResult, setPredictionResult] = useState(null);
     const [ticker, setTicker] = useState('');

@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
 import { getShareBaseUrl } from '../utils/urlHelper'; // <--- Import
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const ReferralModal = ({ isOpen, onClose, userId }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
     const appUrl = getShareBaseUrl(); // <--- Use helper
     const referralLink = `${appUrl}/?ref=${userId}`;

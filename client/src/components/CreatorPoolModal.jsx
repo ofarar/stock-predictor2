@@ -8,6 +8,7 @@ import axios from 'axios';
 import { formatSharePercentage } from '../utils/formatters';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -58,7 +59,8 @@ const BreakdownPieChart = ({ title, data, t }) => {
 };
 
 
-const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
+const CreatorPoolModal = ({ isOpen, onClose, currentProfileId, targetRank }) => {
+    useLockBodyScroll(isOpen);
     const { t, i18n } = useTranslation();
     const [leaderboard, setLeaderboard] = useState([]);
     const [totalRating, setTotalRating] = useState(1);
@@ -66,32 +68,122 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [drilldownView, setDrilldownView] = useState(null); // 'predictions', 'shares', 'badges', 'ranks'
 
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
+    const [myRank, setMyRank] = useState(null);
+    const [scrolledToUser, setScrolledToUser] = useState(false);
+
+    const fetchLeaderboard = async (pageNum, reset = false, customLimit = null) => {
+        if (pageNum === 1) setLoading(true);
+        else setIsFetchingMore(true);
+
+        const limit = customLimit || 20;
+
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/leaderboard/rating?page=${pageNum}&limit=${limit}`, { withCredentials: true });
+            const newUsers = res.data.users;
+
+            // Update myRank state from response ONLY if not explicitly provided via props
+            if (!targetRank && res.data.currentUserRank) {
+                setMyRank(res.data.currentUserRank);
+            }
+
+            if (newUsers.length < limit) {
+                setHasMore(false);
+            }
+
+            // If we fetched a custom limit (e.g. 260 items), we must update the page count 
+            // so the NEXT fetch (infinite scroll) asks for the correct next page.
+            if (customLimit) {
+                // e.g. fetched 260 items -> we are effectively at page 13 (260/20)
+                setPage(Math.ceil(customLimit / 20));
+            }
+
+            let updatedList = [];
+            if (reset) {
+                updatedList = newUsers;
+                setLeaderboard(newUsers);
+            } else {
+                setLeaderboard(prev => {
+                    const existingIds = new Set(prev.map(u => u._id));
+                    const uniqueUsers = newUsers.filter(u => !existingIds.has(u._id));
+                    updatedList = [...prev, ...uniqueUsers];
+                    return updatedList;
+                });
+            }
+            setTotalRating(res.data.totalAnalystRating);
+
+        } catch (err) {
+            console.error("Failed to fetch rating leaderboard", err);
+        } finally {
+            setLoading(false);
+            setIsFetchingMore(false);
+        }
+    };
+
+    // Initial Load & Reset with Direct Load Strategy
     useEffect(() => {
         if (isOpen) {
-            setLoading(true);
+            setLeaderboard([]);
+            setPage(1);
+            setHasMore(true);
             setSelectedUser(null);
             setDrilldownView(null);
-            axios.get(`${import.meta.env.VITE_API_URL}/api/leaderboard/rating`, { withCredentials: true })
-                .then(res => {
-                    setLeaderboard(res.data.users);
-                    setTotalRating(res.data.totalAnalystRating);
-                })
-                .catch(err => console.error("Failed to fetch rating leaderboard", err))
-                .finally(() => setLoading(false));
-        }
-    }, [isOpen]);
+            const rankToUse = targetRank || null;
+            setMyRank(rankToUse);
+            setScrolledToUser(false);
 
+            // Calculate Direct Load Limit
+            let initialLimit = 20;
+            if (rankToUse) {
+                // Fetch enough pages to cover the rank, plus a small buffer, rounded to nearest 20
+                // e.g. Rank 241 -> Fetch 260
+                initialLimit = Math.ceil((rankToUse + 5) / 20) * 20;
+            }
+            // Safety cap (prevent fetching massive amounts if rank is huge)
+            if (initialLimit > 500) initialLimit = 500;
+
+            fetchLeaderboard(1, true, initialLimit);
+        }
+    }, [isOpen, targetRank]);
+
+
+
+    // Pagination Effect (Manual or Auto)
     useEffect(() => {
-        if (isOpen && !loading && !selectedUser && currentProfileId) {
-            const timer = setTimeout(() => {
+        if (isOpen && page > 1) {
+            fetchLeaderboard(page);
+        }
+    }, [page, isOpen]);
+
+    // Reactive Auto-Scroll & Auto-Fetch Logic
+    useEffect(() => {
+        if (!isOpen || !currentProfileId || loading || isFetchingMore || scrolledToUser) return;
+
+        // 1. Check if user is already in the list
+        const userInList = leaderboard.find(u => String(u._id) === String(currentProfileId));
+
+        if (userInList) {
+            // Found! Scroll to them.
+            // Small timeout to ensure DOM rendering
+            setTimeout(() => {
                 const userElement = document.getElementById(`leaderboard-user-${currentProfileId}`);
                 if (userElement) {
                     userElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setScrolledToUser(true);
                 }
             }, 100);
-            return () => clearTimeout(timer);
         }
-    }, [isOpen, loading, selectedUser, currentProfileId]);
+    }, [leaderboard, myRank, currentProfileId, hasMore, loading, isFetchingMore, isOpen, scrolledToUser]);
+
+    const handleScroll = (e) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.target;
+        // Load more when user is 50px from bottom
+        if (scrollHeight - scrollTop <= clientHeight + 50 && hasMore && !loading && !isFetchingMore) {
+            setPage(prev => prev + 1);
+        }
+    };
 
     // Close on ESC key
     useEffect(() => {
@@ -282,31 +374,39 @@ const CreatorPoolModal = ({ isOpen, onClose, currentProfileId }) => {
                             <p className="text-gray-300 text-sm">{t('creatorPoolModal.totalRating')}</p>
                             <p className="text-2xl font-bold text-white">{totalRating.toLocaleString()}</p>
                         </div>
-                        <div className="space-y-2 max-h-[calc(95vh-250px)] overflow-y-auto px-2 py-1 modern-scrollbar">
-                            {loading ? (
-                                <p className="text-gray-400 text-center">{t('explore_loading')}</p>
+                        <div
+                            className="space-y-2 max-h-[calc(95vh-250px)] overflow-y-auto px-2 py-1 modern-scrollbar"
+                            onScroll={handleScroll}
+                        >
+                            {loading && leaderboard.length === 0 ? (
+                                <p className="text-gray-400 text-center py-4">{t('explore_loading')}</p>
                             ) : (
-                                leaderboard.map((user, index) => {
-                                    const isCurrentUser = user._id === currentProfileId;
-                                    return (
-                                        <button
-                                            key={user._id}
-                                            id={isCurrentUser ? `leaderboard-user-${user._id}` : undefined}
-                                            onClick={() => handleSelectUser(user)}
-                                            className={`w-full flex items-center bg-gray-700 p-2 rounded-md hover:bg-gray-600 transition-all ${isCurrentUser ? 'ring-2 ring-green-400' : ''}`}
-                                        >
-                                            <span className="font-bold text-gray-400 w-8 text-center">{index + 1}</span>
-                                            <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2" />
-                                            <span className="text-white font-semibold flex-grow text-start">{user.username}</span>
-                                            <div className="text-end">
-                                                <p className="font-bold text-green-400">{user.analystRating.total.toLocaleString()}</p>
-                                                <p className="text-xs text-gray-400">
-                                                    {formatSharePercentage(((user.analystRating.total / totalRating) * 100), i18n.language)}
-                                                </p>
-                                            </div>
-                                        </button>
-                                    );
-                                })
+                                <>
+                                    {leaderboard.map((user, index) => {
+                                        const isCurrentUser = String(user._id) === String(currentProfileId);
+                                        return (
+                                            <button
+                                                key={user._id}
+                                                id={isCurrentUser ? `leaderboard-user-${user._id}` : undefined}
+                                                onClick={() => handleSelectUser(user)}
+                                                className={`w-full flex items-center bg-gray-700 p-2 rounded-md hover:bg-gray-600 transition-all ${isCurrentUser ? 'ring-2 ring-green-400' : ''}`}
+                                            >
+                                                <span className="font-bold text-gray-400 w-8 text-center">{index + 1}</span>
+                                                <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full mx-2" />
+                                                <span className="text-white font-semibold flex-grow text-start">{user.username}</span>
+                                                <div className="text-end">
+                                                    <p className="font-bold text-green-400">{user.analystRating.total.toLocaleString()}</p>
+                                                    <p className="text-xs text-gray-400">
+                                                        {formatSharePercentage(((user.analystRating.total / totalRating) * 100), i18n.language)}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                    {isFetchingMore && (
+                                        <p className="text-gray-400 text-center py-2 text-sm">{t('explore_loading')}</p>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

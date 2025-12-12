@@ -270,6 +270,7 @@
   "creator_pool_share_label": "Creator Pool Share",
   "creatorPoolModal.title": "Creator Pool Leaderboard",
   "creatorPoolModal.description": "This leaderboard shows the distribution of 'Analyst Rating' points across the platform. A portion of platform revenue will be distributed to top contributors based on this rating.",
+  "creatorPoolModal.showingTop": "Showing Top 100 Predictors",
   "creatorPoolModal.totalRating": "Total Analyst Rating on Platform",
   "total_predictions_label": "Total Predictions",
   "profile_tab_label": "Profile",

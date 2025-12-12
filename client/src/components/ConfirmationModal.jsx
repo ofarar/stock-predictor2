@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen) return null;

@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../utils/formatters';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const VerificationModal = ({ isOpen, onClose, price, onUpdate }) => {
+    useLockBodyScroll(isOpen);
     const { t, i18n } = useTranslation();
     const [view, setView] = useState('initial');
     // *** ADD isProcessing STATE ***

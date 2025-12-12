@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { handleGoogleLogin } from '../utils/authHelpers';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const LoginPromptModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     const handleLogin = () => {

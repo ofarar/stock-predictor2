@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 import AggressivenessProgressBar from './AggressivenessProgressBar';
 import DirectionAccuracyBar from './DirectionAccuracyBar';
 import { formatNumber, formatSharePercentage } from '../utils/formatters';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const PerformanceDetailModal = ({ isOpen, onClose, title, data, predictions, type }) => {
+    useLockBodyScroll(isOpen);
     const { t, i18n } = useTranslation();
 
     // 1. Filter predictions for this specific item (Stock or Type)

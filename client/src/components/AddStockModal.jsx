@@ -4,8 +4,10 @@ import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import StockFilterSearch from './StockFilterSearch';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const AddStockModal = ({ isOpen, onClose, onAdd }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
     const [selectedStock, setSelectedStock] = useState('');
 

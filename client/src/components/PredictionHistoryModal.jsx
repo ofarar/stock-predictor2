@@ -4,8 +4,10 @@ import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Line } from 'react-chartjs-2';
 import { formatDateTime, formatCurrency } from '../utils/formatters';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const PredictionHistoryModal = ({ isOpen, onClose, prediction }) => {
+    useLockBodyScroll(isOpen);
     const { t, i18n } = useTranslation();
     const [activeTab, setActiveTab] = useState('list'); // 'list' or 'chart'
 

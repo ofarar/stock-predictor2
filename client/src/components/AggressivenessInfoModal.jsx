@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const InfoSection = ({ title, text }) => (
     <div className="bg-gray-700 p-3 rounded-md">
@@ -16,6 +17,7 @@ InfoSection.propTypes = {
 };
 
 const AggressivenessInfoModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen) return null;

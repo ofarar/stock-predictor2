@@ -4,8 +4,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const VerifiedStatusModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     const handleManageSubscription = async () => {

@@ -8,6 +8,7 @@ const Setting = require('../models/Setting');
 const Post = require('../models/Post');
 const { sendContactFormEmail, sendWelcomeEmail, sendGoldenActivationEmail, sendGoldenDeactivationEmail, sendPriceChangeEmail } = require('../services/email');
 const xss = require('xss');
+const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { createOrUpdateStripePriceForUser } = require('./stripe');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -237,9 +238,18 @@ router.get('/profile/:userId', async (req, res) => {
 
         const overallRank = (await User.countDocuments({ avgRating: { $gt: user.avgRating } })) + 1;
 
+        // Calculate "Pagination Rank" (Row Index) to support stable auto-scrolling
+        const higherPoolUsers = await User.countDocuments({ 'analystRating.total': { $gt: user.analystRating.total } });
+        const tiedPoolUsers = await User.countDocuments({
+            'analystRating.total': user.analystRating.total,
+            '_id': { $lt: user._id } // Assuming ascending ID sort for ties
+        });
+        const creatorPoolRank = higherPoolUsers + tiedPoolUsers + 1;
+
         const performance = {
             overallRank: overallRank,
             overallAvgRating: Math.round(user.avgRating * 10) / 10,
+            creatorPoolRank: creatorPoolRank
         };
 
         const getGlobalRank = async (field, value, userRating) => {
@@ -759,15 +769,47 @@ router.post('/users/:userId/cancel-golden', async (req, res) => {
 // GET: Leaderboard Rating
 router.get('/leaderboard/rating', async (req, res) => {
     try {
+        // Optional Auth for Rank Calculation
+        const token = req.cookies.accessToken;
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                req.user = decoded;
+            } catch (e) {
+                // Invalid token, ignore (treat as guest)
+            }
+        }
+
+        // NOTE: We limit the leaderboard display to 100 users for performance and UI reasons,
+        // BUT the "Share" calculation is based on the GLOBAL Total Analyst Rating (see below).
+        // This ensures a "Fair Share" model where everyone contributes to the pool denominator,
+        // even if they don't appear in the top 100 list.
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20; // Default to 20 for lazy loading
+        const skip = (page - 1) * limit;
+
+        // STABILIZE SORT: Use _id as tie-breaker for consistent pagination
         const users = await User.find({ 'analystRating.total': { $gt: 0 } })
-            .sort({ 'analystRating.total': -1 })
-            .limit(100)
+            .sort({ 'analystRating.total': -1, '_id': 1 })
+            .skip(skip)
+            .limit(limit)
             .select('username avatar analystRating');
 
         const totalRatingResult = await User.aggregate([
             { $group: { _id: null, total: { $sum: "$analystRating.total" } } }
         ]);
         const totalAnalystRating = totalRatingResult[0]?.total || 1;
+
+        let currentUserRank = null;
+        if (req.user) {
+            // Count how many people have a higher rating than the current user
+            // This is "Rank - 1", so add 1.
+            const user = await User.findById(req.user._id).select('analystRating');
+            if (user && user.analystRating && user.analystRating.total > 0) {
+                const higherUsersCount = await User.countDocuments({ 'analystRating.total': { $gt: user.analystRating.total } });
+                currentUserRank = higherUsersCount + 1;
+            }
+        }
 
         const leaderboardUsers = users.map(u => ({
             _id: u._id,
@@ -777,7 +819,7 @@ router.get('/leaderboard/rating', async (req, res) => {
             ratingBreakdown: u.analystRating
         }));
 
-        res.json({ users: leaderboardUsers, totalAnalystRating });
+        res.json({ users: leaderboardUsers, totalAnalystRating, currentUserRank });
     } catch (err) {
         res.status(500).json({ message: "Error fetching rating leaderboard." });
     }

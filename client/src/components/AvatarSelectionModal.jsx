@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 // --- START FIX ---
 // Avatar styles with translation keys
@@ -15,6 +16,7 @@ const avatarStyles = [
 // --- END FIX ---
 
 const AvatarSelectionModal = ({ isOpen, onClose, onSave, initialAvatarUrl }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     const [currentStyle, setCurrentStyle] = useState(avatarStyles[0]);

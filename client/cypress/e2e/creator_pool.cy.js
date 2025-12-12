@@ -18,7 +18,7 @@ describe('Creator Pool Modal', () => {
             const userId = url.split('/').pop();
 
             // Mock the leaderboard response to ensure the user is in the list with a high rating
-            cy.intercept('GET', '**/api/leaderboard/rating', {
+            cy.intercept('GET', '**/api/leaderboard/rating*', {
                 statusCode: 200,
                 body: {
                     totalAnalystRating: 5000,

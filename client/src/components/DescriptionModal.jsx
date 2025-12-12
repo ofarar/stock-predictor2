@@ -2,8 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 const DescriptionModal = ({ isOpen, onClose, description }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
     if (!isOpen) return null;
 

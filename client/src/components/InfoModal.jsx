@@ -2,6 +2,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import useLockBodyScroll from '../hooks/useLockBodyScroll';
 
 // Reusable card component for a consistent look
 const InfoSection = ({ title, text }) => (
@@ -12,6 +13,7 @@ const InfoSection = ({ title, text }) => (
 );
 
 const InfoModal = ({ isOpen, onClose }) => {
+    useLockBodyScroll(isOpen);
     const { t } = useTranslation();
 
     if (!isOpen) return null;
