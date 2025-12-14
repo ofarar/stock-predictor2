@@ -5,7 +5,7 @@ const Setting = require('../models/Setting');
 const Prediction = require('../models/Prediction');
 const { sendPushToUser } = require('../services/pushNotificationService');
 
-const awardBadges = async (user) => {
+const awardBadges = async (user, options = {}) => {
     const settings = await Setting.findOneAndUpdate({}, {}, { upsert: true, new: true });
     if (!settings.badgeSettings) {
         console.error("Badge settings not found in database.");
@@ -61,7 +61,9 @@ const awardBadges = async (user) => {
     }
     // --- END FIX ---
 
-    const existingBadges = new Map(user.badges.map(b => [b.badgeId, b.tier]));
+    // USE PASSED PREVIOUS BADGES IF available, otherwise user.badges (which might be empty if called from recalculate)
+    const badgesForDiff = options.previousBadges || user.badges;
+    const existingBadges = new Map(badgesForDiff.map(b => [b.badgeId, b.tier]));
     const earnedBadges = [];
 
     for (const badgeId in badgeDefinitions) {
