@@ -448,9 +448,9 @@
   },
   "share": {
     "shareOnX": "X'te Paylaş",
-    "ownerActive": "${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve StockPredictorAI'da oy ver!",
+    "ownerActive": "${{ticker}} fiyatının {{deadline}} {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve StockPredictorAI'da oy ver!",
     "ownerAssessed": "${{ticker}} için yaptığım tahmin {{rating}} puanla sonuçlandı! Tahminim {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu. Sonucu gör!",
-    "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
+    "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
     "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{rating}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu.",
     "activePredictionsAggregated": "{{subject}} {{count}} {{type}} tahmini özeti:\n\n{{predictionList}}...\n\nDoğruluk %{{accuracy}}! {{subject}} portföyünü hemen incele! {{hashtags}} #HisseTahmini",
     "shareActivePredictions": "Aktif Tahminleri Paylaş",
