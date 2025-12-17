@@ -24,11 +24,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { PushNotifications } from '@capacitor/push-notifications';
 
-// DEBUG: Global Error Handler for Mobile
-window.onerror = function (msg, url, lineNo, columnNo, error) {
-  alert('Error: ' + msg + '\nLine: ' + lineNo);
-  return false;
-};
+
 
 // --- HELPER: Detect Mobile Device ---
 const isMobileDevice = () => {
@@ -145,9 +141,9 @@ function App() {
 
   const fetchUser = useCallback(async () => {
     try {
-      console.log('Fetching user from:', `${API_URL}${API_ENDPOINTS.CURRENT_USER}`);
+      // console.log('Fetching user from:', `${API_URL}${API_ENDPOINTS.CURRENT_USER}`);
       const res = await axios.get(`${API_URL}${API_ENDPOINTS.CURRENT_USER}`, { withCredentials: true, timeout: 5000 });
-      console.log('Fetch user response:', res.status, res.data);
+      // console.log('Fetch user response:', res.status, res.data);
       setUser(res.data);
     } catch (err) {
       console.error('Fetch user error:', err.message, err.code, err.response?.status);
@@ -169,7 +165,7 @@ function App() {
 
   // Fetch Earnings Calendar
   useEffect(() => {
-    console.log("Earnings: Initiating fetch for calendar...");
+    // console.log("Earnings: Initiating fetch for calendar...");
     axios.get(`${API_URL}${API_ENDPOINTS.EARNINGS_CALENDAR}`)
       .then(res => {
         const validCalendar = (res.data || []).filter(e => e.earningsDate).slice(0, 50);
@@ -232,7 +228,7 @@ function App() {
           scopes: ['profile', 'email'],
           grantOfflineAccess: true,
         });
-        console.log('GoogleAuth initialized');
+        // console.log('GoogleAuth initialized');
       });
 
       CapacitorApp.addListener('appUrlOpen', data => {
@@ -266,7 +262,7 @@ function App() {
             description: 'General notifications',
             importance: 5,
             visibility: 1
-          }).then(() => console.log('Push Channel Created'));
+          }).then(() => { }); // console.log('Push Channel Created')
           // -------------------------------------------------------
         }
       });

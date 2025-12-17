@@ -9,7 +9,15 @@ async function recalculateUserAnalytics(user) {
     if (!user) return;
 
     // 1. Reset Analytics Structure
-    user.badges = [];
+    const currentBadges = user.badges || []; // --- FIX: Capture existing badges to prevent spam ---
+
+    // Preserve points that are not derived from predictions/badges
+    const sharesPoints = user.analystRating.fromShares || 0;
+    const referralPoints = user.analystRating.fromReferrals || 0;
+    const bonusPoints = user.analystRating.fromBonus || 0;
+    const rankPoints = user.analystRating.fromRanks || 0; // --- FIX: Preserve Rank Points ---
+    const rankBreakdown = user.analystRating.rankBreakdown || new Map(); // --- FIX: Preserve Rank Breakdown ---
+
     if (typeof user.analystRating !== 'object' || user.analystRating === null) {
         user.analystRating = {
             total: 0,
@@ -26,18 +34,14 @@ async function recalculateUserAnalytics(user) {
         };
     }
 
-    // Preserve points that are not derived from predictions/badges
-    const sharesPoints = user.analystRating.fromShares || 0;
-    const referralPoints = user.analystRating.fromReferrals || 0;
-    const bonusPoints = user.analystRating.fromBonus || 0; // Don't lose bonus points if they exist
-
-    user.analystRating.total = sharesPoints + referralPoints + bonusPoints;
+    user.badges = [];
+    user.analystRating.total = sharesPoints + referralPoints + bonusPoints + rankPoints; // Add rankPoints back
     user.analystRating.fromPredictions = 0;
     user.analystRating.fromBadges = 0;
-    user.analystRating.fromRanks = 0;
+    user.analystRating.fromRanks = rankPoints; // Restore Rank Points
     user.analystRating.predictionBreakdownByStock = new Map();
     user.analystRating.badgeBreakdown = new Map();
-    user.analystRating.rankBreakdown = new Map();
+    user.analystRating.rankBreakdown = rankBreakdown; // Restore Rank Breakdown
 
     // 2. Process Predictions
     const userPredictionsData = await Prediction.find({ userId: user._id, status: 'Assessed' }).lean();
@@ -64,11 +68,8 @@ async function recalculateUserAnalytics(user) {
         }
 
         // 3. Award Badges (This function adds to fromBadges and updates badgeBreakdown)
-        // Note: awardBadges expects the user object to have the updated predictions implicit context
-        // simpler approach: awardBadges mostly reads from DB again or we might need to be careful.
-        // Looking at badgeService.js: It fetches predictions AGAIN: `await Prediction.find({ userId: user._id, status: 'Assessed' })`
-        // So passing the user object is enough.
-        await awardBadges(user);
+        // Pass previousBadges to avoid spamming "Badge Earned" notifications
+        await awardBadges(user, { previousBadges: currentBadges });
     }
 
     // 4. Update Average Rating
