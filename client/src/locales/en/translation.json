@@ -459,7 +459,11 @@
     "shareByTimeframe": "Share by Timeframe",
     "noPredictionsForTimeframe": "No active predictions for this timeframe.",
     "myUsername": "My",
-    "possessiveSuffix": "'s"
+    "possessiveSuffix": "'s",
+    "my_last": "My Last",
+    "last": "Last",
+    "results": "Results",
+    "results_other": "Results"
   },
   "editprofile_telegram_label": "Telegram Link",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -726,7 +730,10 @@
     "dataDelayed": "Data delayed up to 15 minutes",
     "copy": "Copy",
     "copied": "Copied",
-    "copiedLink": "Link copied!"
+    "copiedLink": "Link copied!",
+    "accuracy": "Accuracy",
+    "target": "Target",
+    "actual": "Actual"
   },
   "prediction": {
     "makePrediction": "Make a Prediction",

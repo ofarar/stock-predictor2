@@ -458,7 +458,11 @@
         "shareByTimeframe": "Nach Zeitrahmen teilen",
         "noPredictionsForTimeframe": "Keine aktiven Vorhersagen für diesen Zeitraum.",
         "myUsername": "Mein",
-        "possessiveSuffix": "s"
+        "possessiveSuffix": "s",
+        "my_last": "Meine letzten",
+        "last": "letzten",
+        "results": "Ergebnisse",
+        "results_other": "Ergebnisse"
     },
     "editprofile_telegram_label": "Telegram-Link",
     "editprofile_telegram_placeholder": "https://t.me/deinbenutzername",
@@ -724,7 +728,10 @@
         "dataDelayed": "Daten bis zu 15 Minuten verzögert",
         "copy": "Kopieren",
         "copied": "Kopiert",
-        "copiedLink": "Link kopiert!"
+        "copiedLink": "Link kopiert!",
+        "accuracy": "Genauigkeit",
+        "target": "Ziel",
+        "actual": "Aktuell"
     },
     "prediction": {
         "makePrediction": "Prognose erstellen",

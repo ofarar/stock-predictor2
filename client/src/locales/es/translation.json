@@ -458,7 +458,11 @@
         "shareByTimeframe": "Compartir por Marco de Tiempo",
         "noPredictionsForTimeframe": "No hay predicciones activas para este marco.",
         "myUsername": "Mi",
-        "possessiveSuffix": "s"
+        "possessiveSuffix": "s",
+        "my_last": "Mis últimos",
+        "last": "últimos",
+        "results": "Resultados",
+        "results_other": "Resultados"
     },
     "editprofile_telegram_label": "Enlace de Telegram",
     "editprofile_telegram_placeholder": "https://t.me/tuusuario",
@@ -724,7 +728,10 @@
         "dataDelayed": "Datos con hasta 15 minutos de retraso",
         "copy": "Copiar",
         "copied": "Copiado",
-        "copiedLink": "¡Enlace copiado!"
+        "copiedLink": "¡Enlace copiado!",
+        "accuracy": "Precisión",
+        "target": "Objetivo",
+        "actual": "Actual"
     },
     "prediction": {
         "makePrediction": "Hacer una Predicción",

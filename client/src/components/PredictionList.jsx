@@ -1,6 +1,7 @@
 // src/components/PredictionList.js
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isSameDay, isSameWeek, isSameMonth, isSameQuarter, isSameYear } from 'date-fns';
 import MiniPredictionCard from './MiniPredictionCard';
 import LoadMoreButton from './LoadMoreButton';
 import ShareModal from './ShareModal';
@@ -16,79 +17,133 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
     const [shareData, setShareData] = useState({ text: '', url: '' });
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    // Helper for smart grouping
+    const isSameBatch = (date1, date2, type) => {
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+        switch (type) {
+            case 'Hourly': return d1.getTime() === d2.getTime(); // Hourly is strict
+            case 'Daily': return isSameDay(d1, d2);
+            case 'Weekly': return isSameWeek(d1, d2, { weekStartsOn: 1 }); // ISO Week (Monday start)
+            case 'Monthly': return isSameMonth(d1, d2);
+            case 'Quarterly': return isSameQuarter(d1, d2);
+            case 'Yearly': return isSameYear(d1, d2);
+            default: return false;
+        }
+    };
+
     // NEW FUNCTION: Aggregates data and opens the modal
     const handleShareClick = (timeframeType) => {
-        const filteredPredictions = predictions.filter(p => p.predictionType === timeframeType);
+        let filteredPredictions = predictions.filter(p => p.predictionType === timeframeType);
+
         if (filteredPredictions.length === 0) {
             return toast.error(t('share.noPredictionsForTimeframe'));
         }
 
-        // 1. Calculate Aggregated Accuracy/Direction (Unchanged - needed for {{accuracy}})
+        let predictionsToShare = [];
+        let stockListString = '';
+        let allTickers = new Set();
+        let hashtagString = '';
         let correctDirection = 0;
         let total = 0;
-        let stockListString = ''; // Initialize the string for the list
-        let allTickers = new Set(); // For hashtags
-        let hashtagString = '';
-
-        const predictionsToShare = filteredPredictions.map(p => {
-            const currentPrice = quotes ? quotes[p.stockTicker] : null;
-            allTickers.add(p.stockTicker);
-
-            if (currentPrice) {
-                total++;
-                const predictedDirection = p.targetPrice - currentPrice;
-                // Check if direction from creation is correct (unchanged logic)
-                if (predictedDirection * (p.targetPrice - (p.priceAtCreation || 0)) > 0) {
-                    correctDirection++;
-                }
-
-                const changePercent = ((p.targetPrice - currentPrice) / currentPrice) * 100;
-                const sign = changePercent > 0 ? '+' : (changePercent < 0 ? '-' : '');
-
-                // Create the attractive format: $TSLA: 245 (+%4.1) or $NVDA: 170 (-%4.2)
-                return `$${p.stockTicker}: $${p.targetPrice.toFixed(2)} (${sign}%${Math.abs(changePercent).toFixed(1)})`;
-            }
-            return null; // Ignore if currentPrice is missing
-        }).filter(item => item !== null);
-
-        // Join the stock predictions into a readable string
-        stockListString = predictionsToShare.slice(0, 5).join('\n'); // Limit to 5 for space
-
-        const accuracy = total > 0 ? (correctDirection / total) * 100 : 0;
-        const accuracyText = accuracy.toFixed(0);
-        const predictionCount = predictionsToShare.length;
-        const subject = isOwnProfile
-            ? t('share.myUsername') // Owner path: "My" (correct)
+        let subject = isOwnProfile
+            ? t('share.myUsername')
             : (profileUsername || filteredPredictions[0]?.userId?.username || 'User') + t('share.possessiveSuffix', "'s");
-
-        // Construct the hashtags string (Calculation MUST happen before line 68)
-        const allTickersArray = Array.from(allTickers);
-        hashtagString = allTickersArray.slice(0, 3).map(t => `#${t}`).join(' ');
-        // ^ This calculation must be executed before it's used in the shareText object.
-
-        // 2. Construct the Message (Updated)
-        const shareText = t('share.activePredictionsAggregated', {
-            subject: subject,
-            type: t(`predictionTypes.${timeframeType.toLowerCase()}`),
-            count: predictionCount,
-            accuracy: accuracyText,
-            predictionList: stockListString,
-            hashtags: hashtagString // Already contains #BABA #ADBE #HIMS
-        });
-        // Define the unique anchor ID
+        let shareText = '';
         const ACTIVE_PREDICTIONS_ANCHOR = "#active";
-        // const baseUrl = window.location.origin + window.location.pathname; 
-        // Use helper to ensure prod domain on mobile
-        const baseUrl = getShareBaseUrl() + window.location.pathname;
 
-        // Construct the URL by combining the current page URL with the anchor ID
-        const shareUrl = baseUrl + ACTIVE_PREDICTIONS_ANCHOR;
+        // Use helper to ensure prod domain on mobile
+        let baseUrl = getShareBaseUrl() + window.location.pathname;
+        let shareUrl = baseUrl;
+
+        if (quotes) {
+            // --- ACTIVE PREDICTIONS LOGIC (Existing) ---
+            shareUrl += ACTIVE_PREDICTIONS_ANCHOR;
+
+            predictionsToShare = filteredPredictions.map(p => {
+                const currentPrice = quotes[p.stockTicker];
+                allTickers.add(p.stockTicker);
+
+                if (currentPrice) {
+                    total++;
+                    const predictedDirection = p.targetPrice - currentPrice;
+                    // Check if direction from creation is correct
+                    if (predictedDirection * (p.targetPrice - (p.priceAtCreation || 0)) > 0) {
+                        correctDirection++;
+                    }
+
+                    const changePercent = ((p.targetPrice - currentPrice) / currentPrice) * 100;
+                    const sign = changePercent > 0 ? '+' : (changePercent < 0 ? '-' : '');
+
+                    // Format: $TSLA: $245 (+%4.1)
+                    return `$${p.stockTicker}: $${p.targetPrice.toFixed(2)} (${sign}%${Math.abs(changePercent).toFixed(1)})`;
+                }
+                return null;
+            }).filter(item => item !== null);
+
+            stockListString = predictionsToShare.slice(0, 5).join('\n');
+            const accuracy = total > 0 ? (correctDirection / total) * 100 : 0;
+            const accuracyText = accuracy.toFixed(0);
+
+            const allTickersArray = Array.from(allTickers);
+            hashtagString = allTickersArray.slice(0, 3).map(t => `$${t}`).join(' ');
+
+            shareText = t('share.activePredictionsAggregated', {
+                subject: subject,
+                type: t(`predictionTypes.${timeframeType.toLowerCase()}`),
+                count: predictionsToShare.length,
+                accuracy: accuracyText,
+                predictionList: stockListString,
+                hashtags: hashtagString
+            });
+
+        } else {
+            // --- HISTORY PREDICTIONS LOGIC (New) ---
+            shareUrl += "#history";
+
+            // 1. Grouping: Find the *most recent batch* (Smart Grouping)
+            // Sort by assessedAt descending to get latest first
+            filteredPredictions.sort((a, b) => new Date(b.assessedAt) - new Date(a.assessedAt));
+
+            if (filteredPredictions.length === 0) return toast.error(t('share.noPredictionsForTimeframe'));
+
+            // Group by SMART logic (e.g., Same Week, Same Month) using DEADLINE
+            const lastDeadline = filteredPredictions[0].deadline;
+            const batch = filteredPredictions.filter(p => isSameBatch(p.deadline, lastDeadline, timeframeType));
+
+            let totalRating = 0;
+            predictionsToShare = batch.map(p => {
+                allTickers.add(p.stockTicker);
+                total++;
+                // Check if targetHit is true for accuracy
+                if (p.targetHit) correctDirection++;
+
+                totalRating += p.rating || 0;
+
+                // Format: $TICKER: Target $X | Actual $Y | Accuracy Z
+                // Use .toFixed(2) for actual price
+                return `$${p.stockTicker}: ${t('common.target')} $${p.targetPrice} | ${t('common.actual')} $${p.actualPrice?.toFixed(2)} | ${t('common.accuracy')} ${p.rating.toFixed(0)}`;
+            });
+
+            stockListString = predictionsToShare.slice(0, 5).join('\n');
+            const accuracy = total > 0 ? (totalRating / total) : 0;
+
+            const allTickersArray = Array.from(allTickers);
+            hashtagString = allTickersArray.slice(0, 3).map(t => `$${t}`).join(' ');
+
+            // Construct new text directly or use a new translation key
+            // Header: "[Subject] Last [TIMEFRAME] Results 📊"
+            const resultsText = isOwnProfile ? t('share.results') : t('share.results_other');
+            const header = `${subject} ${t('share.last')} ${t(`predictionTypes.${timeframeType.toLowerCase()}`)} ${resultsText} 📊`;
+
+            shareText = `${header}\n\n${stockListString}\n\n🎯 ${t('common.accuracy')}: ${accuracy.toFixed(0)}%\n\n${hashtagString} #StockPredictorAI`;
+        }
 
         // 3. Open the Modal
         setShareData({
             text: shareText,
             url: shareUrl,
-            shareContext: { context: 'activePredictions', type: timeframeType }
+            shareContext: { context: quotes ? 'activePredictions' : 'historyPredictions', type: timeframeType }
         });
         setIsShareModalOpen(true);
     };
@@ -108,7 +163,7 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
                     <h3 className="text-xl font-bold text-white">{t(titleKey)}</h3>
 
                     {/* NEW SHARE DROPDOWN (Click-Activated) */}
-                    {predictions.length > 0 && quotes && (
+                    {predictions.length > 0 && (
                         // --- FIX 2: Replace 'group' with manual 'isMenuOpen' control ---
                         <div className="relative">
                             <button
@@ -123,20 +178,41 @@ const PredictionList = ({ titleKey, predictions, quotes, isOwnProfile, onEditCli
 
                             {/* --- FIX 3: Conditional Rendering controlled by state --- */}
                             {isMenuOpen && (
-                                <div className="absolute end-0 top-full mt-2 bg-gray-800 rounded-md shadow-xl z-10 w-48">
+                                <div className="absolute end-0 top-full mt-2 bg-gray-800 rounded-md shadow-xl z-10 w-64">
                                     <p className="text-xs text-gray-500 p-2 border-b border-gray-700">{t('share.shareByTimeframe')}</p>
-                                    {['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'].map(type => (
-                                        <button
-                                            key={type}
-                                            onClick={() => {
-                                                handleShareClick(type);
-                                                setIsMenuOpen(false); // Close menu after action
-                                            }}
-                                            className="block w-full text-start px-4 py-2 text-sm text-gray-300 hover:bg-green-600 hover:text-white"
-                                        >
-                                            {t(`predictionTypes.${type.toLowerCase()}`)} ({predictions.filter(p => p.predictionType === type).length})
-                                        </button>
-                                    ))}
+                                    {['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'].map(type => {
+                                        // Logic to determine count to show
+                                        let count = 0;
+                                        const typePredictions = predictions.filter(p => p.predictionType === type);
+
+                                        if (quotes) {
+                                            // Active mode: show all
+                                            count = typePredictions.length;
+                                        } else {
+                                            // History mode: show count of "latest batch" only (Smart Grouping)
+                                            if (typePredictions.length > 0) {
+                                                // Sort by assessedAt desc to get latest assessment FIRST
+                                                typePredictions.sort((a, b) => new Date(b.assessedAt) - new Date(a.assessedAt));
+                                                // Group by SMART logic
+                                                const lastDeadline = typePredictions[0].deadline;
+                                                const batch = typePredictions.filter(p => isSameBatch(p.deadline, lastDeadline, type));
+                                                count = batch.length;
+                                            }
+                                        }
+
+                                        return (
+                                            <button
+                                                key={type}
+                                                onClick={() => {
+                                                    handleShareClick(type);
+                                                    setIsMenuOpen(false); // Close menu after action
+                                                }}
+                                                className="block w-full text-start px-4 py-2 text-sm text-gray-300 hover:bg-green-600 hover:text-white"
+                                            >
+                                                {t(`predictionTypes.${type.toLowerCase()}`)} ({count})
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             )}
                             {/* --- END FIX 3 --- */}

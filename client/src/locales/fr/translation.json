@@ -459,7 +459,11 @@
         "shareByTimeframe": "Partager par Horizon Temporel",
         "noPredictionsForTimeframe": "Aucune prédiction active pour cet horizon.",
         "myUsername": "Mon",
-        "possessiveSuffix": "de"
+        "possessiveSuffix": "de",
+        "my_last": "Mes derniers",
+        "last": "derniers",
+        "results": "Résultats",
+        "results_other": "Résultats"
     },
     "editprofile_telegram_label": "Lien Telegram",
     "editprofile_telegram_placeholder": "https://t.me/votrenomdutilisateur",
@@ -725,7 +729,10 @@
         "dataDelayed": "Données retardées jusqu'à 15 minutes",
         "copy": "Copier",
         "copied": "Copié",
-        "copiedLink": "Lien copié !"
+        "copiedLink": "Lien copié !",
+        "accuracy": "Précision",
+        "target": "Cible",
+        "actual": "Actuel"
     },
     "prediction": {
         "makePrediction": "Faire une Prédiction",

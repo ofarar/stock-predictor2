@@ -458,7 +458,11 @@
     "shareByTimeframe": "समय-सीमा के अनुसार साझा करें",
     "noPredictionsForTimeframe": "इस समय-सीमा के लिए कोई सक्रिय भविष्यवाणी नहीं है।",
     "myUsername": "मेरा",
-    "possessiveSuffix": "का"
+    "possessiveSuffix": "का",
+    "my_last": "मेरे पिछले",
+    "last": "पिछले",
+    "results": "परिणाम",
+    "results_other": "परिणाम"
   },
   "editprofile_telegram_label": "टेलीग्राम लिंक",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -725,7 +729,10 @@
     "dataDelayed": "डेटा 15 मिनट तक विलंबित",
     "copy": "कॉपी करें",
     "copied": "कॉपी किया गया",
-    "copiedLink": "लिंक कॉपी किया गया!"
+    "copiedLink": "लिंक कॉपी किया गया!",
+    "accuracy": "सटीकता",
+    "target": "लक्ष्य",
+    "actual": "वास्तविक"
   },
   "prediction": {
     "makePrediction": "भविष्यवाणी करें",

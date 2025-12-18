@@ -457,7 +457,11 @@
     "shareByTimeframe": "مشاركة حسب الإطار الزمني",
     "noPredictionsForTimeframe": "لا توجد توقعات نشطة لهذا الإطار الزمني.",
     "myUsername": "خاصتي",
-    "possessiveSuffix": "'s"
+    "possessiveSuffix": "'s",
+    "my_last": "آخر",
+    "last": "آخر",
+    "results": "نتائج",
+    "results_other": "نتائج"
   },
   "editprofile_telegram_label": "رابط تيليجرام",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -724,7 +728,10 @@
     "dataDelayed": "البيانات متأخرة لمدة تصل إلى 15 دقيقة",
     "copy": "نسخ",
     "copied": "نُسخ",
-    "copiedLink": "تم نسخ الرابط!"
+    "copiedLink": "تم نسخ الرابط!",
+    "accuracy": "الدقة",
+    "target": "الهدف",
+    "actual": "الفعلي"
   },
   "prediction": {
     "makePrediction": "قم بتوقع",

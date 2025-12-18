@@ -459,7 +459,11 @@
     "shareByTimeframe": "Zamana Göre Paylaş",
     "noPredictionsForTimeframe": "Bu zaman diliminde aktif tahmin yok.",
     "myUsername": "Benim",
-    "possessiveSuffix": "'a ait"
+    "possessiveSuffix": "'a ait",
+    "my_last": "Son",
+    "last": "Son",
+    "results": "Sonuçlarım",
+    "results_other": "Sonuçları"
   },
   "editprofile_telegram_label": "Telegram Bağlantısı",
   "editprofile_telegram_placeholder": "https://t.me/kullaniciadiniz",
@@ -725,7 +729,10 @@
     "dataDelayed": "Veriler 15 dakikaya kadar gecikmeli olabilir",
     "copy": "Kopyala",
     "copied": "Kopyalandı",
-    "copiedLink": "Link kopyalandı!"
+    "copiedLink": "Link kopyalandı!",
+    "accuracy": "Doğruluk",
+    "target": "Hedef",
+    "actual": "Gerçek"
   },
   "prediction": {
     "makePrediction": "Tahmin Yap",

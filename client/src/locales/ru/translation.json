@@ -458,7 +458,11 @@
         "shareByTimeframe": "Поделиться по таймфрейму",
         "noPredictionsForTimeframe": "Нет активных прогнозов для этого таймфрейма.",
         "myUsername": "Мой",
-        "possessiveSuffix": "a"
+        "possessiveSuffix": "a",
+        "my_last": "Мои последние",
+        "last": "последние",
+        "results": "результаты",
+        "results_other": "результаты"
     },
     "editprofile_telegram_label": "Ссылка на Telegram",
     "editprofile_telegram_placeholder": "https://t.me/vasheimya",
@@ -724,7 +728,10 @@
         "dataDelayed": "Данные с задержкой до 15 минут",
         "copy": "Копировать",
         "copied": "Скопировано",
-        "copiedLink": "Ссылка скопирована!"
+        "copiedLink": "Ссылка скопирована!",
+        "accuracy": "Точность",
+        "target": "Цель",
+        "actual": "Фактический"
     },
     "prediction": {
         "makePrediction": "Сделать прогноз",

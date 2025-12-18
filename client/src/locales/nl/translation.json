@@ -473,7 +473,11 @@
     "shareByTimeframe": "Op Tijdskader Delen",
     "noPredictionsForTimeframe": "Geen actieve voorspellingen voor dit tijdsbestek.",
     "myUsername": "Mijn",
-    "possessiveSuffix": "s"
+    "possessiveSuffix": "s",
+    "my_last": "Mijn laatste",
+    "last": "laatste",
+    "results": "Resultaten",
+    "results_other": "Resultaten"
   },
   "editprofile_telegram_label": "Telegram Link",
   "editprofile_telegram_placeholder": "https://t.me/jouwgebruikersnaam",
@@ -740,7 +744,10 @@
     "dataDelayed": "Gegevens vertraagd tot 15 minuten",
     "copy": "Kopiëren",
     "copied": "Gekopieerd",
-    "copiedLink": "Link gekopieerd!"
+    "copiedLink": "Link gekopieerd!",
+    "accuracy": "Nauwkeurigheid",
+    "target": "Doel",
+    "actual": "Actueel"
   },
   "prediction": {
     "makePrediction": "Doe een Voorspelling",
