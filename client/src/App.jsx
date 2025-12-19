@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import PullToRefresh from './components/PullToRefresh'; // Import custom component
 
 import { Toaster } from 'react-hot-toast';
@@ -75,6 +75,7 @@ const AIWizardPage = lazy(() => import('./pages/AIWizardPage'));
 const CompleteProfilePage = lazy(() => import('./pages/CompleteProfilePage'));
 const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
 const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // --- 1. LOAD STRIPE JS GLOBALLY ---
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -351,7 +352,8 @@ function App() {
                   <Route path={ROUTES.HOME} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
                   <Route path={ROUTES.DASHBOARD} element={<HomePage user={user} settings={settings} onMakePredictionClick={handleOpenPredictionModal} />} />
                   <Route path={ROUTES.COMPLETE_PROFILE} element={<CompleteProfilePage />} />
-                  <Route path={ROUTES.EXPLORE} element={<ExplorePage requestLogin={requestLogin} settings={settings} user={user} isAuthLoading={isAuthLoading} />} />
+                  {/* Redirect /explore to / to avoid duplicate content */}
+                  <Route path={ROUTES.EXPLORE} element={<Navigate to={ROUTES.HOME} replace />} />
                   <Route path={ROUTES.SCOREBOARD} element={<ScoreboardPage settings={settings} />} />
                   <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
                   <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
@@ -381,6 +383,8 @@ function App() {
                       </FeatureRoute>
                     }
                   />
+                  {/* Catch-all 404 */}
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Suspense>
             </main>

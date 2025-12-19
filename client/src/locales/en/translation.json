@@ -1,4 +1,8 @@
 {
+  "errors": {
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDesc": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
+  },
   "header_golden_feed": "Golden Feed",
   "header_explore": "Explore",
   "header_scoreboard": "Scoreboard",
@@ -727,6 +731,7 @@
   "common": {
     "close": "Close",
     "rating": "Rating",
+    "backToHome": "Back to Home",
     "dataDelayed": "Data delayed up to 15 minutes",
     "copy": "Copy",
     "copied": "Copied",
