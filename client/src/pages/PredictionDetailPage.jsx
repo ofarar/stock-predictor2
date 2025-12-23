@@ -308,6 +308,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                     "@context": "https://schema.org",
                     "@type": "SocialMediaPosting",
                     "headline": pageTitle,
+                    "url": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/prediction/${predictionId}`,
                     "datePublished": prediction.createdAt,
                     "author": {
                         "@type": "Person",
@@ -318,7 +319,7 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                     "keywords": `${stockTicker}, Stock Prediction, ${predictionType}, Financial Forecast`,
                     "mainEntityOfPage": {
                         "@type": "WebPage",
-                        "@id": window.location.href
+                        "@id": `${import.meta.env.VITE_APP_URL || 'https://www.stockpredictorai.com'}/prediction/${predictionId}`
                     }
                 })}
             </script>
