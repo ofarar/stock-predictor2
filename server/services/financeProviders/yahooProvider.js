@@ -14,7 +14,7 @@ async function getYahooInstance() {
         const { default: YahooFinance } = await import('yahoo-finance2');
 
         // Initialize with new v3 syntax (as per your documentation)
-        yahooFinanceInstance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
+        yahooFinanceInstance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
 
         console.log("Yahoo Finance v3 provider initialized successfully.");
         return yahooFinanceInstance;
