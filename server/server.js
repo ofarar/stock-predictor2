@@ -103,12 +103,13 @@ app.use(cors(corsOptions));
 
 
 // 3. Trust Proxy (for production environments like Render/Heroku)
+// Trust the first proxy (Fly.io/Cloudflare load balancer) so we get the real client IP for rate limiting
 app.set('trust proxy', 1);
 
 // --- RATE LIMITING (High Traffic Protection) ---
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 300, // Limit each IP to 300 requests per `window`
+    limit: 1500, // Increased to 1500 requests per `window` to prevent blocking active users
     standardHeaders: 'draft-7',
     legacyHeaders: false,
     message: "Too many requests from this IP, please try again later.",
