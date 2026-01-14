@@ -241,7 +241,8 @@
   "updates_title": "10. التغييرات على سياسة الخصوصية هذه",
   "updates_text": "قد نقوم بتحديث سياسة الخصوصية الخاصة بنا من وقت لآخر. سنخطرك بأي تغييرات عن طريق نشر سياسة الخصوصية الجديدة على هذه الصفحة وتحديث تاريخ 'آخر تحديث' في الأعلى. ننصحك بمراجعة سياسة الخصوصية هذه بشكل دوري لأي تغييرات.",
   "contact_title_2": "11. اتصل بنا",
-  "contact_text": "إذا كانت لديك أي أسئلة أو طلبات بخصوص سياسة الخصوصية هذه أو بياناتك الشخصية، يرجى الاتصال بمسؤول حماية البيانات لدينا على: predictostock@gmail.com",
+  "privacy_contact_pre": "إذا كانت لديك أي أسئلة أو طلبات بخصوص سياسة الخصوصية هذه أو بياناتك الشخصية، يرجى التواصل عبر",
+  "privacy_contact_link": "صفحة اتصل بنا.",
   "profile_title": "الملف الشخصي",
   "followers_label": "المتابعون",
   "following_label": "يتابع",
@@ -456,7 +457,11 @@
     "shareByTimeframe": "مشاركة حسب الإطار الزمني",
     "noPredictionsForTimeframe": "لا توجد توقعات نشطة لهذا الإطار الزمني.",
     "myUsername": "خاصتي",
-    "possessiveSuffix": "'s"
+    "possessiveSuffix": "'s",
+    "my_last": "آخر",
+    "last": "آخر",
+    "results": "نتائج",
+    "results_other": "نتائج"
   },
   "editprofile_telegram_label": "رابط تيليجرام",
   "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -723,7 +728,10 @@
     "dataDelayed": "البيانات متأخرة لمدة تصل إلى 15 دقيقة",
     "copy": "نسخ",
     "copied": "نُسخ",
-    "copiedLink": "تم نسخ الرابط!"
+    "copiedLink": "تم نسخ الرابط!",
+    "accuracy": "الدقة",
+    "target": "الهدف",
+    "actual": "الفعلي"
   },
   "prediction": {
     "makePrediction": "قم بتوقع",

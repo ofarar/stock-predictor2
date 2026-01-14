@@ -129,8 +129,10 @@ const ProfilePage = ({ settings, requestLogin }) => {
     useEffect(() => {
         // FIX: Check for profileData to ensure the data fetch has completed
         // and the core profile owner's data is available.
-        if (profileData && location.hash === "#active") {
-            console.log("Autoscroll: Triggered for #active");
+        // FIX: Depend on profileData change (signaling data fetch success) and hash change
+        if (profileData && location.hash) {
+            const targetId = location.hash.substring(1); // remove '#'
+            console.log(`Autoscroll: Triggered for #${targetId}`);
 
             const ATTEMPT_INTERVAL_MS = 100;
             const MAX_ATTEMPTS = 20; // 2 seconds total
@@ -138,12 +140,12 @@ const ProfilePage = ({ settings, requestLogin }) => {
 
             const scrollInterval = setInterval(() => {
                 attempts++;
-                const element = document.getElementById("active");
-                console.log(`Autoscroll: Attempt ${attempts}, Element found?`, !!element);
+                const element = document.getElementById(targetId);
+                console.log(`Autoscroll: Attempt ${attempts}, Element #${targetId} found?`, !!element);
 
                 if (element) {
-                    console.log("Autoscroll: Element found! Scrolling...");
-                    // Use scrollIntoView which respects scroll-margin-top (added in PredictionList)
+                    console.log(`Autoscroll: Element #${targetId} found! Scrolling...`);
+                    // Use scrollIntoView which respects scroll-margin-top
                     element.scrollIntoView({ behavior: "smooth", block: "start" });
 
                     // Clear the hash after scrolling
@@ -151,7 +153,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
 
                     clearInterval(scrollInterval);
                 } else if (attempts >= MAX_ATTEMPTS) {
-                    console.warn("Autoscroll: Element with id 'active' not found after max attempts.");
+                    console.warn(`Autoscroll: Element with id '${targetId}' not found after max attempts.`);
                     clearInterval(scrollInterval);
                 }
             }, ATTEMPT_INTERVAL_MS);
@@ -472,6 +474,7 @@ const ProfilePage = ({ settings, requestLogin }) => {
                                 onEditClick={handleEditClick}
                                 emptyTextKey="no_prediction_history_label"
                                 profileUsername={user.username}
+                                id="history"
                                 isAdmin={currentUser?.isAdmin}
                                 onDeleteClick={handleDeleteClick}
                             />

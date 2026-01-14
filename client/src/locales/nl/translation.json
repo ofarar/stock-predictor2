@@ -212,11 +212,11 @@
   "privacy_intro_text": "Welkom bij StockPredictorAI ('wij', 'ons', 'onze'). Wij zijn toegewijd aan de bescherming van uw persoonsgegevens. Dit Privacybeleid legt uit hoe wij uw informatie verzamelen, gebruiken, delen en beschermen wanneer u onze dienst gebruikt. Door StockPredictorAI te gebruiken, gaat u akkoord met het verzamelen en gebruiken van informatie in overeenstemming met dit beleid. Dit beleid is opgesteld in overeenstemming met de Algemene Verordening Gegevensbescherming (AVG/GDPR) van de EU.",
   "info_collection_title": "2. Informatie die Wij Verzamelen",
   "info_collection_a_title": "A. Informatie die U Verstrekt",
-  "info_collection_a_text": "Wij verzamelen informatie die u direct aan ons verstrekt, inclusief: \n • Accountinformatie: Wanneer u zich registreert met Google, ontvangen wij uw naam, e-mailadres en profielfoto zoals verstrekt door uw Google-account. Wanneer u uw profiel voltooit, verzamelen we ook uw gekozen gebruikersnaam en eventuele optionele informatie die u toevoegt, zoals uw 'Over Mij'-biografie en links naar sociale media. \n • Betalingsinformatie: Om betalingen voor de status 'Geverifieerde Voorspeller' of 'Gouden Lid' abonnementen te verwerken, vereisen wij uw betalingsinformatie. Dit wordt direct verzameld en verwerkt door onze betalingsverwerker, Stripe, en wordt nooit op onze servers opgeslagen. Wij bewaren alleen een record van uw abonnementsstatus en klant-ID. \n • Gebruikersinhoud: Wij verzamelen de inhoud die u creëert, zoals uw voorspellingen, rationales en Gouden Feed-berichten.",
+  "info_collection_a_text": "Wij verzamelen informatie die u direct aan ons verstrekt, inclusief: \n • Accountinformatie: Wanneer u zich registreert met Google, ontvangen wij uw naam, e-mailadres en profielfoto zoals verstrekt door uw Google-account. Wanneer u uw profiel voltooit, verzamelen we ook uw gekozen gebruikersnaam en eventuele optionele informatie die u toevoegt, zoals uw 'Over Mij'-biografie en links naar sociale media. \n • Betalings- en Uitbetalingsinformatie: Voor onze Gouden Leden (contentmakers) verwerken wij uitbetalingen rechtstreeks naar uw gekoppelde account. Voor abonnees verwerken wij abonnementsbetalingen veilig. Alle financiële transacties worden afgehandeld door Stripe, een wereldleider in veilige betalingen. Wij slaan uw creditcard- of bankrekeninggegevens nooit op. Wij bewaren alleen een record van uw abonnementsstatus of uitbetalingsaccount-ID. \n • Gebruikersinhoud: Wij verzamelen de inhoud die u creëert, zoals uw voorspellingen, rationales en Gouden Feed-berichten.",
   "info_collection_b_title": "B. Informatie die Wij Automatisch Verzamelen",
   "info_collection_b_text": " • Cookies en Sessiegegevens: Wij gebruiken cookies uitsluitend om uw sessie te behouden nadat u bent ingelogd. Een cookie is een klein stukje gegevens dat op uw computer wordt opgeslagen. Dit is essentieel voor de app om te weten wie u bent. \n • Gebruiksgegevens: Wij kunnen gegevens verzamelen over hoe u met de dienst interageert, zoals bezochte pagina's en gebruikte functies, om ons te helpen het platform te verbeteren.",
   "use_info_title": "3. Hoe Wij Uw Informatie Gebruiken",
-  "use_info_text": "Wij gebruiken de verzamelde informatie voor de volgende doeleinden: \n • Om onze Dienst te leveren en te onderhouden, uw gebruikersprofiel aan te maken en uw voorspellingen weer te geven. \n • Om uw betalingen te verwerken en uw Abonnementen ('Geverifieerd' en 'Gouden Lid') te beheren. \n • Om met u te communiceren, inclusief het verzenden van transactionele e-mails (zoals betalingsbewijzen of wachtwoordresets) en meldingen waarvoor u zich hebt aangemeld. \n • Om het gebruik te analyseren ter verbetering van de Dienst. \n • Om onze Servicevoorwaarden af te dwingen en misbruik te voorkomen.",
+  "use_info_text": "Wij gebruiken de verzamelde informatie voor de volgende doeleinden: \n • Om onze Dienst te leveren en te onderhouden, uw gebruikersprofiel aan te maken en uw voorspellingen weer te geven. \n • Om uw betalingen (voor Abonnees) en uitbetalingen (voor Gouden Leden) te verwerken. \n • Om met u te communiceren, inclusief het verzenden van transactionele e-mails (zoals betalingsbewijzen of wachtwoordresets) en meldingen waarvoor u zich hebt aangemeld. \n • Om het gebruik te analyseren ter verbetering van de Dienst. \n • Om onze Servicevoorwaarden af te dwingen en misbruik te voorkomen.",
   "sharing_title": "4. Gegevens delen met Derden",
   "sharing_text": "Wij verkopen uw persoonsgegevens niet. Wij delen uw gegevens alleen met de volgende externe dienstverleners (sub-verwerkers) die essentieel zijn voor de werking van onze Dienst:",
   "sharing_list_a": "Betalingsverwerker: Wij delen uw e-mail, gebruikers-ID en transactiedetails met Stripe om alle betalingen veilig te verwerken en abonnementen te beheren.",
@@ -241,7 +241,8 @@
   "updates_title": "10. Wijzigingen in Dit Privacybeleid",
   "updates_text": "Wij kunnen ons Privacybeleid van tijd tot tijd bijwerken. Wij zullen u van eventuele wijzigingen op de hoogte stellen door het nieuwe Privacybeleid op deze pagina te plaatsen en de datum van 'Laatst Bijgewerkt' bovenaan bij te werken. Het wordt u aangeraden dit Privacybeleid regelmatig te controleren op wijzigingen.",
   "contact_title_2": "11. Neem Contact Met Ons Op",
-  "contact_text": "Als u vragen of verzoeken heeft met betrekking tot dit Privacybeleid of uw persoonsgegevens, neem dan contact op met onze Functionaris voor Gegevensbescherming via: predictostock@gmail.com",
+  "privacy_contact_pre": "Als u vragen of verzoeken heeft met betrekking tot dit Privacybeleid of uw persoonsgegevens, neem dan contact op via onze",
+  "privacy_contact_link": "Contactpagina.",
   "profile_title": "Profiel",
   "followers_label": "Volgers",
   "following_label": "Volgend",
@@ -472,7 +473,11 @@
     "shareByTimeframe": "Op Tijdskader Delen",
     "noPredictionsForTimeframe": "Geen actieve voorspellingen voor dit tijdsbestek.",
     "myUsername": "Mijn",
-    "possessiveSuffix": "s"
+    "possessiveSuffix": "s",
+    "my_last": "Mijn laatste",
+    "last": "laatste",
+    "results": "Resultaten",
+    "results_other": "Resultaten"
   },
   "editprofile_telegram_label": "Telegram Link",
   "editprofile_telegram_placeholder": "https://t.me/jouwgebruikersnaam",
@@ -739,7 +744,10 @@
     "dataDelayed": "Gegevens vertraagd tot 15 minuten",
     "copy": "Kopiëren",
     "copied": "Gekopieerd",
-    "copiedLink": "Link gekopieerd!"
+    "copiedLink": "Link gekopieerd!",
+    "accuracy": "Nauwkeurigheid",
+    "target": "Doel",
+    "actual": "Actueel"
   },
   "prediction": {
     "makePrediction": "Doe een Voorspelling",

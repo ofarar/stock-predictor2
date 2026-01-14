@@ -217,7 +217,7 @@
     "info_collection_b_title": "B. 我们自动收集的信息",
     "info_collection_b_text": " • Cookie 和会话数据：我们仅使用 Cookie 来在您登录后维持您的会话。Cookie 是存储在您计算机上的一个小数据片段。这对于应用程序了解您的身份至关重要。 \n • 使用数据：我们可能会收集有关您如何与服务交互的数据，例如访问的页面和使用的功能，以帮助我们改进平台。",
     "use_info_title": "3. 我们如何使用您的信息",
-    "use_info_text": "我们将收集的信息用于以下目的： \n • 提供和维护我们的服务、创建您的用户个人资料并显示您的预测。 \n • 处理您的付款并管理您的订阅（“Verified”和“Golden Member”）。 \n • 与您沟通，包括发送交易电子邮件（如付款收据或密码重置）和您选择接收的通知。 \n • 分析使用情况以改进服务。 \n • 执行我们的服务条款并防止滥用。",
+    "use_info_text": "我们将收集的信息用于以下目的：\n • 提供和维护我们的服务、创建您的用户个人资料并显示您的预测。\n • 处理您的付款（针对订阅者）和支出（针对黄金会员）。\n • 与您沟通，包括发送交易电子邮件（如付款收据或密码重置）和您选择接收的通知。\n • 分析使用情况以改进服务。\n • 执行我们的服务条款并防止滥用。",
     "sharing_title": "4. 与第三方共享数据",
     "sharing_text": "我们不会出售您的个人信息。我们仅与以下对我们运营服务至关重要的第三方服务提供商（子处理商）共享您的数据：",
     "sharing_list_a": "支付处理商：我们与 Stripe 共享您的电子邮件、用户 ID 和交易详情，以安全地处理所有付款和管理订阅。",
@@ -242,7 +242,8 @@
     "updates_title": "10. 本隐私政策的变更",
     "updates_text": "我们可能会不时更新我们的隐私政策。我们将通过在本页面上发布新的隐私政策并更新顶部的“最后更新于”日期来通知您任何变更。建议您定期查看本隐私政策以了解任何变更。",
     "contact_title_2": "11. 联系我们",
-    "contact_text": "如果您对本隐私政策或您的个人数据有任何疑问或要求，请通过以下方式联系我们的数据保护联系人：predictostock@gmail.com",
+    "privacy_contact_pre": "如果您对本隐私政策或您的个人数据有任何疑问或要求，请通过我们的",
+    "privacy_contact_link": "联系我们页面。",
     "profile_title": "个人资料",
     "followers_label": "关注者",
     "following_label": "正在关注",
@@ -457,7 +458,11 @@
         "shareByTimeframe": "按时间范围分享",
         "noPredictionsForTimeframe": "此时间范围内没有活跃预测。",
         "myUsername": "我的",
-        "possessiveSuffix": "的"
+        "possessiveSuffix": "的",
+        "my_last": "我最近的",
+        "last": "最近的",
+        "results": "结果",
+        "results_other": "结果"
     },
     "editprofile_telegram_label": "Telegram 链接",
     "editprofile_telegram_placeholder": "https://t.me/yourusername",
@@ -723,7 +728,10 @@
         "dataDelayed": "数据延迟最多15分钟",
         "copy": "复制",
         "copied": "已复制",
-        "copiedLink": "链接已复制!"
+        "copiedLink": "链接已复制!",
+        "accuracy": "准确率",
+        "target": "目标",
+        "actual": "实际"
     },
     "prediction": {
         "makePrediction": "做出预测",

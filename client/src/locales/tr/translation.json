@@ -243,6 +243,8 @@
   "updates_text": "Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Bu sayfada yeni Gizlilik Politikasını yayınlayarak ve üstteki 'Son Güncelleme' tarihini güncelleyerek sizi herhangi bir değişiklikten haberdar edeceğiz. Herhangi bir değişiklik için bu Gizlilik Politikasını periyodik olarak gözden geçirmeniz tavsiye edilir.",
   "contact_title_2": "11. Bize Ulaşın",
   "contact_text": "Bu Gizlilik Politikası veya kişisel verilerinizle ilgili herhangi bir sorunuz veya talebiniz varsa, lütfen Veri Koruma İletişim kişimizle şu adresten iletişime geçin: predictostock@gmail.com",
+  "privacy_contact_pre": "Bu Gizlilik Politikası veya kişisel verilerinizle ilgili herhangi bir sorunuz veya talebiniz varsa, lütfen şu seçenek üzerinden bize ulaşın:",
+  "privacy_contact_link": "İletişim Sayfası.",
   "profile_title": "Profil",
   "followers_label": "Takipçiler",
   "following_label": "Takip Edilenler",
@@ -448,16 +450,20 @@
   },
   "share": {
     "shareOnX": "X'te Paylaş",
-    "ownerActive": "${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve StockPredictorAI'da oy ver!",
+    "ownerActive": "${{ticker}} fiyatının {{deadline}} {{targetPrice}} olacağını tahmin ediyorum. Tahminimi gör ve StockPredictorAI'da oy ver!",
     "ownerAssessed": "${{ticker}} için yaptığım tahmin {{rating}} puanla sonuçlandı! Tahminim {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu. Sonucu gör!",
-    "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} kadar {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
+    "visitorActive": "İlginç bir tahmin: {{username}}, ${{ticker}} fiyatının {{deadline}} {{targetPrice}} olacağını düşünüyor. Sen ne düşünüyorsun?",
     "visitorAssessed": "Bu sonuca bir göz at: {{username}} kullanıcısının ${{ticker}} tahmini {{rating}} puan aldı! Tahmini {{targetPrice}} idi ve kapanış fiyatı {{actualPrice}} oldu.",
     "activePredictionsAggregated": "{{subject}} {{count}} {{type}} tahmini özeti:\n\n{{predictionList}}...\n\nDoğruluk %{{accuracy}}! {{subject}} portföyünü hemen incele! {{hashtags}} #HisseTahmini",
     "shareActivePredictions": "Aktif Tahminleri Paylaş",
     "shareByTimeframe": "Zamana Göre Paylaş",
     "noPredictionsForTimeframe": "Bu zaman diliminde aktif tahmin yok.",
     "myUsername": "Benim",
-    "possessiveSuffix": "'a ait"
+    "possessiveSuffix": "'a ait",
+    "my_last": "Son",
+    "last": "Son",
+    "results": "Sonuçlarım",
+    "results_other": "Sonuçları"
   },
   "editprofile_telegram_label": "Telegram Bağlantısı",
   "editprofile_telegram_placeholder": "https://t.me/kullaniciadiniz",
@@ -723,7 +729,10 @@
     "dataDelayed": "Veriler 15 dakikaya kadar gecikmeli olabilir",
     "copy": "Kopyala",
     "copied": "Kopyalandı",
-    "copiedLink": "Link kopyalandı!"
+    "copiedLink": "Link kopyalandı!",
+    "accuracy": "Doğruluk",
+    "target": "Hedef",
+    "actual": "Gerçek"
   },
   "prediction": {
     "makePrediction": "Tahmin Yap",

@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../constants';
 
 // A small helper component to render sections consistently
 const PrivacySection = ({ titleKey, textKey, children }) => {
@@ -22,10 +24,10 @@ const PrivacyPage = () => {
         <div className="max-w-4xl mx-auto text-gray-300">
             <h1 className="text-4xl font-bold text-white text-center mb-4">{t('privacy_title')}</h1>
             <p className="text-center text-gray-500 text-sm mb-8">{t('privacy_last_updated')}</p>
-            
+
             <div className="bg-gray-800 p-8 rounded-lg space-y-6 text-gray-300">
                 <PrivacySection titleKey="privacy_intro_title" textKey="privacy_intro_text" />
-                
+
                 <PrivacySection titleKey="info_collection_title">
                     <div className="ps-4 space-y-2">
                         <h3 className="text-lg font-semibold text-gray-200">{t('info_collection_a_title')}</h3>
@@ -45,7 +47,7 @@ const PrivacyPage = () => {
                         <li>{t('sharing_list_d')}</li>
                     </ul>
                 </PrivacySection>
-                
+
                 <PrivacySection titleKey="gdpr_title" textKey="gdpr_intro">
                     <ul className="list-disc list-inside ps-4 space-y-2">
                         <li>{t('gdpr_list_a')}</li>
@@ -55,13 +57,20 @@ const PrivacyPage = () => {
                     </ul>
                     <p>{t('gdpr_outro')}</p>
                 </PrivacySection>
-                
+
                 <PrivacySection titleKey="retention_title" textKey="retention_text" />
                 <PrivacySection titleKey="cookies_title" textKey="cookies_text" />
                 <PrivacySection titleKey="children_title" textKey="children_text" />
                 <PrivacySection titleKey="security_title" textKey="security_text" />
                 <PrivacySection titleKey="updates_title" textKey="updates_text" />
-                <PrivacySection titleKey="contact_title_2" textKey="contact_text" />
+                <PrivacySection titleKey="contact_title_2">
+                    <p>
+                        {t('privacy_contact_pre')}{' '}
+                        <Link to={ROUTES.CONTACT} className="text-cyan-400 hover:underline">
+                            {t('privacy_contact_link')}
+                        </Link>
+                    </p>
+                </PrivacySection>
             </div>
         </div>
     );
