@@ -606,7 +606,7 @@ router.post('/admin/health-check/:service', async (req, res) => {
                 }
                 const port = process.env.PORT || 5001;
                 // This makes an internal HTTP request to test the full stack for the profile endpoint
-                await axios.get(`http://localhost:${port}/api/users/${anyUser._id}`);
+                await axios.get(`http://localhost:${port}/api/profile/${anyUser._id}`);
                 return 'OK'; // We only care if it resolves without error
             });
 

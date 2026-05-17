@@ -101,7 +101,7 @@ const search = async (keyword) => {
     const yahoo = await getYahooInstance(); // 1. Get v3 instance
     try {
         // 2. Call v3 method
-        const results = await yahoo.search(keyword);
+        const results = await yahoo.search(keyword, { enableFuzzyQuery: true, quotesCount: 15 });
         // 3. Map
         return (results.quotes || []).map(mapYahooSearch);
     } catch (error) {
