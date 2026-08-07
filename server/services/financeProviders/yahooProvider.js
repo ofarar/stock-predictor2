@@ -13,8 +13,8 @@ async function getYahooInstance() {
         // Use async import() to load the ESM 'yahoo-finance2' module
         const { default: YahooFinance } = await import('yahoo-finance2');
 
-        // Initialize with new v3 syntax (as per your documentation)
-        yahooFinanceInstance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
+        // Initialize with new syntax
+        yahooFinanceInstance = new YahooFinance();
 
         console.log("Yahoo Finance v3 provider initialized successfully.");
         return yahooFinanceInstance;

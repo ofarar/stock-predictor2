@@ -17,7 +17,7 @@ async function main() {
 
     try {
         const { default: YahooFinance } = await import('yahoo-finance2');
-        const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
+        const yahooFinance = new YahooFinance();
 
         const queryOptions = {
             period1: startDate, // yahoo-finance2 handles YYYY-MM-DD strings well often, but for intraday let's be strict? 
