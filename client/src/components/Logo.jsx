@@ -11,8 +11,8 @@ const Logo = () => {
             {/* This div handles the responsive text */}
             <div className="flex flex-row items-center sm:flex-col sm:items-start">
 
-                {/* Logo Text: Hidden on mobile, visible on desktop */}
-                <span className="hidden sm:inline font-bold text-2xl text-white">
+                {/* Logo Text: Visible on both mobile and desktop */}
+                <span className="inline font-bold text-lg sm:text-2xl text-white">
                     Stock<span className="text-green-400">Predictor</span>
                     {/* --- NEW "AI" TEXT --- */}
                     <span className="text-xl text-gray-300 ms-1">AI</span>
