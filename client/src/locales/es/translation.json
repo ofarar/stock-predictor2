@@ -1,1233 +1,1238 @@
 {
-    "header_watchlist": "Lista de seguimiento",
-    "header_golden_feed": "Feed Dorado",
-    "header_explore": "Explorar",
-    "header_scoreboard": "Tabla de clasificación",
-    "header_ai_assist": "Asistente de Cartera IA",
-    "header_make_prediction": "Hacer una predicción",
-    "header_my_profile": "Mi perfil",
-    "header_settings": "Ajustes",
-    "header_admin": "Admin",
-    "header_logout": "Cerrar sesión",
-    "header_login": "Iniciar sesión",
-    "notifications_title": "Notificaciones",
-    "notifications_none": "No hay notificaciones nuevas.",
-    "footer_about": "Acerca de",
-    "footer_contact": "Contacto",
-    "footer_terms": "Términos de servicio",
-    "footer_privacy": "Política de privacidad",
-    "profile_followers": "Seguidores",
-    "profile_following": "Siguiendo",
-    "profile_subscribers": "Suscriptores",
-    "profile_subscriptions": "Suscripciones",
-    "profile_edit": "Editar perfil",
-    "profile_get_verified": "Verificarse",
-    "profile_manage_gold": "Gestionar Membresía Dorada",
-    "profile_become_golden": "Hacerse Dorado",
-    "profile_join_button": "Unirse (${{price}}/mes)",
-    "profile_subscribed_badge": "Suscrito",
-    "profile_subscriptions_paused": "Suscripciones pausadas",
-    "profile_follow_button": "Seguir",
-    "profile_following_button": "Siguiendo",
-    "profile_unfollow_button": "Dejar de seguir",
-    "profile_overall_rank": "Rango general",
-    "profile_avg_score": "Rating Promedio",
-    "profile_total_points": "Puntos totales",
-    "profile_total_predictions": "Predicciones totales",
-    "profile_tab_profile": "Perfil",
-    "profile_tab_golden_feed": "Feed Dorado",
-    "profile_watchlist_title": "Lista de seguimiento",
-    "profile_watchlist_empty": "Este usuario aún no sigue ninguna acción.",
-    "profile_achievements_title": "Logros",
-    "profile_achievements_empty": "Aún no hay logros. ¡Sigue haciendo predicciones!",
-    "profile_achievements_how_work": "¿Cómo se ganan las insignias?",
-    "profile_active_predictions": "Predicciones activas",
-    "profile_prediction_history": "Historial de predicciones",
-    "profile_load_more": "Cargar más",
-    "profile_no_active_predictions": "No hay predicciones activas.",
-    "profile_no_prediction_history": "Aún no hay historial de predicciones.",
-    "verified_tick_popover_title": "Predictor verificado",
-    "verified_tick_popover_text": "Este usuario es un miembro verificado de la comunidad, lo que indica un compromiso con la plataforma.",
-    "verified_modal_title": "Conviértase en un predictor verificado",
-    "verified_modal_text": "Gane credibilidad y visibilidad en la comunidad con una insignia verificada.",
-    "verified_modal_benefit1": "Obtenga una marca de verificación verde junto a su nombre en todo el sitio.",
-    "verified_modal_benefit2": "Sus predicciones se destacan en el filtro \"Solo verificados\" en la página Explorar.",
-    "verified_modal_benefit3": "Sea recomendado como Experto Verificado en las páginas de Lista de seguimiento relevantes.",
-    "verified_modal_button": "Verificarse por ${{price}}",
-    "verified_status_modal_title": "¡Es un predictor verificado!",
-    "verified_status_modal_text": "Ha aumentado la confianza y la visibilidad en la comunidad.",
-    "verified_status_modal_close": "Cerrar",
-    "verified_status_modal_remove": "Eliminar estado de verificación",
-    "homepage_aim": "Predice el mercado. Rastrea tu precisión.",
-    "about_title": "Acerca de StockPredictorAI",
-    "about_mission_title": "Nuestra Misión",
-    "about_mission_text": "StockPredictorAI se fundó bajo el principio de que la sabiduría colectiva de las personas informadas puede ser una herramienta poderosa para navegar por los mercados financieros. Nuestra misión es ofrecer una plataforma donde tanto los inversores novatos como los profesionales puedan poner a prueba sus habilidades analíticas, aprender de la comunidad y construir un historial transparente de sus predicciones de mercado.",
-    "about_how_it_works_title": "Cómo Funciona",
-    "about_how_it_works_predict_title": "1. Predice el Mercado",
-    "about_how_it_works_predict_text": "Haz predicciones sobre miles de activos con varios plazos, desde horarios hasta anuales.",
-    "about_how_it_works_compete_title": "2. Compite y Asciende",
-    "about_how_it_works_compete_text": "Sube en las tablas de clasificación haciendo predicciones precisas y demuestra tus habilidades a la comunidad.",
-    "about_how_it_works_follow_title": "3. Sigue y Aprende",
-    "about_how_it_works_follow_text": "Sigue a los mejores pronosticadores para aprender de sus estrategias y recibir notificaciones de sus nuevos movimientos en el mercado.",
-    "about_how_it_works_golden_title": "4. Hazte Golden",
-    "about_how_it_works_golden_text": "Conviértete en Miembro Golden para ofrecer contenido exclusivo a tus suscriptores y construir tu marca.",
-    "about_how_it_works_track_title": "5. Registra tu Historial",
-    "about_how_it_works_track_text": "Construye un historial transparente y a largo plazo de tu rendimiento en todos los plazos y activos.",
-    "scoring_explained_title": "Explicación del Rating",
-    "scoring_explained_text1": "Nuestra plataforma utiliza un **Sistema de Puntuación por Proximidad** para recompensar la precisión. En lugar de una simple respuesta de \"correcto\" o \"incorrecto\", tu puntuación se basa en qué tan cerca estuvo tu predicción del resultado real.",
-    "scoring_explained_text2": "Por ejemplo, si una acción está en 152 $ y predices que estará en 150 $, recibirás un rating mucho más alta que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo por encima de las suposiciones al azar. La puntuación máxima para una predicción perfecta es de 100 puntos, y los puntos disminuyen cuanto más se aleja tu predicción del precio final.",
-    "aiwizard_coming_soon": "PRÓXIMAMENTE",
-    "aiwizard_title": "Asistente de Portafolio con IA",
-    "aiwizard_description": "Obtén recomendaciones personalizadas de acciones basadas en los patrones de nuestros mejores predictores.",
-    "aiwizard_how_it_works": "Cómo Funciona",
-    "aiwizard_step1_title": "Define tu Estilo",
-    "aiwizard_step1_text": "Responde algunas preguntas sobre tu horizonte de inversión e intereses.",
-    "aiwizard_step2_title": "La IA Analiza los Datos",
-    "aiwizard_step2_text": "Nuestro sistema encuentra a los principales predictores que destacan en tus áreas de interés.",
-    "aiwizard_step3_title": "Obtén Información",
-    "aiwizard_step3_text": "Recibe un feed curado de acciones que nuestros mejores analistas están observando.",
-    "aiwizard_join_waitlist": "Únete a la Lista de Acceso Anticipado",
-    "aiwizard_checking_status": "Comprobando estado...",
-    "aiwizard_on_waitlist": "¡Ya estás en la lista de espera!",
-    "aiwizard_signin_to_join": "Inicia sesión para unirte a la lista",
-    "aiwizard_early_access_note": "Sé el primero en saber cuándo se lanza. ¡Los registrados tempranamente obtendrán acceso gratuito por tiempo limitado!",
-    "aiwizard_legal_note": "**Nota Legal:** El Asistente de Cartera con IA proporciona información basada en datos históricos de usuarios únicamente con fines informativos. No es asesoramiento financiero. Todas las decisiones de inversión deben tomarse con su propia investigación y diligencia debida.",
-    "aiwizard_joining": "Uniéndose...",
-    "aiwizard_join_success": "¡Estás en la lista! Te notificaremos cuando se lance.",
-    "aiwizard_join_error": "No se pudo unir a la lista de espera.",
-    "contact_title": "Contáctanos",
-    "contact_get_in_touch": "Ponte en contacto",
-    "contact_intro_text": "¿Tienes alguna pregunta, comentario o consulta de asociación? Nos encantaría saber de ti.",
-    "contact_fill_form_text": "Rellena el formulario y nos pondremos en contacto contigo lo antes posible.",
-    "contact_urgent_text": "Para asuntos urgentes, también puede contactarnos directamente en:",
-    "contact_email": "predictostock@gmail.com",
-    "contact_name_label": "Su nombre",
-    "contact_email_label": "Su correo electrónico",
-    "contact_message_label": "Mensaje",
-    "contact_sending": "Enviando...",
-    "contact_send_button": "Enviar mensaje",
-    "contact_fill_all_fields_error": "Por favor, complete todos los campos.",
-    "contact_success_message": "¡Tu mensaje ha sido enviado!",
-    "contact_error_message": "Algo salió mal. Por favor, inténtalo de nuevo.",
-    "editprofile_title": "Editar perfil",
-    "editprofile_avatar_label": "Avatar",
-    "editprofile_change_avatar": "Cambiar avatar",
-    "editprofile_username_label": "Nombre de usuario",
-    "editprofile_about_label": "Acerca de",
-    "editprofile_about_counter": "{{current}} / {{limit}}",
-    "editprofile_xlink_label": "Enlace X (Twitter)",
-    "editprofile_xlink_placeholder": "https://x.com/tuperfil",
-    "editprofile_youtube_label": "Enlace de YouTube",
-    "editprofile_youtube_placeholder": "https://youtube.com/tucanal",
-    "editprofile_save_changes": "Guardar cambios",
-    "editprofile_saving": "Guardando...",
-    "editprofile_cancel": "Cancelar",
-    "editprofile_success": "¡Perfil actualizado con éxito!",
-    "editprofile_error": "Error al actualizar el perfil.",
-    "explore_title": "Explorar Predicciones",
-    "explore_filter_stock": "Filtrar por Acción",
-    "explore_prediction_type": "Tipo de Predicción",
-    "explore_sort_by": "Ordenar por",
-    "explore_sort_by_date": "Más Recientes",
-    "explore_sort_by_performance": "Mejores Rendimientos",
-    "explore_sort_by_votes": "Más Votadas",
-    "explore_sort_by_potential": "Mayor Potencial",
-    "explore_verified_only": "Mostrar solo predictores verificados",
-    "explore_tab_active": "Activas",
-    "explore_tab_assessed": "Evaluadas",
-    "explore_loading": "Cargando Predicciones...",
-    "explore_no_predictions": "No se encontraron predicciones para estos filtros.",
-    "explore_predicts_price_of": "Predice un precio de",
-    "explore_by_deadline": "para {{date}}",
-    "explore_predicted": "Predicho",
-    "explore_actual_price": "Precio Real",
-    "explore_view_rationale": "Ver Justificación",
-    "explore_agree": "De Acuerdo",
-    "explore_disagree": "En Desacuerdo",
-    "explore_vote_failed": "Votación fallida.",
-    "followers_avg_score": "Rating Prom.",
-    "followers_subscribed_on": "Suscrito el {{date}}",
-    "followers_cancel_subscription": "Cancelar Suscripción",
-    "followers_could_not_load_lists": "No se pudieron cargar las listas de usuarios.",
-    "followers_subscription_canceled": "Suscripción a {{username}} cancelada.",
-    "followers_failed_to_cancel": "No se pudo cancelar la suscripción.",
-    "followers_tab_followers": "Seguidores",
-    "followers_tab_following": "Siguiendo",
-    "followers_tab_subscribers": "Suscriptores",
-    "followers_tab_subscriptions": "Suscripciones",
-    "followers_loading": "Cargando...",
-    "followers_confirm_cancel_title": "Cancelar suscripción",
-    "followers_confirm_cancel_message": "¿Seguro que quieres cancelar tu suscripción a {{username}}?",
-    "followers_no_users": "No hay usuarios para mostrar en esta lista.",
-    "golden_feed_new_label": "NUEVO",
-    "golden_feed_failed_mark_read": "No se pudo marcar el feed como leído.",
-    "golden_feed_failed_fetch": "No se pudo cargar el Feed Dorado.",
-    "golden_feed_header": "Tu Feed Dorado",
-    "golden_feed_create_post": "Crear Publicación",
-    "golden_feed_filter_by_member": "Filtrar por Miembro",
-    "golden_feed_all_subscriptions": "Todas las Suscripciones",
-    "golden_feed_filter_by_stock": "Filtrar por Acción",
-    "golden_feed_prediction_type": "Tipo de Predicción",
-    "golden_feed_loading": "Cargando Feed...",
-    "golden_feed_no_posts_title": "No se encontraron publicaciones para estos filtros.",
-    "golden_feed_no_posts_subtitle": "Intenta ampliar tus criterios de búsqueda o suscribirte a más Miembros Dorados.",
-    "loading_dashboard": "Cargando panel...",
-    "welcome_message": "Bienvenido a StockPredictorAI",
-    "description": "Inicia sesión para validar tus conocimientos del mercado, construir un historial verificable y compartir tu análisis.",
-    "google_signin": "Iniciar sesión con Google",
-    "loading_settings": "Cargando ajustes...",
-    "notification_settings_title": "Ajustes de Notificación",
-    "toggle_all_predictions_label": "Todas las Predicciones de Usuarios Seguidos",
-    "toggle_all_predictions_description": "Recibe una notificación por cada nueva predicción hecha por los usuarios que sigues.",
-    "toggle_short_term_label": "Predicciones Significativas a Corto Plazo",
-    "toggle_short_term_description": "Recibe una notificación cuando un usuario seguido haga una predicción significativa Horaria, Diaria o Semanal.",
-    "toggle_long_term_label": "Predicciones Significativas a Largo Plazo",
-    "toggle_long_term_description": "Recibe una notificación cuando un usuario seguido haga una predicción significativa Mensual o de mayor duración.",
-    "saving": "Guardando...",
-    "save_changes": "Guardar Cambios",
-    "settings_saved_success": "¡Ajustes guardados!",
-    "settings_saved_error": "No se pudieron guardar los ajustes.",
-    "Awaiting Assessment": "Esperando Evaluación",
-    "...": "...",
-    "Could not load prediction details.": "No se pudieron cargar los detalles de la predicción.",
-    "Loading Prediction...": "Cargando Predicción...",
-    "Prediction not found.": "Predicción no encontrada.",
-    "Live Score": "Puntuación en Vivo",
-    "Score at Close": "Puntuación al Cierre",
-    "Current": "Actual",
-    "Closing Price": "Precio de Cierre",
-    "(Price journey visual is not available for this older prediction)": "(El visual del recorrido del precio no está disponible para esta predicción anterior)",
-    "Target Price": "Precio Objetivo",
-    "View Rationale": "Ver Justificación",
-    "Final Score": "Puntuación Final",
-    "Time Remaining": "Tiempo Restante",
-    "DO YOU AGREE?": "¿ESTÁS DE ACUERDO?",
-    "Agree": "De acuerdo",
-    "Disagree": "En desacuerdo",
-    "Predicted by": "Predicho por",
-    "Made on": "Hecho el",
-    "Prediction": "Predicción",
-    "privacy_title": "Política de Privacidad",
-    "privacy_last_updated": "Última actualización: 8 de noviembre de 2025",
-    "privacy_intro_title": "1. Introducción",
-    "privacy_intro_text": "Bienvenido a StockPredictorAI ('nosotros', 'nos', 'nuestro'). Estamos comprometidos a proteger sus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos su información cuando utiliza nuestro servicio. Al usar StockPredictorAI, usted acepta la recopilación y el uso de información de acuerdo con esta política. Esta política está redactada en cumplimiento del Reglamento General de Protección de Datos (RGPD) de la UE.",
-    "info_collection_title": "2. Información que recopilamos",
-    "info_collection_a_title": "A. Información que usted proporciona",
-    "info_collection_a_text": "Recopilamos la información que nos proporcionas directamente, incluyendo: \n • Información de la cuenta: Cuando te registras con Google, recibimos tu nombre, dirección de correo electrónico y foto de perfil proporcionados por tu cuenta de Google. Cuando completas tu perfil, también recopilamos el nombre de usuario que elegiste y cualquier información opcional que añadas, como tu biografía 'Acerca de' y enlaces a redes sociales. \n • Información de pagos y cobros: Para nuestros Miembros Golden (creadores de contenido), procesamos los pagos directamente a tu cuenta conectada. Para los suscriptores, procesamos los pagos de suscripción de forma segura. Todas las transacciones financieras son manejadas por Stripe, líder mundial en pagos seguros. Nunca almacenamos los datos de tu tarjeta de crédito o cuenta bancaria. Solo almacenamos un registro de tu estado de suscripción o ID de cuenta de pago. \n • Contenido del usuario: Recopilamos el contenido que creas, como tus predicciones, razonamientos y publicaciones del Golden Feed.",
-    "info_collection_b_title": "B. Información que recopilamos automáticamente",
-    "info_collection_b_text": " • Cookies y datos de sesión: Utilizamos cookies únicamente para mantener tu sesión después de iniciar sesión. Una cookie es un pequeño fragmento de datos almacenado en tu computadora. Esto es esencial para que la aplicación sepa quién eres. \n • Datos de uso: Podemos recopilar datos sobre cómo interactúa con el servicio, como las páginas visitadas y las funciones utilizadas, para ayudarnos a mejorar la plataforma.",
-    "use_info_title": "3. Cómo utilizamos tu información",
-    "use_info_text": "Utilizamos la información que recopilamos para los siguientes propósitos: \n • Para proporcionar y mantener nuestro Servicio, crear tu perfil de usuario y mostrar tus predicciones. \n • Para procesar tus pagos (para Suscriptores) y cobros (para Miembros Golden). \n • Para comunicarnos contigo, incluyendo el envío de correos electrónicos transaccionales (como recibos de pago o restablecimiento de contraseñas) y notificaciones que hayas elegido recibir. \n • Para analizar el uso y mejorar el Servicio. \n • Para hacer cumplir nuestros Términos de Servicio y prevenir abusos.",
-    "sharing_title": "4. Intercambio de datos con terceros",
-    "sharing_text": "No vendemos su información personal. Solo compartimos sus datos con los siguientes proveedores de servicios externos (subprocesadores) que son esenciales para que podamos operar nuestro Servicio:",
-    "sharing_list_a": "Procesador de pagos: Compartimos su correo electrónico, ID de usuario y detalles de la transacción con Stripe para procesar de forma segura todos los pagos y gestionar las suscripciones.",
-    "sharing_list_b": "Proveedor de autenticación: Usamos Google LLC para gestionar el inicio de sesión y la autenticación del usuario.",
-    "sharing_list_c": "Servicio de Correo Electrónico: Utilizamos Brevo (anteriormente Sendinblue) para enviar correos electrónicos transaccionales esenciales (como recibos y notificaciones).",
-    "sharing_list_d": "Cumplimiento legal: Podemos divulgar su información si así lo exige la ley o en respuesta a solicitudes válidas de autoridades públicas (por ejemplo, un tribunal o una agencia gubernamental).",
-    "gdpr_title": "5. Sus derechos de protección de datos (RGPD)",
-    "gdpr_intro": "Dado que nuestro servicio tiene su sede en los Países Bajos, usted tiene derechos específicos de protección de datos en virtud del RGPD. Nos comprometemos a respetar estos derechos. Usted tiene:",
-    "gdpr_list_a": "El Derecho de Acceso: Tiene derecho a solicitar una copia de los datos personales que tenemos sobre usted.",
-    "gdpr_list_b": "El Derecho de Rectificación: Tiene derecho a corregir cualquier dato inexacto o incompleto. Puede actualizar la mayor parte de la información de su perfil directamente en su página 'Editar perfil'.",
-    "gdpr_list_c": "El Derecho de Supresión (Derecho al Olvido): Tiene derecho a solicitar la eliminación de sus datos personales. Tenga en cuenta que es posible que debamos conservar cierta información durante un período por motivos legales o de mantenimiento de registros financieros (por ejemplo, registros de pagos).",
-    "gdpr_list_d": "El Derecho a la Portabilidad de los Datos: Tiene derecho a solicitar que transfiramos los datos que hemos recopilado sobre usted a otra organización, o directamente a usted, en un formato legible por máquina.",
-    "gdpr_outro": "Para ejercer cualquiera de estos derechos, póngase en contacto con nuestro Contacto de Protección de Datos en predictostock@gmail.com. Responderemos a su solicitud en un plazo de 30 días.",
-    "retention_title": "6. Retención de datos",
-    "retention_text": "Conservaremos sus datos personales solo durante el tiempo que sea necesario para los fines establecidos en esta Política de Privacidad. Conservaremos los datos de su cuenta mientras su cuenta esté activa. Si elimina su cuenta, tomaremos medidas para eliminar sus datos personales en un plazo razonable, a excepción de los datos que estemos legalmente obligados a conservar (como los registros de pagos con fines fiscales y contables).",
-    "cookies_title": "7. Política de cookies",
-    "cookies_text": "Usamos cookies esenciales para mantener su sesión después de iniciar sesión. Una cookie es un pequeño fragmento de datos almacenado en su computadora. Puede indicar a su navegador que rechace todas las cookies, pero si lo hace, no podrá iniciar sesión ni utilizar nuestro Servicio.",
-    "children_title": "8. Privacidad de los niños",
-    "children_text": "Nuestro Servicio no está destinado a ser utilizado por menores de 16 años (en cumplimiento del RGPD). No recopilamos conscientemente información de identificación personal de niños menores de 16 años. Si tiene conocimiento de que un niño nos ha proporcionado datos personales, póngase en contacto con nosotros. Si nos damos cuenta de que hemos recopilado datos personales de un niño sin verificación del consentimiento de los padres, tomaremos medidas para eliminar esa información de nuestros servidores.",
-    "security_title": "9. Seguridad",
-    "security_text": "La seguridad de sus datos es importante para nosotros. Usamos medidas de seguridad como el cifrado de sesión (HTTPS) y el almacenamiento seguro de contraseñas (a través de Google) para proteger su información. Sin embargo, recuerde que ningún método de transmisión por Internet o método de almacenamiento electrónico es 100% seguro. No podemos garantizar su seguridad absoluta.",
-    "updates_title": "10. Cambios a esta Política de Privacidad",
-    "updates_text": "Podemos actualizar nuestra Política de Privacidad de vez en cuando. Le notificaremos cualquier cambio publicando la nueva Política de Privacidad en esta página y actualizando la fecha de 'Última actualización' en la parte superior. Se le aconseja que revise esta Política de Privacidad periódicamente para detectar cualquier cambio.",
-    "contact_title_2": "11. Contáctenos",
-    "privacy_contact_pre": "Si tiene alguna pregunta o solicitud sobre esta Política de Privacidad o sus datos personales, póngase en contacto a través de nuestra",
-    "privacy_contact_link": "página de Contacto.",
-    "profile_title": "Perfil",
-    "followers_label": "Seguidores",
-    "following_label": "Siguiendo",
-    "subscribers_label": "Suscriptores",
-    "subscriptions_label": "Suscripciones",
-    "manage_gold_label": "Gestionar Membresía Dorada",
-    "become_golden_label": "Hacerse Dorado",
-    "edit_profile_label": "Editar Perfil",
-    "get_verified_label": "Verificarse",
-    "following_btn": "Siguiendo",
-    "follow_btn": "Seguir",
-    "subscribed_label": "Suscrito",
-    "join_label": "Unirse (${{price}}/mes)",
-    "subscriptions_paused_label": "Suscripciones pausadas",
-    "member_since_label": "Miembro desde el {{date}}",
-    "no_bio_label": "No hay biografía.",
-    "active_predictions_title": "Predicciones Activas",
-    "prediction_history_title": "Historial de Predicciones",
-    "no_active_predictions_label": "No hay predicciones activas.",
-    "no_prediction_history_label": "Aún no hay historial de predicciones.",
-    "load_more_label": "Cargar Más",
-    "overall_rank_label": "Rango General",
-    "average_score_label": "Puntuación Media",
-    "total_points_label": "Puntos Totales",
-    "analyst_rating_label": "Rating de Analista",
-    "creator_pool_share_label": "Cuota del Fondo de Creadores",
-    "creatorPoolModal.title": "Clasificación del Fondo de Creadores",
-    "creatorPoolModal.description": "Esta clasificación muestra la distribución de puntos de 'Rating de Analista' en la plataforma. Una parte de los ingresos de la plataforma se distribuirá a los principales contribuyentes en función de este rating.",
-    "creatorPoolModal.totalRating": "Rating Total de Analistas en la Plataforma",
-    "total_predictions_label": "Predicciones Totales",
-    "profile_tab_label": "Perfil",
-    "golden_feed_tab_label": "Feed Dorado",
-    "create_golden_post_btn": "Crear Publicación Dorada",
-    "processing_verification_msg": "Procesando verificación...",
-    "verification_success_msg": "¡Verificación exitosa!",
-    "verification_removed_success_msg": "Estado de verificación eliminado.",
-    "verification_failed_msg": "La verificación falló.",
-    "cancel_verification_title": "Cancelar Verificación",
-    "cancel_verification_msg": "¿Estás seguro? Perderás tu estado de verificado y sus beneficios.",
-    "title_top_performers": "🏆 Mejores Jugadores",
-    "label_prediction_type": "Tipo de Predicción",
-    "label_filter_by_stock": "Filtrar por Acción",
-    "text_avg_score": "Rating Prom.",
-    "msg_loading_scoreboard_error": "No se pudieron cargar los datos de la tabla de clasificación.",
-    "msg_no_users_found": "No se encontraron usuarios para estos filtros.",
-    "msg_try_broaden_search": "Intenta ampliar tus criterios de búsqueda.",
-    "loading_stock_data": "Cargando datos de la acción...",
-    "error_loading_stock_data": "No se pudieron cargar los datos para {{ticker}}.",
-    "could_not_load_stock_data": "No se pudieron cargar los datos para {{ticker}}. Por favor, intente con otro símbolo.",
-    "add_to_watchlist": "Añadir a la lista de seguimiento",
-    "remove_from_watchlist": "Eliminar de la lista de seguimiento",
-    "make_prediction": "Hacer una predicción",
-    "top_predictors_for": "Mejores predictores para {{ticker}}",
-    "avg_score": "Puntaje Prom.",
-    "no_top_predictors": "Aún no hay predictores destacados para este filtro.",
-    "active_predictions_on": "Predicciones activas sobre {{ticker}}",
-    "prediction_type": "Predicción {{type}}",
-    "target": "Objetivo: ${{targetPrice}}",
-    "no_active_predictions": "Aún no hay predicciones activas para esta acción.",
-    "terms_page": {
-        "title": "Términos de Servicio",
-        "sections": {
-            "acceptance_of_terms": {
-                "title": "1. Aceptación de los Términos",
-                "content": "Al acceder o utilizar el sitio web de StockPredictorAI (\"Servicio\"), usted acepta estar sujeto a estos Términos de Servicio. Si no está de acuerdo con alguna parte de los términos, no podrá acceder al Servicio."
-            },
-            "no_financial_advice": {
-                "title": "2. No es Asesoramiento Financiero",
-                "content": "La información, predicciones y puntuaciones proporcionadas en este Servicio son solo para fines informativos y de entretenimiento. Nada en este sitio web constituye asesoramiento financiero, de inversión, legal o fiscal. Usted es el único responsable de sus propias decisiones de inversión."
-            },
-            "user_conduct": {
-                "title": "3. Conducta del Usuario",
-                "content": "Usted se compromete a no utilizar el Servicio para publicar o transmitir material malicioso, difamatorio o que viole de alguna otra manera la ley. Usted es responsable de todas las predicciones y contenidos publicados bajo su cuenta."
-            },
-            "limitation_of_liability": {
-                "title": "4. Limitación de Responsabilidad",
-                "content": "En ningún caso StockPredictorAI, ni sus directores o empleados, serán responsables por daños indirectos, incidentales, especiales, consecuentes o punitivos, incluyendo, sin limitación, la pérdida de beneficios, datos u otras pérdidas intangibles, que resulten de su acceso o uso del Servicio."
-            },
-            "golden_members": {
-                "title": "5. Suscripciones de Miembro Golden y Tarifas de la Plataforma",
-                "content": "StockPredictorAI proporciona una plataforma para que ciertos usuarios ('Miembros Golden') ofrezcan contenido basado en suscripción. Al activar su estado de Miembro Golden, acepta ofrecer estos servicios a otros usuarios. Para cubrir la operación de la plataforma, el procesamiento de pagos y los costos administrativos, StockPredictorAI retendrá una tarifa de plataforma del treinta por ciento (30%) (la 'Tarifa de Plataforma') de los ingresos brutos por suscripción generados por sus suscriptores. El setenta por ciento (70%) restante se le pagará a través de nuestro procesador de pagos, Stripe. Esta tarifa del 30% se deduce automáticamente de cada transacción. Al convertirse en Miembro Golden, usted reconoce y acepta esta estructura de Tarifa de Plataforma del 30%."
-            },
-            "analyst_rating": {
-                "title": "6. Sistema de Rating de Analista",
-                "content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictorAI y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo."
-            },
-            "creator_pool": {
-                "title": "7. Pagos del Fondo de Creadores",
-                "content": "Como recompensa a nuestros principales contribuyentes, StockPredictorAI asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictorAI se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
-            },
-            "payments_and_refunds": {
-                "title": "8. Pagos, Suscripciones y Reembolsos",
-                "content": "Nuestra plataforma ofrece servicios de pago, incluido el estado 'Verified Predictor' y las suscripciones 'Golden Member' (colectivamente, 'Suscripciones'). Todos los pagos se procesan a través de nuestro procesador de pagos externo, Stripe. No almacenamos ni retenemos la información de su tarjeta de crédito. Todas las Suscripciones se facturan de forma mensual recurrente. Puede cancelar su Suscripción en cualquier momento a través de su perfil de usuario o del portal de nuestro procesador de pagos. Su cancelación entrará en vigor al final del ciclo de facturación actual y conservará el acceso a las funciones de pago hasta esa fecha. Todos los pagos por Suscripciones son definitivos y no reembolsables. No proporcionamos reembolsos ni créditos por ningún período de suscripción parcial o contenido no utilizado."
-            },
-            "content_and_ip": {
-                "title": "9. Contenido del Usuario y Derechos de Propiedad Intelectual",
-                "content": "Usted conserva todos los derechos de propiedad sobre el contenido que crea en el Servicio, incluida la información de su perfil, las justificaciones de las predicciones y las publicaciones del Golden Feed ('Contenido del Usuario'). Al publicar Contenido del Usuario, usted otorga a StockPredictorAI una licencia no exclusiva, mundial, libre de regalías y perpetua para usar, alojar, mostrar, reproducir y distribuir su Contenido del Usuario únicamente con el fin de operar, promocionar y mejorar el Servicio. Usted garantiza que es propietario de su Contenido del Usuario o que tiene todos los derechos necesarios para publicarlo y otorgarnos esta licencia, y que su contenido no infringe los derechos de ningún tercero. Si cree que se han infringido sus derechos de autor, contáctenos de inmediato en predictostock@gmail.com con un Aviso de Retirada de DMCA."
-            },
-            "termination": {
-                "title": "10. Cancelación de la Cuenta",
-                "content": "StockPredictorAI se reserva el derecho de suspender o cancelar su cuenta y el acceso al Servicio a nuestra entera discreción, con o sin previo aviso, por cualquier motivo, incluida la violación de estos Términos. También puede cancelar su cuenta en cualquier momento contactándonos o utilizando una función de eliminación en la aplicación, si estuviera disponible. Tras la cancelación por cualquiera de las partes, su derecho a utilizar el Servicio cesará de inmediato. Todas las tarifas prepagadas por Suscripciones no son reembolsables y no será elegible para un reembolso por ninguna parte del período de suscripción restante en el momento de la cancelación. Nos reservamos el derecho de eliminar su Contenido del Usuario tras la cancelación, pero no estamos obligados a hacerlo."
-            },
-            "disputes": {
-                "title": "11. Resolución de Disputas y Ley Aplicable",
-                "content": "Estos Términos de Servicio se rigen e interpretan de acuerdo con las leyes de los Países Bajos, sin tener en cuenta sus principios de conflicto de leyes. Usted acepta resolver cualquier disputa que tenga con StockPredictorAI exclusivamente a través de un arbitraje vinculante en La Haya, Países Bajos, y no en un tribunal de justicia. Usted y StockPredictorAI acuerdan renunciar a cualquier derecho a participar en una demanda colectiva o un arbitraje colectivo. Todas las disputas deben presentarse a título individual, y no como demandante o miembro de una clase en ningún presunto procedimiento colectivo o representativo."
-            }
-        }
-    },
-    "watchlist_page": {
-        "title": "Mi Lista de Seguimiento",
-        "search_placeholder": "Buscar acciones para seguir (ej. AAPL)...",
-        "empty_watchlist": {
-            "title": "Tu lista de seguimiento está vacía.",
-            "subtitle": "Busca una acción arriba para empezar a seguirla."
-        },
-        "active_predictions_title": "Predicciones Activas para {{ticker}}",
-        "filter_by_type": "Filtrar por Tipo",
-        "sort_by": "Ordenar por",
-        "sort_options": {
-            "date": "Más Recientes",
-            "votes": "Más Votadas",
-            "potential": "Mayor Potencial"
-        },
-        "no_predictions": "No hay predicciones activas que coincidan con tus filtros.",
-        "load_more": "Cargar Más",
-        "recommended_experts_title": "Expertos Recomendados",
-        "no_recommended_experts": "Aún no hay predictores destacados para esta acción.",
-        "watchlist_card": {
-            "remove_title": "Eliminar {{symbol}} de la lista de seguimiento"
-        },
-        "follow_button": "Seguir"
-    },
-    "prediction_types": {
-        "Overall": "Todos",
-        "Hourly": "Por Hora",
-        "Daily": "Diario",
-        "Weekly": "Semanal",
-        "Monthly": "Mensual",
-        "Quarterly": "Trimestral",
-        "Yearly": "Anual"
-    },
-    "avatarModal": {
-        "title": "Cambiar tu Avatar",
-        "styleLabel": "Estilo",
-        "shuffleButton": "Aleatorio",
-        "cancelButton": "Cancelar",
-        "saveButton": "Guardar Avatar",
-        "styles": {
-            "adventurer": "Aventurero",
-            "lorelei": "Lorelei",
-            "miniavs": "Mini Avatares",
-            "openPeeps": "Open Peeps",
-            "personas": "Personas",
-            "pixelArt": "Pixel Art",
-            "notionists": "Notionists",
-            "bottts": "Robots",
-            "shapes": "Formas",
-            "thumbs": "Pulgares",
-            "funEmoji": "Emoji Divertido",
-            "identicon": "Identicon",
-            "initials": "Iniciales",
-            "rings": "Anillos"
-        }
-    },
-    "badgeInfoModal": {
-        "title": "Cómo Funcionan los Logros",
-        "loadingText": "Cargando detalles...",
-        "ratingLabel": "Puntuación > {{rating}}",
-        "minPredictions": "Requiere al menos {{count}} predicciones.",
-        "closeButton": "Cerrar"
-    },
-    "badgeShowcase": {
-        "title": "Logros",
-        "noAchievements": "Aún no hay logros. ¡Sigue haciendo predicciones!",
-        "infoButtonTitle": "¿Cómo se ganan las insignias?",
-        "unknownBadge": "Insignia Desconocida"
-    },
-    "communityFeed": {
-        "title": "Feed de la Comunidad",
-        "noRecentPredictions": "No hay predicciones recientes."
-    },
-    "confirmationModal": {
-        "cancel": "Cancelar",
-        "confirm": "Confirmar",
-        "defaultTitle": "¿Estás seguro?",
-        "defaultMessage": "Esta acción no se puede deshacer."
-    },
-    "dailyLeaderboard": {
-        "title": "Mejores Jugadores de Hoy",
-        "subtitle": "(Basado en las predicciones horarias de hoy)",
-        "noData": "Aún no hay datos para hoy.",
-        "averageScoreSuffix": "prom."
-    },
-    "descriptionModal": {
-        "title": "Justificación del Predictor"
-    },
-    "famousStocks": {
-        "title": "Predicciones populares",
-        "title_historical": "Populares (Últimos 7 días)",
-        "predictionsText": "{{count}} predicciones hoy",
-        "predictionsText_historical": "{{count}} predicciones (7d)",
-        "noData": "No hay acciones populares en este momento."
-    },
-    "share": {
-        "shareOnX": "Compartir en X",
-        "ownerActive": "Predigo que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¡Mira mi predicción y vota en StockPredictorAI!",
-        "ownerAssessed": "¡Mi predicción para ${{ticker}} terminó con una puntuación de {{rating}}! Predije {{targetPrice}} y cerró en {{actualPrice}}. ¡Mira el resultado!",
-        "visitorActive": "Predicción interesante: {{username}} cree que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¿Qué opinas?",
-        "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{rating}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}.",
-        "activePredictionsAggregated": "Resumen de {{subject}} {{count}} predicciones {{type}}:\n\n{{predictionList}}...\n\nPrecisión: %{{accuracy}}! ¡Mira {{subject}} portafolio! {{hashtags}} #PronósticoBolsa",
-        "shareActivePredictions": "Compartir Predicciones Activas",
-        "shareByTimeframe": "Compartir por Marco de Tiempo",
-        "noPredictionsForTimeframe": "No hay predicciones activas para este marco.",
-        "myUsername": "Mi",
-        "possessiveSuffix": "s",
-        "my_last": "Mis últimos",
-        "last": "últimos",
-        "results": "Resultados",
-        "results_other": "Resultados"
-    },
-    "editprofile_telegram_label": "Enlace de Telegram",
-    "editprofile_telegram_placeholder": "https://t.me/tuusuario",
-    "shareModal.title": "Compartir",
-    "shareModal.shareOnX": "Compartir en X (Twitter)",
-    "shareModal.shareOnTelegram": "Compartir en Telegram",
-    "prediction.share_title": "Compartir",
-    "badge.shareTitle": "Compartir insignia",
-    "badge.shareButton": "Compartir",
-    "footer": {
-        "about": "Acerca de",
-        "contact": "Contacto",
-        "terms": "Términos de Servicio",
-        "privacy": "Política de Privacidad",
-        "copyright": "Todos los derechos reservados.",
-        "whitepaper": "Libro Blanco"
-    },
-    "globalSearch": {
-        "placeholder": "Buscar acciones..."
-    },
-    "goldenFeed": {
-        "newTag": "NUEVO",
-        "attachedPrediction": "Predicción Adjunta:",
-        "loading": "Cargando Feed...",
-        "exclusiveContentTitle": "Contenido Exclusivo",
-        "exclusiveContentDescription": "Únete a los suscriptores de {{username}} para ver su feed privado, que incluye justificaciones detalladas de predicciones y análisis de mercado.",
-        "joinButton": "Unirse por ${{price}}/mes",
-        "noPosts": "{{username}} aún no ha publicado ningún contenido exclusivo."
-    },
-    "goldenMemberModal": {
-        "title": "Configuración de Miembro Dorado",
-        "priceLabel": "Precio Mensual ($1 - $500)",
-        "descriptionLabel": "Descripción",
-        "defaultDescription": "¡Obtén información exclusiva y apoya mis predicciones!",
-        "acceptingNewLabel": "Aceptar Nuevos Suscriptores",
-        "updateSuccess": "¡Configuración de Miembro Dorado actualizada!",
-        "updateFail": "No se pudo actualizar la configuración.",
-        "deactivateSuccess": "Estado de Miembro Dorado desactivado.",
-        "deactivateFail": "No se pudieron actualizar los ajustes.",
-        "updateButton": "Actualizar Ajustes",
-        "activateButton": "Activar Membresía Dorada",
-        "deactivateButton": "Desactivar",
-        "onboarding": {
-            "actionRequired": "Acción requerida: Completar registro en Stripe",
-            "connectPrompt": "Necesitas conectar tu cuenta de Stripe para recibir pagos de los suscriptores.",
-            "complete": "✅ Cuenta de Stripe conectada y lista para recibir pagos",
-            "tooltip": "Por favor, completa el registro en Stripe antes de actualizar la configuración.",
-            "connectButton": "Conectar con Stripe",
-            "processingButton": "Procesando...",
-            "websiteTip": "Consejo: Stripe requiere un sitio web de negocios. Puede usar su URL de perfil público a continuación.",
-            "copiedUrl": "¡URL del perfil copiada!",
-            "documentTitle": "Verificación de Identidad requerida",
-            "documentPrompt": "Para seguir cumpliendo, Stripe requiere un documento de identidad (p. ej., pasaporte o licencia). Sus pagos se pausan hasta que lo proporcione.",
-            "resolveRestrictions": "Subir Documentos requeridos"
-        }
-    },
-    "goldenPostForm": {
-        "title": "Crear Publicación Dorada",
-        "messagePlaceholder": "Comparte tu análisis exclusivo con tus suscriptores...",
-        "attachPredictionLabel": "Adjuntar una Predicción",
-        "stockLabel": "Acción",
-        "targetPriceLabel": "Precio Objetivo",
-        "typeLabel": "Tipo",
-        "hourly": "Por Hora",
-        "daily": "Diario",
-        "weekly": "Semanal",
-        "monthly": "Mensual",
-        "quarterly": "Trimestral",
-        "yearly": "Anual",
-        "cancelButton": "Cancelar",
-        "postingButton": "Publicando...",
-        "postButton": "Publicar",
-        "emptyMessageError": "El mensaje de la publicación no puede estar vacío.",
-        "fetchPriceError": "No se pudo obtener el precio de {{ticker}}.",
-        "createSuccess": "¡Publicación Dorada publicada!",
-        "createFail": "No se pudo crear la publicación."
-    },
-    "header": {
-        "aiWizard": "Asistente de Cartera IA",
-        "watchlist": "Lista de Seguimiento",
-        "goldenFeed": "Feed Dorado",
-        "explore": "Explorar",
-        "scoreboard": "Tabla de Clasificación",
-        "makePrediction": "Hacer una Predicción",
-        "userMenu": {
-            "myProfile": "Mi Perfil",
-            "invite": "Invitar y Ganar",
-            "settings": "Ajustes",
-            "admin": "Admin",
-            "logout": "Cerrar Sesión"
-        },
-        "notifications": {
-            "title": "Notificaciones",
-            "noNew": "No hay notificaciones nuevas.",
-            "clearAll": "Limpiar todo",
-            "clearSuccess": "¡Notificaciones limpiadas!",
-            "clearError": "Error al limpiar."
-        },
-        "mobileMenu": {
-            "myProfile": "Mi Perfil",
-            "watchlist": "Lista de Seguimiento",
-            "goldenFeed": "Feed Dorado",
-            "explore": "Explorar",
-            "scoreboard": "Clasificación",
-            "settings": "Ajustes",
-            "adminPanel": "Panel de Admin",
-            "logout": "Cerrar Sesión",
-            "login": "Iniciar Sesión",
-            "aiWizard": "Asistente de Cartera IA"
-        },
-        "buttons": {
-            "login": "Iniciar Sesión",
-            "logout": "Cerrar Sesión",
-            "makePrediction": "Hacer una Predicción"
-        }
-    },
-    "advanced_settings": "Configuración Avanzada",
-    "notifications": {
-        "type": {
-            "newPrediction": "Nueva Predicción",
-            "newFollower": "Nuevo Seguidor",
-            "badgeEarned": "Insignia Ganada",
-            "goldenPost": "Publicación Dorada",
-            "priceChange": "Cambio de Precio",
-            "predictionAssessed": "Predicción Evaluada",
-            "newReferral": "Nueva Referencia"
-        },
-        "desc": {
-            "newPrediction": "Recibe una notificación cuando alguien a quien sigues haga una predicción",
-            "newFollower": "Recibe una notificación cuando alguien te siga",
-            "badgeEarned": "Recibe una notificación cuando ganes una nueva insignia",
-            "goldenPost": "Recibe una notificación cuando un Miembro Dorado a quien sigues publique",
-            "priceChange": "Recibe una notificación cuando un Miembro Dorado cambie su precio",
-            "predictionAssessed": "Recibe una notificación cuando se califique tu predicción",
-            "newReferral": "Recibe una notificación cuando alguien se una usando tu código"
-        },
-        "newPrediction": "{{username}} hizo una predicción {{predictionType}} sobre {{stockTicker}}.",
-        "newFollower": "{{username}} ha comenzado a seguirte.",
-        "goldenPost": "{{username}} ha publicado un nuevo Post Dorado.",
-        "badgeEarnedSelf": "¡Felicidades! Has ganado la insignia {{tier}} {{badgeName}}.",
-        "badgeEarnedFollower": "¡{{username}} ha ganado la insignia {{tier}} {{badgeName}}!",
-        "predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo {{rating}} puntos!",
-        "priceChange": "El precio de la suscripción de {{creatorName}} cambiará de ${{oldPrice}} a ${{newPrice}} el {{effectiveDate}}."
-    },
-    "hourlyWinnersFeed": {
-        "title": "Ganadores de la Última Hora",
-        "nextResults": "Próximos resultados en: {{timeLeft}}",
-        "marketClosed": "Mercado Cerrado",
-        "noPredictions": "Aún no hay predicciones evaluadas.",
-        "ratingSuffix": "+{{rating}} pts"
-    },
-    "infoModal": {
-        "title": "Explicación del Bono por Tiempo",
-        "description": "Para recompensar el análisis temprano, se aplica una penalización basada en el tiempo a las predicciones. La puntuación máxima que puedes lograr con una predicción disminuye a medida que se acerca la fecha límite.",
-        "hourlyPredictions": {
-            "title": "Predicciones por Hora:",
-            "description": "La penalización se aplica minuto a minuto. Los primeros 10 minutos no tienen penalización (Puntuación Máx.: 100). La penalización aumenta linealmente hasta los últimos 10 minutos de la hora, donde la Puntuación Máx. es 80."
-        },
-        "dailyPredictions": {
-            "title": "Predicciones Diarias:",
-            "description": "La penalización se aplica a lo largo del día de negociación. Las predicciones hechas justo en la apertura del mercado tienen el mayor potencial de puntuación."
-        },
-        "longerTermPredictions": {
-            "title": "Predicciones a Largo Plazo:",
-            "description": "Para predicciones Semanales, Mensuales y de mayor duración, la penalización es proporcional al porcentaje del período de predicción que ya ha transcurrido."
-        },
-        "closeButton": "Cerrar"
-    },
-    "joinGoldenModal": {
-        "title": "Unirse a los Suscriptores de {{username}}",
-        "pricePerMonth": "{{price}} / mes",
-        "whatYouGet": "Lo que obtienes:",
-        "noDescription": "No se proporcionó descripción.",
-        "joinButton": "Unirse Ahora",
-        "joinButtonWithPrice": "Unirse por ${{price}}/mes",
-        "cancelAnytime": "Puedes cancelar en cualquier momento.",
-        "toast": {
-            "success": "¡Ahora estás suscrito a {{username}}!",
-            "error": "No se pudo unir. Por favor, inténtalo de nuevo."
-        },
-        "successTitle": "¡Suscripción exitosa!",
-        "successDescription": "Ahora tienes acceso al feed exclusivo de {{username}}.",
-        "successButton": "¡Genial!"
-    },
-    "loginPromptModal": {
-        "title": "Únete a la Comunidad",
-        "description": "Cree una cuenta para hacer predicciones, seguir a los mejores predictores y escalar en las tablas de clasificación.",
-        "signUpWithGoogle": "Registrarse con Google"
-    },
-    "longTermLeaders": {
-        "title": "Líderes a Largo Plazo",
-        "description": "(Basado en la precisión Trimestral y Anual)",
-        "noData": "Aún no hay datos.",
-        "accuracyLabel": "Prom."
-    },
-    "performanceChart": {
-        "title": "Gráfico de Rendimiento",
-        "filters": {
-            "overall": "General",
-            "hourly": "Por Hora",
-            "daily": "Diario",
-            "weekly": "Semanal",
-            "monthly": "Mensual",
-            "quarterly": "Trimestral",
-            "yearly": "Anual"
-        },
-        "tooltip": {
-            "avgRating": "Rating Prom.: {{rating}}",
-            "predictions": "{{count}} Predicciones",
-            "stocks": "Acciones: {{tickers}}"
-        },
-        "noData": "No hay datos de rendimiento para este filtro."
-    },
-    "performanceTabs": {
-        "shareOnX": "Compartir en X",
-        "shareText": {
-            "byStock": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de ${{ticker}} en StockPredictorAI! A ver si puedes superarme.",
-            "byType": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de tipo '{{type}}' en StockPredictorAI! Echa un vistazo a mis estadísticas."
-        },
-        "tabs": {
-            "byType": "Por Tipo",
-            "byStock": "Por Acción"
-        },
-        "statCard": {
-            "averageScore": "Rating Promedio",
-            "rank": "RANGO",
-            "topRankTitle": "Rango Top {{rank}}"
-        },
-        "noData": {
-            "byType": "No hay datos disponibles para los tipos de predicción.",
-            "byStock": "No hay datos disponibles para acciones individuales."
-        }
-    },
-    "predictionJourney": {
-        "initial": "Inicial",
-        "target": "Objetivo",
-        "currentPriceTooltip": "{{priceLabel}}: {{value}}"
-    },
-    "predictionModal": {
-        "confirmationTitle": "¿Estás seguro?",
-        "closeButtonAria": "Cerrar modal"
-    },
-    "predictionTypes": {
-        "modalTitle": "Explicación de Tipos de Predicción",
-        "overall": "General",
-        "all": "Todos",
-        "hourly": "Por Hora",
-        "hourlyDescription": "Predice el precio de la acción para el final de la hora de negociación actual o siguiente. Ideal para la volatilidad a corto plazo.",
-        "daily": "Diario",
-        "dailyDescription": "Predice el precio de la acción para el final del día de negociación actual o siguiente. Un marco de tiempo clásico para los movimientos diarios del mercado.",
-        "weekly": "Semanal",
-        "weeklyDescription": "Predice el precio de la acción para el final de la semana de negociación actual (viernes). Bueno para seguir las tendencias semanales.",
-        "monthly": "Mensual",
-        "monthlyDescription": "Predice el precio de la acción para el final del mes calendario actual. Ideal para capturar el impulso mensual.",
-        "quarterly": "Trimestral",
-        "quarterlyDescription": "Predice el precio de la acción para el final del trimestre fiscal actual (ej. Marzo, Junio, Septiembre, Diciembre).",
-        "yearly": "Anual",
-        "yearlyDescription": "Predice el precio de la acción para el final del año calendario actual. Una predicción a largo plazo para cambios importantes en el mercado."
-    },
-    "common": {
-        "close": "Cerrar",
-        "score": "Puntuación",
-        "dataDelayed": "Datos con hasta 15 minutos de retraso",
-        "copy": "Copiar",
-        "copied": "Copiado",
-        "copiedLink": "¡Enlace copiado!",
-        "accuracy": "Precisión",
-        "target": "Objetivo",
-        "actual": "Actual"
-    },
-    "prediction": {
-        "makePrediction": "Hacer una Predicción",
-        "searchPlaceholder": "Buscar una acción (ej. AAPL)",
-        "searching": "Buscando...",
-        "currentPrice": "Precio Actual",
-        "na": "N/D",
-        "type": "Tipo",
-        "learnMore": "Aprende más sobre los tipos de predicción",
-        "targetPrice": "Precio Objetivo",
-        "rationale": "Justificación (Opcional)",
-        "rationalePlaceholder": "¿Cuál es su razonamiento para este movimiento de precios?",
-        "placePrediction": "Realizar Predicción",
-        "maxRating": "Puntuación Máx.: {{rating}}",
-        "confirmationMessage": "Su predicción de {{price}} representa un cambio de {{percent}}, que es superior al rango típico de {{limit}} %. ¿Está seguro?",
-        "limitReached": "Has alcanzado el límite diario de {{limit}} predicciones.",
-        "submitFailed": "Error al enviar la predicción.",
-        "priceDelayInfo": "Los precios tienen un retraso de hasta 15 minutos.",
-        "submitting": "Enviando...",
-        "submitSuccess": "¡Predicción para {{symbol}} enviada!",
-        "priceUnavailable": {
-            "title": "Datos de precios en vivo no disponibles",
-            "description": "No pudimos recuperar el precio en vivo para este activo en este momento. Esto puede ocurrir durante alta volatilidad del mercado o breves interrupciones de la API.",
-            "button": "Probar con otra acción"
-        },
-        "duplicateError": "Ya tiene una predicción {{type}} activa para {{ticker}}.",
-        "targetHit": "🎯 Objetivo Alcanzado"
-    },
-    "scoreboard": {
-        "title": "Tabla de Clasificación",
-        "trophy": "🏆",
-        "loadError": "No se pudieron cargar los datos de la tabla de clasificación.",
-        "predictionType": "Tipo de Predicción",
-        "filterStock": "Filtrar por Acción",
-        "avgScore": "Rating Promedio",
-        "noUsers": "No se encontraron usuarios para estos filtros.",
-        "noUsersHint": "Intenta ampliar tus criterios de búsqueda.",
-        "rank": "Rango: {{number}}",
-        "currentPrice": "Precio Actual: ${{price}}"
-    },
-    "stockChart": {
-        "loading": "Cargando Gráfico...",
-        "priceLabel": "Precio de {{ticker}}"
-    },
-    "stockFilterSearch": {
-        "placeholder": "ej. AAPL"
-    },
-    "stockSearch": {
-        "title": "Buscar Activo",
-        "placeholder": "Buscar acciones, criptomonedas...",
-        "loading": "Cargando...",
-        "errorNoResults": "No se encontraron resultados.",
-        "errorFetchFailed": "No se pudieron obtener los resultados de la búsqueda.",
-        "errorQuoteFailed": "No se pudo obtener la cotización de la acción.",
-        "errorQuoteNotFound": "No se pudo recuperar la cotización de {{symbol}}. Por favor, intente con otro símbolo.",
-        "dataDelayed": "Datos con hasta 15 minutos de retraso"
-    },
-    "timePenaltyBar": {
-        "label": "Bono por Tiempo",
-        "infoAriaLabel": "Aprende más sobre el Bono por Tiempo"
-    },
-    "topMovers": {
-        "loading": "Cargando Principales Movimientos...",
-        "title": "Acciones en Tendencia"
-    },
-    "verificationModal": {
-        "title": "Conviértase en un Predictor Verificado",
-        "description": "Gane credibilidad y visibilidad en la comunidad con una insignia verificada.",
-        "benefits": {
-            "greenCheck": "Obtenga una marca de verificación verde junto a su nombre en todo el sitio.",
-            "verifiedFilter": "Sus predicciones se destacan en el filtro \"Solo Verificados\" en la página Explorar.",
-            "verifiedExpert": "Sea recomendado como Experto Verificado en las páginas de Lista de Seguimiento relevantes."
-        },
-        "button": "Verificar por {{price}}",
-        "successDescriptionGeneric": "Tu insignia de verificación ya está activa."
-    },
-    "verifiedStatusModal": {
-        "title": "¡Eres un Predictor Verificado!",
-        "description": "Has aumentado la confianza y la visibilidad en la comunidad.",
-        "closeButton": "Cerrar",
-        "removeButton": "Eliminar estado de verificación"
-    },
-    "verifiedTick": {
-        "ariaLabel": "Predictor Verificado",
-        "title": "Predictor Verificado",
-        "description": "Este usuario es un miembro verificado de la comunidad, lo que indica un compromiso con la plataforma."
-    },
-    "watchlistShowcase": {
-        "title": "Lista de Seguimiento",
-        "viewStock": "Ver {{stock}}",
-        "noStocks": "Este usuario aún no sigue ninguna acción."
-    },
-    "watchlistPage": {
-        "loading": "Cargando tu lista de seguimiento...",
-        "title": "Mi lista de seguimiento",
-        "searchPlaceholder": "Busca acciones para seguir (ej. AAPL)...",
-        "emptyWatchlist": {
-            "title": "Tu lista de seguimiento está vacía.",
-            "description": "Busca una acción arriba para empezar a seguirla."
-        },
-        "activePredictions": "Predicciones activas para {{ticker}}",
-        "filterByTypeLabel": "Filtrar por tipo",
-        "sortByLabel": "Ordenar por",
-        "sortOptions": {
-            "date": "Más recientes",
-            "votes": "Más votadas",
-            "potential": "Mayor potencial"
-        },
-        "noPredictions": "No hay predicciones activas que coincidan con tus filtros.",
-        "loadMore": "Cargar más",
-        "recommendedPredictors": "Predictores recomendados",
-        "noRecommendedUsers": "Aún no hay predictores destacados para esta acción.",
-        "avgScoreLabel": "Rating promedio: ",
-        "followingButton": "Seguir",
-        "toast": {
-            "loadingAdd": "Agregando {{ticker}}...",
-            "loadingRemove": "Eliminando {{ticker}}...",
-            "successUpdate": "Lista de seguimiento actualizada con éxito.",
-            "errorUpdate": "Error al actualizar.",
-            "errorLoadWatchlist": "No se pudo cargar la lista de seguimiento.",
-            "loadingFollow": "Siguiendo al usuario...",
-            "successFollow": "¡Usuario seguido!",
-            "errorFollow": "No se pudo seguir al usuario."
-        },
-        "editButton": "Editar Orden",
-        "doneButton": "Hecho",
-        "addStockModal": {
-            "title": "Añadir a la lista de seguimiento",
-            "searchLabel": "Buscar una acción",
-            "addButton": "Añadir"
-        },
-        "duplicateError": "{{ticker}} ya está en tu lista de seguimiento."
-    },
-    "watchlistStockCard": {
-        "removeButtonTitle": "Eliminar {{symbol}} de la lista de seguimiento"
-    },
-    "predictionWidgetMessages": {
-        "openingHourPrediction": "Predicción para la hora de apertura",
-        "marketClosed": "El mercado está cerrado actualmente",
-        "forDate": "Para el {{date}}",
-        "maxRating": "Puntuación Máx.: {{rating}}",
-        "invalidType": "Seleccione un tipo de predicción válido."
-    },
-    "profile": {
-        "loading": "Cargando perfil...",
-        "userNotFound": "Usuario no encontrado.",
-        "stripeActionRequired": "🚨 Acción requerida: Sus pagos han sido pausados. Haga clic para resolver."
-    },
-    "predictionStatus": {
-        "Active": "Activo",
-        "Assessed": "Evaluado"
-    },
-    "editPredictionModal": {
-        "title": "Editar predicción para {{ticker}}",
-        "newTargetPriceLabel": "Nuevo precio objetivo",
-        "reasonLabel": "Motivo de la actualización (opcional)",
-        "reasonPlaceholder": "Nueva información, cambio de mercado, etc.",
-        "cancelButton": "Cancelar",
-        "savingButton": "Guardando...",
-        "saveButton": "Guardar cambios",
-        "successToast": "¡Predicción actualizada con éxito!",
-        "errorToast": "No se pudo actualizar la predicción."
-    },
-    "predictionHistoryModal": {
-        "title": "Historial de ediciones para {{ticker}}",
-        "initialReason": "Predicción inicial",
-        "chartLabelPredicted": "Precio previsto",
-        "chartLabelActual": "Precio real en la actualización",
-        "tabHistory": "Historial",
-        "tabChart": "Gráfico"
-    },
-    "aggressiveness": {
-        "title": "Estilo de Predicción",
-        "defensive": "Defensivo",
-        "neutral": "Neutral",
-        "offensive": "Ofensivo",
-        "noData": "No hay predicciones recientes con datos suficientes."
-    },
-    "aggressivenessInfoModal": {
-        "title": "Entendiendo el Estilo de Predicción",
-        "description": "Este medidor analiza el nivel de riesgo de las predicciones de un usuario. Los umbrales para cada estilo cambian según el plazo de la predicción.",
-        "defensiveTitle": "Defensivo",
-        "defensiveText": "Predicciones cautelosas con pequeños precios objetivo, centradas en la consistencia (ej. <3% para Diario, <15% para Anual).",
-        "neutralTitle": "Neutral",
-        "neutralText": "Predicciones moderadamente ambiciosas que equilibran el riesgo con la recompensa potencial.",
-        "offensiveTitle": "Ofensivo",
-        "offensiveText": "Predicciones audaces de alto riesgo con grandes precios objetivo (ej. >7% para Diario, >35% para Anual)."
-    },
-    "badges": {
-        "market_maven": {
-            "name": "Maestro del Mercado",
-            "description": "Otorgado por una alta precisión general en las predicciones de todo tipo."
-        },
-        "hourly_hotshot": {
-            "name": "Experto Horario",
-            "description": "Maestría en predicciones a corto plazo, por hora."
-        },
-        "daily_oracle": {
-            "name": "Oráculo Diario",
-            "description": "Sobresalió en la predicción de los movimientos diarios del mercado."
-        },
-        "weekly_strategist": {
-            "name": "Estratega Semanal",
-            "description": "Habilidad demostrada en predicciones de una semana de duración."
-        },
-        "monthly_maven": {
-            "name": "Experto Mensual",
-            "description": "Capacidad probada para pronosticar las tendencias del mercado durante un mes."
-        },
-        "quarterly_visionary": {
-            "name": "Visionario Trimestral",
-            "description": "Previsión en predicciones a largo plazo, trimestrales."
-        },
-        "yearly_legend": {
-            "name": "Leyenda Anual",
-            "description": "Habilidad excepcional para pronosticar los resultados del mercado a un año."
-        },
-        "tiers": {
-            "Gold": "Oro",
-            "Silver": "Plata",
-            "Bronze": "Bronce"
-        }
-    },
-    "badgeDetailModal": {
-        "shareButton": "Compartir",
-        "shareTweet": "¡Acabo de ganar la insignia '{{name}}' de nivel {{tier}}! {{icon}} Sigue mis predicciones: "
-    },
-    "market_watch": {
-        "title": "Vigilancia del mercado",
-        "unavailable": "Los datos del mercado en vivo no están disponibles temporalmente."
-    },
-    "time": {
-        "days": "d",
-        "hours": "h",
-        "minutes": "m",
-        "seconds": "s"
-    },
-    "completeProfile": {
-        "title": "Elija su nombre de usuario",
-        "subtitle": "El nombre de usuario <1>{{username}}</1> ya está en uso. Por favor, elige uno diferente para completar tu registro.",
-        "usernameLabel": "Nombre de usuario",
-        "completeButton": "Completar registro",
-        "savingButton": "Guardando...",
-        "error": {
-            "empty": "El nombre de usuario no puede estar vacío.",
-            "taken": "Este nombre de usuario ya está en uso. Por favor, elige otro.",
-            "generic": "Ocurrió un error.",
-            "failed": "No se pudo completar el registro. Por favor, inténtalo de nuevo."
-        }
-    },
-    "explore_load_more": "Load More",
-    "find_member_wizard": {
-        "trigger_title": "Encuentre su Mentor Dorado perfecto",
-        "trigger_description": "Responda algunas preguntas rápidas sobre su estilo de inversión y le recomendaremos los Miembros Dorados que mejor se adapten a usted.",
-        "trigger_button": "Iniciar el Asistente",
-        "wizard_title": "Asistente de Recomendación",
-        "step1_title": "Paso 1: Acciones de Interés",
-        "step1_description": "Díganos qué acciones le interesa más seguir. Esto nos ayuda a encontrar expertos que se centran en lo que a usted le importa.",
-        "stock_search_placeholder": "Buscar acciones (ej. AAPL, TSLA)...",
-        "step2_title": "Paso 2: Su Tolerancia al Riesgo",
-        "step2_description": "¿Cuánto riesgo está dispuesto a asumir? Esto nos ayuda a encontrar pronosticadores que compartan su estilo.",
-        "step3_title": "Paso 3: Su Horizonte de Inversión",
-        "step3_description": "¿Busca operaciones rápidas o inversiones a largo plazo?",
-        "horizon_short": "Corto plazo",
-        "horizon_long": "Largo plazo",
-        "horizon_all": "Todos los Horizontes",
-        "step4_title": "Sus Mejores Recomendaciones",
-        "step4_description": "Según sus respuestas, aquí están los Miembros Dorados que creemos que encontrará más valiosos.",
-        "find_button": "Buscar Recomendaciones",
-        "loading_recommendations": "Analizando Miembros Dorados...",
-        "error_recommendations": "No se pudieron obtener las recomendaciones. Por favor, inténtelo de nuevo más tarde.",
-        "no_recommendations": "No se encontraron miembros que coincidan con sus criterios específicos. Intente ampliar su búsqueda.",
-        "match_rate": "Coincidencia",
-        "skip_step": "Omitir",
-        "error_recommendations_generic": "Ocurrió un error al generar las recomendaciones."
-    },
-    "common_cancel": "Cancelar",
-    "common_next": "Siguiente",
-    "common_back": "Atrás",
-    "common_close": "Cerrar",
-    "stockPage": {
-        "chart": {
-            "unavailableTitle": "Datos del gráfico no disponibles",
-            "unavailableDescription": "No pudimos cargar los datos históricos de precios en este momento. Por favor, inténtelo de nuevo más tarde.",
-            "lazyTitle": "Mostrar historial de precios de 90 días",
-            "lazyButton": "Cargar gráfico"
-        }
-    },
-    "followers": {
-        "unfollowing": "Dejando de seguir...",
-        "unfollowSuccess": "¡Has dejado de seguir al usuario!",
-        "unfollowError": "No se pudo dejar de seguir al usuario."
-    },
-    "paymentSuccess": {
-        "toastSuccess": "¡Pago exitoso! Tu verificación ya está activa.",
-        "errorSession": "No se pudo verificar la sesión del usuario.",
-        "errorFetchUser": "Error al obtener los datos del usuario.",
-        "title": "¡Éxito!",
-        "redirecting": "Tu pago ha sido procesado. Redirigiendo a tu perfil...",
-        "verifyingSession": "Verificando sesión...",
-        "goNow": "Ir ahora"
-    },
-    "sentiment": {
-        "title": "Sentimiento de la Comunidad",
-        "subtitle": "¿Qué está pensando la multitud?",
-        "based_on_count": "Basado en {{count}} predicciones",
-        "question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
-        "hourly": "Por hora",
-        "daily": "Diario",
-        "weekly": "Semanal",
-        "monthly": "Mensual",
-        "quarterly": "Trimestral",
-        "yearly": "Anual"
-    },
-    "editprofile_username_empty": "El nombre de usuario no puede estar vacío.",
-    "analystRating.pointsAwarded": "¡+5 Rating de Analista!",
-    "analystRatingInfo.title": "Rating de Analista Explicado",
-    "analystRatingInfo.description": "Tu 'Rating de Analista' es una medida de tus valiosas contribuciones a la plataforma. Este rating determina tu parte del Fondo de Creadores.",
-    "analystRatingInfo.section1.title": "1. Predicciones de Alta Calidad (+2 a +10 Rating)",
-    "analystRatingInfo.section1.text": "Ganas puntos de Rating de Analista por cada predicción que se evalúa con alta precisión (Puntuación > 70). Cuanto mayor sea tu puntuación, más puntos ganarás. Esto recompensa la calidad sobre la cantidad.",
-    "analystRatingInfo.section2.title": "2. Ganar Insignias (+100 a +500 Rating)",
-    "analystRatingInfo.section2.text": "Cuando ganas una nueva insignia (p. ej., 'Estratega Semanal'), recibes una gran bonificación única de rating. Las insignias de Oro proporcionan una bonificación mayor que las de Plata o Bronce.",
-    "analystRatingInfo.section3.title": "3. Compartir Contenido (+5 Rating)",
-    "analystRatingInfo.section3.text": "Recibes una pequeña bonificación de rating cuando compartes tus rangos o insignias. Esto está limitado para prevenir el spam.",
-    "analystRatingInfo.section4.title": "4. Rangos en la Clasificación",
-    "analystRatingInfo.section4.text": "Ganas grandes bonificaciones periódicas por clasificarte en el Top 100 de cualquier tabla de clasificación. Los puntos se ponderan por la competencia: un rango Top 10 en una acción popular (como $AAPL) vale más que un rango Top 10 en una tranquila. Los rangos por hora/día se comprueban cada 15 minutos; los rangos a largo plazo (semanal, mensual) se comprueban en sus respectivos horarios.",
-    "analystRatingInfo.section5.title": "5. Referidos",
-    "analystRatingInfo.section5.text": "Ganará una bonificación de rating significativa por invitar a usuarios nuevos y activos a la plataforma.",
-    "referralModal.title": "Invitar y Ganar",
-    "referralModal.description": "Invita a amigos a StockPredictorAI. ¡Cuando se registren, ganarás 500 puntos de Rating de Analista!",
-    "referralModal.copied": "¡Enlace copiado al portapapeles!",
-    "referralModal.copy": "Copiar",
-    "referralModal.share": "Compartir en X",
-    "referralModal.shareTweet": "¡Únete a mí en StockPredictorAI y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.  #NASDAQ #Stock $TSLA $NVDA $GOOGL $AMZN $AAPL $BTC #Gold",
-    "referralModal.shareOnTelegram": "Compartir en Telegram",
-    "referralModal.shareTelegram": "¡Únete a mí en StockPredictorAI y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.  #NASDAQ #Stock $TSLA $NVDA $GOOGL $AMZN $AAPL $BTC #Gold",
-    "analystRating.pie.predictions": "De Predicciones",
-    "analystRating.pie.badges": "De Insignias",
-    "analystRating.pie.shares": "De Compartidos",
-    "analystRating.pie.ranks": "De Rangos",
-    "analystRating.pie.referrals": "De Referidos",
-    "common.back": "Volver",
-    "sentiment.question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
-    "sentiment.based_on_count": "Basado en {{count}} predicciones",
-    "prediction_timeframes": {
-        "hourly": "final de la hora",
-        "daily": "final del día",
-        "weekly": "final de la semana",
-        "monthly": "final de mes",
-        "quarterly": "final de trimestre",
-        "yearly": "final de año"
-    },
-    "profile_avg_rating": "Rating Prom.",
-    "rating_explained_title": "Explicación del Rating",
-    "rating_explained_text1": "Nuestra plataforma utiliza un **Sistema de Rating por Proximidad** para recompensar la precisión. En lugar de un simple \"correcto\" o \"incorrecto\", su rating se basa en qué tan cerca estuvo su predicción del resultado real.",
-    "rating_explained_text2": "Por ejemplo, si una acción está a 152 $ y predice 150 $, recibirá un rating mucho más alto que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo sobre las conjeturas aleatorias. El rating máximo para una predicción perfecta es 100, y disminuye cuanto más se aleja su predicción del precio final.",
-    "notifications.predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo un rating de {{rating}}!",
-    "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Rating",
-    "performanceChart.avgRatingLabel": "Rating Prom.",
-    "performanceChart.tooltip.avgRating": "Rating Prom.: {{rating}}",
-    "performanceTabs.statCard.averageRating": "Rating Promedio",
-    "badgeInfoModal.ratingLabel": "Rating > {{rating}}",
-    "common.rating": "Rating",
-    "text_avg_rating": "Rating Prom.",
-    "Final Rating": "Rating Final",
-    "Live Rating": "Rating en Vivo",
-    "Rating at Close": "Rating al Cierre",
-    "creatorPoolModal.clickShares": "Haga clic en una sección para ver un desglose detallado.",
-    "creatorPoolModal.predictionsBreakdownTitle": "Desglose de Rating: Predicciones",
-    "creatorPoolModal.sharesBreakdownTitle": "Desglose de Rating: Compartidos",
-    "creatorPoolModal.badgesBreakdownTitle": "Desglose de Rating: Insignias",
-    "creatorPoolModal.ranksBreakdownTitle": "Desglose de Rating: Rangos",
-    "analystRating.pie.labels.frompredictions": "De Predicciones",
-    "analystRating.pie.labels.frombadges": "De Insignias",
-    "analystRating.pie.labels.fromshares": "De Compartidos",
-    "analystRating.pie.labels.fromranks": "De Rangos",
-    "analystRating.pie.labels.fromreferrals": "De Referidos",
-    "analystRating.pie.labels.fromsummary": "Del Resumen Inteligente",
-    "analystRating.pie.labels.market_maven": "Experto del Mercado",
-    "analystRating.pie.labels.daily_oracle": "Oráculo Diario",
-    "analystRating.pie.labels.hourly_hotshot": "Experto Horario",
-    "analystRating.pie.labels.weekly_strategist": "Estratega Semanal",
-    "analystRating.pie.labels.monthly_maven": "Experto Mensual",
-    "analystRating.pie.labels.quarterly_visionary": "Visionario Trimestral",
-    "analystRating.pie.labels.yearly_legend": "Leyenda Anual",
-    "analystRating.pie.labels.overall": "Rango General",
-    "analystRating.pie.labels.hourly": "Rango Horario",
-    "analystRating.pie.labels.daily": "Rango Diario",
-    "analystRating.pie.labels.weekly": "Rango Semanal",
-    "analystRating.pie.labels.monthly": "Rango Mensual",
-    "analystRating.pie.labels.quarterly": "Rango Trimestral",
-    "analystRating.pie.labels.yearly": "Rango Anual",
-    "creatorPoolModal.breakdownTitle": "Detalles del Desglose",
-    "creatorPoolModal.loading": "Cargando clasificación...",
-    "notifications.newReferral": "¡{{username}} se registró con tu enlace de referido! +{{points}} Rating de Analista.",
-    "notifications.types.NewReferral": "Nuevo Referido",
-    "header.dashboard": "Panel",
-    "aim.title": "Encuentre Perspectivas Probadas. <0>Monetice sus Predicciones del Mercado.</0>",
-    "promoBanner.creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de bonificación</1> y obtenga su parte de los ingresos de la plataforma solo por sus contribuciones. <2>Unirse ahora</2>",
-    "promoBanner.joinNow": "Unirse ahora",
-    "analystRating.pie.bonus": "Bono",
-    "analystRating.pie.labels.frombonus": "Bono",
-    "seo": {
-        "default": {
-            "title": "StockPredictorAI - Prediga el Mercado, Siga su Precisión",
-            "description": "Únase a la comunidad de StockPredictorAI para hacer predicciones de acciones, seguir su precisión y seguir a los analistas con mejor rendimiento. Regístrese para construir su historial."
-        },
-        "explore_page": {
-            "title": "Explorar Predicciones de Acciones y Analistas Top | StockPredictorAI",
-            "description": "Explore las últimas predicciones de acciones activas y evaluadas de la comunidad de StockPredictorAI. Filtre por acción, período de tiempo y vea quiénes son los mejores."
-        },
-        "stock_page": {
-            "title": "Predicciones y Sentimiento de {{name}} ({{ticker}}) | StockPredictorAI",
-            "description": "Vea las últimas predicciones y el sentimiento de la comunidad para {{name}} ({{ticker}}). Únase a la conversación y haga su propia predicción de acciones en StockPredictorAI."
-        },
-        "prediction_page": {
-            "title": "Predicción {{type}} de {{username}} para {{ticker}} | StockPredictorAI",
-            "description": "Vea la predicción {{type}} de {{username}} para {{ticker}}. ¿Está de acuerdo o en desacuerdo? Vote sobre su predicción y vea el análisis completo en StockPredictorAI."
-        },
-        "profile_page": {
-            "title": "Perfil e Historial de Predicciones de {{username}} | StockPredictorAI",
-            "description": "Vea el perfil completo, historial de predicciones, insignias y rating de analista de {{username}} en StockPredictorAI. Sígalo para recibir actualizaciones sobre sus nuevas predicciones."
-        }
-    },
-    "common.accept": "Aceptar",
-    "common.decline": "Rechazar",
-    "common.cookieConsent": "Este sitio web utiliza cookies para mejorar la experiencia del usuario. Al aceptar, usted acepta nuestro uso de cookies para análisis y referencias.",
-    "promoBanner": {
-        "creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de Rating de Analista</1> y obtenga su parte de los ingresos de la plataforma.",
-        "joinNow": "Unirse ahora",
-        "whyJoin": "¿Por qué unirse?"
-    },
-    "benefitsModal": {
-        "title": "Desbloquee la Experiencia Completa",
-        "subtitle": "Únase a la comunidad para predecir, seguir y ganar.",
-        "predict": {
-            "title": "Hacer Predicciones",
-            "desc": "Construya un historial transparente y demuestre sus habilidades."
-        },
-        "notify": {
-            "title": "Notificaciones Inteligentes",
-            "desc": "Reciba alertas cuando sus analistas favoritos hagan un movimiento."
-        },
-        "watchlist": {
-            "title": "Lista de Seguimiento Personalizada",
-            "desc": "Siga acciones específicas y vea el sentimiento de la comunidad en vivo."
-        },
-        "earn": {
-            "title": "Obtener Ingresos",
-            "desc": "Los mejores rendimientos comparten el 50% de las ganancias de la plataforma a través del Fondo de Creadores."
-        },
-        "footer": "Registrarse es 100% gratuito. No se requiere tarjeta de crédito."
-    },
-    "profile_views_label": "Vistas",
-    "earningsBanner": {
-        "headline": "INFORME DE RESULTADOS:",
-        "message": "El próximo informe de resultados de {{ticker}} es este {{day}}.",
-        "makePrediction": "Hacer una predicción",
-        "viewStock": "Ver página de acciones de {{ticker}}"
-    },
-    "summary": {
-        "default_intro": "Entusiasta del mercado de valores explorando nuevas oportunidades.",
-        "veteran": "Un veterano experimentado desde {{year}} con una gran experiencia en el mercado.",
-        "active_trader": "Un operador activo construyendo un historial sólido desde {{year}}.",
-        "rising_star": "Una estrella en ascenso que se unió en {{year}} y está comenzando su viaje.",
-        "top_rank": "¡Actualmente clasificado #{{rank}} en la tabla de clasificación mundial! 🏆",
-        "top_100": "Un rendimiento de primer nivel, actualmente dentro del top 100 mundial.",
-        "high_accuracy": "Construye predicciones altamente precisas con una impresionante calificación promedio de {{rating}}.",
-        "solid_history": "Mantiene un historial de predicciones sólido con una calificación confiable de {{rating}}.",
-        "stock_superpowers": "Muestra una precisión excepcional al analizar {{stocks}}.",
-        "expert_short_term": "Se especializa en movimientos del mercado a corto plazo.",
-        "expert_long_term": "Sobresale en la previsión de tendencias a largo plazo.",
-        "style_aggressive": "Prefiere oportunidades de alto crecimiento y alto riesgo.",
-        "style_conservative": "Adopta un enfoque calculado y constante en los mercados.",
-        "style_balanced": "Mantiene una estrategia de cartera equilibrada.",
-        "influencer": "Seguido por {{count}} inversores que confían en sus conocimientos.",
-        "community_builder": "Construyendo una comunidad dedicada de {{count}} seguidores.",
-        "golden_member": "Un Miembro Dorado premium que ofrece conocimientos exclusivos del mercado.",
-        "new_trader": "Un nuevo operador listo para dejar su huella en el mercado.",
-        "market_oracle": "Oráculo del Mercado: Tiene una habilidad asombrosa para predecir el próximo movimiento del mercado.",
-        "trend_spotter": "Detector de Tendencias: Excelente para identificar la dirección correcta del mercado."
-    },
-    "smart_summary_title": "Resumen Inteligente",
-    "share_summary_label": "Compartir este resumen",
-    "share_message_intro": "¡Echa un vistazo a este perfil de operador en StockPredictorAI!",
-    "smart_summary_btn": "Resumen Inteligente",
-    "direction_accuracy": {
-        "title": "Precisión de Dirección",
-        "noData": "Sin predicciones evaluadas",
-        "info": "Porcentaje de predicciones donde el precio se movió en la dirección prevista",
-        "details": "{{correct}}/{{total}} Correctas"
-    },
-    "directionAccuracyInfoModal": {
-        "title": "Entendiendo la Precisión de Dirección",
-        "description": "Esta métrica muestra con qué frecuencia un usuario predice correctamente si el precio subirá o bajará, independientemente del precio objetivo exacto.",
-        "howItWorks": "Cómo funciona",
-        "explanation": "Si un usuario predice un aumento de precio y el precio realmente sube (incluso si no alcanza el objetivo), cuenta como una predicción direccional correcta. Lo mismo se aplica para las predicciones de bajada de precio."
+  "header_watchlist": "Lista de seguimiento",
+  "header_golden_feed": "Feed Dorado",
+  "header_explore": "Explorar",
+  "header_scoreboard": "Tabla de clasificación",
+  "header_ai_assist": "Asistente de Cartera IA",
+  "header_make_prediction": "Hacer una predicción",
+  "header_my_profile": "Mi perfil",
+  "header_settings": "Ajustes",
+  "header_admin": "Admin",
+  "header_logout": "Cerrar sesión",
+  "header_login": "Iniciar sesión",
+  "notifications_title": "Notificaciones",
+  "notifications_none": "No hay notificaciones nuevas.",
+  "footer_about": "Acerca de",
+  "footer_contact": "Contacto",
+  "footer_terms": "Términos de servicio",
+  "footer_privacy": "Política de privacidad",
+  "profile_followers": "Seguidores",
+  "profile_following": "Siguiendo",
+  "profile_subscribers": "Suscriptores",
+  "profile_subscriptions": "Suscripciones",
+  "profile_edit": "Editar perfil",
+  "profile_get_verified": "Verificarse",
+  "profile_manage_gold": "Gestionar Membresía Dorada",
+  "profile_become_golden": "Hacerse Dorado",
+  "profile_join_button": "Unirse (${{price}}/mes)",
+  "profile_subscribed_badge": "Suscrito",
+  "profile_subscriptions_paused": "Suscripciones pausadas",
+  "profile_follow_button": "Seguir",
+  "profile_following_button": "Siguiendo",
+  "profile_unfollow_button": "Dejar de seguir",
+  "profile_overall_rank": "Rango general",
+  "profile_avg_score": "Rating Promedio",
+  "profile_total_points": "Puntos totales",
+  "profile_total_predictions": "Predicciones totales",
+  "profile_tab_profile": "Perfil",
+  "profile_tab_golden_feed": "Feed Dorado",
+  "profile_watchlist_title": "Lista de seguimiento",
+  "profile_watchlist_empty": "Este usuario aún no sigue ninguna acción.",
+  "profile_achievements_title": "Logros",
+  "profile_achievements_empty": "Aún no hay logros. ¡Sigue haciendo predicciones!",
+  "profile_achievements_how_work": "¿Cómo se ganan las insignias?",
+  "profile_active_predictions": "Predicciones activas",
+  "profile_prediction_history": "Historial de predicciones",
+  "profile_load_more": "Cargar más",
+  "profile_no_active_predictions": "No hay predicciones activas.",
+  "profile_no_prediction_history": "Aún no hay historial de predicciones.",
+  "verified_tick_popover_title": "Predictor verificado",
+  "verified_tick_popover_text": "Este usuario es un miembro verificado de la comunidad, lo que indica un compromiso con la plataforma.",
+  "verified_modal_title": "Conviértase en un predictor verificado",
+  "verified_modal_text": "Gane credibilidad y visibilidad en la comunidad con una insignia verificada.",
+  "verified_modal_benefit1": "Obtenga una marca de verificación verde junto a su nombre en todo el sitio.",
+  "verified_modal_benefit2": "Sus predicciones se destacan en el filtro \"Solo verificados\" en la página Explorar.",
+  "verified_modal_benefit3": "Sea recomendado como Experto Verificado en las páginas de Lista de seguimiento relevantes.",
+  "verified_modal_button": "Verificarse por ${{price}}",
+  "verified_status_modal_title": "¡Es un predictor verificado!",
+  "verified_status_modal_text": "Ha aumentado la confianza y la visibilidad en la comunidad.",
+  "verified_status_modal_close": "Cerrar",
+  "verified_status_modal_remove": "Eliminar estado de verificación",
+  "homepage_aim": "Predice el mercado. Rastrea tu precisión.",
+  "about_title": "Acerca de StockPredictorAI",
+  "about_mission_title": "Nuestra Misión",
+  "about_mission_text": "StockPredictorAI se fundó bajo el principio de que la sabiduría colectiva de las personas informadas puede ser una herramienta poderosa para navegar por los mercados financieros. Nuestra misión es ofrecer una plataforma donde tanto los inversores novatos como los profesionales puedan poner a prueba sus habilidades analíticas, aprender de la comunidad y construir un historial transparente de sus predicciones de mercado.",
+  "about_how_it_works_title": "Cómo Funciona",
+  "about_how_it_works_predict_title": "1. Predice el Mercado",
+  "about_how_it_works_predict_text": "Haz predicciones sobre miles de activos con varios plazos, desde horarios hasta anuales.",
+  "about_how_it_works_compete_title": "2. Compite y Asciende",
+  "about_how_it_works_compete_text": "Sube en las tablas de clasificación haciendo predicciones precisas y demuestra tus habilidades a la comunidad.",
+  "about_how_it_works_follow_title": "3. Sigue y Aprende",
+  "about_how_it_works_follow_text": "Sigue a los mejores pronosticadores para aprender de sus estrategias y recibir notificaciones de sus nuevos movimientos en el mercado.",
+  "about_how_it_works_golden_title": "4. Hazte Golden",
+  "about_how_it_works_golden_text": "Conviértete en Miembro Golden para ofrecer contenido exclusivo a tus suscriptores y construir tu marca.",
+  "about_how_it_works_track_title": "5. Registra tu Historial",
+  "about_how_it_works_track_text": "Construye un historial transparente y a largo plazo de tu rendimiento en todos los plazos y activos.",
+  "scoring_explained_title": "Explicación del Rating",
+  "scoring_explained_text1": "Nuestra plataforma utiliza un **Sistema de Puntuación por Proximidad** para recompensar la precisión. En lugar de una simple respuesta de \"correcto\" o \"incorrecto\", tu puntuación se basa en qué tan cerca estuvo tu predicción del resultado real.",
+  "scoring_explained_text2": "Por ejemplo, si una acción está en 152 $ y predices que estará en 150 $, recibirás un rating mucho más alta que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo por encima de las suposiciones al azar. La puntuación máxima para una predicción perfecta es de 100 puntos, y los puntos disminuyen cuanto más se aleja tu predicción del precio final.",
+  "aiwizard_coming_soon": "PRÓXIMAMENTE",
+  "aiwizard_title": "Asistente de Portafolio con IA",
+  "aiwizard_description": "Obtén recomendaciones personalizadas de acciones basadas en los patrones de nuestros mejores predictores.",
+  "aiwizard_how_it_works": "Cómo Funciona",
+  "aiwizard_step1_title": "Define tu Estilo",
+  "aiwizard_step1_text": "Responde algunas preguntas sobre tu horizonte de inversión e intereses.",
+  "aiwizard_step2_title": "La IA Analiza los Datos",
+  "aiwizard_step2_text": "Nuestro sistema encuentra a los principales predictores que destacan en tus áreas de interés.",
+  "aiwizard_step3_title": "Obtén Información",
+  "aiwizard_step3_text": "Recibe un feed curado de acciones que nuestros mejores analistas están observando.",
+  "aiwizard_join_waitlist": "Únete a la Lista de Acceso Anticipado",
+  "aiwizard_checking_status": "Comprobando estado...",
+  "aiwizard_on_waitlist": "¡Ya estás en la lista de espera!",
+  "aiwizard_signin_to_join": "Inicia sesión para unirte a la lista",
+  "aiwizard_early_access_note": "Sé el primero en saber cuándo se lanza. ¡Los registrados tempranamente obtendrán acceso gratuito por tiempo limitado!",
+  "aiwizard_legal_note": "**Nota Legal:** El Asistente de Cartera con IA proporciona información basada en datos históricos de usuarios únicamente con fines informativos. No es asesoramiento financiero. Todas las decisiones de inversión deben tomarse con su propia investigación y diligencia debida.",
+  "aiwizard_joining": "Uniéndose...",
+  "aiwizard_join_success": "¡Estás en la lista! Te notificaremos cuando se lance.",
+  "aiwizard_join_error": "No se pudo unir a la lista de espera.",
+  "contact_title": "Contáctanos",
+  "contact_get_in_touch": "Ponte en contacto",
+  "contact_intro_text": "¿Tienes alguna pregunta, comentario o consulta de asociación? Nos encantaría saber de ti.",
+  "contact_fill_form_text": "Rellena el formulario y nos pondremos en contacto contigo lo antes posible.",
+  "contact_urgent_text": "Para asuntos urgentes, también puede contactarnos directamente en:",
+  "contact_email": "predictostock@gmail.com",
+  "contact_name_label": "Su nombre",
+  "contact_email_label": "Su correo electrónico",
+  "contact_message_label": "Mensaje",
+  "contact_sending": "Enviando...",
+  "contact_send_button": "Enviar mensaje",
+  "contact_fill_all_fields_error": "Por favor, complete todos los campos.",
+  "contact_success_message": "¡Tu mensaje ha sido enviado!",
+  "contact_error_message": "Algo salió mal. Por favor, inténtalo de nuevo.",
+  "editprofile_title": "Editar perfil",
+  "editprofile_avatar_label": "Avatar",
+  "editprofile_change_avatar": "Cambiar avatar",
+  "editprofile_username_label": "Nombre de usuario",
+  "editprofile_about_label": "Acerca de",
+  "editprofile_about_counter": "{{current}} / {{limit}}",
+  "editprofile_xlink_label": "Enlace X (Twitter)",
+  "editprofile_xlink_placeholder": "https://x.com/tuperfil",
+  "editprofile_youtube_label": "Enlace de YouTube",
+  "editprofile_youtube_placeholder": "https://youtube.com/tucanal",
+  "editprofile_save_changes": "Guardar cambios",
+  "editprofile_saving": "Guardando...",
+  "editprofile_cancel": "Cancelar",
+  "editprofile_success": "¡Perfil actualizado con éxito!",
+  "editprofile_error": "Error al actualizar el perfil.",
+  "explore_title": "Explorar Predicciones",
+  "explore_filter_stock": "Filtrar por Acción",
+  "explore_prediction_type": "Tipo de Predicción",
+  "explore_sort_by": "Ordenar por",
+  "explore_sort_by_date": "Más Recientes",
+  "explore_sort_by_performance": "Mejores Rendimientos",
+  "explore_sort_by_votes": "Más Votadas",
+  "explore_sort_by_potential": "Mayor Potencial",
+  "explore_verified_only": "Mostrar solo predictores verificados",
+  "explore_tab_active": "Activas",
+  "explore_tab_assessed": "Evaluadas",
+  "explore_loading": "Cargando Predicciones...",
+  "explore_no_predictions": "No se encontraron predicciones para estos filtros.",
+  "explore_predicts_price_of": "Predice un precio de",
+  "explore_by_deadline": "para {{date}}",
+  "explore_predicted": "Predicho",
+  "explore_actual_price": "Precio Real",
+  "explore_view_rationale": "Ver Justificación",
+  "explore_agree": "De Acuerdo",
+  "explore_disagree": "En Desacuerdo",
+  "explore_vote_failed": "Votación fallida.",
+  "followers_avg_score": "Rating Prom.",
+  "followers_subscribed_on": "Suscrito el {{date}}",
+  "followers_cancel_subscription": "Cancelar Suscripción",
+  "followers_could_not_load_lists": "No se pudieron cargar las listas de usuarios.",
+  "followers_subscription_canceled": "Suscripción a {{username}} cancelada.",
+  "followers_failed_to_cancel": "No se pudo cancelar la suscripción.",
+  "followers_tab_followers": "Seguidores",
+  "followers_tab_following": "Siguiendo",
+  "followers_tab_subscribers": "Suscriptores",
+  "followers_tab_subscriptions": "Suscripciones",
+  "followers_loading": "Cargando...",
+  "followers_confirm_cancel_title": "Cancelar suscripción",
+  "followers_confirm_cancel_message": "¿Seguro que quieres cancelar tu suscripción a {{username}}?",
+  "followers_no_users": "No hay usuarios para mostrar en esta lista.",
+  "golden_feed_new_label": "NUEVO",
+  "golden_feed_failed_mark_read": "No se pudo marcar el feed como leído.",
+  "golden_feed_failed_fetch": "No se pudo cargar el Feed Dorado.",
+  "golden_feed_header": "Tu Feed Dorado",
+  "golden_feed_create_post": "Crear Publicación",
+  "golden_feed_filter_by_member": "Filtrar por Miembro",
+  "golden_feed_all_subscriptions": "Todas las Suscripciones",
+  "golden_feed_filter_by_stock": "Filtrar por Acción",
+  "golden_feed_prediction_type": "Tipo de Predicción",
+  "golden_feed_loading": "Cargando Feed...",
+  "golden_feed_no_posts_title": "No se encontraron publicaciones para estos filtros.",
+  "golden_feed_no_posts_subtitle": "Intenta ampliar tus criterios de búsqueda o suscribirte a más Miembros Dorados.",
+  "loading_dashboard": "Cargando panel...",
+  "welcome_message": "Bienvenido a StockPredictorAI",
+  "description": "Inicia sesión para validar tus conocimientos del mercado, construir un historial verificable y compartir tu análisis.",
+  "google_signin": "Iniciar sesión con Google",
+  "loading_settings": "Cargando ajustes...",
+  "notification_settings_title": "Ajustes de Notificación",
+  "toggle_all_predictions_label": "Todas las Predicciones de Usuarios Seguidos",
+  "toggle_all_predictions_description": "Recibe una notificación por cada nueva predicción hecha por los usuarios que sigues.",
+  "toggle_short_term_label": "Predicciones Significativas a Corto Plazo",
+  "toggle_short_term_description": "Recibe una notificación cuando un usuario seguido haga una predicción significativa Horaria, Diaria o Semanal.",
+  "toggle_long_term_label": "Predicciones Significativas a Largo Plazo",
+  "toggle_long_term_description": "Recibe una notificación cuando un usuario seguido haga una predicción significativa Mensual o de mayor duración.",
+  "saving": "Guardando...",
+  "save_changes": "Guardar Cambios",
+  "settings_saved_success": "¡Ajustes guardados!",
+  "settings_saved_error": "No se pudieron guardar los ajustes.",
+  "Awaiting Assessment": "Esperando Evaluación",
+  "...": "...",
+  "Could not load prediction details.": "No se pudieron cargar los detalles de la predicción.",
+  "Loading Prediction...": "Cargando Predicción...",
+  "Prediction not found.": "Predicción no encontrada.",
+  "Live Score": "Puntuación en Vivo",
+  "Score at Close": "Puntuación al Cierre",
+  "Current": "Actual",
+  "Closing Price": "Precio de Cierre",
+  "(Price journey visual is not available for this older prediction)": "(El visual del recorrido del precio no está disponible para esta predicción anterior)",
+  "Target Price": "Precio Objetivo",
+  "View Rationale": "Ver Justificación",
+  "Final Score": "Puntuación Final",
+  "Time Remaining": "Tiempo Restante",
+  "DO YOU AGREE?": "¿ESTÁS DE ACUERDO?",
+  "Agree": "De acuerdo",
+  "Disagree": "En desacuerdo",
+  "Predicted by": "Predicho por",
+  "Made on": "Hecho el",
+  "Prediction": "Predicción",
+  "privacy_title": "Política de Privacidad",
+  "privacy_last_updated": "Última actualización: 8 de noviembre de 2025",
+  "privacy_intro_title": "1. Introducción",
+  "privacy_intro_text": "Bienvenido a StockPredictorAI ('nosotros', 'nos', 'nuestro'). Estamos comprometidos a proteger sus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos su información cuando utiliza nuestro servicio. Al usar StockPredictorAI, usted acepta la recopilación y el uso de información de acuerdo con esta política. Esta política está redactada en cumplimiento del Reglamento General de Protección de Datos (RGPD) de la UE.",
+  "info_collection_title": "2. Información que recopilamos",
+  "info_collection_a_title": "A. Información que usted proporciona",
+  "info_collection_a_text": "Recopilamos la información que nos proporcionas directamente, incluyendo: \n • Información de la cuenta: Cuando te registras con Google, recibimos tu nombre, dirección de correo electrónico y foto de perfil proporcionados por tu cuenta de Google. Cuando completas tu perfil, también recopilamos el nombre de usuario que elegiste y cualquier información opcional que añadas, como tu biografía 'Acerca de' y enlaces a redes sociales. \n • Información de pagos y cobros: Para nuestros Miembros Golden (creadores de contenido), procesamos los pagos directamente a tu cuenta conectada. Para los suscriptores, procesamos los pagos de suscripción de forma segura. Todas las transacciones financieras son manejadas por Stripe, líder mundial en pagos seguros. Nunca almacenamos los datos de tu tarjeta de crédito o cuenta bancaria. Solo almacenamos un registro de tu estado de suscripción o ID de cuenta de pago. \n • Contenido del usuario: Recopilamos el contenido que creas, como tus predicciones, razonamientos y publicaciones del Golden Feed.",
+  "info_collection_b_title": "B. Información que recopilamos automáticamente",
+  "info_collection_b_text": " • Cookies y datos de sesión: Utilizamos cookies únicamente para mantener tu sesión después de iniciar sesión. Una cookie es un pequeño fragmento de datos almacenado en tu computadora. Esto es esencial para que la aplicación sepa quién eres. \n • Datos de uso: Podemos recopilar datos sobre cómo interactúa con el servicio, como las páginas visitadas y las funciones utilizadas, para ayudarnos a mejorar la plataforma.",
+  "use_info_title": "3. Cómo utilizamos tu información",
+  "use_info_text": "Utilizamos la información que recopilamos para los siguientes propósitos: \n • Para proporcionar y mantener nuestro Servicio, crear tu perfil de usuario y mostrar tus predicciones. \n • Para procesar tus pagos (para Suscriptores) y cobros (para Miembros Golden). \n • Para comunicarnos contigo, incluyendo el envío de correos electrónicos transaccionales (como recibos de pago o restablecimiento de contraseñas) y notificaciones que hayas elegido recibir. \n • Para analizar el uso y mejorar el Servicio. \n • Para hacer cumplir nuestros Términos de Servicio y prevenir abusos.",
+  "sharing_title": "4. Intercambio de datos con terceros",
+  "sharing_text": "No vendemos su información personal. Solo compartimos sus datos con los siguientes proveedores de servicios externos (subprocesadores) que son esenciales para que podamos operar nuestro Servicio:",
+  "sharing_list_a": "Procesador de pagos: Compartimos su correo electrónico, ID de usuario y detalles de la transacción con Stripe para procesar de forma segura todos los pagos y gestionar las suscripciones.",
+  "sharing_list_b": "Proveedor de autenticación: Usamos Google LLC para gestionar el inicio de sesión y la autenticación del usuario.",
+  "sharing_list_c": "Servicio de Correo Electrónico: Utilizamos Brevo (anteriormente Sendinblue) para enviar correos electrónicos transaccionales esenciales (como recibos y notificaciones).",
+  "sharing_list_d": "Cumplimiento legal: Podemos divulgar su información si así lo exige la ley o en respuesta a solicitudes válidas de autoridades públicas (por ejemplo, un tribunal o una agencia gubernamental).",
+  "gdpr_title": "5. Sus derechos de protección de datos (RGPD)",
+  "gdpr_intro": "Dado que nuestro servicio tiene su sede en los Países Bajos, usted tiene derechos específicos de protección de datos en virtud del RGPD. Nos comprometemos a respetar estos derechos. Usted tiene:",
+  "gdpr_list_a": "El Derecho de Acceso: Tiene derecho a solicitar una copia de los datos personales que tenemos sobre usted.",
+  "gdpr_list_b": "El Derecho de Rectificación: Tiene derecho a corregir cualquier dato inexacto o incompleto. Puede actualizar la mayor parte de la información de su perfil directamente en su página 'Editar perfil'.",
+  "gdpr_list_c": "El Derecho de Supresión (Derecho al Olvido): Tiene derecho a solicitar la eliminación de sus datos personales. Tenga en cuenta que es posible que debamos conservar cierta información durante un período por motivos legales o de mantenimiento de registros financieros (por ejemplo, registros de pagos).",
+  "gdpr_list_d": "El Derecho a la Portabilidad de los Datos: Tiene derecho a solicitar que transfiramos los datos que hemos recopilado sobre usted a otra organización, o directamente a usted, en un formato legible por máquina.",
+  "gdpr_outro": "Para ejercer cualquiera de estos derechos, póngase en contacto con nuestro Contacto de Protección de Datos en predictostock@gmail.com. Responderemos a su solicitud en un plazo de 30 días.",
+  "retention_title": "6. Retención de datos",
+  "retention_text": "Conservaremos sus datos personales solo durante el tiempo que sea necesario para los fines establecidos en esta Política de Privacidad. Conservaremos los datos de su cuenta mientras su cuenta esté activa. Si elimina su cuenta, tomaremos medidas para eliminar sus datos personales en un plazo razonable, a excepción de los datos que estemos legalmente obligados a conservar (como los registros de pagos con fines fiscales y contables).",
+  "cookies_title": "7. Política de cookies",
+  "cookies_text": "Usamos cookies esenciales para mantener su sesión después de iniciar sesión. Una cookie es un pequeño fragmento de datos almacenado en su computadora. Puede indicar a su navegador que rechace todas las cookies, pero si lo hace, no podrá iniciar sesión ni utilizar nuestro Servicio.",
+  "children_title": "8. Privacidad de los niños",
+  "children_text": "Nuestro Servicio no está destinado a ser utilizado por menores de 16 años (en cumplimiento del RGPD). No recopilamos conscientemente información de identificación personal de niños menores de 16 años. Si tiene conocimiento de que un niño nos ha proporcionado datos personales, póngase en contacto con nosotros. Si nos damos cuenta de que hemos recopilado datos personales de un niño sin verificación del consentimiento de los padres, tomaremos medidas para eliminar esa información de nuestros servidores.",
+  "security_title": "9. Seguridad",
+  "security_text": "La seguridad de sus datos es importante para nosotros. Usamos medidas de seguridad como el cifrado de sesión (HTTPS) y el almacenamiento seguro de contraseñas (a través de Google) para proteger su información. Sin embargo, recuerde que ningún método de transmisión por Internet o método de almacenamiento electrónico es 100% seguro. No podemos garantizar su seguridad absoluta.",
+  "updates_title": "10. Cambios a esta Política de Privacidad",
+  "updates_text": "Podemos actualizar nuestra Política de Privacidad de vez en cuando. Le notificaremos cualquier cambio publicando la nueva Política de Privacidad en esta página y actualizando la fecha de 'Última actualización' en la parte superior. Se le aconseja que revise esta Política de Privacidad periódicamente para detectar cualquier cambio.",
+  "contact_title_2": "11. Contáctenos",
+  "privacy_contact_pre": "Si tiene alguna pregunta o solicitud sobre esta Política de Privacidad o sus datos personales, póngase en contacto a través de nuestra",
+  "privacy_contact_link": "página de Contacto.",
+  "profile_title": "Perfil",
+  "followers_label": "Seguidores",
+  "following_label": "Siguiendo",
+  "subscribers_label": "Suscriptores",
+  "subscriptions_label": "Suscripciones",
+  "manage_gold_label": "Gestionar Membresía Dorada",
+  "become_golden_label": "Hacerse Dorado",
+  "edit_profile_label": "Editar Perfil",
+  "get_verified_label": "Verificarse",
+  "following_btn": "Siguiendo",
+  "follow_btn": "Seguir",
+  "subscribed_label": "Suscrito",
+  "join_label": "Unirse (${{price}}/mes)",
+  "subscriptions_paused_label": "Suscripciones pausadas",
+  "member_since_label": "Miembro desde el {{date}}",
+  "no_bio_label": "No hay biografía.",
+  "active_predictions_title": "Predicciones Activas",
+  "prediction_history_title": "Historial de Predicciones",
+  "no_active_predictions_label": "No hay predicciones activas.",
+  "no_prediction_history_label": "Aún no hay historial de predicciones.",
+  "load_more_label": "Cargar Más",
+  "overall_rank_label": "Rango General",
+  "average_score_label": "Puntuación Media",
+  "total_points_label": "Puntos Totales",
+  "analyst_rating_label": "Rating de Analista",
+  "creator_pool_share_label": "Cuota del Fondo de Creadores",
+  "creatorPoolModal.title": "Clasificación del Fondo de Creadores",
+  "creatorPoolModal.description": "Esta clasificación muestra la distribución de puntos de 'Rating de Analista' en la plataforma. Una parte de los ingresos de la plataforma se distribuirá a los principales contribuyentes en función de este rating.",
+  "creatorPoolModal.totalRating": "Rating Total de Analistas en la Plataforma",
+  "total_predictions_label": "Predicciones Totales",
+  "profile_tab_label": "Perfil",
+  "golden_feed_tab_label": "Feed Dorado",
+  "create_golden_post_btn": "Crear Publicación Dorada",
+  "processing_verification_msg": "Procesando verificación...",
+  "verification_success_msg": "¡Verificación exitosa!",
+  "verification_removed_success_msg": "Estado de verificación eliminado.",
+  "verification_failed_msg": "La verificación falló.",
+  "cancel_verification_title": "Cancelar Verificación",
+  "cancel_verification_msg": "¿Estás seguro? Perderás tu estado de verificado y sus beneficios.",
+  "title_top_performers": "🏆 Mejores Jugadores",
+  "label_prediction_type": "Tipo de Predicción",
+  "label_filter_by_stock": "Filtrar por Acción",
+  "text_avg_score": "Rating Prom.",
+  "msg_loading_scoreboard_error": "No se pudieron cargar los datos de la tabla de clasificación.",
+  "msg_no_users_found": "No se encontraron usuarios para estos filtros.",
+  "msg_try_broaden_search": "Intenta ampliar tus criterios de búsqueda.",
+  "loading_stock_data": "Cargando datos de la acción...",
+  "error_loading_stock_data": "No se pudieron cargar los datos para {{ticker}}.",
+  "could_not_load_stock_data": "No se pudieron cargar los datos para {{ticker}}. Por favor, intente con otro símbolo.",
+  "add_to_watchlist": "Añadir a la lista de seguimiento",
+  "remove_from_watchlist": "Eliminar de la lista de seguimiento",
+  "make_prediction": "Hacer una predicción",
+  "top_predictors_for": "Mejores predictores para {{ticker}}",
+  "avg_score": "Puntaje Prom.",
+  "no_top_predictors": "Aún no hay predictores destacados para este filtro.",
+  "active_predictions_on": "Predicciones activas sobre {{ticker}}",
+  "prediction_type": "Predicción {{type}}",
+  "target": "Objetivo: ${{targetPrice}}",
+  "no_active_predictions": "Aún no hay predicciones activas para esta acción.",
+  "terms_page": {
+    "title": "Términos de Servicio",
+    "sections": {
+      "acceptance_of_terms": {
+        "title": "1. Aceptación de los Términos",
+        "content": "Al acceder o utilizar el sitio web de StockPredictorAI (\"Servicio\"), usted acepta estar sujeto a estos Términos de Servicio. Si no está de acuerdo con alguna parte de los términos, no podrá acceder al Servicio."
+      },
+      "no_financial_advice": {
+        "title": "2. No es Asesoramiento Financiero",
+        "content": "La información, predicciones y puntuaciones proporcionadas en este Servicio son solo para fines informativos y de entretenimiento. Nada en este sitio web constituye asesoramiento financiero, de inversión, legal o fiscal. Usted es el único responsable de sus propias decisiones de inversión."
+      },
+      "user_conduct": {
+        "title": "3. Conducta del Usuario",
+        "content": "Usted se compromete a no utilizar el Servicio para publicar o transmitir material malicioso, difamatorio o que viole de alguna otra manera la ley. Usted es responsable de todas las predicciones y contenidos publicados bajo su cuenta."
+      },
+      "limitation_of_liability": {
+        "title": "4. Limitación de Responsabilidad",
+        "content": "En ningún caso StockPredictorAI, ni sus directores o empleados, serán responsables por daños indirectos, incidentales, especiales, consecuentes o punitivos, incluyendo, sin limitación, la pérdida de beneficios, datos u otras pérdidas intangibles, que resulten de su acceso o uso del Servicio."
+      },
+      "golden_members": {
+        "title": "5. Suscripciones de Miembro Golden y Tarifas de la Plataforma",
+        "content": "StockPredictorAI proporciona una plataforma para que ciertos usuarios ('Miembros Golden') ofrezcan contenido basado en suscripción. Al activar su estado de Miembro Golden, acepta ofrecer estos servicios a otros usuarios. Para cubrir la operación de la plataforma, el procesamiento de pagos y los costos administrativos, StockPredictorAI retendrá una tarifa de plataforma del treinta por ciento (30%) (la 'Tarifa de Plataforma') de los ingresos brutos por suscripción generados por sus suscriptores. El setenta por ciento (70%) restante se le pagará a través de nuestro procesador de pagos, Stripe. Esta tarifa del 30% se deduce automáticamente de cada transacción. Al convertirse en Miembro Golden, usted reconoce y acepta esta estructura de Tarifa de Plataforma del 30%."
+      },
+      "analyst_rating": {
+        "title": "6. Sistema de Rating de Analista",
+        "content": "El Servicio cuenta con un sistema de 'Rating de Analista' para recompensar las contribuciones de alta calidad. Los usuarios pueden ganar ratings por diversas actividades, incluyendo, entre otras: alcanzar altas puntuaciones en predicciones (p. ej., >70% de precisión), ganar insignias de la plataforma, alcanzar altos rangos en la clasificación y compartir contenido de la plataforma. Las actividades específicas y las cantidades de rating son determinadas por StockPredictorAI y pueden cambiarse en cualquier momento. Este rating es una característica promocional y no tiene valor monetario directo."
+      },
+      "creator_pool": {
+        "title": "7. Pagos del Fondo de Creadores",
+        "content": "Como recompensa a nuestros principales contribuyentes, StockPredictorAI asigna el cincuenta por ciento (50%) de su beneficio neto trimestral (ingresos menos todos los gastos operativos, impuestos y tasas) a un 'Fondo de Creadores'. Este fondo se distribuye a los usuarios en función de su 'Rating de Analista' como un porcentaje del Rating de Analista total en la plataforma. Los pagos se calculan trimestralmente y se distribuyen en base a Net-30 (30 días después del final del trimestre). Para ser elegible para un pago, un usuario debe tener un saldo de pago acumulado mínimo de 100,00 USD. Los saldos por debajo de este mínimo se transferirán al siguiente trimestre. Todos los usuarios son responsables de sus propias obligaciones fiscales resultantes de cualquier pago. StockPredictorAI se reserva el derecho de modificar, pausar o terminar el programa del Fondo de Creadores en cualquier momento, con o sin previo aviso."
+      },
+      "payments_and_refunds": {
+        "title": "8. Pagos, Suscripciones y Reembolsos",
+        "content": "Nuestra plataforma ofrece servicios de pago, incluido el estado 'Verified Predictor' y las suscripciones 'Golden Member' (colectivamente, 'Suscripciones'). Todos los pagos se procesan a través de nuestro procesador de pagos externo, Stripe. No almacenamos ni retenemos la información de su tarjeta de crédito. Todas las Suscripciones se facturan de forma mensual recurrente. Puede cancelar su Suscripción en cualquier momento a través de su perfil de usuario o del portal de nuestro procesador de pagos. Su cancelación entrará en vigor al final del ciclo de facturación actual y conservará el acceso a las funciones de pago hasta esa fecha. Todos los pagos por Suscripciones son definitivos y no reembolsables. No proporcionamos reembolsos ni créditos por ningún período de suscripción parcial o contenido no utilizado."
+      },
+      "content_and_ip": {
+        "title": "9. Contenido del Usuario y Derechos de Propiedad Intelectual",
+        "content": "Usted conserva todos los derechos de propiedad sobre el contenido que crea en el Servicio, incluida la información de su perfil, las justificaciones de las predicciones y las publicaciones del Golden Feed ('Contenido del Usuario'). Al publicar Contenido del Usuario, usted otorga a StockPredictorAI una licencia no exclusiva, mundial, libre de regalías y perpetua para usar, alojar, mostrar, reproducir y distribuir su Contenido del Usuario únicamente con el fin de operar, promocionar y mejorar el Servicio. Usted garantiza que es propietario de su Contenido del Usuario o que tiene todos los derechos necesarios para publicarlo y otorgarnos esta licencia, y que su contenido no infringe los derechos de ningún tercero. Si cree que se han infringido sus derechos de autor, contáctenos de inmediato en predictostock@gmail.com con un Aviso de Retirada de DMCA."
+      },
+      "termination": {
+        "title": "10. Cancelación de la Cuenta",
+        "content": "StockPredictorAI se reserva el derecho de suspender o cancelar su cuenta y el acceso al Servicio a nuestra entera discreción, con o sin previo aviso, por cualquier motivo, incluida la violación de estos Términos. También puede cancelar su cuenta en cualquier momento contactándonos o utilizando una función de eliminación en la aplicación, si estuviera disponible. Tras la cancelación por cualquiera de las partes, su derecho a utilizar el Servicio cesará de inmediato. Todas las tarifas prepagadas por Suscripciones no son reembolsables y no será elegible para un reembolso por ninguna parte del período de suscripción restante en el momento de la cancelación. Nos reservamos el derecho de eliminar su Contenido del Usuario tras la cancelación, pero no estamos obligados a hacerlo."
+      },
+      "disputes": {
+        "title": "11. Resolución de Disputas y Ley Aplicable",
+        "content": "Estos Términos de Servicio se rigen e interpretan de acuerdo con las leyes de los Países Bajos, sin tener en cuenta sus principios de conflicto de leyes. Usted acepta resolver cualquier disputa que tenga con StockPredictorAI exclusivamente a través de un arbitraje vinculante en La Haya, Países Bajos, y no en un tribunal de justicia. Usted y StockPredictorAI acuerdan renunciar a cualquier derecho a participar en una demanda colectiva o un arbitraje colectivo. Todas las disputas deben presentarse a título individual, y no como demandante o miembro de una clase en ningún presunto procedimiento colectivo o representativo."
+      }
     }
+  },
+  "watchlist_page": {
+    "title": "Mi Lista de Seguimiento",
+    "search_placeholder": "Buscar acciones para seguir (ej. AAPL)...",
+    "empty_watchlist": {
+      "title": "Tu lista de seguimiento está vacía.",
+      "subtitle": "Busca una acción arriba para empezar a seguirla."
+    },
+    "active_predictions_title": "Predicciones Activas para {{ticker}}",
+    "filter_by_type": "Filtrar por Tipo",
+    "sort_by": "Ordenar por",
+    "sort_options": {
+      "date": "Más Recientes",
+      "votes": "Más Votadas",
+      "potential": "Mayor Potencial"
+    },
+    "no_predictions": "No hay predicciones activas que coincidan con tus filtros.",
+    "load_more": "Cargar Más",
+    "recommended_experts_title": "Expertos Recomendados",
+    "no_recommended_experts": "Aún no hay predictores destacados para esta acción.",
+    "watchlist_card": {
+      "remove_title": "Eliminar {{symbol}} de la lista de seguimiento"
+    },
+    "follow_button": "Seguir"
+  },
+  "prediction_types": {
+    "Overall": "Todos",
+    "Hourly": "Por Hora",
+    "Daily": "Diario",
+    "Weekly": "Semanal",
+    "Monthly": "Mensual",
+    "Quarterly": "Trimestral",
+    "Yearly": "Anual"
+  },
+  "avatarModal": {
+    "title": "Cambiar tu Avatar",
+    "styleLabel": "Estilo",
+    "shuffleButton": "Aleatorio",
+    "cancelButton": "Cancelar",
+    "saveButton": "Guardar Avatar",
+    "styles": {
+      "adventurer": "Aventurero",
+      "lorelei": "Lorelei",
+      "miniavs": "Mini Avatares",
+      "openPeeps": "Open Peeps",
+      "personas": "Personas",
+      "pixelArt": "Pixel Art",
+      "notionists": "Notionists",
+      "bottts": "Robots",
+      "shapes": "Formas",
+      "thumbs": "Pulgares",
+      "funEmoji": "Emoji Divertido",
+      "identicon": "Identicon",
+      "initials": "Iniciales",
+      "rings": "Anillos"
+    }
+  },
+  "badgeInfoModal": {
+    "title": "Cómo Funcionan los Logros",
+    "loadingText": "Cargando detalles...",
+    "ratingLabel": "Puntuación > {{rating}}",
+    "minPredictions": "Requiere al menos {{count}} predicciones.",
+    "closeButton": "Cerrar"
+  },
+  "badgeShowcase": {
+    "title": "Logros",
+    "noAchievements": "Aún no hay logros. ¡Sigue haciendo predicciones!",
+    "infoButtonTitle": "¿Cómo se ganan las insignias?",
+    "unknownBadge": "Insignia Desconocida"
+  },
+  "communityFeed": {
+    "title": "Feed de la Comunidad",
+    "noRecentPredictions": "No hay predicciones recientes."
+  },
+  "confirmationModal": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "defaultTitle": "¿Estás seguro?",
+    "defaultMessage": "Esta acción no se puede deshacer."
+  },
+  "dailyLeaderboard": {
+    "title": "Mejores Jugadores de Hoy",
+    "subtitle": "(Basado en las predicciones horarias de hoy)",
+    "noData": "Aún no hay datos para hoy.",
+    "averageScoreSuffix": "prom."
+  },
+  "descriptionModal": {
+    "title": "Justificación del Predictor"
+  },
+  "famousStocks": {
+    "title": "Predicciones populares",
+    "title_historical": "Populares (Últimos 7 días)",
+    "predictionsText": "{{count}} predicciones hoy",
+    "predictionsText_historical": "{{count}} predicciones (7d)",
+    "noData": "No hay acciones populares en este momento."
+  },
+  "share": {
+    "shareOnX": "Compartir en X",
+    "ownerActive": "Predigo que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¡Mira mi predicción y vota en StockPredictorAI!",
+    "ownerAssessed": "¡Mi predicción para ${{ticker}} terminó con una puntuación de {{rating}}! Predije {{targetPrice}} y cerró en {{actualPrice}}. ¡Mira el resultado!",
+    "visitorActive": "Predicción interesante: {{username}} cree que ${{ticker}} alcanzará {{targetPrice}} antes del {{deadline}}. ¿Qué opinas?",
+    "visitorAssessed": "¡Mira este resultado: la predicción de {{username}} para ${{ticker}} obtuvo una puntuación de {{rating}}! Predijo {{targetPrice}} y cerró en {{actualPrice}}.",
+    "activePredictionsAggregated": "Resumen de {{subject}} {{count}} predicciones {{type}}:\n\n{{predictionList}}...\n\nPrecisión: %{{accuracy}}! ¡Mira {{subject}} portafolio! {{hashtags}} #PronósticoBolsa",
+    "shareActivePredictions": "Compartir Predicciones Activas",
+    "shareByTimeframe": "Compartir por Marco de Tiempo",
+    "noPredictionsForTimeframe": "No hay predicciones activas para este marco.",
+    "myUsername": "Mi",
+    "possessiveSuffix": "s",
+    "my_last": "Mis últimos",
+    "last": "últimos",
+    "results": "Resultados",
+    "results_other": "Resultados"
+  },
+  "editprofile_telegram_label": "Enlace de Telegram",
+  "editprofile_telegram_placeholder": "https://t.me/tuusuario",
+  "shareModal.title": "Compartir",
+  "shareModal.shareOnX": "Compartir en X (Twitter)",
+  "shareModal.shareOnTelegram": "Compartir en Telegram",
+  "prediction.share_title": "Compartir",
+  "badge.shareTitle": "Compartir insignia",
+  "badge.shareButton": "Compartir",
+  "footer": {
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "terms": "Términos de Servicio",
+    "privacy": "Política de Privacidad",
+    "copyright": "Todos los derechos reservados.",
+    "whitepaper": "Libro Blanco"
+  },
+  "globalSearch": {
+    "placeholder": "Buscar acciones..."
+  },
+  "goldenFeed": {
+    "newTag": "NUEVO",
+    "attachedPrediction": "Predicción Adjunta:",
+    "loading": "Cargando Feed...",
+    "exclusiveContentTitle": "Contenido Exclusivo",
+    "exclusiveContentDescription": "Únete a los suscriptores de {{username}} para ver su feed privado, que incluye justificaciones detalladas de predicciones y análisis de mercado.",
+    "joinButton": "Unirse por ${{price}}/mes",
+    "noPosts": "{{username}} aún no ha publicado ningún contenido exclusivo."
+  },
+  "goldenMemberModal": {
+    "title": "Configuración de Miembro Dorado",
+    "priceLabel": "Precio Mensual ($1 - $500)",
+    "descriptionLabel": "Descripción",
+    "defaultDescription": "¡Obtén información exclusiva y apoya mis predicciones!",
+    "acceptingNewLabel": "Aceptar Nuevos Suscriptores",
+    "updateSuccess": "¡Configuración de Miembro Dorado actualizada!",
+    "updateFail": "No se pudo actualizar la configuración.",
+    "deactivateSuccess": "Estado de Miembro Dorado desactivado.",
+    "deactivateFail": "No se pudieron actualizar los ajustes.",
+    "updateButton": "Actualizar Ajustes",
+    "activateButton": "Activar Membresía Dorada",
+    "deactivateButton": "Desactivar",
+    "onboarding": {
+      "actionRequired": "Acción requerida: Completar registro en Stripe",
+      "connectPrompt": "Necesitas conectar tu cuenta de Stripe para recibir pagos de los suscriptores.",
+      "complete": "✅ Cuenta de Stripe conectada y lista para recibir pagos",
+      "tooltip": "Por favor, completa el registro en Stripe antes de actualizar la configuración.",
+      "connectButton": "Conectar con Stripe",
+      "processingButton": "Procesando...",
+      "websiteTip": "Consejo: Stripe requiere un sitio web de negocios. Puede usar su URL de perfil público a continuación.",
+      "copiedUrl": "¡URL del perfil copiada!",
+      "documentTitle": "Verificación de Identidad requerida",
+      "documentPrompt": "Para seguir cumpliendo, Stripe requiere un documento de identidad (p. ej., pasaporte o licencia). Sus pagos se pausan hasta que lo proporcione.",
+      "resolveRestrictions": "Subir Documentos requeridos"
+    }
+  },
+  "goldenPostForm": {
+    "title": "Crear Publicación Dorada",
+    "messagePlaceholder": "Comparte tu análisis exclusivo con tus suscriptores...",
+    "attachPredictionLabel": "Adjuntar una Predicción",
+    "stockLabel": "Acción",
+    "targetPriceLabel": "Precio Objetivo",
+    "typeLabel": "Tipo",
+    "hourly": "Por Hora",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "quarterly": "Trimestral",
+    "yearly": "Anual",
+    "cancelButton": "Cancelar",
+    "postingButton": "Publicando...",
+    "postButton": "Publicar",
+    "emptyMessageError": "El mensaje de la publicación no puede estar vacío.",
+    "fetchPriceError": "No se pudo obtener el precio de {{ticker}}.",
+    "createSuccess": "¡Publicación Dorada publicada!",
+    "createFail": "No se pudo crear la publicación."
+  },
+  "header": {
+    "aiWizard": "Asistente de Cartera IA",
+    "watchlist": "Lista de Seguimiento",
+    "goldenFeed": "Feed Dorado",
+    "explore": "Explorar",
+    "scoreboard": "Tabla de Clasificación",
+    "makePrediction": "Hacer una Predicción",
+    "userMenu": {
+      "myProfile": "Mi Perfil",
+      "invite": "Invitar y Ganar",
+      "settings": "Ajustes",
+      "admin": "Admin",
+      "logout": "Cerrar Sesión"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "noNew": "No hay notificaciones nuevas.",
+      "clearAll": "Limpiar todo",
+      "clearSuccess": "¡Notificaciones limpiadas!",
+      "clearError": "Error al limpiar."
+    },
+    "mobileMenu": {
+      "myProfile": "Mi Perfil",
+      "watchlist": "Lista de Seguimiento",
+      "goldenFeed": "Feed Dorado",
+      "explore": "Explorar",
+      "scoreboard": "Clasificación",
+      "settings": "Ajustes",
+      "adminPanel": "Panel de Admin",
+      "logout": "Cerrar Sesión",
+      "login": "Iniciar Sesión",
+      "aiWizard": "Asistente de Cartera IA"
+    },
+    "buttons": {
+      "login": "Iniciar Sesión",
+      "logout": "Cerrar Sesión",
+      "makePrediction": "Hacer una Predicción"
+    }
+  },
+  "advanced_settings": "Configuración Avanzada",
+  "notifications": {
+    "type": {
+      "newPrediction": "Nueva Predicción",
+      "newFollower": "Nuevo Seguidor",
+      "badgeEarned": "Insignia Ganada",
+      "goldenPost": "Publicación Dorada",
+      "priceChange": "Cambio de Precio",
+      "predictionAssessed": "Predicción Evaluada",
+      "newReferral": "Nueva Referencia"
+    },
+    "desc": {
+      "newPrediction": "Recibe una notificación cuando alguien a quien sigues haga una predicción",
+      "newFollower": "Recibe una notificación cuando alguien te siga",
+      "badgeEarned": "Recibe una notificación cuando ganes una nueva insignia",
+      "goldenPost": "Recibe una notificación cuando un Miembro Dorado a quien sigues publique",
+      "priceChange": "Recibe una notificación cuando un Miembro Dorado cambie su precio",
+      "predictionAssessed": "Recibe una notificación cuando se califique tu predicción",
+      "newReferral": "Recibe una notificación cuando alguien se una usando tu código"
+    },
+    "newPrediction": "{{username}} hizo una predicción {{predictionType}} sobre {{stockTicker}}.",
+    "newFollower": "{{username}} ha comenzado a seguirte.",
+    "goldenPost": "{{username}} ha publicado un nuevo Post Dorado.",
+    "badgeEarnedSelf": "¡Felicidades! Has ganado la insignia {{tier}} {{badgeName}}.",
+    "badgeEarnedFollower": "¡{{username}} ha ganado la insignia {{tier}} {{badgeName}}!",
+    "predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo {{rating}} puntos!",
+    "priceChange": "El precio de la suscripción de {{creatorName}} cambiará de ${{oldPrice}} a ${{newPrice}} el {{effectiveDate}}."
+  },
+  "hourlyWinnersFeed": {
+    "title": "Ganadores de la Última Hora",
+    "nextResults": "Próximos resultados en: {{timeLeft}}",
+    "marketClosed": "Mercado Cerrado",
+    "noPredictions": "Aún no hay predicciones evaluadas.",
+    "ratingSuffix": "+{{rating}} pts"
+  },
+  "infoModal": {
+    "title": "Explicación del Bono por Tiempo",
+    "description": "Para recompensar el análisis temprano, se aplica una penalización basada en el tiempo a las predicciones. La puntuación máxima que puedes lograr con una predicción disminuye a medida que se acerca la fecha límite.",
+    "hourlyPredictions": {
+      "title": "Predicciones por Hora:",
+      "description": "La penalización se aplica minuto a minuto. Los primeros 10 minutos no tienen penalización (Puntuación Máx.: 100). La penalización aumenta linealmente hasta los últimos 10 minutos de la hora, donde la Puntuación Máx. es 80."
+    },
+    "dailyPredictions": {
+      "title": "Predicciones Diarias:",
+      "description": "La penalización se aplica a lo largo del día de negociación. Las predicciones hechas justo en la apertura del mercado tienen el mayor potencial de puntuación."
+    },
+    "longerTermPredictions": {
+      "title": "Predicciones a Largo Plazo:",
+      "description": "Para predicciones Semanales, Mensuales y de mayor duración, la penalización es proporcional al porcentaje del período de predicción que ya ha transcurrido."
+    },
+    "closeButton": "Cerrar"
+  },
+  "joinGoldenModal": {
+    "title": "Unirse a los Suscriptores de {{username}}",
+    "pricePerMonth": "{{price}} / mes",
+    "whatYouGet": "Lo que obtienes:",
+    "noDescription": "No se proporcionó descripción.",
+    "joinButton": "Unirse Ahora",
+    "joinButtonWithPrice": "Unirse por ${{price}}/mes",
+    "cancelAnytime": "Puedes cancelar en cualquier momento.",
+    "toast": {
+      "success": "¡Ahora estás suscrito a {{username}}!",
+      "error": "No se pudo unir. Por favor, inténtalo de nuevo."
+    },
+    "successTitle": "¡Suscripción exitosa!",
+    "successDescription": "Ahora tienes acceso al feed exclusivo de {{username}}.",
+    "successButton": "¡Genial!"
+  },
+  "loginPromptModal": {
+    "title": "Únete a la Comunidad",
+    "description": "Cree una cuenta para hacer predicciones, seguir a los mejores predictores y escalar en las tablas de clasificación.",
+    "signUpWithGoogle": "Registrarse con Google"
+  },
+  "longTermLeaders": {
+    "title": "Líderes a Largo Plazo",
+    "description": "(Basado en la precisión Trimestral y Anual)",
+    "noData": "Aún no hay datos.",
+    "accuracyLabel": "Prom."
+  },
+  "performanceChart": {
+    "title": "Gráfico de Rendimiento",
+    "filters": {
+      "overall": "General",
+      "hourly": "Por Hora",
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "quarterly": "Trimestral",
+      "yearly": "Anual"
+    },
+    "tooltip": {
+      "avgRating": "Rating Prom.: {{rating}}",
+      "predictions": "{{count}} Predicciones",
+      "stocks": "Acciones: {{tickers}}"
+    },
+    "noData": "No hay datos de rendimiento para este filtro."
+  },
+  "performanceTabs": {
+    "shareOnX": "Compartir en X",
+    "shareText": {
+      "byStock": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de ${{ticker}} en StockPredictorAI! A ver si puedes superarme.",
+      "byType": "¡Estoy en el puesto n.º {{rank}} por mis predicciones de tipo '{{type}}' en StockPredictorAI! Echa un vistazo a mis estadísticas."
+    },
+    "tabs": {
+      "byType": "Por Tipo",
+      "byStock": "Por Acción"
+    },
+    "statCard": {
+      "averageScore": "Rating Promedio",
+      "rank": "RANGO",
+      "topRankTitle": "Rango Top {{rank}}"
+    },
+    "noData": {
+      "byType": "No hay datos disponibles para los tipos de predicción.",
+      "byStock": "No hay datos disponibles para acciones individuales."
+    }
+  },
+  "predictionJourney": {
+    "initial": "Inicial",
+    "target": "Objetivo",
+    "currentPriceTooltip": "{{priceLabel}}: {{value}}"
+  },
+  "predictionModal": {
+    "confirmationTitle": "¿Estás seguro?",
+    "closeButtonAria": "Cerrar modal"
+  },
+  "predictionTypes": {
+    "modalTitle": "Explicación de Tipos de Predicción",
+    "overall": "General",
+    "all": "Todos",
+    "hourly": "Por Hora",
+    "hourlyDescription": "Predice el precio de la acción para el final de la hora de negociación actual o siguiente. Ideal para la volatilidad a corto plazo.",
+    "daily": "Diario",
+    "dailyDescription": "Predice el precio de la acción para el final del día de negociación actual o siguiente. Un marco de tiempo clásico para los movimientos diarios del mercado.",
+    "weekly": "Semanal",
+    "weeklyDescription": "Predice el precio de la acción para el final de la semana de negociación actual (viernes). Bueno para seguir las tendencias semanales.",
+    "monthly": "Mensual",
+    "monthlyDescription": "Predice el precio de la acción para el final del mes calendario actual. Ideal para capturar el impulso mensual.",
+    "quarterly": "Trimestral",
+    "quarterlyDescription": "Predice el precio de la acción para el final del trimestre fiscal actual (ej. Marzo, Junio, Septiembre, Diciembre).",
+    "yearly": "Anual",
+    "yearlyDescription": "Predice el precio de la acción para el final del año calendario actual. Una predicción a largo plazo para cambios importantes en el mercado."
+  },
+  "common": {
+    "close": "Cerrar",
+    "score": "Puntuación",
+    "dataDelayed": "Datos con hasta 15 minutos de retraso",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copiedLink": "¡Enlace copiado!",
+    "accuracy": "Precisión",
+    "target": "Objetivo",
+    "actual": "Actual"
+  },
+  "prediction": {
+    "makePrediction": "Hacer una Predicción",
+    "searchPlaceholder": "Buscar una acción (ej. AAPL)",
+    "searching": "Buscando...",
+    "currentPrice": "Precio Actual",
+    "na": "N/D",
+    "type": "Tipo",
+    "learnMore": "Aprende más sobre los tipos de predicción",
+    "targetPrice": "Precio Objetivo",
+    "rationale": "Justificación (Opcional)",
+    "rationalePlaceholder": "¿Cuál es su razonamiento para este movimiento de precios?",
+    "placePrediction": "Realizar Predicción",
+    "maxRating": "Puntuación Máx.: {{rating}}",
+    "confirmationMessage": "Su predicción de {{price}} representa un cambio de {{percent}}, que es superior al rango típico de {{limit}} %. ¿Está seguro?",
+    "limitReached": "Has alcanzado el límite diario de {{limit}} predicciones.",
+    "submitFailed": "Error al enviar la predicción.",
+    "priceDelayInfo": "Los precios tienen un retraso de hasta 15 minutos.",
+    "submitting": "Enviando...",
+    "submitSuccess": "¡Predicción para {{symbol}} enviada!",
+    "priceUnavailable": {
+      "title": "Datos de precios en vivo no disponibles",
+      "description": "No pudimos recuperar el precio en vivo para este activo en este momento. Esto puede ocurrir durante alta volatilidad del mercado o breves interrupciones de la API.",
+      "button": "Probar con otra acción"
+    },
+    "duplicateError": "Ya tiene una predicción {{type}} activa para {{ticker}}.",
+    "targetHit": "🎯 Objetivo Alcanzado"
+  },
+  "scoreboard": {
+    "title": "Tabla de Clasificación",
+    "trophy": "🏆",
+    "loadError": "No se pudieron cargar los datos de la tabla de clasificación.",
+    "predictionType": "Tipo de Predicción",
+    "filterStock": "Filtrar por Acción",
+    "avgScore": "Rating Promedio",
+    "noUsers": "No se encontraron usuarios para estos filtros.",
+    "noUsersHint": "Intenta ampliar tus criterios de búsqueda.",
+    "rank": "Rango: {{number}}",
+    "currentPrice": "Precio Actual: ${{price}}"
+  },
+  "stockChart": {
+    "loading": "Cargando Gráfico...",
+    "priceLabel": "Precio de {{ticker}}"
+  },
+  "stockFilterSearch": {
+    "placeholder": "ej. AAPL"
+  },
+  "stockSearch": {
+    "title": "Buscar Activo",
+    "placeholder": "Buscar acciones, criptomonedas...",
+    "loading": "Cargando...",
+    "errorNoResults": "No se encontraron resultados.",
+    "errorFetchFailed": "No se pudieron obtener los resultados de la búsqueda.",
+    "errorQuoteFailed": "No se pudo obtener la cotización de la acción.",
+    "errorQuoteNotFound": "No se pudo recuperar la cotización de {{symbol}}. Por favor, intente con otro símbolo.",
+    "dataDelayed": "Datos con hasta 15 minutos de retraso"
+  },
+  "timePenaltyBar": {
+    "label": "Bono por Tiempo",
+    "infoAriaLabel": "Aprende más sobre el Bono por Tiempo"
+  },
+  "topMovers": {
+    "loading": "Cargando Principales Movimientos...",
+    "title": "Acciones en Tendencia"
+  },
+  "verificationModal": {
+    "title": "Conviértase en un Predictor Verificado",
+    "description": "Gane credibilidad y visibilidad en la comunidad con una insignia verificada.",
+    "benefits": {
+      "greenCheck": "Obtenga una marca de verificación verde junto a su nombre en todo el sitio.",
+      "verifiedFilter": "Sus predicciones se destacan en el filtro \"Solo Verificados\" en la página Explorar.",
+      "verifiedExpert": "Sea recomendado como Experto Verificado en las páginas de Lista de Seguimiento relevantes."
+    },
+    "button": "Verificar por {{price}}",
+    "successDescriptionGeneric": "Tu insignia de verificación ya está activa."
+  },
+  "verifiedStatusModal": {
+    "title": "¡Eres un Predictor Verificado!",
+    "description": "Has aumentado la confianza y la visibilidad en la comunidad.",
+    "closeButton": "Cerrar",
+    "removeButton": "Eliminar estado de verificación"
+  },
+  "verifiedTick": {
+    "ariaLabel": "Predictor Verificado",
+    "title": "Predictor Verificado",
+    "description": "Este usuario es un miembro verificado de la comunidad, lo que indica un compromiso con la plataforma."
+  },
+  "watchlistShowcase": {
+    "title": "Lista de Seguimiento",
+    "viewStock": "Ver {{stock}}",
+    "noStocks": "Este usuario aún no sigue ninguna acción."
+  },
+  "watchlistPage": {
+    "loading": "Cargando tu lista de seguimiento...",
+    "title": "Mi lista de seguimiento",
+    "searchPlaceholder": "Busca acciones para seguir (ej. AAPL)...",
+    "emptyWatchlist": {
+      "title": "Tu lista de seguimiento está vacía.",
+      "description": "Busca una acción arriba para empezar a seguirla."
+    },
+    "activePredictions": "Predicciones activas para {{ticker}}",
+    "filterByTypeLabel": "Filtrar por tipo",
+    "sortByLabel": "Ordenar por",
+    "sortOptions": {
+      "date": "Más recientes",
+      "votes": "Más votadas",
+      "potential": "Mayor potencial"
+    },
+    "noPredictions": "No hay predicciones activas que coincidan con tus filtros.",
+    "loadMore": "Cargar más",
+    "recommendedPredictors": "Predictores recomendados",
+    "noRecommendedUsers": "Aún no hay predictores destacados para esta acción.",
+    "avgScoreLabel": "Rating promedio: ",
+    "followingButton": "Seguir",
+    "toast": {
+      "loadingAdd": "Agregando {{ticker}}...",
+      "loadingRemove": "Eliminando {{ticker}}...",
+      "successUpdate": "Lista de seguimiento actualizada con éxito.",
+      "errorUpdate": "Error al actualizar.",
+      "errorLoadWatchlist": "No se pudo cargar la lista de seguimiento.",
+      "loadingFollow": "Siguiendo al usuario...",
+      "successFollow": "¡Usuario seguido!",
+      "errorFollow": "No se pudo seguir al usuario."
+    },
+    "editButton": "Editar Orden",
+    "doneButton": "Hecho",
+    "addStockModal": {
+      "title": "Añadir a la lista de seguimiento",
+      "searchLabel": "Buscar una acción",
+      "addButton": "Añadir"
+    },
+    "duplicateError": "{{ticker}} ya está en tu lista de seguimiento."
+  },
+  "watchlistStockCard": {
+    "removeButtonTitle": "Eliminar {{symbol}} de la lista de seguimiento"
+  },
+  "predictionWidgetMessages": {
+    "openingHourPrediction": "Predicción para la hora de apertura",
+    "marketClosed": "El mercado está cerrado actualmente",
+    "forDate": "Para el {{date}}",
+    "maxRating": "Puntuación Máx.: {{rating}}",
+    "invalidType": "Seleccione un tipo de predicción válido."
+  },
+  "profile": {
+    "loading": "Cargando perfil...",
+    "userNotFound": "Usuario no encontrado.",
+    "stripeActionRequired": "🚨 Acción requerida: Sus pagos han sido pausados. Haga clic para resolver."
+  },
+  "predictionStatus": {
+    "Active": "Activo",
+    "Assessed": "Evaluado"
+  },
+  "editPredictionModal": {
+    "title": "Editar predicción para {{ticker}}",
+    "newTargetPriceLabel": "Nuevo precio objetivo",
+    "reasonLabel": "Motivo de la actualización (opcional)",
+    "reasonPlaceholder": "Nueva información, cambio de mercado, etc.",
+    "cancelButton": "Cancelar",
+    "savingButton": "Guardando...",
+    "saveButton": "Guardar cambios",
+    "successToast": "¡Predicción actualizada con éxito!",
+    "errorToast": "No se pudo actualizar la predicción."
+  },
+  "predictionHistoryModal": {
+    "title": "Historial de ediciones para {{ticker}}",
+    "initialReason": "Predicción inicial",
+    "chartLabelPredicted": "Precio previsto",
+    "chartLabelActual": "Precio real en la actualización",
+    "tabHistory": "Historial",
+    "tabChart": "Gráfico"
+  },
+  "aggressiveness": {
+    "title": "Estilo de Predicción",
+    "defensive": "Defensivo",
+    "neutral": "Neutral",
+    "offensive": "Ofensivo",
+    "noData": "No hay predicciones recientes con datos suficientes."
+  },
+  "aggressivenessInfoModal": {
+    "title": "Entendiendo el Estilo de Predicción",
+    "description": "Este medidor analiza el nivel de riesgo de las predicciones de un usuario. Los umbrales para cada estilo cambian según el plazo de la predicción.",
+    "defensiveTitle": "Defensivo",
+    "defensiveText": "Predicciones cautelosas con pequeños precios objetivo, centradas en la consistencia (ej. <3% para Diario, <15% para Anual).",
+    "neutralTitle": "Neutral",
+    "neutralText": "Predicciones moderadamente ambiciosas que equilibran el riesgo con la recompensa potencial.",
+    "offensiveTitle": "Ofensivo",
+    "offensiveText": "Predicciones audaces de alto riesgo con grandes precios objetivo (ej. >7% para Diario, >35% para Anual)."
+  },
+  "badges": {
+    "market_maven": {
+      "name": "Maestro del Mercado",
+      "description": "Otorgado por una alta precisión general en las predicciones de todo tipo."
+    },
+    "hourly_hotshot": {
+      "name": "Experto Horario",
+      "description": "Maestría en predicciones a corto plazo, por hora."
+    },
+    "daily_oracle": {
+      "name": "Oráculo Diario",
+      "description": "Sobresalió en la predicción de los movimientos diarios del mercado."
+    },
+    "weekly_strategist": {
+      "name": "Estratega Semanal",
+      "description": "Habilidad demostrada en predicciones de una semana de duración."
+    },
+    "monthly_maven": {
+      "name": "Experto Mensual",
+      "description": "Capacidad probada para pronosticar las tendencias del mercado durante un mes."
+    },
+    "quarterly_visionary": {
+      "name": "Visionario Trimestral",
+      "description": "Previsión en predicciones a largo plazo, trimestrales."
+    },
+    "yearly_legend": {
+      "name": "Leyenda Anual",
+      "description": "Habilidad excepcional para pronosticar los resultados del mercado a un año."
+    },
+    "tiers": {
+      "Gold": "Oro",
+      "Silver": "Plata",
+      "Bronze": "Bronce"
+    }
+  },
+  "badgeDetailModal": {
+    "shareButton": "Compartir",
+    "shareTweet": "¡Acabo de ganar la insignia '{{name}}' de nivel {{tier}}! {{icon}} Sigue mis predicciones: "
+  },
+  "market_watch": {
+    "title": "Vigilancia del mercado",
+    "unavailable": "Los datos del mercado en vivo no están disponibles temporalmente."
+  },
+  "time": {
+    "days": "d",
+    "hours": "h",
+    "minutes": "m",
+    "seconds": "s"
+  },
+  "completeProfile": {
+    "title": "Elija su nombre de usuario",
+    "subtitle": "El nombre de usuario <1>{{username}}</1> ya está en uso. Por favor, elige uno diferente para completar tu registro.",
+    "usernameLabel": "Nombre de usuario",
+    "completeButton": "Completar registro",
+    "savingButton": "Guardando...",
+    "error": {
+      "empty": "El nombre de usuario no puede estar vacío.",
+      "taken": "Este nombre de usuario ya está en uso. Por favor, elige otro.",
+      "generic": "Ocurrió un error.",
+      "failed": "No se pudo completar el registro. Por favor, inténtalo de nuevo."
+    }
+  },
+  "explore_load_more": "Load More",
+  "find_member_wizard": {
+    "trigger_title": "Encuentre su Mentor Dorado perfecto",
+    "trigger_description": "Responda algunas preguntas rápidas sobre su estilo de inversión y le recomendaremos los Miembros Dorados que mejor se adapten a usted.",
+    "trigger_button": "Iniciar el Asistente",
+    "wizard_title": "Asistente de Recomendación",
+    "step1_title": "Paso 1: Acciones de Interés",
+    "step1_description": "Díganos qué acciones le interesa más seguir. Esto nos ayuda a encontrar expertos que se centran en lo que a usted le importa.",
+    "stock_search_placeholder": "Buscar acciones (ej. AAPL, TSLA)...",
+    "step2_title": "Paso 2: Su Tolerancia al Riesgo",
+    "step2_description": "¿Cuánto riesgo está dispuesto a asumir? Esto nos ayuda a encontrar pronosticadores que compartan su estilo.",
+    "step3_title": "Paso 3: Su Horizonte de Inversión",
+    "step3_description": "¿Busca operaciones rápidas o inversiones a largo plazo?",
+    "horizon_short": "Corto plazo",
+    "horizon_long": "Largo plazo",
+    "horizon_all": "Todos los Horizontes",
+    "step4_title": "Sus Mejores Recomendaciones",
+    "step4_description": "Según sus respuestas, aquí están los Miembros Dorados que creemos que encontrará más valiosos.",
+    "find_button": "Buscar Recomendaciones",
+    "loading_recommendations": "Analizando Miembros Dorados...",
+    "error_recommendations": "No se pudieron obtener las recomendaciones. Por favor, inténtelo de nuevo más tarde.",
+    "no_recommendations": "No se encontraron miembros que coincidan con sus criterios específicos. Intente ampliar su búsqueda.",
+    "match_rate": "Coincidencia",
+    "skip_step": "Omitir",
+    "error_recommendations_generic": "Ocurrió un error al generar las recomendaciones."
+  },
+  "common_cancel": "Cancelar",
+  "common_next": "Siguiente",
+  "common_back": "Atrás",
+  "common_close": "Cerrar",
+  "stockPage": {
+    "chart": {
+      "unavailableTitle": "Datos del gráfico no disponibles",
+      "unavailableDescription": "No pudimos cargar los datos históricos de precios en este momento. Por favor, inténtelo de nuevo más tarde.",
+      "lazyTitle": "Mostrar historial de precios de 90 días",
+      "lazyButton": "Cargar gráfico"
+    }
+  },
+  "followers": {
+    "unfollowing": "Dejando de seguir...",
+    "unfollowSuccess": "¡Has dejado de seguir al usuario!",
+    "unfollowError": "No se pudo dejar de seguir al usuario."
+  },
+  "paymentSuccess": {
+    "toastSuccess": "¡Pago exitoso! Tu verificación ya está activa.",
+    "errorSession": "No se pudo verificar la sesión del usuario.",
+    "errorFetchUser": "Error al obtener los datos del usuario.",
+    "title": "¡Éxito!",
+    "redirecting": "Tu pago ha sido procesado. Redirigiendo a tu perfil...",
+    "verifyingSession": "Verificando sesión...",
+    "goNow": "Ir ahora"
+  },
+  "sentiment": {
+    "title": "Sentimiento de la Comunidad",
+    "subtitle": "¿Qué está pensando la multitud?",
+    "based_on_count": "Basado en {{count}} predicciones",
+    "question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
+    "hourly": "Por hora",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "quarterly": "Trimestral",
+    "yearly": "Anual"
+  },
+  "editprofile_username_empty": "El nombre de usuario no puede estar vacío.",
+  "analystRating.pointsAwarded": "¡+5 Rating de Analista!",
+  "analystRatingInfo.title": "Rating de Analista Explicado",
+  "analystRatingInfo.description": "Tu 'Rating de Analista' es una medida de tus valiosas contribuciones a la plataforma. Este rating determina tu parte del Fondo de Creadores.",
+  "analystRatingInfo.section1.title": "1. Predicciones de Alta Calidad (+2 a +10 Rating)",
+  "analystRatingInfo.section1.text": "Ganas puntos de Rating de Analista por cada predicción que se evalúa con alta precisión (Puntuación > 70). Cuanto mayor sea tu puntuación, más puntos ganarás. Esto recompensa la calidad sobre la cantidad.",
+  "analystRatingInfo.section2.title": "2. Ganar Insignias (+100 a +500 Rating)",
+  "analystRatingInfo.section2.text": "Cuando ganas una nueva insignia (p. ej., 'Estratega Semanal'), recibes una gran bonificación única de rating. Las insignias de Oro proporcionan una bonificación mayor que las de Plata o Bronce.",
+  "analystRatingInfo.section3.title": "3. Compartir Contenido (+5 Rating)",
+  "analystRatingInfo.section3.text": "Recibes una pequeña bonificación de rating cuando compartes tus rangos o insignias. Esto está limitado para prevenir el spam.",
+  "analystRatingInfo.section4.title": "4. Rangos en la Clasificación",
+  "analystRatingInfo.section4.text": "Ganas grandes bonificaciones periódicas por clasificarte en el Top 100 de cualquier tabla de clasificación. Los puntos se ponderan por la competencia: un rango Top 10 en una acción popular (como $AAPL) vale más que un rango Top 10 en una tranquila. Los rangos por hora/día se comprueban cada 15 minutos; los rangos a largo plazo (semanal, mensual) se comprueban en sus respectivos horarios.",
+  "analystRatingInfo.section5.title": "5. Referidos",
+  "analystRatingInfo.section5.text": "Ganará una bonificación de rating significativa por invitar a usuarios nuevos y activos a la plataforma.",
+  "referralModal.title": "Invitar y Ganar",
+  "referralModal.description": "Invita a amigos a StockPredictorAI. ¡Cuando se registren, ganarás 500 puntos de Rating de Analista!",
+  "referralModal.copied": "¡Enlace copiado al portapapeles!",
+  "referralModal.copy": "Copiar",
+  "referralModal.share": "Compartir en X",
+  "referralModal.shareTweet": "¡Únete a mí en StockPredictorAI y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.  #NASDAQ #Stock $TSLA $NVDA $GOOGL $AMZN $AAPL $BTC #Gold",
+  "referralModal.shareOnTelegram": "Compartir en Telegram",
+  "referralModal.shareTelegram": "¡Únete a mí en StockPredictorAI y empieza a hacer predicciones de mercado! Podemos ganar una parte de los ingresos de la plataforma solo por ser precisos.  #NASDAQ #Stock $TSLA $NVDA $GOOGL $AMZN $AAPL $BTC #Gold",
+  "analystRating.pie.predictions": "De Predicciones",
+  "analystRating.pie.badges": "De Insignias",
+  "analystRating.pie.shares": "De Compartidos",
+  "analystRating.pie.ranks": "De Rangos",
+  "analystRating.pie.referrals": "De Referidos",
+  "common.back": "Volver",
+  "sentiment.question": "¿Cuál es el precio objetivo {{type}} de la comunidad para {{ticker}}?",
+  "sentiment.based_on_count": "Basado en {{count}} predicciones",
+  "prediction_timeframes": {
+    "hourly": "final de la hora",
+    "daily": "final del día",
+    "weekly": "final de la semana",
+    "monthly": "final de mes",
+    "quarterly": "final de trimestre",
+    "yearly": "final de año"
+  },
+  "profile_avg_rating": "Rating Prom.",
+  "rating_explained_title": "Explicación del Rating",
+  "rating_explained_text1": "Nuestra plataforma utiliza un **Sistema de Rating por Proximidad** para recompensar la precisión. En lugar de un simple \"correcto\" o \"incorrecto\", su rating se basa en qué tan cerca estuvo su predicción del resultado real.",
+  "rating_explained_text2": "Por ejemplo, si una acción está a 152 $ y predice 150 $, recibirá un rating mucho más alto que alguien que predijo 180 $. Este sistema está diseñado para recompensar el análisis reflexivo sobre las conjeturas aleatorias. El rating máximo para una predicción perfecta es 100, y disminuye cuanto más se aleja su predicción del precio final.",
+  "notifications.predictionAssessed": "¡Tu predicción {{predictionType}} en {{stockTicker}} obtuvo un rating de {{rating}}!",
+  "hourlyWinnersFeed.ratingSuffix": "+{{rating}} Rating",
+  "performanceChart.avgRatingLabel": "Rating Prom.",
+  "performanceChart.tooltip.avgRating": "Rating Prom.: {{rating}}",
+  "performanceTabs.statCard.averageRating": "Rating Promedio",
+  "badgeInfoModal.ratingLabel": "Rating > {{rating}}",
+  "common.rating": "Rating",
+  "text_avg_rating": "Rating Prom.",
+  "Final Rating": "Rating Final",
+  "Live Rating": "Rating en Vivo",
+  "Rating at Close": "Rating al Cierre",
+  "creatorPoolModal.clickShares": "Haga clic en una sección para ver un desglose detallado.",
+  "creatorPoolModal.predictionsBreakdownTitle": "Desglose de Rating: Predicciones",
+  "creatorPoolModal.sharesBreakdownTitle": "Desglose de Rating: Compartidos",
+  "creatorPoolModal.badgesBreakdownTitle": "Desglose de Rating: Insignias",
+  "creatorPoolModal.ranksBreakdownTitle": "Desglose de Rating: Rangos",
+  "analystRating.pie.labels.frompredictions": "De Predicciones",
+  "analystRating.pie.labels.frombadges": "De Insignias",
+  "analystRating.pie.labels.fromshares": "De Compartidos",
+  "analystRating.pie.labels.fromranks": "De Rangos",
+  "analystRating.pie.labels.fromreferrals": "De Referidos",
+  "analystRating.pie.labels.fromsummary": "Del Resumen Inteligente",
+  "analystRating.pie.labels.market_maven": "Experto del Mercado",
+  "analystRating.pie.labels.daily_oracle": "Oráculo Diario",
+  "analystRating.pie.labels.hourly_hotshot": "Experto Horario",
+  "analystRating.pie.labels.weekly_strategist": "Estratega Semanal",
+  "analystRating.pie.labels.monthly_maven": "Experto Mensual",
+  "analystRating.pie.labels.quarterly_visionary": "Visionario Trimestral",
+  "analystRating.pie.labels.yearly_legend": "Leyenda Anual",
+  "analystRating.pie.labels.overall": "Rango General",
+  "analystRating.pie.labels.hourly": "Rango Horario",
+  "analystRating.pie.labels.daily": "Rango Diario",
+  "analystRating.pie.labels.weekly": "Rango Semanal",
+  "analystRating.pie.labels.monthly": "Rango Mensual",
+  "analystRating.pie.labels.quarterly": "Rango Trimestral",
+  "analystRating.pie.labels.yearly": "Rango Anual",
+  "creatorPoolModal.breakdownTitle": "Detalles del Desglose",
+  "creatorPoolModal.loading": "Cargando clasificación...",
+  "notifications.newReferral": "¡{{username}} se registró con tu enlace de referido! +{{points}} Rating de Analista.",
+  "notifications.types.NewReferral": "Nuevo Referido",
+  "header.dashboard": "Panel",
+  "aim.title": "Encuentre Perspectivas Probadas. <0>Monetice sus Predicciones del Mercado.</0>",
+  "promoBanner.creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de bonificación</1> y obtenga su parte de los ingresos de la plataforma solo por sus contribuciones. <2>Unirse ahora</2>",
+  "promoBanner.joinNow": "Unirse ahora",
+  "analystRating.pie.bonus": "Bono",
+  "analystRating.pie.labels.frombonus": "Bono",
+  "seo": {
+    "default": {
+      "title": "StockPredictorAI - Prediga el Mercado, Siga su Precisión",
+      "description": "Únase a la comunidad de StockPredictorAI para hacer predicciones de acciones, seguir su precisión y seguir a los analistas con mejor rendimiento. Regístrese para construir su historial."
+    },
+    "explore_page": {
+      "title": "Explorar Predicciones de Acciones y Analistas Top | StockPredictorAI",
+      "description": "Explore las últimas predicciones de acciones activas y evaluadas de la comunidad de StockPredictorAI. Filtre por acción, período de tiempo y vea quiénes son los mejores."
+    },
+    "stock_page": {
+      "title": "Predicciones y Sentimiento de {{name}} ({{ticker}}) | StockPredictorAI",
+      "description": "Vea las últimas predicciones y el sentimiento de la comunidad para {{name}} ({{ticker}}). Únase a la conversación y haga su propia predicción de acciones en StockPredictorAI."
+    },
+    "prediction_page": {
+      "title": "Predicción {{type}} de {{username}} para {{ticker}} | StockPredictorAI",
+      "description": "Vea la predicción {{type}} de {{username}} para {{ticker}}. ¿Está de acuerdo o en desacuerdo? Vote sobre su predicción y vea el análisis completo en StockPredictorAI."
+    },
+    "profile_page": {
+      "title": "Perfil e Historial de Predicciones de {{username}} | StockPredictorAI",
+      "description": "Vea el perfil completo, historial de predicciones, insignias y rating de analista de {{username}} en StockPredictorAI. Sígalo para recibir actualizaciones sobre sus nuevas predicciones."
+    }
+  },
+  "common.accept": "Aceptar",
+  "common.decline": "Rechazar",
+  "common.cookieConsent": "Este sitio web utiliza cookies para mejorar la experiencia del usuario. Al aceptar, usted acepta nuestro uso de cookies para análisis y referencias.",
+  "promoBanner": {
+    "creatorPoolText": "💰 <strong>¡Únase como Usuario Pionero!</strong> Regístrese ahora para ganar <1>+1.000 puntos de Rating de Analista</1> y obtenga su parte de los ingresos de la plataforma.",
+    "joinNow": "Unirse ahora",
+    "whyJoin": "¿Por qué unirse?"
+  },
+  "benefitsModal": {
+    "title": "Desbloquee la Experiencia Completa",
+    "subtitle": "Únase a la comunidad para predecir, seguir y ganar.",
+    "predict": {
+      "title": "Hacer Predicciones",
+      "desc": "Construya un historial transparente y demuestre sus habilidades."
+    },
+    "notify": {
+      "title": "Notificaciones Inteligentes",
+      "desc": "Reciba alertas cuando sus analistas favoritos hagan un movimiento."
+    },
+    "watchlist": {
+      "title": "Lista de Seguimiento Personalizada",
+      "desc": "Siga acciones específicas y vea el sentimiento de la comunidad en vivo."
+    },
+    "earn": {
+      "title": "Obtener Ingresos",
+      "desc": "Los mejores rendimientos comparten el 50% de las ganancias de la plataforma a través del Fondo de Creadores."
+    },
+    "footer": "Registrarse es 100% gratuito. No se requiere tarjeta de crédito."
+  },
+  "profile_views_label": "Vistas",
+  "earningsBanner": {
+    "headline": "INFORME DE RESULTADOS:",
+    "message": "El próximo informe de resultados de {{ticker}} es este {{day}}.",
+    "makePrediction": "Hacer una predicción",
+    "viewStock": "Ver página de acciones de {{ticker}}"
+  },
+  "summary": {
+    "default_intro": "Entusiasta del mercado de valores explorando nuevas oportunidades.",
+    "veteran": "Un veterano experimentado desde {{year}} con una gran experiencia en el mercado.",
+    "active_trader": "Un operador activo construyendo un historial sólido desde {{year}}.",
+    "rising_star": "Una estrella en ascenso que se unió en {{year}} y está comenzando su viaje.",
+    "top_rank": "¡Actualmente clasificado #{{rank}} en la tabla de clasificación mundial! 🏆",
+    "top_100": "Un rendimiento de primer nivel, actualmente dentro del top 100 mundial.",
+    "high_accuracy": "Construye predicciones altamente precisas con una impresionante calificación promedio de {{rating}}.",
+    "solid_history": "Mantiene un historial de predicciones sólido con una calificación confiable de {{rating}}.",
+    "stock_superpowers": "Muestra una precisión excepcional al analizar {{stocks}}.",
+    "expert_short_term": "Se especializa en movimientos del mercado a corto plazo.",
+    "expert_long_term": "Sobresale en la previsión de tendencias a largo plazo.",
+    "style_aggressive": "Prefiere oportunidades de alto crecimiento y alto riesgo.",
+    "style_conservative": "Adopta un enfoque calculado y constante en los mercados.",
+    "style_balanced": "Mantiene una estrategia de cartera equilibrada.",
+    "influencer": "Seguido por {{count}} inversores que confían en sus conocimientos.",
+    "community_builder": "Construyendo una comunidad dedicada de {{count}} seguidores.",
+    "golden_member": "Un Miembro Dorado premium que ofrece conocimientos exclusivos del mercado.",
+    "new_trader": "Un nuevo operador listo para dejar su huella en el mercado.",
+    "market_oracle": "Oráculo del Mercado: Tiene una habilidad asombrosa para predecir el próximo movimiento del mercado.",
+    "trend_spotter": "Detector de Tendencias: Excelente para identificar la dirección correcta del mercado."
+  },
+  "smart_summary_title": "Resumen Inteligente",
+  "share_summary_label": "Compartir este resumen",
+  "share_message_intro": "¡Echa un vistazo a este perfil de operador en StockPredictorAI!",
+  "smart_summary_btn": "Resumen Inteligente",
+  "direction_accuracy": {
+    "title": "Precisión de Dirección",
+    "noData": "Sin predicciones evaluadas",
+    "info": "Porcentaje de predicciones donde el precio se movió en la dirección prevista",
+    "details": "{{correct}}/{{total}} Correctas"
+  },
+  "directionAccuracyInfoModal": {
+    "title": "Entendiendo la Precisión de Dirección",
+    "description": "Esta métrica muestra con qué frecuencia un usuario predice correctamente si el precio subirá o bajará, independientemente del precio objetivo exacto.",
+    "howItWorks": "Cómo funciona",
+    "explanation": "Si un usuario predice un aumento de precio y el precio realmente sube (incluso si no alcanza el objetivo), cuenta como una predicción direccional correcta. Lo mismo se aplica para las predicciones de bajada de precio."
+  },
+  "smart_banner": {
+    "app_name": "StockPredictorAI",
+    "description": "Obtén la aplicación para una mejor experiencia",
+    "install": "Instalar"
+  }
 }

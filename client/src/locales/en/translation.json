@@ -1249,5 +1249,10 @@
     "closeResultButton": "Close Result",
     "labelDaily": "Daily",
     "labelIntraday": "Intraday"
+  },
+  "smart_banner": {
+    "app_name": "StockPredictorAI",
+    "description": "Get the app for a better experience",
+    "install": "Install"
   }
 }

@@ -1252,5 +1252,10 @@
     "closeResultButton": "Sonucu Kapat",
     "labelDaily": "Günlük",
     "labelIntraday": "Gün İçi"
+  },
+  "smart_banner": {
+    "app_name": "StockPredictorAI",
+    "description": "Daha iyi bir deneyim için uygulamayı indirin",
+    "install": "İndir"
   }
 }

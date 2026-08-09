@@ -1238,5 +1238,10 @@
     "closeResultButton": "परिणाम बंद करें",
     "labelDaily": "दैनिक",
     "labelIntraday": "इंट्राडे"
+  },
+  "smart_banner": {
+    "app_name": "StockPredictorAI",
+    "description": "बेहतर अनुभव के लिए ऐप प्राप्त करें",
+    "install": "इंस्टॉल करें"
   }
 }

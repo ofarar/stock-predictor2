@@ -17,6 +17,7 @@ import EarningsBanner from './components/EarningsBanner';
 import Footer from './components/Footer';
 import FeatureRoute from './components/FeatureRoute';
 import AdminRoute from './components/AdminRoute';
+import SmartAppBanner from './components/SmartAppBanner';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Capacitor } from '@capacitor/core';
@@ -234,6 +235,7 @@ function App() {
 
       CapacitorApp.addListener('appUrlOpen', data => {
         const url = new URL(data.url);
+        // Auth success handler
         if (url.protocol === 'stockpredictorai:' && url.host === 'auth-success') {
           const token = url.searchParams.get('token');
           if (token) {
@@ -244,6 +246,14 @@ function App() {
               })
               .catch(err => console.error('Mobile auth failed', err));
           }
+        } 
+        // Deep link handler for https://stockpredictorai.com or https://www.stockpredictorai.com
+        else if (url.hostname === 'stockpredictorai.com' || url.hostname === 'www.stockpredictorai.com') {
+           const path = url.pathname + url.search;
+           if (path && path !== window.location.pathname + window.location.search) {
+              window.history.pushState(null, '', path);
+              window.dispatchEvent(new Event('popstate'));
+           }
         }
       });
     }
@@ -326,6 +336,7 @@ function App() {
       />
       <ScrollToTop />
       <CanonicalTag />
+      <SmartAppBanner />
       <Elements stripe={stripePromise}>
         <PullToRefreshWrapper>
           <div className="min-h-screen bg-gray-900 text-gray-200 font-sans flex flex-col">

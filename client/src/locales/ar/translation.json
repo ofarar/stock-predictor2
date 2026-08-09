@@ -1237,5 +1237,10 @@
     "closeResultButton": "إغلاق النتيجة",
     "labelDaily": "يومي",
     "labelIntraday": "خلال اليوم"
+  },
+  "smart_banner": {
+    "app_name": "StockPredictorAI",
+    "description": "احصل على التطبيق لتجربة أفضل",
+    "install": "تثبيت"
   }
 }

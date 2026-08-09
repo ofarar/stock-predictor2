@@ -1253,5 +1253,10 @@
     "closeResultButton": "Resultaat Sluiten",
     "labelDaily": "Dagelijks",
     "labelIntraday": "Intradag"
+  },
+  "smart_banner": {
+    "app_name": "StockPredictorAI",
+    "description": "Download de app voor een betere ervaring",
+    "install": "Installeren"
   }
 }
