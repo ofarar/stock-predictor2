@@ -80,26 +80,8 @@ router.post('/users/mark-creator-pool-seen', async (req, res) => {
     try {
         await User.findByIdAndUpdate(req.user._id, { hasSeenCreatorPoolAnimation: true });
         res.status(200).send();
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Calculate extra stats if needed, or just return the user
-        // For the profile page, we usually need prediction counts, etc.
-        // But for now, let's return the user object as the frontend likely expects.
-
-        // We might need to calculate the 'rank' or other dynamic properties here
-        // if they aren't stored directly on the user document.
-
-        const userObj = user.toObject();
-
-        // Get prediction count
-        const predictionCount = await Prediction.countDocuments({ userId: user._id });
-        userObj.predictionCount = predictionCount;
-
-        res.json(userObj);
     } catch (err) {
-        console.error("Error fetching user profile:", err);
+        console.error("Error marking creator pool as seen:", err);
         res.status(500).json({ message: 'Server error' });
     }
 });

@@ -1,6 +1,7 @@
 // src/components/GoldenPostForm.js
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import StockFilterSearch from './StockFilterSearch';
@@ -95,7 +96,7 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
 
     const predictionTypes = ['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={onClose}>
             <div className="relative bg-gray-800 p-6 rounded-lg w-full max-w-lg" onClick={e => e.stopPropagation()}>
                 <h2 className="text-2xl font-bold text-white mb-4">{t('goldenPostForm.title')}</h2>
@@ -163,7 +164,8 @@ const GoldenPostForm = ({ isOpen, onClose, onPostCreated }) => {
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

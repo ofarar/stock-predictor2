@@ -135,7 +135,6 @@ router.post('/connect/create-account', async (req, res) => {
             type: 'express',
             email: user.email,
             capabilities: {
-                card_payments: { requested: true },
                 transfers: { requested: true }, // Required for payouts
             },
             business_type: 'individual',
