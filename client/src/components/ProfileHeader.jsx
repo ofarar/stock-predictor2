@@ -2,6 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 import VerifiedTick from './VerifiedTick';
 import QuantSystemInfoModal from './QuantSystemInfoModal';
 
@@ -17,14 +19,32 @@ const ProfileHeader = React.forwardRef(({ profileData, currentUser, isOwnProfile
     const usernameWithoutLastWord = usernameParts.join(' '); // Get the rest
     // --- End: Logic to split username ---
     const hasRestrictions = user.stripeConnectRestrictions || false;
+    const [isResolvingStripe, setIsResolvingStripe] = React.useState(false);
+
+    const handleResolveStripe = async () => {
+        setIsResolvingStripe(true);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/stripe/connect/onboarding-link`, {}, { withCredentials: true });
+            window.location.href = res.data.url;
+        } catch (err) {
+            console.error("Error creating onboarding link:", err);
+            toast.error(err.response?.data?.message || 'Error resolving Stripe restrictions.');
+        } finally {
+            setIsResolvingStripe(false);
+        }
+    };
 
     return (
         <div className="relative flex flex-col md:flex-row items-center gap-6 bg-gray-800 p-6 rounded-lg mb-8">
             {/* NEW WARNING BANNER: Show only if it's the owner AND they have restrictions */}
             {isOwnProfile && hasRestrictions && (
-                <div className="absolute top-0 start-0 end-0 bg-red-600 p-2 text-center text-white text-sm font-bold rounded-t-lg">
-                    {t('profile.stripeActionRequired')}
-                </div>
+                <button
+                    onClick={handleResolveStripe}
+                    disabled={isResolvingStripe}
+                    className="absolute top-0 start-0 end-0 bg-red-600 p-2 text-center text-white text-sm font-bold rounded-t-lg hover:bg-red-700 cursor-pointer disabled:opacity-75 transition-colors w-full"
+                >
+                    {isResolvingStripe ? '...' : t('profile.stripeActionRequired')}
+                </button>
             )}
             {/* Settings Icon (Top Right) - Only for own profile */}
             {isOwnProfile && (
