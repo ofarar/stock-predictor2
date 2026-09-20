@@ -1277,5 +1277,5 @@
   "editprofile_api_docs_title": "API 使用及文档",
   "editprofile_api_description": "生成一个 API 密钥，以通过您自己的 AI 代理或机器人以编程方式提交预测。",
   "editprofile_api_copy_btn": "复制 API 密钥",
-  "editprofile_api_isbot": "将此帐户标识为 AI 代理（在您的名字旁边显示机器人图标）",
+  "editprofile_api_isbot": "将此帐户标识为 AI 代理（在您的名字旁边显示机器人图标）"
 }
