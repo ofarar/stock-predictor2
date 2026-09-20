@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/User');
@@ -40,6 +41,20 @@ const viewLimiter = rateLimit({
     windowMs: VIEW_WINDOW_MS, // 1 hour
     max: VIEW_LIMIT,
     message: 'Too many requests.',
+});
+
+// POST: Generate API Key
+router.post('/generate-api-key', async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not logged in' });
+    
+    try {
+        const apiKey = crypto.randomBytes(32).toString('hex');
+        await User.findByIdAndUpdate(req.user._id, { apiKey: apiKey });
+        res.status(200).json({ apiKey });
+    } catch (error) {
+        console.error('API Key generation error:', error);
+        res.status(500).json({ message: 'Failed to generate API Key.' });
+    }
 });
 
 // POST: Contact form
@@ -380,7 +395,7 @@ router.put('/profile', async (req, res) => {
         return res.status(401).send('You must be logged in.');
     }
     try {
-        const { username, about, youtubeLink, xLink, avatar, telegramLink } = req.body;
+        const { username, about, youtubeLink, xLink, avatar, telegramLink, isBot } = req.body;
 
         const sanitizedUpdate = {
             username: xss(username),
@@ -391,6 +406,10 @@ router.put('/profile', async (req, res) => {
             country: xss(req.body.country),
             avatar: xss(avatar)
         };
+
+        if (isBot !== undefined) {
+            sanitizedUpdate.isBot = isBot;
+        }
 
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,

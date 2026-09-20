@@ -71,9 +71,35 @@ router.get('/predictions', async (req, res) => {
     }
 });
 
+// Middleware for API Key Authentication
+const apiAuthMiddleware = async (req, res, next) => {
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey) {
+        const user = await User.findOne({ apiKey });
+        if (user) {
+            req.user = user;
+        }
+    }
+    next();
+};
+
 // POST: Create a new prediction
-router.post('/predict', predictLimiter, async (req, res) => {
-    if (!req.user) return res.status(401).send('You must be logged in.');
+router.post('/predict', apiAuthMiddleware, predictLimiter, async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'You must be logged in.' });
+
+    const { stockTicker, targetPrice, deadline, predictionType, description, maxRatingAtCreation } = req.body;
+
+    // --- Strict API Validation ---
+    const errors = [];
+    if (!stockTicker || typeof stockTicker !== 'string') errors.push("stockTicker is required and must be a string");
+    if (targetPrice === undefined || typeof targetPrice !== 'number' || targetPrice <= 0) errors.push("targetPrice is required and must be a positive number");
+    if (!predictionType || !['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'].includes(predictionType)) errors.push("predictionType is invalid (Hourly, Daily, Weekly, Monthly, Quarterly, Yearly)");
+    if (!deadline || isNaN(Date.parse(deadline))) errors.push("deadline is required and must be a valid ISO Date string");
+
+    if (errors.length > 0) {
+        return res.status(400).json({ message: "Validation Error", errors });
+    }
+    // --- End Validation ---
 
     try {
         const settings = await Setting.findOne();
@@ -100,7 +126,6 @@ router.post('/predict', predictLimiter, async (req, res) => {
         user = await User.findByIdAndUpdate(req.user._id, dailyCountUpdate, { new: true }).populate('followers', 'notificationSettings');
         // --- End Daily Limit Check ---
 
-        const { stockTicker, targetPrice, deadline, predictionType, description, maxRatingAtCreation } = req.body;
         const sanitizedDescription = xss(description);
 
         // --- Check for existing active prediction ---
@@ -270,9 +295,8 @@ router.post('/prediction/:id/view', viewLimiter, async (req, res) => {
 });
 
 // GET: Explore feed (paginated predictions)
-// GET: Explore feed (paginated predictions)
 router.get('/explore/feed', async (req, res) => {
-    const { status = 'Active', stock, predictionType, sortBy = 'date', verifiedOnly, page = 1, limit = 20 } = req.query;
+    const { status = 'Active', stock, predictionType, sortBy = 'date', verifiedOnly, isBot = 'All', page = 1, limit = 20 } = req.query;
     let userId = req.user ? req.user._id.toString() : null;
     let guestId = req.cookies.guest_id;
 
@@ -290,12 +314,22 @@ router.get('/explore/feed', async (req, res) => {
         if (predictionType && predictionType !== 'All') matchQuery.predictionType = predictionType;
 
         let pipeline = [];
-        if (verifiedOnly === 'true') {
+        const needsUserDetails = verifiedOnly === 'true' || isBot !== 'All';
+        
+        if (needsUserDetails) {
             pipeline.push(
                 { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
-                { $unwind: '$userDetails' },
-                { $match: { 'userDetails.isVerified': true } }
+                { $unwind: '$userDetails' }
             );
+            
+            if (verifiedOnly === 'true') {
+                pipeline.push({ $match: { 'userDetails.isVerified': true } });
+            }
+            if (isBot === 'True') {
+                pipeline.push({ $match: { 'userDetails.isBot': true } });
+            } else if (isBot === 'False') {
+                pipeline.push({ $match: { 'userDetails.isBot': { $ne: true } } });
+            }
         }
 
         pipeline.push({ $match: matchQuery });
@@ -312,7 +346,7 @@ router.get('/explore/feed', async (req, res) => {
             } else {
                 sortStage = { voteScore: -1, createdAt: -1 };
             }
-            if (verifiedOnly !== 'true') {
+            if (!needsUserDetails) {
                 pipeline.push(
                     { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userDetails' } },
                     { $unwind: '$userDetails' }
@@ -409,7 +443,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
         })
             .sort({ rating: -1 })
             .limit(3)
-            .populate('userId', 'username avatar isGoldenMember isVerified');
+            .populate('userId', 'username avatar isGoldenMember isVerified isBot');
 
         const formattedWinners = winners.map(p => ({
             predictionId: p._id,
@@ -418,6 +452,7 @@ router.get('/widgets/hourly-winners', async (req, res) => {
             avatar: p.userId.avatar,
             isGoldenMember: p.userId.isGoldenMember,
             isVerified: p.userId.isVerified,
+            isBot: p.userId.isBot,
             ticker: p.stockTicker,
             rating: p.rating || p.score || 0.0
         }));
@@ -448,6 +483,7 @@ router.get('/widgets/daily-leaders', async (req, res) => {
                     avatar: '$user.avatar',
                     isGoldenMember: '$user.isGoldenMember',
                     isVerified: '$user.isVerified',
+                    isBot: '$user.isBot',
                     _id: 0
                 }
             }
@@ -474,6 +510,7 @@ router.get('/widgets/long-term-leaders', async (req, res) => {
                     avatar: '$user.avatar',
                     isGoldenMember: '$user.isGoldenMember',
                     isVerified: '$user.isVerified',
+                    isBot: '$user.isBot',
                     _id: 0
                 }
             }

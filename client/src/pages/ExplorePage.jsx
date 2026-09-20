@@ -141,7 +141,7 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(searchParams.get('status') || 'Active');
-    const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date', verifiedOnly: false });
+    const [filters, setFilters] = useState({ stock: '', predictionType: 'All', sortBy: 'date', verifiedOnly: false, isBot: 'All' });
     const [descModal, setDescModal] = useState({ isOpen: false, description: '' });
     // --- FIX: REMOVED currentUser state ---
     // const [currentUser, setCurrentUser] = useState(user); 
@@ -196,7 +196,7 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
     useEffect(() => {
         setPage(1);
         fetchPredictions(1, true);
-    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, fetchPredictions]);
+    }, [activeTab, filters.stock, filters.predictionType, filters.sortBy, filters.verifiedOnly, filters.isBot, fetchPredictions]);
 
     useEffect(() => {
         if (page > 1) {
@@ -309,7 +309,7 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
 
                 <h1 className="text-3xl font-bold text-white mb-6">{t('explore_title')}</h1>
                 <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                             <label className="block text-xs font-bold text-gray-400 mb-1">{t('explore_filter_stock')}</label>
                             <StockFilterSearch onStockSelect={(stock) => handleFilterChange('stock', stock)} />
@@ -331,6 +331,14 @@ const ExplorePage = ({ requestLogin, settings, user, isAuthLoading }) => { // <-
                                 <option value="performance">{t('explore_sort_by_performance')}</option>
                                 <option value="votes">{t('explore_sort_by_votes')}</option>
                                 {activeTab === 'Active' && <option value="potential">{t('explore_sort_by_potential')}</option>}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-1">{t('explore_user_type', 'User Type')}</label>
+                            <select onChange={(e) => handleFilterChange('isBot', e.target.value)} value={filters.isBot} className="w-full bg-gray-700 text-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="All">{t('explore_bot_all', 'All Users')}</option>
+                                <option value="False">{t('explore_bot_humans', 'Humans Only')}</option>
+                                <option value="True">{t('explore_bot_ai', 'AI Agents Only')}</option>
                             </select>
                         </div>
                     </div>

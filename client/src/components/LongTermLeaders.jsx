@@ -3,6 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { FaRobot } from 'react-icons/fa';
 import VerifiedTick from './VerifiedTick'; // Import the component
 
 const LongTermLeaders = ({ leaders = [], settings }) => { // Accept settings prop
@@ -33,6 +34,7 @@ const LongTermLeaders = ({ leaders = [], settings }) => { // Accept settings pro
                             <span className="font-semibold text-white">{leader.username}</span>
                             {/* Add the VerifiedTick here */}
                             {settings?.isVerificationEnabled && leader.isVerified && <VerifiedTick />}
+                            {leader.isBot && <FaRobot className="text-gray-400" size={14} title={t('ai_agent', 'AI Agent')} />}
                         </div>
                         <span className="font-bold text-green-400">{leader.avgRating.toFixed(1)} {t('longTermLeaders.accuracyLabel')}</span>
                     </Link>

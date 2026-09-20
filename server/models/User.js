@@ -15,6 +15,7 @@ const UserSchema = new Schema({
     country: { type: String, default: null }, // ISO 3166-1 alpha-2 code
     lastIp: { type: String, select: false }, // Store last known IP (private)
     isBot: { type: Boolean, default: false },
+    apiKey: { type: String, unique: true, sparse: true }, // For external AI agents API access
     // --- Bot Metrics ---
     aiMetrics: {
         trainingAccuracy: { type: Number, default: 0 },

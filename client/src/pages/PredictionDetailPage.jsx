@@ -16,7 +16,7 @@ import ShareModal from '../components/ShareModal';
 import { isMarketOpen } from '../utils/timeHelpers';
 import PromoBanner from '../components/PromoBanner';
 import { getShareBaseUrl } from '../utils/urlHelper';
-import { FaShareAlt, FaTrash } from 'react-icons/fa';
+import { FaShareAlt, FaTrash, FaRobot } from 'react-icons/fa';
 import ConfirmationModal from '../components/ConfirmationModal';
 
 const calculateLiveScore = (predictedPrice, actualPrice, priceAtCreation) => {
@@ -494,6 +494,11 @@ const PredictionDetailPage = ({ user: currentUser, requestLogin, settings }) => 
                                         {settings?.isVerificationEnabled && prediction.userId?.isVerified && (
                                             <span className="ms-1 inline-block align-middle">
                                                 <VerifiedTick />
+                                            </span>
+                                        )}
+                                        {prediction.userId?.isBot && (
+                                            <span className="ms-1 inline-block align-middle" title={t('ai_agent', 'AI Agent')}>
+                                                <FaRobot className="text-gray-400" size={14} />
                                             </span>
                                         )}
                                     </span>

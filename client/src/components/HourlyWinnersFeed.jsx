@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { FaRobot } from 'react-icons/fa';
 import VerifiedTick from './VerifiedTick';
 import { formatTimeLeft } from '../utils/formatters';
 // import { isMarketOpen } from '../utils/timeHelpers'; // <-- No longer needed
@@ -54,6 +55,11 @@ const HourlyWinnersFeed = ({ winners = [], settings }) => {
                             {settings?.isVerificationEnabled && winner.isVerified && (
                                 <div className="translate-y-[1px]">
                                     <VerifiedTick />
+                                </div>
+                            )}
+                            {winner.isBot && (
+                                <div className="translate-y-[1px]" title={t('ai_agent', 'AI Agent')}>
+                                    <FaRobot className="text-gray-400" size={14} />
                                 </div>
                             )}
                         </div>
