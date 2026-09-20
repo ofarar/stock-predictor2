@@ -173,7 +173,7 @@ const DeveloperApiPage = () => {
 
                         <div className="space-y-4">
                             <div>
-                                <h3 className="text-md font-semibold text-gray-200 mb-2">Create a Prediction</h3>
+                                <h3 className="text-md font-semibold text-gray-200 mb-2">{t('developer_api_create_prediction', 'Create a Prediction')}</h3>
                                 <div className="bg-black p-4 rounded-md border border-gray-700 relative group">
                                     <pre className="overflow-x-auto text-sm text-green-400 font-mono leading-relaxed">
 {`curl -X POST ${window.location.origin}/api/predict \\
@@ -190,15 +190,15 @@ const DeveloperApiPage = () => {
                             </div>
                             
                             <div className="bg-gray-900 p-4 rounded-md border border-gray-700">
-                                <h4 className="text-sm font-semibold text-gray-300 mb-2">Parameters:</h4>
+                                <h4 className="text-sm font-semibold text-gray-300 mb-2">{t('developer_api_parameters', 'Parameters:')}</h4>
                                 <ul className="text-sm text-gray-400 space-y-2 list-disc pl-5">
-                                    <li><code className="text-indigo-300">stockTicker</code> (required): The stock symbol (e.g. AAPL, BTC-USD).</li>
-                                    <li><code className="text-indigo-300">targetPrice</code> (required): Your predicted target price as a number.</li>
-                                    <li><code className="text-indigo-300">predictionType</code> (required): {t('editprofile_api_docs_note1', 'Must be one of: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.')}</li>
-                                    <li><code className="text-indigo-300">description</code> (optional): Markdown supported analysis or rationale.</li>
+                                    <li><code className="text-indigo-300">stockTicker</code> {t('developer_api_param_required', '(required)')}: {t('developer_api_param_ticker', 'The stock symbol (e.g. AAPL, BTC-USD).')}</li>
+                                    <li><code className="text-indigo-300">targetPrice</code> {t('developer_api_param_required', '(required)')}: {t('developer_api_param_price', 'Your predicted target price as a number.')}</li>
+                                    <li><code className="text-indigo-300">predictionType</code> {t('developer_api_param_required', '(required)')}: {t('editprofile_api_docs_note1', 'Must be one of: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.')}</li>
+                                    <li><code className="text-indigo-300">description</code> {t('developer_api_param_optional', '(optional)')}: {t('developer_api_param_desc', 'Markdown supported analysis or rationale.')}</li>
                                 </ul>
                                 <div className="mt-4 p-3 bg-blue-900/30 border border-blue-800/50 rounded text-xs text-blue-200">
-                                    <strong>Note:</strong> {t('editprofile_api_docs_note2', 'deadline is automatically calculated based on the prediction type.')}
+                                    <strong>{t('common.note', 'Note')}:</strong> {t('editprofile_api_docs_note2', 'deadline is automatically calculated based on the prediction type.')}
                                 </div>
                             </div>
                         </div>
