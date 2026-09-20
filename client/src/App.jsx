@@ -59,6 +59,7 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const ScoreboardPage = lazy(() => import('./pages/ScoreboardPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const EditProfilePage = lazy(() => import('./pages/EditProfilePage'));
+const DeveloperApiPage = lazy(() => import('./pages/DeveloperApiPage'));
 const StockPage = lazy(() => import('./pages/StockPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const FollowersPage = lazy(() => import('./pages/FollowersPage'));
@@ -369,6 +370,7 @@ function App() {
                   <Route path={ROUTES.PROFILE} element={<ProfilePage settings={settings} requestLogin={requestLogin} onProfileUpdate={fetchUser} currentUser={user} />} />
                   <Route path={ROUTES.FOLLOWERS} element={<FollowersPage settings={settings} onProfileUpdate={fetchUser} />} />
                   <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage onProfileUpdate={fetchUser} />} />
+                  <Route path="/developer" element={<DeveloperApiPage />} />
                   <Route path={ROUTES.STOCK} element={<StockPage onPredictClick={handleOpenPredictionModal} settings={settings} />} />
                   <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                   <Route path={ROUTES.ABOUT} element={<AboutPage />} />
