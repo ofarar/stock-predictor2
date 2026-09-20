@@ -552,7 +552,8 @@
       "invite": "आमंत्रित करें और कमाएँ",
       "settings": "सेटिंग्स",
       "admin": "व्यवस्थापक",
-      "logout": "लॉग आउट करें"
+      "logout": "लॉग आउट करें",
+      "developerApi": "डेवलपर API"
     },
     "notifications": {
       "title": "सूचनाएं",
@@ -571,7 +572,8 @@
       "adminPanel": "व्यवस्थापक पैनल",
       "logout": "लॉग आउट करें",
       "login": "लॉग इन करें",
-      "aiWizard": "एआई पोर्टफोलियो सहायता"
+      "aiWizard": "एआई पोर्टफोलियो सहायता",
+      "developerApi": "डेवलपर API"
     },
     "buttons": {
       "login": "लॉग इन करें",
@@ -732,7 +734,8 @@
     "copiedLink": "लिंक कॉपी किया गया!",
     "accuracy": "सटीकता",
     "target": "लक्ष्य",
-    "actual": "वास्तविक"
+    "actual": "वास्तविक",
+    "note": "नोट"
   },
   "prediction": {
     "makePrediction": "भविष्यवाणी करें",
@@ -1243,5 +1246,24 @@
     "app_name": "StockPredictorAI",
     "description": "बेहतर अनुभव के लिए ऐप प्राप्त करें",
     "install": "इंस्टॉल करें"
-  }
+  },
+  "developer_api_title": "डेवलपर API",
+  "developer_api_subtitle": "StockPredictorAI के साथ अपने स्वयं के AI एजेंट, एल्गोरिदम और स्वचालित ट्रेडिंग बॉट बनाएं और एकीकृत करें।",
+  "developer_api_key_title": "प्रमाणीकरण",
+  "developer_bot_settings": "एजेंट सेटिंग्स",
+  "developer_api_isbot_title": "AI एजेंट के रूप में पहचानें",
+  "developer_api_docs_intro": "भविष्यवाणियों को स्वचालित करने के लिए हमारे REST API का उपयोग करें। सुनिश्चित करें कि आप अपनी API कुंजी सुरक्षित रखें और इसे क्लाइंट-साइड कोड में उजागर न करें।",
+  "developer_api_create_prediction": "भविष्यवाणी बनाएं",
+  "developer_api_parameters": "पैरामीटर:",
+  "developer_api_param_required": "(आवश्यक)",
+  "developer_api_param_optional": "(वैकल्पिक)",
+  "developer_api_param_ticker": "स्टॉक प्रतीक (उदा. AAPL, BTC-USD)।",
+  "developer_api_param_price": "एक संख्या के रूप में आपका अनुमानित लक्ष्य मूल्य।",
+  "developer_api_param_desc": "मार्कडाउन समर्थित विश्लेषण या तर्क।",
+  "editprofile_api_docs_note1": "इनमें से एक होना चाहिए: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly।",
+  "editprofile_api_docs_note2": "अंतिम तिथि (deadline) भविष्यवाणी के प्रकार के आधार पर स्वचालित रूप से गणना की जाती है।",
+  "editprofile_api_docs_title": "API उपयोग और दस्तावेज़ीकरण",
+  "editprofile_api_description": "अपने स्वयं के AI एजेंटों या बॉट के माध्यम से भविष्यवाणियां जमा करने के लिए एक API कुंजी बनाएं।",
+  "editprofile_api_copy_btn": "API कुंजी कॉपी करें",
+  "editprofile_api_isbot": "इस खाते को AI एजेंट के रूप में पहचानें (आपके नाम के आगे एक बॉट आइकन प्रदर्शित करता है)"
 }

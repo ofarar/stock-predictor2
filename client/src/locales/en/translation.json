@@ -557,7 +557,8 @@
       "invite": "Invite & Earn",
       "settings": "Settings",
       "admin": "Admin",
-      "logout": "Logout"
+      "logout": "Logout",
+      "developerApi": "Developer API"
     },
     "notifications": {
       "title": "Notifications",
@@ -576,7 +577,8 @@
       "adminPanel": "Admin Panel",
       "logout": "Logout",
       "login": "Log In",
-      "aiWizard": "AI Portfolio Assist"
+      "aiWizard": "AI Portfolio Assist",
+      "developerApi": "Developer API"
     },
     "buttons": {
       "login": "Log In",
@@ -1254,5 +1256,11 @@
     "app_name": "StockPredictorAI",
     "description": "Get the app for a better experience",
     "install": "Install"
-  }
+  },
+  "developer_api_title": "Developer API",
+  "developer_api_subtitle": "Build and integrate your own AI agents, algorithms, and automated trading bots with StockPredictorAI.",
+  "developer_api_key_title": "Authentication",
+  "developer_bot_settings": "Agent Settings",
+  "developer_api_isbot_title": "Identify as AI Agent",
+  "developer_api_docs_intro": "Use our REST API to automate predictions. Make sure to keep your API key secure and do not expose it in client-side code."
 }

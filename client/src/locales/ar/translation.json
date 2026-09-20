@@ -551,7 +551,8 @@
       "invite": "دعوة وكسب",
       "settings": "الإعدادات",
       "admin": "المشرف",
-      "logout": "تسجيل الخروج"
+      "logout": "تسجيل الخروج",
+      "developerApi": "डेवलपर API"
     },
     "notifications": {
       "title": "الإشعارات",
@@ -570,7 +571,8 @@
       "adminPanel": "لوحة المشرف",
       "logout": "تسجيل الخروج",
       "login": "تسجيل الدخول",
-      "aiWizard": "مساعد محفظة الذكاء الاصطناعي"
+      "aiWizard": "مساعد محفظة الذكاء الاصطناعي",
+      "developerApi": "डेवलपर API"
     },
     "buttons": {
       "login": "تسجيل الدخول",
@@ -731,7 +733,8 @@
     "copiedLink": "تم نسخ الرابط!",
     "accuracy": "الدقة",
     "target": "الهدف",
-    "actual": "الفعلي"
+    "actual": "الفعلي",
+    "note": "नोट"
   },
   "prediction": {
     "makePrediction": "قم بتوقع",
@@ -1242,5 +1245,24 @@
     "app_name": "StockPredictorAI",
     "description": "احصل على التطبيق لتجربة أفضل",
     "install": "تثبيت"
-  }
+  },
+  "developer_api_title": "واجهة المطورين",
+  "developer_api_subtitle": "قم ببناء ودمج وكلاء الذكاء الاصطناعي والخوارزميات وروبوتات التداول الآلي الخاصة بك مع StockPredictorAI.",
+  "developer_api_key_title": "المصادقة",
+  "developer_bot_settings": "إعدادات الوكيل",
+  "developer_api_isbot_title": "تحديد كوكيل ذكاء اصطناعي",
+  "developer_api_docs_intro": "استخدم واجهة برمجة تطبيقات REST الخاصة بنا لأتمتة التوقعات. تأكد من الحفاظ على أمان مفتاح واجهة برمجة التطبيقات الخاص بك ولا تكشفه في الكود من جانب العميل.",
+  "developer_api_create_prediction": "إنشاء توقع",
+  "developer_api_parameters": "المعلمات:",
+  "developer_api_param_required": "(مطلوب)",
+  "developer_api_param_optional": "(اختياري)",
+  "developer_api_param_ticker": "رمز السهم (مثل AAPL, BTC-USD).",
+  "developer_api_param_price": "السعر المستهدف المتوقع كرقم.",
+  "developer_api_param_desc": "تحليل أو منطق يدعم Markdown.",
+  "editprofile_api_docs_note1": "يجب أن يكون واحدًا من: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.",
+  "editprofile_api_docs_note2": "يتم حساب الموعد النهائي (deadline) تلقائيًا بناءً على نوع التوقع.",
+  "editprofile_api_docs_title": "استخدام واجهة برمجة التطبيقات والوثائق",
+  "editprofile_api_description": "قم بإنشاء مفتاح API لإرسال التوقعات برمجيًا عبر وكلاء الذكاء الاصطناعي أو الروبوتات الخاصة بك.",
+  "editprofile_api_copy_btn": "نسخ مفتاح API",
+  "editprofile_api_isbot": "تحديد هذا الحساب كوكيل ذكاء اصطناعي (يعرض أيقونة روبوت بجوار اسمك)"
 }

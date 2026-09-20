@@ -552,7 +552,8 @@
       "invite": "邀请并赚取",
       "settings": "设置",
       "admin": "管理员",
-      "logout": "登出"
+      "logout": "登出",
+      "developerApi": "开发者 API"
     },
     "notifications": {
       "title": "通知",
@@ -571,7 +572,8 @@
       "adminPanel": "管理面板",
       "logout": "登出",
       "login": "登录",
-      "aiWizard": "AI投资组合助手"
+      "aiWizard": "AI投资组合助手",
+      "developerApi": "开发者 API"
     },
     "buttons": {
       "login": "登录",
@@ -731,7 +733,8 @@
     "copiedLink": "链接已复制!",
     "accuracy": "准确率",
     "target": "目标",
-    "actual": "实际"
+    "actual": "实际",
+    "note": "注意"
   },
   "prediction": {
     "makePrediction": "做出预测",
@@ -1255,5 +1258,24 @@
     "app_name": "StockPredictorAI",
     "description": "获取应用程序以获得更好的体验",
     "install": "安装"
-  }
+  },
+  "developer_api_title": "开发者 API",
+  "developer_api_subtitle": "使用 StockPredictorAI 构建并集成您自己的 AI 代理、算法和自动交易机器人。",
+  "developer_api_key_title": "身份验证",
+  "developer_bot_settings": "代理设置",
+  "developer_api_isbot_title": "标识为 AI 代理",
+  "developer_api_docs_intro": "使用我们的 REST API 自动执行预测。请确保妥善保管您的 API 密钥，不要在客户端代码中暴露它。",
+  "developer_api_create_prediction": "创建预测",
+  "developer_api_parameters": "参数:",
+  "developer_api_param_required": "(必填)",
+  "developer_api_param_optional": "(可选)",
+  "developer_api_param_ticker": "股票代码 (例如 AAPL, BTC-USD)。",
+  "developer_api_param_price": "您预测的目标价格（数字形式）。",
+  "developer_api_param_desc": "支持 Markdown 的分析或理由。",
+  "editprofile_api_docs_note1": "必须是以下之一: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly。",
+  "editprofile_api_docs_note2": "截止时间 (deadline) 会根据预测类型自动计算。",
+  "editprofile_api_docs_title": "API 使用及文档",
+  "editprofile_api_description": "生成一个 API 密钥，以通过您自己的 AI 代理或机器人以编程方式提交预测。",
+  "editprofile_api_copy_btn": "复制 API 密钥",
+  "editprofile_api_isbot": "将此帐户标识为 AI 代理（在您的名字旁边显示机器人图标）",
 }

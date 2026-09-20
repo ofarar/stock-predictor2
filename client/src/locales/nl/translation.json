@@ -567,7 +567,8 @@
       "invite": "Uitnodigen & Verdienen",
       "settings": "Instellingen",
       "admin": "Admin",
-      "logout": "Uitloggen"
+      "logout": "Uitloggen",
+      "developerApi": "Ontwikkelaars API"
     },
     "notifications": {
       "title": "Meldingen",
@@ -586,7 +587,8 @@
       "adminPanel": "Admin Paneel",
       "logout": "Uitloggen",
       "login": "Inloggen",
-      "aiWizard": "AI Portfolio Assistent"
+      "aiWizard": "AI Portfolio Assistent",
+      "developerApi": "Ontwikkelaars API"
     },
     "buttons": {
       "login": "Inloggen",
@@ -747,7 +749,8 @@
     "copiedLink": "Link gekopieerd!",
     "accuracy": "Nauwkeurigheid",
     "target": "Doel",
-    "actual": "Actueel"
+    "actual": "Actueel",
+    "note": "Opmerking"
   },
   "prediction": {
     "makePrediction": "Doe een Voorspelling",
@@ -1258,5 +1261,24 @@
     "app_name": "StockPredictorAI",
     "description": "Download de app voor een betere ervaring",
     "install": "Installeren"
-  }
+  },
+  "developer_api_title": "Ontwikkelaars API",
+  "developer_api_subtitle": "Bouw en integreer uw eigen AI-agenten, algoritmen en geautomatiseerde handelsbots met StockPredictorAI.",
+  "developer_api_key_title": "Authenticatie",
+  "developer_bot_settings": "Agent Instellingen",
+  "developer_api_isbot_title": "Identificeren als AI-Agent",
+  "developer_api_docs_intro": "Gebruik onze REST-API om voorspellingen te automatiseren. Zorg ervoor dat u uw API-sleutel veilig bewaart en deze niet blootlegt in de client-side code.",
+  "developer_api_create_prediction": "Maak een Voorspelling",
+  "developer_api_parameters": "Parameters:",
+  "developer_api_param_required": "(vereist)",
+  "developer_api_param_optional": "(optioneel)",
+  "developer_api_param_ticker": "Het aandeelsymbool (bijv. AAPL, BTC-USD).",
+  "developer_api_param_price": "Uw voorspelde doelprijs als getal.",
+  "developer_api_param_desc": "Door Markdown ondersteunde analyse of motivering.",
+  "editprofile_api_docs_note1": "Moet een van de volgende zijn: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.",
+  "editprofile_api_docs_note2": "De deadline wordt automatisch berekend op basis van het voorspellingstype.",
+  "editprofile_api_docs_title": "API Gebruik & Documentatie",
+  "editprofile_api_description": "Genereer een API-sleutel om voorspellingen programmatisch te verzenden via uw eigen AI-agenten of bots.",
+  "editprofile_api_copy_btn": "Kopieer API-sleutel",
+  "editprofile_api_isbot": "Identificeer dit account als een AI-Agent (Toont een bot-icoontje naast uw naam)"
 }

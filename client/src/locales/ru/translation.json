@@ -552,7 +552,8 @@
       "invite": "Пригласить и Заработать",
       "settings": "Настройки",
       "admin": "Админ",
-      "logout": "Выйти"
+      "logout": "Выйти",
+      "developerApi": "API Разработчика"
     },
     "notifications": {
       "title": "Уведомления",
@@ -571,7 +572,8 @@
       "adminPanel": "Панель администратора",
       "logout": "Выйти",
       "login": "Войти",
-      "aiWizard": "ИИ-ассистент портфеля"
+      "aiWizard": "ИИ-ассистент портфеля",
+      "developerApi": "API Разработчика"
     },
     "buttons": {
       "login": "Войти",
@@ -731,7 +733,8 @@
     "copiedLink": "Ссылка скопирована!",
     "accuracy": "Точность",
     "target": "Цель",
-    "actual": "Фактический"
+    "actual": "Фактический",
+    "note": "Примечание"
   },
   "prediction": {
     "makePrediction": "Сделать прогноз",
@@ -1255,5 +1258,24 @@
     "app_name": "StockPredictorAI",
     "description": "Получите приложение для лучшего опыта",
     "install": "Установить"
-  }
+  },
+  "developer_api_title": "API Разработчика",
+  "developer_api_subtitle": "Создавайте и интегрируйте собственных ИИ-агентов, алгоритмы и ботов для автоматической торговли с помощью StockPredictorAI.",
+  "developer_api_key_title": "Аутентификация",
+  "developer_bot_settings": "Настройки Агента",
+  "developer_api_isbot_title": "Идентифицировать как ИИ-Агента",
+  "developer_api_docs_intro": "Используйте наш REST API для автоматизации прогнозов. Убедитесь, что ваш API-ключ находится в безопасности, и не раскрывайте его в клиентском коде.",
+  "developer_api_create_prediction": "Создать прогноз",
+  "developer_api_parameters": "Параметры:",
+  "developer_api_param_required": "(обязательно)",
+  "developer_api_param_optional": "(необязательно)",
+  "developer_api_param_ticker": "Символ акции (например, AAPL, BTC-USD).",
+  "developer_api_param_price": "Ваша целевая цена в виде числа.",
+  "developer_api_param_desc": "Анализ или обоснование с поддержкой Markdown.",
+  "editprofile_api_docs_note1": "Должно быть одним из: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.",
+  "editprofile_api_docs_note2": "Срок (deadline) рассчитывается автоматически на основе типа прогноза.",
+  "editprofile_api_docs_title": "Использование API и Документация",
+  "editprofile_api_description": "Сгенерируйте API-ключ для программной отправки прогнозов через ваших ИИ-агентов или ботов.",
+  "editprofile_api_copy_btn": "Скопировать API-ключ",
+  "editprofile_api_isbot": "Идентифицировать этот аккаунт как ИИ-Агента (рядом с вашим именем будет отображаться иконка бота)",
 }

@@ -553,7 +553,8 @@
       "invite": "Davet Et & Kazan",
       "settings": "Ayarlar",
       "admin": "Yönetici",
-      "logout": "Çıkış Yap"
+      "logout": "Çıkış Yap",
+      "developerApi": "Geliştirici API"
     },
     "notifications": {
       "title": "Bildirimler",
@@ -572,7 +573,8 @@
       "adminPanel": "Yönetici Paneli",
       "logout": "Çıkış Yap",
       "login": "Giriş Yap",
-      "aiWizard": "Yapay Zeka Portföy Asistanı"
+      "aiWizard": "Yapay Zeka Portföy Asistanı",
+      "developerApi": "Geliştirici API"
     },
     "buttons": {
       "login": "Giriş Yap",
@@ -732,7 +734,8 @@
     "copiedLink": "Link kopyalandı!",
     "accuracy": "Doğruluk",
     "target": "Hedef",
-    "actual": "Gerçek"
+    "actual": "Gerçek",
+    "note": "Not"
   },
   "prediction": {
     "makePrediction": "Tahmin Yap",
@@ -1257,5 +1260,24 @@
     "app_name": "StockPredictorAI",
     "description": "Daha iyi bir deneyim için uygulamayı indirin",
     "install": "İndir"
-  }
+  },
+  "developer_api_title": "Geliştirici API'si",
+  "developer_api_subtitle": "Kendi yapay zeka ajanlarınızı, algoritmalarınızı ve otomatik işlem botlarınızı StockPredictorAI ile oluşturun ve entegre edin.",
+  "developer_api_key_title": "Kimlik Doğrulama",
+  "developer_bot_settings": "Ajan Ayarları",
+  "developer_api_isbot_title": "Yapay Zeka Ajanı Olarak Tanımla",
+  "developer_api_docs_intro": "Tahminleri otomatikleştirmek için REST API'mizi kullanın. API anahtarınızı güvende tuttuğunuzdan emin olun ve asla istemci tarafı kodlarda paylaşmayın.",
+  "developer_api_create_prediction": "Tahmin Oluştur",
+  "developer_api_parameters": "Parametreler:",
+  "developer_api_param_required": "(zorunlu)",
+  "developer_api_param_optional": "(isteğe bağlı)",
+  "developer_api_param_ticker": "Hisse sembolü (örn. AAPL, BTC-USD).",
+  "developer_api_param_price": "Sayı formatında hedef fiyat tahmininiz.",
+  "developer_api_param_desc": "Markdown destekli analiz veya açıklama.",
+  "editprofile_api_docs_note1": "Şunlardan biri olmalıdır: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.",
+  "editprofile_api_docs_note2": "Bitiş süresi (deadline), tahmin türüne (prediction type) göre otomatik olarak hesaplanır.",
+  "editprofile_api_docs_title": "API Kullanımı ve Dokümantasyon",
+  "editprofile_api_description": "Kendi yapay zeka ajanlarınız veya botlarınız aracılığıyla programatik olarak tahmin göndermek için bir API anahtarı oluşturun.",
+  "editprofile_api_copy_btn": "API Anahtarını Kopyala",
+  "editprofile_api_isbot": "Bu hesabı bir Yapay Zeka Ajanı olarak tanımla (Adınızın yanında bir bot simgesi gösterir)",
 }

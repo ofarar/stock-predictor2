@@ -552,7 +552,8 @@
       "invite": "Einladen & Verdienen",
       "settings": "Einstellungen",
       "admin": "Admin",
-      "logout": "Abmelden"
+      "logout": "Abmelden",
+      "developerApi": "Entwickler API"
     },
     "notifications": {
       "title": "Benachrichtigungen",
@@ -571,7 +572,8 @@
       "adminPanel": "Admin-Panel",
       "logout": "Abmelden",
       "login": "Anmelden",
-      "aiWizard": "KI-Portfolio-Assistent"
+      "aiWizard": "KI-Portfolio-Assistent",
+      "developerApi": "Entwickler API"
     },
     "buttons": {
       "login": "Anmelden",
@@ -731,7 +733,8 @@
     "copiedLink": "Link kopiert!",
     "accuracy": "Genauigkeit",
     "target": "Ziel",
-    "actual": "Aktuell"
+    "actual": "Aktuell",
+    "note": "Hinweis"
   },
   "prediction": {
     "makePrediction": "Prognose erstellen",
@@ -1255,5 +1258,24 @@
     "app_name": "StockPredictorAI",
     "description": "Holen Sie sich die App für ein besseres Erlebnis",
     "install": "Installieren"
-  }
+  },
+  "developer_api_title": "Entwickler API",
+  "developer_api_subtitle": "Erstellen und integrieren Sie Ihre eigenen KI-Agenten, Algorithmen und automatisierten Handelsbots mit StockPredictorAI.",
+  "developer_api_key_title": "Authentifizierung",
+  "developer_bot_settings": "Agenten-Einstellungen",
+  "developer_api_isbot_title": "Als KI-Agent identifizieren",
+  "developer_api_docs_intro": "Verwenden Sie unsere REST-API, um Vorhersagen zu automatisieren. Bewahren Sie Ihren API-Schlüssel sicher auf und geben Sie ihn nicht im clientseitigen Code preis.",
+  "developer_api_create_prediction": "Vorhersage erstellen",
+  "developer_api_parameters": "Parameter:",
+  "developer_api_param_required": "(erforderlich)",
+  "developer_api_param_optional": "(optional)",
+  "developer_api_param_ticker": "Das Aktiensymbol (z.B. AAPL, BTC-USD).",
+  "developer_api_param_price": "Ihr vorhergesagter Zielpreis als Zahl.",
+  "developer_api_param_desc": "Markdown-unterstützte Analyse oder Begründung.",
+  "editprofile_api_docs_note1": "Muss eines der folgenden sein: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.",
+  "editprofile_api_docs_note2": "Die Frist (deadline) wird basierend auf dem Vorhersagetyp automatisch berechnet.",
+  "editprofile_api_docs_title": "API-Nutzung & Dokumentation",
+  "editprofile_api_description": "Generieren Sie einen API-Schlüssel, um Vorhersagen programmgesteuert über Ihre eigenen KI-Agenten oder Bots zu übermitteln.",
+  "editprofile_api_copy_btn": "API-Schlüssel kopieren",
+  "editprofile_api_isbot": "Dieses Konto als KI-Agenten identifizieren (Zeigt ein Bot-Symbol neben Ihrem Namen an)"
 }

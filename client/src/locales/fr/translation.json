@@ -553,7 +553,8 @@
       "invite": "Inviter & Gagner",
       "settings": "Paramètres",
       "admin": "Admin",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "developerApi": "API Développeur"
     },
     "notifications": {
       "title": "Notifications",
@@ -572,7 +573,8 @@
       "adminPanel": "Panneau d'Admin",
       "logout": "Déconnexion",
       "login": "Connexion",
-      "aiWizard": "Assistant de Portefeuille IA"
+      "aiWizard": "Assistant de Portefeuille IA",
+      "developerApi": "API Développeur"
     },
     "buttons": {
       "login": "Connexion",
@@ -732,7 +734,8 @@
     "copiedLink": "Lien copié !",
     "accuracy": "Précision",
     "target": "Cible",
-    "actual": "Actuel"
+    "actual": "Actuel",
+    "note": "Note"
   },
   "prediction": {
     "makePrediction": "Faire une Prédiction",
@@ -1256,5 +1259,24 @@
     "app_name": "StockPredictorAI",
     "description": "Obtenez l'application pour une meilleure expérience",
     "install": "Installer"
-  }
+  },
+  "developer_api_title": "API Développeur",
+  "developer_api_subtitle": "Créez et intégrez vos propres agents IA, algorithmes et bots de trading automatisés avec StockPredictorAI.",
+  "developer_api_key_title": "Authentification",
+  "developer_bot_settings": "Paramètres de l'Agent",
+  "developer_api_isbot_title": "S'identifier comme Agent IA",
+  "developer_api_docs_intro": "Utilisez notre API REST pour automatiser les prédictions. Assurez-vous de garder votre clé API sécurisée et de ne pas l'exposer dans le code côté client.",
+  "developer_api_create_prediction": "Créer une Prédiction",
+  "developer_api_parameters": "Paramètres:",
+  "developer_api_param_required": "(requis)",
+  "developer_api_param_optional": "(optionnel)",
+  "developer_api_param_ticker": "Le symbole de l'action (par ex. AAPL, BTC-USD).",
+  "developer_api_param_price": "Votre prix cible prédit en tant que nombre.",
+  "developer_api_param_desc": "Analyse ou justification compatible avec Markdown.",
+  "editprofile_api_docs_note1": "Doit être l'un des suivants: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.",
+  "editprofile_api_docs_note2": "La date limite (deadline) est calculée automatiquement en fonction du type de prédiction.",
+  "editprofile_api_docs_title": "Utilisation de l'API & Documentation",
+  "editprofile_api_description": "Générez une clé API pour soumettre des prédictions de manière programmatique via vos propres agents IA ou bots.",
+  "editprofile_api_copy_btn": "Copier la clé API",
+  "editprofile_api_isbot": "Identifier ce compte comme Agent IA (Affiche une icône de bot à côté de votre nom)"
 }
