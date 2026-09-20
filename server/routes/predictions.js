@@ -89,17 +89,31 @@ router.post('/predict', apiAuthMiddleware, predictLimiter, async (req, res) => {
 
     const { stockTicker, targetPrice, deadline, predictionType, description, maxRatingAtCreation } = req.body;
 
-    // --- Strict API Validation ---
     const errors = [];
     if (!stockTicker || typeof stockTicker !== 'string') errors.push("stockTicker is required and must be a string");
     if (targetPrice === undefined || typeof targetPrice !== 'number' || targetPrice <= 0) errors.push("targetPrice is required and must be a positive number");
     if (!predictionType || !['Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'].includes(predictionType)) errors.push("predictionType is invalid (Hourly, Daily, Weekly, Monthly, Quarterly, Yearly)");
-    if (!deadline || isNaN(Date.parse(deadline))) errors.push("deadline is required and must be a valid ISO Date string");
+    if (deadline && isNaN(Date.parse(deadline))) errors.push("deadline must be a valid ISO Date string");
 
     if (errors.length > 0) {
         return res.status(400).json({ message: "Validation Error", errors });
     }
     // --- End Validation ---
+
+    // Calculate deadline if not provided
+    let finalDeadline = deadline ? new Date(deadline) : null;
+    if (!finalDeadline) {
+        const now = new Date();
+        switch (predictionType) {
+            case 'Hourly': finalDeadline = new Date(now.getTime() + 60 * 60 * 1000); break;
+            case 'Daily': finalDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000); break;
+            case 'Weekly': finalDeadline = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); break;
+            case 'Monthly': finalDeadline = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); break;
+            case 'Quarterly': finalDeadline = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000); break;
+            case 'Yearly': finalDeadline = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); break;
+            default: finalDeadline = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        }
+    }
 
     try {
         const settings = await Setting.findOne();
@@ -166,7 +180,7 @@ router.post('/predict', apiAuthMiddleware, predictLimiter, async (req, res) => {
             stockTicker,
             targetPrice,
             targetPriceAtCreation: targetPrice,
-            deadline,
+            deadline: finalDeadline,
             predictionType,
             priceAtCreation: currentPrice, // Will be null if API failed
             currency: currency,

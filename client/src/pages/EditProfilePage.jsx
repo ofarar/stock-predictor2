@@ -206,13 +206,12 @@ const EditProfilePage = ({ onProfileUpdate }) => {
     "stockTicker": "NVDA",
     "targetPrice": 1500,
     "predictionType": "Weekly",
-    "deadline": "2026-09-27T15:00:00.000Z",
     "description": "Optional analysis notes."
   }'`}
                                 </pre>
                                 <p className="text-xs text-gray-500 mt-2">
-                                    * predictionType must be one of: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.<br/>
-                                    * deadline must be a valid ISO Date string representing the exact time the prediction expires.
+                                    * {t('editprofile_api_docs_note1', 'predictionType must be one of: Hourly, Daily, Weekly, Monthly, Quarterly, Yearly.')}<br/>
+                                    * {t('editprofile_api_docs_note2', 'deadline is automatically calculated based on the prediction type.')}
                                 </p>
                             </div>
                         </div>
