@@ -176,7 +176,7 @@ const DeveloperApiPage = () => {
                                 <h3 className="text-md font-semibold text-gray-200 mb-2">{t('developer_api_create_prediction', 'Create a Prediction')}</h3>
                                 <div className="bg-black p-4 rounded-md border border-gray-700 relative group">
                                     <pre className="overflow-x-auto text-sm text-green-400 font-mono leading-relaxed">
-{`curl -X POST ${window.location.origin}/api/predict \\
+{`curl -X POST ${import.meta.env.VITE_API_URL}/api/predict \\
   -H "x-api-key: YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
