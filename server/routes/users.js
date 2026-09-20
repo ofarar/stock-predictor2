@@ -397,19 +397,16 @@ router.put('/profile', async (req, res) => {
     try {
         const { username, about, youtubeLink, xLink, avatar, telegramLink, isBot } = req.body;
 
-        const sanitizedUpdate = {
-            username: xss(username),
-            about: xss(about),
-            youtubeLink: xss(youtubeLink),
-            xLink: xss(xLink),
-            telegramLink: xss(telegramLink),
-            country: xss(req.body.country),
-            avatar: xss(avatar)
-        };
+        const sanitizedUpdate = {};
 
-        if (isBot !== undefined) {
-            sanitizedUpdate.isBot = isBot;
-        }
+        if (username !== undefined) sanitizedUpdate.username = xss(username);
+        if (about !== undefined) sanitizedUpdate.about = xss(about);
+        if (youtubeLink !== undefined) sanitizedUpdate.youtubeLink = xss(youtubeLink);
+        if (xLink !== undefined) sanitizedUpdate.xLink = xss(xLink);
+        if (telegramLink !== undefined) sanitizedUpdate.telegramLink = xss(telegramLink);
+        if (req.body.country !== undefined) sanitizedUpdate.country = xss(req.body.country);
+        if (avatar !== undefined) sanitizedUpdate.avatar = xss(avatar);
+        if (isBot !== undefined) sanitizedUpdate.isBot = isBot;
 
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,
